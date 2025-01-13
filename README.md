@@ -1,5 +1,8 @@
 # trascendence
 
+## Requirements (major/minor modules chosen and more)
+https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
+
 ## Commits and branch names
 
 In this project, we follow the Conventional Commits specification for structuring our commit messages and branch names. It enables automated tools and processes to analyze and generate release notes, changelogs, and versioning information. For more info on Conventional Commits, visit <https://www.conventionalcommits.org/en/v1.0.0/>
