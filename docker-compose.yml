@@ -1,0 +1,33 @@
+services:
+  be:
+    container_name: be
+    build: ./be
+    ports:
+      - 8000:8000
+    volumes:
+      - ./be:/app
+    env_file:
+      - ./be/.env
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - trascendence_network
+
+  db:
+    container_name: db
+    image: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - ./be/.env
+    restart: always
+    networks:
+      - trascendence_network
+
+volumes:
+  db_data:
+
+networks:
+  trascendence_network:
+    driver: bridge
