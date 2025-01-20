@@ -4,7 +4,11 @@ To decide the color scheme for the project, the team conducted a poll, and an ex
 
 ## Poll
 
-### Calculation:
+## Colors
+
+![colors schemes p1](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/colors1.jpg)
+![colors schemes p2](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/colors2.jpg)
+![colors schemes p3](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/colors3.jpg)
 
 ### The scoring method is as follows:
 
