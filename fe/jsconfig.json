@@ -1,0 +1,5 @@
+{
+  "compilerOptions": {
+    "checkJs": false // Errors of modules with VSCode
+  }
+}

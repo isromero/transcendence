@@ -1,9 +1,11 @@
 import prettier from 'eslint-plugin-prettier';
 import promise from 'eslint-plugin-promise';
+import html from 'eslint-plugin-html';
+import css from 'eslint-plugin-css';
 
 export default [
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html', '**/*.css'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -11,6 +13,8 @@ export default [
     plugins: {
       prettier,
       promise,
+      html,
+      css,
     },
     rules: {
       // Basic error prevention
