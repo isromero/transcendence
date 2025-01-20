@@ -3,6 +3,71 @@
 ## Requirements (major/minor modules chosen and more)
 https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 
+## Project Setup
+
+### Prerequisites
+- Docker and Docker Compose
+- Node.js 20.0.0 or higher
+- VS Code with recommended extensions (for linting and formatting)
+
+### Development Environment
+1. Clone the repository
+2. Create environment files in fe/.env and be/.env (see .env.example)
+3. Run docker compose build
+4. Run docker compose up
+
+### Services
+The services will be available at:
+- Backend: http://localhost:8000
+- Frontend: http://localhost:3000
+- Database: http://localhost:5432
+
+### Linting and Formatting VS Code
+Intall the following extensions:
+- ESLint
+- Prettier
+
+### Code Quality Tools inside fe/
+#### ESLint
+- Lints JavaScript, HTML and CSS files
+- Run: `npm run lint`
+- Fix: `npm run lint:fix`
+
+#### Prettier
+- Formats JavaScript, HTML and CSS files
+- Run: `npm run format`
+- Check: `npm run format:check`
+
+#### Combined Commands
+- Check all: `npm run check`
+- Fix all: `npm run fix`
+
+## Project Structure
+
+- be/
+  - apps/ Contains all the applications
+    - core/ Contains all the core modules
+  - config/ Contains all the configuration files
+
+- fe/
+  - assets/ Contains all the assets
+    - fonts/ Contains all the fonts
+    - images/ Contains all the images
+  - css/ Contains all the CSS files
+    - styles.css Contains the main styles file
+    - pages/ Contains all the pages
+    - components/ Contains all the components
+  - js/ Contains all the JavaScript files
+    - main.js Contains the main JavaScript file
+    - components/ Contains all the components
+    - pages/ Contains all the pages
+    - services/ Contains all the services (API calls)
+    - utils/ Contains all the utility functions
+  - index.html/ Contains the main HTML file
+  - jsconfig.json/ Contains the JavaScript configuration file
+  - eslint.config.js/ Contains the ESLint configuration file
+  - .prettierrc Contains the Prettier configuration file
+
 ## Commits and branch names
 
 In this project, we follow the Conventional Commits specification for structuring our commit messages and branch names. It enables automated tools and processes to analyze and generate release notes, changelogs, and versioning information. For more info on Conventional Commits, visit <https://www.conventionalcommits.org/en/v1.0.0/>
