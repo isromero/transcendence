@@ -1,4 +1,4 @@
-# Color Scheme poll
+# Color Scheme Poll
 
 To decide the color scheme for the project, the team conducted a poll, and an external person also cast a vote (thanks amejia).
 
@@ -6,9 +6,9 @@ To decide the color scheme for the project, the team conducted a poll, and an ex
 
 ## Colors
 
-![Preview Image](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors1.jpg)
-![Preview Image](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors2.jpg)
-![Preview Image](https://github.com/isromero/transcendence/tree/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors3.jpg)
+![Preview Image](https://raw.githubusercontent.com/isromero/transcendence/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors1.jpg)
+![Preview Image](https://raw.githubusercontent.com/isromero/transcendence/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors2.jpg)
+![Preview Image](https://raw.githubusercontent.com/isromero/transcendence/feat/Frontend-concept-map/frontend-concept/color_poll/img/colors3.jpg)
 
 ### The scoring method is as follows:
 
