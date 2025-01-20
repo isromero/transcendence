@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
     networks:
-      - trascendence_network
+      - transcendence_network
 
   db:
     container_name: db
@@ -23,11 +23,23 @@ services:
       - ./be/.env
     restart: always
     networks:
-      - trascendence_network
+      - transcendence_network
+
+  fe:
+    container_name: fe
+    build: ./fe
+    ports:
+      - 3000:3000
+    volumes:
+      - ./fe:/app
+    env_file:
+      - ./fe/.env
+    networks:
+      - transcendence_network
 
 volumes:
   db_data:
 
 networks:
-  trascendence_network:
+  transcendence_network:
     driver: bridge

@@ -1,5 +1,5 @@
 """
-WSGI config for trascendence project.
+WSGI config for transcendence project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
