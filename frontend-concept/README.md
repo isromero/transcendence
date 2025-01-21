@@ -6,19 +6,19 @@ https://www.figma.com/design/TtJ4Q0JorxIXMcNXJMrFJ9/Trascendence?node-id=0-1&p=f
 
 ## Pages
 ### Starting page
-#### Register
-#### Login
+- Register
+- Login
 ### Home page
-#### Create match
-##### Match settings
-#### Join match
+- Create match
+    - Match settings
+- Join match
 ### Game
 ### Spectate
 ### Settings
-#### Edit profile
+- Edit profile
 ### Social
-#### friends
-#### My profile
+- friends
+- My profile
 ## Modal Components
 ### End game screen local version
 ### End game screen multiplayer version
