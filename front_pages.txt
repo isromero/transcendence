@@ -1,0 +1,107 @@
+Starting page
+	Cookies - banner
+		Accept All Declinea Reject Non-Essential(no hay)
+	Login
+		2fa
+		or login with 42
+	Register
+		register form
+			nick:
+			mail:
+			password:
+		2fa
+		login
+	language
+
+Homepage
+	Play
+		PvP local
+		Play Online
+			create match
+				code: xxxxx
+			join match
+				code:
+	Tournament
+		create tournament
+			points to win: 
+			set player num: 5
+			code: xxxx
+		join match
+			code: 
+	Avatar:
+		View my profile:
+			avatar
+			name
+			wins:
+			losses:
+			matches played:
+			win rate: %
+
+		Settings:
+			Profile:
+				avatar:
+				name:
+				password:
+				mail:
+			language:
+				spanish
+				english
+
+			Security:
+				delete my-data
+					wins:
+					losses:
+					matches played:
+					learn about data deletion (link)
+
+				delete acount
+					confirm deletion
+						type passord
+							name:
+							avatar:
+							password:
+							mail:
+					cancel
+					learn about data deletion (link)
+					learn about account deletion (link)
+				Learn about GDPR (link)
+				contact Support (link email)
+
+					
+Play page
+	Game
+		boton p1 boton p2 -> teclas
+		winner: xxx
+		play again?
+	waiting other player...
+		ready?
+		3 2 1...
+		winner: xxx
+		play again?
+	Tournament:
+	waiting other players...
+		ready?
+		actual round players:
+		3 names
+		...
+		nex round:
+		3 names
+		...
+
+		Waiting | Lose | Tournament is closed
+			Round final round = player number / 2 winner
+			0 {[]name | }
+	
+			Round nx
+			1 {[points]name | name[points]}
+			2 {[points]name | name[points]}
+			3 {[points]name | name[points]}
+			Round nx
+			4 {[points]name | name[points]}
+	
+		winner:
+			name
+			play again?
+			n/n 16/40
+			code:xxxx
+		
