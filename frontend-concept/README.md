@@ -5,6 +5,10 @@
 https://www.figma.com/design/TtJ4Q0JorxIXMcNXJMrFJ9/Trascendence?node-id=0-1&p=f&t=4NyTnpIPORdnopFC-0
 
 ## Pages
+
+![Preview Image](https://raw.githubusercontent.com/isromero/transcendence/feat/Frontend-concept-map/frontend-concept/pages.png)
+![Preview Image](https://raw.githubusercontent.com/isromero/transcendence/feat/Frontend-concept-map/frontend-concept/modal_components.png)
+
 ### Starting page
 - Register
 - Login
