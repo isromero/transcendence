@@ -20,7 +20,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./be/.env
+      - ${BE_ENV_FILE:-.be/.env.example}
     restart: always
     networks:
       - transcendence_network
