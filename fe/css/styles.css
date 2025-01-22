@@ -7,45 +7,80 @@
 :root {
     --bs-primary: #08141e;  /* Color principal de fondo */
     --bs-secondary: #0f2a3f; /* inputs */
-    --bs-body-bg: #20394f;   /* plaetas */
+    --bs-tertirary: #20394f;   /* plaetas */
     --bs-text-color: #f6d6bd; /* Color principal de textos */
     --bs-text-color-secondary: #c3a38a; /* Color botones tipo 1  */
-    --bs-text-color-tertiary: #997577; /* Color botones tipo 2 */
+    --bs-text-color-tertiary: #FF4D6D; /* Color botones tipo 2 */
     --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* Fuente personalizada */
+    --bs-text-color-quaternary: #59D683; /* Boton Log intra */
 }
 
+.bs-primary {
+    background-color: var(--bs-primary);
+}
+
+.bs-secondary {
+    background-color: var(--bs-secondary);
+}
 .text-principal-color {
     color: var(--bs-text-color);
 }
 
+.text-success-color {
+    color: var(--bs-text-color-quaternary);
+}
+
+.accept-button {
+    color: var(--bs-text-color-tertiary);
+    background-color: var(--bs-primary);
+    border-color: var(--bs-text-color-tertiary);
+}
+
+.cancel-button {
+    color: var(--bs-text-color);
+    background-color: var(--bs-primary);
+    border-color: var(---bs-text-color);
+}
+
+
+
 .secondary-title-color {
+    color: var(--bs-text-color-secondary);
+    font-size: 3rem;
+}
+.form-secondary-title-color {
     color: var(--bs-text-color-secondary);
 }
 
 .title-principal-styles {
     color: white;
-    text-shadow: 0 0 5px var(--bs-text-color), 
-                 0 0 10px var(--bs-text-color), 
-                 0 0 20px var(--bs-text-color), 
-                 0 0 40px #C3A38A, 
-                 0 0 80px #C3A38A, 
-                 0 0 90px #C3A38A, 
-                 0 0 100px #C3A38A, 
-                 0 0 150px #C3A38A;
+    font-size: 2.8rem;
+    text-shadow: 0 0 0.1em var(--bs-text-color), 
+                 0 0 0.3em var(--bs-text-color), 
+                 0 0 0.6em #C3A38A, 
+                 0 0 1em #C3A38A;
 }
-
 
 
 .button-text-styles {
     color: var(--bs-text-color-secondary);
-text-shadow: 0px 4px 6px #000;
--webkit-text-stroke: 0.5px black;
-font-family: "Pixelify Sans";
-font-style: normal;
-line-height: normal;
+    text-shadow: 0px 4px 6px #000;
+    -webkit-text-stroke: 0.5px black;
+    font-family: "Pixelify Sans";
+    font-style: normal;
+    line-height: normal;
 
 }
 
+.button-text-size {
+    font-size: 2.5rem;
+
+}
+
+
+.mt-8 {
+    margin-top: 8rem;
+}
 
 @font-face {
     font-family: 'Pixelify Sans';
