@@ -9,6 +9,8 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 - Docker and Docker Compose
 - Node.js 20.0.0 or higher
 - VS Code with recommended extensions (for linting and formatting)
+- Black formatter (`pip install black`) if you want to use it locally
+- Flake8 (`pip install flake8`) if you want to use it locally
 
 ### Development Environment
 1. Clone the repository
@@ -26,8 +28,10 @@ The services will be available at:
 Intall the following extensions:
 - ESLint
 - Prettier
+- Black Formatter -> ms-python.black-formatter
+- Flake8 -> ms-python.flake8 (you will need to install flake8 locally)
 
-### Code Quality Tools inside fe/
+### Frontend Code Quality Tools inside fe/
 #### ESLint
 - Lints JavaScript, HTML and CSS files
 - Run: `npm run lint`
@@ -41,6 +45,14 @@ Intall the following extensions:
 #### Combined Commands
 - Check all: `npm run check`
 - Fix all: `npm run fix`
+
+### Backend Code Quality Tools inside be/
+#### Black (Formatter)
+- Format all files: `black .`
+- Check format: `black . --check`
+
+#### Flake8 (Linter)
+- Check all files: `flake8`
 
 ## Project Structure
 
