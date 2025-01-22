@@ -1,0 +1,56 @@
+name: Auto-fix Code Style
+
+on: [push]
+
+jobs:
+  frontend-fix:
+    name: Frontend Fix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+      - name: Build containers
+        run: docker compose build
+      - name: Install dependencies
+        run: docker compose run --rm fe npm install
+      - name: Fix style
+        run: docker compose run --rm fe npm run fix
+
+  backend-black-format:
+    name: Backend Black Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+      - name: Build containers
+        run: docker compose build
+      - name: Format with Black
+        run: docker compose run --rm be black .
+
+  backend-flake8-check:
+    name: Backend Flake8 Check (you have to fix errors manually)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+      - name: Build containers
+        run: docker compose build
+      - name: Check with Flake8
+        run: docker compose run --rm be flake8 .
+
+  commit-changes:
+    name: Commit Changes
+    needs: [frontend-fix, backend-black-format, backend-flake8-check]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Commit fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format/check code"
+          branch: ${{ github.ref }} 
