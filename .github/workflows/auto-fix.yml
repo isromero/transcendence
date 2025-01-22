@@ -17,12 +17,14 @@ jobs:
         run: docker compose build
 
       - name: Fix frontend style
-        run: docker compose run --rm fe npm run fix
+        run: |
+          docker compose run --rm fe npm install
+          docker compose run --rm fe npm run fix
 
       - name: Fix backend style with Black
         run: docker compose run --rm be black .
 
-      - name: Check backend style with Flake8 (you have to fix errors manually)
+      - name: Check backend style with Flake8
         run: docker compose run --rm be flake8 .
 
       - name: Commit fixes
