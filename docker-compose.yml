@@ -9,6 +9,8 @@ services:
     env_file:
       - ./be/.env
     restart: always
+    environment:
+      - NODE_ENV=development
     depends_on:
       - db
     networks:
