@@ -7,10 +7,8 @@ services:
     volumes:
       - ./be:/app
     env_file:
-      - ./be/.env
+      - ${BE_ENV_FILE:-.be.env.example}
     restart: always
-    environment:
-      - NODE_ENV=development
     depends_on:
       - db
     networks:
@@ -35,7 +33,7 @@ services:
     volumes:
       - ./fe:/app
     env_file:
-      - ./fe/.env
+      - ${FE_ENV_FILE:-.fe.env.example}
     networks:
       - transcendence_network
 
