@@ -7,7 +7,7 @@ services:
     volumes:
       - ./be:/app
     env_file:
-      - ${BE_ENV_FILE:-be/.env.example}
+      - ${BE_ENV_FILE:-be/.env_example}
     restart: always
     depends_on:
       - db
@@ -20,7 +20,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ${BE_ENV_FILE:-be/.env.example}
+      - ${BE_ENV_FILE:-be/.env_example}
     restart: always
     networks:
       - transcendence_network
@@ -33,7 +33,7 @@ services:
     volumes:
       - ./fe:/app
     env_file:
-      - ${FE_ENV_FILE:-fe/.env.example}
+      - ${FE_ENV_FILE:-fe/.env_example}
     networks:
       - transcendence_network
 
