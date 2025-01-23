@@ -38,10 +38,24 @@
     color: var(--bs-text-color);
     background-color: var(--bs-primary);
     border-color: var(---bs-text-color);
+    
+}
+
+.border-primary {
+    border-color: var(--bs-text-color) !important;
+}
+
+.glowing-border {
+    border: 3px solid var(--bs-text-color); /* Borde principal */
+    box-shadow: 0 0 2px var(--bs-text-color), 
+                0 0 4px var(--bs-text-color), 
+                0 0 6px #C3A38A;
+    border-radius: 50%; /* Mantén el borde redondeado */
 }
 
 
 
+  
 .secondary-title-color {
     color: var(--bs-text-color-secondary);
     font-size: 2.8rem;
@@ -59,6 +73,15 @@
                  0 0 1em #C3A38A;
 }
 
+.profile-title {
+    color: white;
+    font-size: 2.2rem;
+    text-shadow: 0 0 0.1em var(--bs-text-color), 
+                 0 0 0.3em var(--bs-text-color), 
+                 0 0 0.6em #C3A38A, 
+                 0 0 1em #C3A38A;
+}
+
 
 .button-text-styles {
     color: var(--bs-text-color-secondary);
@@ -68,6 +91,11 @@
     font-style: normal;
     line-height: normal;
 
+}
+
+.spa-link {
+    color: inherit; /* Hereda el color del elemento padre */
+    text-decoration: none; /* Elimina el subrayado del enlace */
 }
 
 .button-text-size {
