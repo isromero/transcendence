@@ -3,14 +3,14 @@
 /* TODO: Add global styles + reset styles (search for it) */
 
 :root {
-    --bs-primary: #08141e;  /* Color principal de fondo */
+    --bs-primary: #08141e;  /* background principal color */
     --bs-secondary: #0f2a3f; /* inputs */
-    --bs-tertirary: #20394f;   /* plaetas */
-    --bs-text-color: #f6d6bd; /* Color principal de textos */
-    --bs-text-color-secondary: #c3a38a; /* Color botones tipo 1  */
-    --bs-text-color-tertiary: #FF4D6D; /* Color botones tipo 2 */
-    --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* Fuente personalizada */
-    --bs-text-color-quaternary: #59D683; /* Boton Log intra */
+    --bs-tertirary: #20394f;   /* paletas */
+    --bs-text-color: #f6d6bd; /* text principal color */
+    --bs-text-color-secondary: #c3a38a; /* Color button type 1  */
+    --bs-text-color-tertiary: #FF4D6D; /* Color button type 2 */
+    --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* font */
+    --bs-text-color-quaternary: #59D683; /* Button Log intra */
 }
 
 .bs-primary {

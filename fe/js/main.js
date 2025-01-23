@@ -1,7 +1,7 @@
-// Manejo del historial y navegación
+
 const appContainer = document.getElementById('app-container');
 
-// Función para cargar dinámicamente una página en la SPA
+
 async function loadPage(page) {
   try {
     const url = page === '/' ? '/index.html' : `/pages${page}.html`;
@@ -13,7 +13,7 @@ async function loadPage(page) {
     const content = await response.text();
     appContainer.innerHTML = content;
 
-    // Actualizar el historial del navegador
+
     window.history.pushState({ page }, '', page);
   } catch (error) {
     // TODO (samu): Error pages
@@ -21,22 +21,22 @@ async function loadPage(page) {
   }
 }
 
-// Listener central para enlaces
+
 document.body.addEventListener('click', (event) => {
-  // Comprueba si el clic proviene de un enlace con la clase `spa-link`
+
   const link = event.target.closest('a.spa-link');
   if (link) {
-    event.preventDefault(); // Evita la navegación estándar
-    const page = link.getAttribute('href'); // Obtiene el destino del enlace
-    loadPage(page); // Carga dinámicamente la página
+    event.preventDefault();
+    const page = link.getAttribute('href');
+    loadPage(page);
   }
 });
 
-// Maneja la navegación hacia adelante y atrás en el historial del navegador
+
 window.addEventListener('popstate', (event) => {
   const page = event.state?.page || '/';
   loadPage(page);
 });
 
-// Carga inicial
+
 loadPage(window.location.pathname);
