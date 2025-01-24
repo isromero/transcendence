@@ -35,7 +35,7 @@ services:
     volumes:
       - ./fe:/app
     env_file:
-      - ${FE_ENV_FILE:-fe/.env_example}
+      - ${FE_ENV_FILE:-fe/.env}
     networks:
       - transcendence_network
 
