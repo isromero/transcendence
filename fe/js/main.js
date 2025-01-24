@@ -44,6 +44,7 @@ function updateIcons(page) {
     leftButton.className = 'bi bi-person-circle';
     leftButton.parentElement.setAttribute('href', '/profile');
     rightButton.className = 'bi bi-list'; 
+    rightButton.parentElement.setAttribute('href', '/settings');
   }
 }
 
