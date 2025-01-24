@@ -5,3 +5,4 @@ be/.env
 fe/.env
 node_modules/
 package-lock.json
+my_script

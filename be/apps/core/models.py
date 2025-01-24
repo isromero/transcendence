@@ -9,7 +9,7 @@ class Users(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	username = models.CharField(max_length=50, unique=True)
 	password = models.CharField(max_length=50)
-	avatar = models.URLField(null=True) #cambiar a una url para avatar por defecto
+	avatar = models.URLField(null=True, blank=True) #cambiar a una url para avatar por defecto
 	email = models.EmailField(max_length=50, unique=True)
 	status = models.BooleanField(default=False)
 
