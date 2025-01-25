@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure .env exists for frontend
+        run: |
+          if [ ! -f ./fe/.env ]; then
+            echo "Fallback to .env_example for frontend"
+            cp ./fe/.env_example ./fe/.env
+          fi
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
       - name: Build containers
@@ -22,6 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure .env exists for backend
+        run: |
+          if [ ! -f ./be/.env ]; then
+            echo "Fallback to .env_example for backend"
+            cp ./be/.env_example ./be/.env
+          fi
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
       - name: Build containers
@@ -34,6 +46,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure .env exists for backend
+        run: |
+          if [ ! -f ./be/.env ]; then
+            echo "Fallback to .env_example for backend"
+            cp ./be/.env_example ./be/.env
+          fi
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
       - name: Build containers
@@ -53,4 +71,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "style: auto-format/check code"
-          branch: ${{ github.ref }} 
+          branch: ${{ github.ref }}
