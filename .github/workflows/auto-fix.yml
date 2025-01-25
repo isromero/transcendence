@@ -6,6 +6,8 @@ jobs:
   frontend-fix:
     name: Frontend Fix
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Ensure .env exists for frontend
@@ -26,6 +28,8 @@ jobs:
   backend-black-format:
     name: Backend Black Format
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Ensure .env exists for backend
@@ -44,6 +48,8 @@ jobs:
   backend-flake8-check:
     name: Backend Flake8 Check (you have to fix errors manually)
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Ensure .env exists for backend
