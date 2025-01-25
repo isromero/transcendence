@@ -21,7 +21,7 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 ### Services
 The services will be available at:
 - Backend: http://localhost:8000
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3001
 - Database: http://localhost:5432
 
 ### Linting and Formatting VS Code
