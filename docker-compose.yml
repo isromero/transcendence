@@ -7,8 +7,8 @@ services:
     volumes:
       - ./be:/app
     env_file:
-      - ./be/.env
       - ./be/.env_example
+      - ./be/.env
     restart: always
     depends_on:
       - db
@@ -21,8 +21,8 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./be/.env
       - ./be/.env_example
+      - ./be/.env
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -37,8 +37,8 @@ services:
     volumes:
       - ./fe:/app
     env_file:
-      - ./fe/.env
       - ./fe/.env_example
+      - ./fe/.env
     networks:
       - transcendence_network
 
