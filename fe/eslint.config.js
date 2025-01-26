@@ -6,7 +6,7 @@ import globals from 'globals';
 
 export default [
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html'],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html', '**/*.css'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -18,7 +18,9 @@ export default [
       prettier,
       promise,
       html,
+      css,
     },
+    extends: ['plugin:css/recommended'],
     rules: {
       // Basic error prevention
       'no-console': 'warn', // Warns when console.* is used
@@ -57,16 +59,6 @@ export default [
 
       // Code formatting
       'prettier/prettier': 'error', // Enforces consistent code formatting using Prettier
-    },
-  },
-  {
-    files: ['**/*.css'],
-    plugins: {
-      css,
-    },
-    processor: 'css/css',
-    rules: {
-      'css/no-invalid': 'error',
     },
   },
 ];
