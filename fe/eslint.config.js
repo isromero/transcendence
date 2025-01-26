@@ -9,6 +9,10 @@ export default [
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
+      env: {
+        browser: true,
+        es2022: true,
+      },
     },
     plugins: {
       prettier,
