@@ -9,17 +9,22 @@ async function loadPage(page) {
   if (page === null) {
     return;
   }
+
+  if (page === '/' || page == '/index.html')
+	page = '/menu-login';
+
   if (page.includes('menu-')) {
-    page.replace('menu-', '');
-    url = '/pages/menus${page}.html';
+    page = page.replace('menu-', '');
+    url = `/pages/menus${page}.html`;
+	console.log(url);
     loadMenu(url);
   } else if (page.includes('game-')) {
-    page.replace('game-', '');
-    url = '/pages/game${page}.html';
+    page = page.replace('game-', '');
+    url = `/pages/game${page}.html`;
     loadGame(url);
   } else if (page.includes('modal-')) {
-    page.replace('modal-', '');
-    url = '/components${page}.html';
+    page = page.replace('modal-', '');
+    url = `/components${page}.html`;
     loadModal(url);
   } else {
     const message = 'not found page: ${url}';
@@ -30,6 +35,7 @@ async function loadPage(page) {
 async function loadMenu(page) {
   try {
     const url = page;
+	const template = await fetch('/pages/templates/menu.html');
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -39,8 +45,11 @@ async function loadMenu(page) {
     }
 
     const content = await response.text();
-    pageContainer.innerHTML = content;
 
+	appContainer.innerHTML = await template.text();
+	/*
+    pageContainer.innerHTML = content;
+	*/
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
@@ -51,6 +60,7 @@ async function loadMenu(page) {
 async function loadGame(page) {
   try {
     const url = page;
+	const template = await fetch('/pages/templates/main.html');
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -59,8 +69,11 @@ async function loadGame(page) {
       throw new Error('Game page not found');
     }
 
+	appContainer.innerHTML = await template.text();
+	/*
     const content = await response.text();
     appContainer.innerHTML = content;
+	*/
   } catch (error) {
     loadError('?', error.message);
   }
@@ -105,35 +118,6 @@ async function loadError(page, message) {
   }
 }
 
-/*
-function updateIcons(page) {
-  const leftButton = document.querySelector('.btn.position-absolute.bottom-0.start-0 i');
-  const rightButton = document.querySelector('.btn.position-absolute.bottom-0.end-0 i');
-
-  if (page === '/login') {
-
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  } else if (page === '/register') {
-    
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  }
-  else if (page === '/') {
-    
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  }
-   else {
-
-    leftButton.className = 'bi bi-person-circle';
-    leftButton.parentElement.setAttribute('href', '/profile');
-    rightButton.className = 'bi bi-list'; 
-    rightButton.parentElement.setAttribute('href', '/settings');
-  }
-}
-*/
-
 document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
   if (link) {
@@ -144,6 +128,7 @@ document.body.addEventListener('click', event => {
 });
 
 window.addEventListener('popstate', event => {
+  console.log('test');
   const page = event.state?.page || '/';
   loadPage(page);
 });
