@@ -31,7 +31,7 @@ services:
     container_name: fe
     build: ./fe
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
       - ./fe:/app
     env_file:
