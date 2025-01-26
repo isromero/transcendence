@@ -4,114 +4,104 @@ const modalContainer = document.getElementById('modal-container');
 const menuContainer = document.getElementById('menu-container');
 
 async function loadPage(page) {
-	let url;
+  let url;
 
-	if (page.includes("menu-"))
-	{
-		url = '/pages/menus${page}.html';
-		loadMenu(url);
-	}
-	else if (page.includes("game-"))
-	{
-		url = '/pages/game${page}.html';
-		loadGame(url);
-	}
-	else if (page.includes("modal-"))
-	{
-		url = '/components${page}.html';
-		loadModal(url);
-	}
-	else
-	{
-		url = '/components${page}.html';
-		loadError(url);
-	}
+  if (page === null) {
+    return;
+  }
+  if (page.includes('menu-')) {
+    page.replace('menu-', '');
+    url = '/pages/menus${page}.html';
+    loadMenu(url);
+  } else if (page.includes('game-')) {
+    page.replace('game-', '');
+    url = '/pages/game${page}.html';
+    loadGame(url);
+  } else if (page.includes('modal-')) {
+    page.replace('modal-', '');
+    url = '/components${page}.html';
+    loadModal(url);
+  } else {
+    const message = 'not found page: ${url}';
+    loadError(404, message);
+  }
 }
 
 async function loadMenu(page) {
   try {
-	const url = page;
+    const url = page;
     const response = await fetch(url);
 
-	if (!response.ok)
-	{
-		/* TODO(samusanc): here goes an error checker for debug and other stuff, throw 
-		 * exception is a mistake!!!*/
-		throw new Error('Menu page not found');
-	}
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Menu page not found');
+    }
 
     const content = await response.text();
     pageContainer.innerHTML = content;
 
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
-
   } catch (error) {
-    pageContainer.innerHTML = '<div class="text-center"><h1>Unknow Error 404</h1><p>'error.message'</p></div>';
+    loadError('?', error.message);
   }
 }
 
 async function loadGame(page) {
   try {
-	const url = page;
+    const url = page;
     const response = await fetch(url);
 
-	if (!response.ok)
-	{
-		/* TODO(samusanc): here goes an error checker for debug and other stuff, throw 
-		 * exception is a mistake!!!*/
-		throw new Error('Game page not found');
-	}
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Game page not found');
+    }
 
     const content = await response.text();
     appContainer.innerHTML = content;
-
   } catch (error) {
-	loadPage('/');
-    pageContainer.innerHTML = '<div class="text-center"><h1>Unknow Error 404</h1><p>'error.message'</p></div>';
+    loadError('?', error.message);
   }
 }
 
 async function loadModal(page) {
   try {
-	const url = page;
+    const url = page;
     const response = await fetch(url);
 
-	if (!response.ok)
-	{
-		/* TODO(samusanc): here goes an error checker for debug and other stuff, throw 
-		 * exception is a mistake!!!*/
-		throw new Error('Modal page not found');
-	}
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Modal page not found');
+    }
 
     const content = await response.text();
     modalContainer.innerHTML = content;
-
   } catch (error) {
-    modalContainer.innerHTML = '<div class="text-center"><h1>Unknow Error 404</h1><p>'error.message'</p></div>';
+    loadError('?', error.message);
   }
 }
 
-async function loadError(page) {
+async function loadError(page, message) {
   try {
     const url = page;
     const response = await fetch(url);
 
-	if (!response.ok)
-	{
-		/* TODO(samusanc): here goes an error checker for debug and other stuff, throw 
-		 * exception is a mistake!!!*/
-		throw new Error('Error page not found');
-	}
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Error page not found');
+    }
 
     const content = await response.text();
     pageContainer.innerHTML = content;
 
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
-
   } catch (error) {
-    pageContainer.innerHTML = '<div class="text-center"><h1>Unknow Error 404</h1><p>'error.message'</p></div>';
+    loadError('?', error.message);
   }
 }
 
@@ -144,7 +134,7 @@ function updateIcons(page) {
 }
 */
 
-document.body.addEventListener('click', (event) => {
+document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
   if (link) {
     event.preventDefault();
@@ -153,7 +143,7 @@ document.body.addEventListener('click', (event) => {
   }
 });
 
-window.addEventListener('popstate', (event) => {
+window.addEventListener('popstate', event => {
   const page = event.state?.page || '/';
   loadPage(page);
 });

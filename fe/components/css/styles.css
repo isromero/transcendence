@@ -3,139 +3,141 @@
 /* TODO: Add global styles + reset styles (search for it) */
 
 :root {
-    --bs-primary: #08141e;  /* background principal color */
-    --bs-secondary: #0f2a3f; /* inputs */
-    --bs-tertirary: #20394f;   /* paletas */
-    --bs-text-color: #f6d6bd; /* text principal color */
-    --bs-text-color-secondary: #c3a38a; /* Color button type 1  */
-    --bs-text-color-tertiary: #FF4D6D; /* Color button type 2 */
-    --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* font */
-    --bs-text-color-quaternary: #59D683; /* Button Log intra */
+  --bs-primary: #08141e; /* background principal color */
+  --bs-secondary: #0f2a3f; /* inputs */
+  --bs-tertirary: #20394f; /* paletas */
+  --bs-text-color: #f6d6bd; /* text principal color */
+  --bs-text-color-secondary: #c3a38a; /* Color button type 1  */
+  --bs-text-color-tertiary: #ff4d6d; /* Color button type 2 */
+  --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* font */
+  --bs-text-color-quaternary: #59d683; /* Button Log intra */
 }
 
 .test-background {
-	width: 100%;
-	height: 100%;
-	left: 0px;
-	top: 0px;
-	position: absolute;
-	background: #FFFFFF;
-	box-shadow: 0px 0px 80px black inset
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  background: #ffffff;
+  box-shadow: 0px 0px 80px black inset;
 }
 
 .bs-primary {
-    background-color: var(--bs-primary);
+  background-color: var(--bs-primary);
 }
 
 .bs-secondary {
-    background-color: var(--bs-secondary);
+  background-color: var(--bs-secondary);
 }
 .text-principal-color {
-    color: var(--bs-text-color);
+  color: var(--bs-text-color);
 }
 
 .text-success-color {
-    color: var(--bs-text-color-quaternary);
+  color: var(--bs-text-color-quaternary);
 }
 
 .accept-button {
-    color: var(--bs-text-color-tertiary);
-    background-color: var(--bs-primary);
-    border-color: var(--bs-text-color-tertiary);
+  color: var(--bs-text-color-tertiary);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-text-color-tertiary);
 }
 
 .cancel-button {
-    color: var(--bs-text-color);
-    background-color: var(--bs-primary);
-    border-color: var(---bs-text-color);
+  color: var(--bs-text-color);
+  background-color: var(--bs-primary);
+  border-color: var(---bs-text-color);
 }
 
 .border-primary {
-    border-color: var(--bs-text-color) !important;
+  border-color: var(--bs-text-color) !important;
 }
 
 .glowing-border {
-    border: 3px solid var(--bs-text-color);
-    box-shadow: 0 0 2px var(--bs-text-color), 
-                0 0 4px var(--bs-text-color), 
-                0 0 6px #C3A38A;
-    border-radius: 50%;
+  border: 3px solid var(--bs-text-color);
+  box-shadow:
+    0 0 2px var(--bs-text-color),
+    0 0 4px var(--bs-text-color),
+    0 0 6px #c3a38a;
+  border-radius: 50%;
 }
-  
+
 .secondary-title-color {
-    color: var(--bs-text-color-secondary);
-    font-size: 2.8rem;
+  color: var(--bs-text-color-secondary);
+  font-size: 2.8rem;
 }
 
 .form-secondary-title-color {
-    color: var(--bs-text-color-secondary);
+  color: var(--bs-text-color-secondary);
 }
 
 .title-principal-styles {
-    color: white;
-    font-size: 2.8rem;
-    text-shadow: 0 0 0.1em var(--bs-text-color), 
-                 0 0 0.3em var(--bs-text-color), 
-                 0 0 0.6em #C3A38A, 
-                 0 0 1em #C3A38A;
+  color: white;
+  font-size: 2.8rem;
+  text-shadow:
+    0 0 0.1em var(--bs-text-color),
+    0 0 0.3em var(--bs-text-color),
+    0 0 0.6em #c3a38a,
+    0 0 1em #c3a38a;
 }
 
 .profile-title {
-    color: white;
-    font-size: 2.2rem;
-    text-shadow: 0 0 0.1em var(--bs-text-color), 
-                 0 0 0.3em var(--bs-text-color), 
-                 0 0 0.6em #C3A38A, 
-                 0 0 1em #C3A38A;
+  color: white;
+  font-size: 2.2rem;
+  text-shadow:
+    0 0 0.1em var(--bs-text-color),
+    0 0 0.3em var(--bs-text-color),
+    0 0 0.6em #c3a38a,
+    0 0 1em #c3a38a;
 }
 
 .button-text-styles {
-    color: var(--bs-text-color-secondary);
-    text-shadow: 0px 4px 6px #000;
-    -webkit-text-stroke: 0.5px black;
-    font-family: "Pixelify Sans";
-    font-style: normal;
-    line-height: normal;
-
+  color: var(--bs-text-color-secondary);
+  text-shadow: 0px 4px 6px #000;
+  -webkit-text-stroke: 0.5px black;
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  line-height: normal;
 }
 
 .spa-link {
-    color: inherit; /* Hereda el color del elemento padre */
-    text-decoration: none; /* Elimina el subrayado del enlace */
+  color: inherit; /* Hereda el color del elemento padre */
+  text-decoration: none; /* Elimina el subrayado del enlace */
 }
 
 .button-text-size {
-    font-size: 2.5rem;
+  font-size: 2.5rem;
 }
 
 .mt-8 {
-    margin-top: 8rem;
+  margin-top: 8rem;
 }
 
 @font-face {
-    font-family: 'Pixelify Sans';
-    src: url('../assets/fonts/PixelifySans-Regular.ttf') format('truetype');
-    font-weight: 400; /* Regular */
-    font-style: normal;
+  font-family: 'Pixelify Sans';
+  src: url('../assets/fonts/PixelifySans-Regular.ttf') format('truetype');
+  font-weight: 400; /* Regular */
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Pixelify Sans';
-    src: url('../assets/fonts/PixelifySans-Medium.ttf') format('truetype');
-    font-weight: 500; /* Medium */
-    font-style: normal;
+  font-family: 'Pixelify Sans';
+  src: url('../assets/fonts/PixelifySans-Medium.ttf') format('truetype');
+  font-weight: 500; /* Medium */
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Pixelify Sans';
-    src: url('../assets/fonts/PixelifySans-SemiBold.ttf') format('truetype');
-    font-weight: 600; /* SemiBold */
-    font-style: normal;
+  font-family: 'Pixelify Sans';
+  src: url('../assets/fonts/PixelifySans-SemiBold.ttf') format('truetype');
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Pixelify Sans';
-    src: url('../assets/fonts/PixelifySans-Bold.ttf') format('truetype');
-    font-weight: 700; /* Bold */
-    font-style: normal;
+  font-family: 'Pixelify Sans';
+  src: url('../assets/fonts/PixelifySans-Bold.ttf') format('truetype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
 }
