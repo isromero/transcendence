@@ -39,6 +39,84 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2025-01-26T09:24:28.410Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "1",
+    "object_repr": "Friends object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2025-01-26T09:24:40.342Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "2",
+    "object_repr": "Friends object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2025-01-26T09:24:50.001Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "3",
+    "object_repr": "Friends object (3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2025-01-26T09:36:38.027Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "4",
+    "object_repr": "Friends object (4)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2025-01-26T09:37:22.237Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "3",
+    "object_repr": "Friends object (3)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2025-01-26T09:37:30.747Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "3",
+    "object_repr": "Friends object (3)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -585,6 +663,46 @@
     "avatar": null,
     "email": "one@si.foro",
     "status": false
+  }
+},
+{
+  "model": "core.friends",
+  "pk": 1,
+  "fields": {
+    "user_id": 1,
+    "friend_id": 2,
+    "created_at": "2025-01-26T09:24:28.408Z",
+    "status": 2
+  }
+},
+{
+  "model": "core.friends",
+  "pk": 2,
+  "fields": {
+    "user_id": 1,
+    "friend_id": 3,
+    "created_at": "2025-01-26T09:24:40.342Z",
+    "status": 1
+  }
+},
+{
+  "model": "core.friends",
+  "pk": 3,
+  "fields": {
+    "user_id": 2,
+    "friend_id": 3,
+    "created_at": "2025-01-26T09:24:50.001Z",
+    "status": 0
+  }
+},
+{
+  "model": "core.friends",
+  "pk": 4,
+  "fields": {
+    "user_id": 3,
+    "friend_id": 2,
+    "created_at": "2025-01-26T09:36:38.027Z",
+    "status": 1
   }
 }
 ]
