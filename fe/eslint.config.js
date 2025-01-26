@@ -2,6 +2,7 @@ import prettier from 'eslint-plugin-prettier';
 import promise from 'eslint-plugin-promise';
 import html from 'eslint-plugin-html';
 import css from 'eslint-plugin-css';
+import globals from 'globals';
 
 export default [
   {
