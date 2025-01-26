@@ -2,18 +2,12 @@ name: Auto-fix Code Style
 
 on: [push]
 
+env:
+  TRANSCENDENCE_ENV_FILE: ""
+
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set ENV_FILE for CI
-        run: echo "TRANSCENDENCE_ENV_FILE=" >> $GITHUB_ENV
-
   build:
     runs-on: ubuntu-latest
-    needs: setup
     steps:
       - uses: actions/checkout@v4
 
