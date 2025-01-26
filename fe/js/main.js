@@ -1,5 +1,5 @@
 const appContainer = document.getElementById('app-container');
-const pageContainer = document.getElementById('page-container');
+const containerStatus = "none"
 const modalContainer = document.getElementById('modal-container');
 const menuContainer = document.getElementById('menu-container');
 
@@ -11,7 +11,7 @@ async function loadPage(page) {
   }
 
   if (page === '/' || page == '/index.html')
-	page = '/menu-login';
+	page = '/menu-auth';
 
   if (page.includes('menu-')) {
     page = page.replace('menu-', '');
@@ -35,21 +35,28 @@ async function loadPage(page) {
 async function loadMenu(page) {
   try {
     const url = page;
-	const template = await fetch('/pages/templates/menu.html');
+	console.log(url);
     const response = await fetch(url);
+	if (containerStatus === "none")
+	{
+		const template = await fetch('/pages/templates/menu.html');
+		if (!template.ok) {
+		  throw new Error('Error loading template or page content');
+		}
+		const template_content = await template.text();
+		appContainer.innerHTML = template_content;
+	}
 
     if (!response.ok) {
-      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
-       * exception is a mistake!!!*/
-      throw new Error('Menu page not found');
+      throw new Error('Error loading template or page content');
     }
 
-    const content = await response.text();
-
-	appContainer.innerHTML = await template.text();
-	/*
-    pageContainer.innerHTML = content;
-	*/
+    const response_content = await response.text();
+    const pageContainer = appContainer.querySelector('#page-container');
+    if (!pageContainer) {
+      throw new Error('Element with ID "page-container" not found in the template');
+    }
+    pageContainer.innerHTML = response_content;
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
@@ -120,9 +127,11 @@ async function loadError(page, message) {
 
 document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
+
   if (link) {
     event.preventDefault();
-    const page = link.getAttribute('lsp-loader');
+    const page = link.getAttribute('spa-loader');
+	console.log(page);
     loadPage(page);
   }
 });
