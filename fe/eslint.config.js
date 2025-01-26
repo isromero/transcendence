@@ -3,10 +3,11 @@ import promise from 'eslint-plugin-promise';
 import html from 'eslint-plugin-html';
 import css from 'eslint-plugin-css';
 import globals from 'globals';
-
+import cssPlugin from 'eslint-plugin-css';
 export default [
+  cssPlugin.configs['flat/recommended'],
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html', '**/*.css'],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -18,9 +19,7 @@ export default [
       prettier,
       promise,
       html,
-      css,
     },
-    extends: ['plugin:css/recommended'],
     rules: {
       // Basic error prevention
       'no-console': 'warn', // Warns when console.* is used
