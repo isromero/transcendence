@@ -26,5 +26,8 @@
     "eslint-plugin-promise": "^7.2.1",
     "globals": "^15.14.0",
     "prettier": "^3.4.2"
+  },
+  "dependencies": {
+    "lint": "^0.8.19"
   }
 }
