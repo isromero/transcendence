@@ -57,7 +57,6 @@ async function loadMenu(page) {
       throw new Error('Element with ID "page-container" not found in the template');
     }
     pageContainer.innerHTML = response_content;
-    //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
     loadError('?', error.message);

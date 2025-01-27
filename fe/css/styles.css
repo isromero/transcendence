@@ -3,7 +3,9 @@
 /* TODO: Add global styles + reset styles (search for it) */
 
 :root {
-  --bs-primary: #08141e; /* background principal color */
+  --bs-background: rgba(8, 20, 30, 1);/*#08141e;*/ /* background principal color */
+  --bs-modal: rgba(0, 0, 0, 0.25);/*#08141e;*/ /* background principal color */
+  --bs-primary: rgba(8, 20, 30, 0);/*#08141e;*/ /* background principal color */
   --bs-secondary: #0f2a3f; /* inputs */
   --bs-tertirary: #20394f; /* paletas */
   --bs-text-color: #f6d6bd; /* text principal color */
@@ -13,15 +15,36 @@
   --bs-text-color-quaternary: #59d683; /* Button Log intra */
 }
 
-.test-background {
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  background: #ffffff;
-  box-shadow: 0px 0px 80px black inset;
+.card, .card-body {
+    background: transparent !important;
 }
+
+.shadow-background {
+    width: 100%; 
+    height: 100%; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+	color: var(--bes-background);
+    background-color: var(--bs-background); 
+    box-shadow: inset 0px 0px 200px black; 
+    z-index: 0;
+}
+
+.modal-background {
+    width: 100%; 
+    height: 100%; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+	color: var(--bes-background);
+    background-color: var(--bs-modal); 
+	backdrop-filter: blur(10px);
+    /*box-shadow: inset 0px 0px 200px black; */
+    z-index: 2;
+}
+
+
 
 .bs-primary {
   background-color: var(--bs-primary);
@@ -30,6 +53,7 @@
 .bs-secondary {
   background-color: var(--bs-secondary);
 }
+
 .text-principal-color {
   color: var(--bs-text-color);
 }
@@ -102,8 +126,8 @@
 }
 
 .spa-link {
-  color: inherit; /* Hereda el color del elemento padre */
-  text-decoration: none; /* Elimina el subrayado del enlace */
+  color: inherit;
+  text-decoration: none;
 }
 
 .button-text-size {
