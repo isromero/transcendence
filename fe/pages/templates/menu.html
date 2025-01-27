@@ -16,21 +16,16 @@
 	
 	<div id="btn-rigth">
 		<button class="btn p-0 position-absolute bottom-0 end-0 me-4 mb-2 title-principal-styles">
-			<a href="/globe" class="spa-link"><i class="bi bi-globe" style="font-size: 3.5rem;"></i>
+			<a spa-loader="modal-login" class="spa-link"><i class="bi bi-globe" style="font-size: 3.5rem;"></i>
 		</button>
 	</div>
 </div>
 
 <div class="modal-background" hidden>
 	<div class="d-flex justify-content-center gap-2">
-			<a spa-loader="/menu-auth" class="spa-link" style="flex: 1;">
-				<button type="button" class="btn cancel-button w-100 bs-primary border-primary-color" style="border-radius: 10px; height: 2.8rem;">Cancel</button>
-			</a>
-			<a spa-loader="/menu-home_page" class="spa-link" style="flex: 1;">
-				<button type="submit" class="btn accept-button w-100 bs-primary" style="border-radius: 10px; height: 2.8rem;" id="finish-login">LogIn</button>
-			</a>
-	</div>
-
-	<div id="modal-container">
+		<div class="btn cancel-button w-75 bs-primary border-primary-color" style="border-radius: 10px; height: 2.8rem;">
+			<div id="modal-container">
+			</div>
+		</div>
 	</div>
 </div>

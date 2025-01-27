@@ -1,6 +1,5 @@
 const appContainer = document.getElementById('app-container');
 const containerStatus = "none"
-const modalContainer = document.getElementById('modal-container');
 const menuContainer = document.getElementById('menu-container');
 
 async function loadPage(page) {
@@ -15,16 +14,16 @@ async function loadPage(page) {
 
   if (page.includes('menu-')) {
     page = page.replace('menu-', '');
-    url = `/pages/menus${page}.html`;
+    url = `/pages/menus/${page}.html`;
 	console.log(url);
     loadMenu(url);
   } else if (page.includes('game-')) {
     page = page.replace('game-', '');
-    url = `/pages/game${page}.html`;
+    url = `/pages/game/${page}.html`;
     loadGame(url);
   } else if (page.includes('modal-')) {
     page = page.replace('modal-', '');
-    url = `/components${page}.html`;
+    url = `/components/${page}.html`;
     loadModal(url);
   } else {
     const message = 'not found page: ${url}';
@@ -45,6 +44,7 @@ async function loadMenu(page) {
 		}
 		const template_content = await template.text();
 		appContainer.innerHTML = template_content;
+		//containerStatus = "menu";
 	}
 
     if (!response.ok) {
@@ -88,16 +88,36 @@ async function loadGame(page) {
 async function loadModal(page) {
   try {
     const url = page;
+	console.log(url);
     const response = await fetch(url);
+	if (containerStatus === "none")
+	{
+		const template = await fetch('/pages/templates/menu.html');
+		if (!template.ok) {
+		  throw new Error('Error loading template or page content');
+		}
+		const template_content = await template.text();
+		appContainer.innerHTML = template_content;
+		if (containerStatus === "menu")
+		{
+			const modalBackground = appContainer.querySelector('#modal-background');
+			if (!modalBackground) {
+			  throw new Error('Element with ID "background modal" not found in the template');
+			}
+			modalBackground.hidden = false;
+		}
+	}
 
     if (!response.ok) {
-      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
-       * exception is a mistake!!!*/
-      throw new Error('Modal page not found');
+      throw new Error('Error loading template or page content');
     }
 
-    const content = await response.text();
-    modalContainer.innerHTML = content;
+    const response_content = await response.text();
+    const modalContainer = appContainer.querySelector('#modal-container');
+    if (!modalContainer) {
+      throw new Error('Element with ID "page-container" not found in the template');
+    }
+    //modalContainer.innerHTML = response_content;
   } catch (error) {
     loadError('?', error.message);
   }
