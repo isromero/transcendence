@@ -17,8 +17,6 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     needs: build
-    env:
-      TRANSCENDENCE_ENV_FILE: ./fe/.env_example
     steps:
       - uses: actions/checkout@v4
 

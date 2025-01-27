@@ -3,3 +3,4 @@ psycopg2-binary==2.9.10
 black==24.8.0
 flake8==7.1.0
 python-dotenv==1.0.0
+django-cors-headers==4.6.0

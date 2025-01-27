@@ -17,12 +17,12 @@ class UserView(View):
     def get(self, _, user_id=None):
         if user_id:
             user = get_object_or_404(User, id=user_id)
-            return JsonResponse(serialize_user(user), status=200)
+            return JsonResponse({"data": serialize_user(user)}, status=200)
         else:
             users = User.objects.all().values(
                 "id", "username", "email", "avatar", "status"
             )
-            return JsonResponse({"users": list(users)}, status=200)
+            return JsonResponse({"data": list(users)}, status=200)
 
     def post(self, request):
         try:

@@ -12,6 +12,8 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.browser,
+        ...globals.node,
+        ...globals.es2022,
       },
     },
     plugins: {
@@ -21,7 +23,7 @@ export default [
     },
     rules: {
       // Basic error prevention
-      'no-console': 'warn', // Warns when console.* is used
+      'no-console': ['warn', { allow: ['error'] }], // Warns when console.* is used except for console.error
       'no-debugger': 'warn', // Warns when debugger statements are used
       'no-duplicate-case': 'error', // Prevents duplicate case labels in switch statements
       'no-irregular-whitespace': 'error', // Prevents irregular whitespace outside of strings
