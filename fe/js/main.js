@@ -1,5 +1,4 @@
 const appContainer = document.getElementById('app-container');
-const containerStatus = "none"
 const menuContainer = document.getElementById('menu-container');
 
 async function loadPage(page) {
@@ -34,19 +33,14 @@ async function loadPage(page) {
 async function loadMenu(page) {
   try {
     const url = page;
-	console.log(url);
     const response = await fetch(url);
-	if (containerStatus === "none")
-	{
-		const template = await fetch('/pages/templates/menu.html');
-		if (!template.ok) {
-		  throw new Error('Error loading template or page content');
-		}
-		const template_content = await template.text();
-		appContainer.innerHTML = template_content;
-		//containerStatus = "menu";
-	}
+	const template = await fetch('/pages/templates/menu.html');
 
+	if (!template.ok) {
+	  throw new Error('Error loading template or page content');
+	}
+	const template_content = await template.text();
+	appContainer.innerHTML = template_content;
     if (!response.ok) {
       throw new Error('Error loading template or page content');
     }
@@ -90,23 +84,12 @@ async function loadModal(page) {
     const url = page;
 	console.log(url);
     const response = await fetch(url);
-	if (containerStatus === "none")
-	{
-		const template = await fetch('/pages/templates/menu.html');
-		if (!template.ok) {
-		  throw new Error('Error loading template or page content');
-		}
-		const template_content = await template.text();
-		appContainer.innerHTML = template_content;
-		if (containerStatus === "menu")
-		{
-			const modalBackground = appContainer.querySelector('#modal-background');
-			if (!modalBackground) {
-			  throw new Error('Element with ID "background modal" not found in the template');
-			}
-			modalBackground.hidden = false;
-		}
+	const modalBackground = document.getElementById("modalus-background");
+
+	if (!modalBackground) {
+	  throw new Error('Element with ID "background modal" not found in the template');
 	}
+	modalBackground.hidden = false;
 
     if (!response.ok) {
       throw new Error('Error loading template or page content');
@@ -117,7 +100,7 @@ async function loadModal(page) {
     if (!modalContainer) {
       throw new Error('Element with ID "page-container" not found in the template');
     }
-    //modalContainer.innerHTML = response_content;
+    modalContainer.innerHTML = response_content;
   } catch (error) {
     loadError('?', error.message);
   }
@@ -148,7 +131,7 @@ document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
 
   if (link) {
-    event.preventDefault();
+//    event.preventDefault();
     const page = link.getAttribute('spa-loader');
 	console.log(page);
     loadPage(page);
