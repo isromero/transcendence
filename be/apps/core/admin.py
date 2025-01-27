@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.core.models import Users, Friends, Stats, Tournaments, History
+from apps.core.models import User, Friends, Stats, Tournaments, History
 
 # Register your models here.
 
@@ -35,7 +35,7 @@ class HistoryAdmin(admin.ModelAdmin):
                     "position_match", "date", "position_tournament",)
 
 
-admin.site.register(Users, UserAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Friends, FriendAdmin)
 admin.site.register(Stats, StatsAdmin)
 admin.site.register(Tournaments, TournamentAdmin)

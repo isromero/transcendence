@@ -18,6 +18,15 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 3. Run docker compose build
 4. Run docker compose up
 
+## Migrations
+We don't use a virtual environment so you will need to run the migrations in the container.
+
+```bash
+docker compose run --rm be python manage.py makemigrations
+docker compose run --rm be python manage.py migrate
+```
+
+
 ### Services
 The services will be available at:
 - Backend: http://localhost:8000

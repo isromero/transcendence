@@ -1,8 +1,8 @@
 # Backend
 be/.env
+be/config/__pycache__/
 
 # Frontend
 fe/.env
 node_modules/
 package-lock.json
-my_script

@@ -583,7 +583,7 @@
   "pk": 7,
   "fields": {
     "app_label": "core",
-    "model": "users"
+    "model": "user"
   }
 },
 {
@@ -627,7 +627,7 @@
   }
 },
 {
-  "model": "core.users",
+  "model": "core.user",
   "pk": 1,
   "fields": {
     "created_at": "2025-01-25T16:42:19.447Z",
@@ -640,7 +640,7 @@
   }
 },
 {
-  "model": "core.users",
+  "model": "core.user",
   "pk": 2,
   "fields": {
     "created_at": "2025-01-25T16:42:57.268Z",
@@ -653,7 +653,7 @@
   }
 },
 {
-  "model": "core.users",
+  "model": "core.user",
   "pk": 3,
   "fields": {
     "created_at": "2025-01-25T16:43:19.564Z",
