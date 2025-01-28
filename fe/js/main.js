@@ -7,11 +7,13 @@ async function loadPage(page) {
   let url;
 
   if (page === null) {
+	console.log("hola desgracia");
+	console.log(page);
     return;
   }
 
   if (page === '/' || page == '/index.html') {
-    page = '/menu-auth';
+    page = 'menu-auth';
   }
 
   if (page.includes('menu-')) {
@@ -80,7 +82,7 @@ async function loadGame(page) {
     appContainer.innerHTML = content;
 	*/
   } catch (error) {
-    loadError('?', error.message);
+    loadError('madre mia willy', error.message);
   }
 }
 
@@ -99,7 +101,7 @@ async function loadModal(page) {
     const response_content = await response.text();
     modalContainer.innerHTML = response_content;
   } catch (error) {
-    loadError('?', error.message);
+    loadError('willyyyyyy', error.message);
   }
 }
 
@@ -120,7 +122,7 @@ async function loadError(page, message) {
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
-    loadError('?', error.message);
+    loadError('ay que se quema la casa', error.message);
   }
 }
 
@@ -128,7 +130,7 @@ document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
 
   if (link) {
-    //    event.preventDefault();
+    event.preventDefault();
     const page = link.getAttribute('spa-loader');
     console.log(page);
     loadPage(page);
