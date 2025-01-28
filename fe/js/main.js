@@ -8,13 +8,14 @@ async function loadPage(page) {
     return;
   }
 
-  if (page === '/' || page == '/index.html')
-	page = '/menu-auth';
+  if (page === '/' || page == '/index.html') {
+    page = '/menu-auth';
+  }
 
   if (page.includes('menu-')) {
     page = page.replace('menu-', '');
     url = `/pages/menus/${page}.html`;
-	console.log(url);
+    console.log(url);
     loadMenu(url);
   } else if (page.includes('game-')) {
     page = page.replace('game-', '');
@@ -34,13 +35,13 @@ async function loadMenu(page) {
   try {
     const url = page;
     const response = await fetch(url);
-	const template = await fetch('/pages/templates/menu.html');
+    const template = await fetch('/pages/templates/menu.html');
 
-	if (!template.ok) {
-	  throw new Error('Error loading template or page content');
-	}
-	const template_content = await template.text();
-	appContainer.innerHTML = template_content;
+    if (!template.ok) {
+      throw new Error('Error loading template or page content');
+    }
+    const template_content = await template.text();
+    appContainer.innerHTML = template_content;
     if (!response.ok) {
       throw new Error('Error loading template or page content');
     }
@@ -48,7 +49,9 @@ async function loadMenu(page) {
     const response_content = await response.text();
     const pageContainer = appContainer.querySelector('#page-container');
     if (!pageContainer) {
-      throw new Error('Element with ID "page-container" not found in the template');
+      throw new Error(
+        'Element with ID "page-container" not found in the template'
+      );
     }
     pageContainer.innerHTML = response_content;
     //updateIcons(page);
@@ -60,7 +63,7 @@ async function loadMenu(page) {
 async function loadGame(page) {
   try {
     const url = page;
-	const template = await fetch('/pages/templates/main.html');
+    const template = await fetch('/pages/templates/main.html');
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -69,8 +72,8 @@ async function loadGame(page) {
       throw new Error('Game page not found');
     }
 
-	appContainer.innerHTML = await template.text();
-	/*
+    appContainer.innerHTML = await template.text();
+    /*
     const content = await response.text();
     appContainer.innerHTML = content;
 	*/
@@ -82,14 +85,16 @@ async function loadGame(page) {
 async function loadModal(page) {
   try {
     const url = page;
-	console.log(url);
+    console.log(url);
     const response = await fetch(url);
-	const modalBackground = document.getElementById("modalus-background");
+    const modalBackground = document.getElementById('modalus-background');
 
-	if (!modalBackground) {
-	  throw new Error('Element with ID "background modal" not found in the template');
-	}
-	modalBackground.hidden = false;
+    if (!modalBackground) {
+      throw new Error(
+        'Element with ID "background modal" not found in the template'
+      );
+    }
+    modalBackground.hidden = false;
 
     if (!response.ok) {
       throw new Error('Error loading template or page content');
@@ -98,7 +103,9 @@ async function loadModal(page) {
     const response_content = await response.text();
     const modalContainer = appContainer.querySelector('#modal-container');
     if (!modalContainer) {
-      throw new Error('Element with ID "page-container" not found in the template');
+      throw new Error(
+        'Element with ID "page-container" not found in the template'
+      );
     }
     modalContainer.innerHTML = response_content;
   } catch (error) {
@@ -131,9 +138,9 @@ document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
 
   if (link) {
-//    event.preventDefault();
+    //    event.preventDefault();
     const page = link.getAttribute('spa-loader');
-	console.log(page);
+    console.log(page);
     loadPage(page);
   }
 });
