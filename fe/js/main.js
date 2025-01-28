@@ -1,68 +1,154 @@
 const appContainer = document.getElementById('app-container');
+const menuContainer = document.getElementById('menu-container');
 
 async function loadPage(page) {
+  let url;
+
+  if (page === null) {
+    return;
+  }
+
+  if (page === '/' || page == '/index.html') {
+    page = '/menu-auth';
+  }
+
+  if (page.includes('menu-')) {
+    page = page.replace('menu-', '');
+    url = `/pages/menus/${page}.html`;
+    console.log(url);
+    loadMenu(url);
+  } else if (page.includes('game-')) {
+    page = page.replace('game-', '');
+    url = `/pages/game/${page}.html`;
+    loadGame(url);
+  } else if (page.includes('modal-')) {
+    page = page.replace('modal-', '');
+    url = `/components/${page}.html`;
+    loadModal(url);
+  } else {
+    const message = 'not found page: ${url}';
+    loadError(404, message);
+  }
+}
+
+async function loadMenu(page) {
   try {
-    const url = page === '/' ? '/index.html' : `/pages${page}.html`;
+    const url = page;
+    const response = await fetch(url);
+    const template = await fetch('/pages/templates/menu.html');
+
+    if (!template.ok) {
+      throw new Error('Error loading template or page content');
+    }
+    const template_content = await template.text();
+    appContainer.innerHTML = template_content;
+    if (!response.ok) {
+      throw new Error('Error loading template or page content');
+    }
+
+    const response_content = await response.text();
+    const pageContainer = appContainer.querySelector('#page-container');
+    if (!pageContainer) {
+      throw new Error(
+        'Element with ID "page-container" not found in the template'
+      );
+    }
+    pageContainer.innerHTML = response_content;
+    //updateIcons(page);
+  } catch (error) {
+    loadError('?', error.message);
+  }
+}
+
+async function loadGame(page) {
+  try {
+    const url = page;
+    const template = await fetch('/pages/templates/main.html');
     const response = await fetch(url);
 
-    if (!response.ok) throw new Error('Página no encontrada');
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Game page not found');
+    }
 
+    appContainer.innerHTML = await template.text();
+    /*
     const content = await response.text();
     appContainer.innerHTML = content;
-
-
-    window.history.pushState({ page }, '', page);
-
-
-    updateIcons(page);
+	*/
   } catch (error) {
-    appContainer.innerHTML = '<div class="text-center"><h1>Error 404</h1><p>Página no encontrada.</p></div>';
+    loadError('?', error.message);
   }
 }
 
+async function loadModal(page) {
+  try {
+    const url = page;
+    console.log(url);
+    const response = await fetch(url);
+    const modalBackground = document.getElementById('modalus-background');
 
-function updateIcons(page) {
-  const leftButton = document.querySelector('.btn.position-absolute.bottom-0.start-0 i');
-  const rightButton = document.querySelector('.btn.position-absolute.bottom-0.end-0 i');
+    if (!modalBackground) {
+      throw new Error(
+        'Element with ID "background modal" not found in the template'
+      );
+    }
+    modalBackground.hidden = false;
 
-  if (page === '/login') {
+    if (!response.ok) {
+      throw new Error('Error loading template or page content');
+    }
 
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  } else if (page === '/register') {
-    
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  }
-  else if (page === '/') {
-    
-    leftButton.className = 'bi bi-question-circle';
-    rightButton.className = 'bi bi-globe'; 
-  }
-   else {
-
-    leftButton.className = 'bi bi-person-circle';
-    leftButton.parentElement.setAttribute('href', '/profile');
-    rightButton.className = 'bi bi-list'; 
-    rightButton.parentElement.setAttribute('href', '/settings');
+    const response_content = await response.text();
+    const modalContainer = appContainer.querySelector('#modal-container');
+    if (!modalContainer) {
+      throw new Error(
+        'Element with ID "page-container" not found in the template'
+      );
+    }
+    modalContainer.innerHTML = response_content;
+  } catch (error) {
+    loadError('?', error.message);
   }
 }
 
+async function loadError(page, message) {
+  try {
+    const url = page;
+    const response = await fetch(url);
 
-document.body.addEventListener('click', (event) => {
+    if (!response.ok) {
+      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
+       * exception is a mistake!!!*/
+      throw new Error('Error page not found');
+    }
+
+    const content = await response.text();
+    pageContainer.innerHTML = content;
+
+    //window.history.pushState({ page }, '', page);
+    //updateIcons(page);
+  } catch (error) {
+    loadError('?', error.message);
+  }
+}
+
+document.body.addEventListener('click', event => {
   const link = event.target.closest('a.spa-link');
+
   if (link) {
-    event.preventDefault();
-    const page = link.getAttribute('href');
+    //    event.preventDefault();
+    const page = link.getAttribute('spa-loader');
+    console.log(page);
     loadPage(page);
   }
 });
 
-
-window.addEventListener('popstate', (event) => {
+window.addEventListener('popstate', event => {
+  console.log('test');
   const page = event.state?.page || '/';
   loadPage(page);
 });
-
 
 loadPage(window.location.pathname);
