@@ -1,5 +1,7 @@
 const appContainer = document.getElementById('app-container');
 const menuContainer = document.getElementById('menu-container');
+const modalBackground = document.getElementById('modalus-background');
+const modalContainer = document.querySelector('#modal-container');
 
 async function loadPage(page) {
   let url;
@@ -87,13 +89,7 @@ async function loadModal(page) {
     const url = page;
     console.log(url);
     const response = await fetch(url);
-    const modalBackground = document.getElementById('modalus-background');
 
-    if (!modalBackground) {
-      throw new Error(
-        'Element with ID "background modal" not found in the template'
-      );
-    }
     modalBackground.hidden = false;
 
     if (!response.ok) {
@@ -101,12 +97,6 @@ async function loadModal(page) {
     }
 
     const response_content = await response.text();
-    const modalContainer = appContainer.querySelector('#modal-container');
-    if (!modalContainer) {
-      throw new Error(
-        'Element with ID "page-container" not found in the template'
-      );
-    }
     modalContainer.innerHTML = response_content;
   } catch (error) {
     loadError('?', error.message);
