@@ -14,6 +14,70 @@
   --bs-font-sans-serif: 'Pixelify Sans', sans-serif; /* font */
   --bs-text-color-quaternary: #59d683; /* Button Log intra */
 }
+/*------------------------------------------------------------------------*/
+.top-box, .bottom-box {
+    background-color: #1b2a3a;
+    height: 100px;
+	width: 40px;
+    border-radius: 10px;
+}
+
+.game-area {
+	background-color: #112233;
+	width: 20rem;
+	height: 70vh;
+	border-radius: 10px;
+	border: 1px solid #ccc;
+	align-items: center;
+	justify-content: center;
+    box-shadow: inset 0px 0px 200px black; 
+}
+
+.game-section {
+    position: relative;
+    height: 47%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.score {
+    font-size: 120px;
+    opacity: 0.7;
+}
+
+.bar {
+    position: absolute;
+    width: 110px;
+    height: 20px;
+    background-color: var(--bs-text-color-tertiary);
+}
+
+.top-bar {
+    top: 10px;
+    right: 10px;
+}
+
+.bottom-bar {
+    bottom: 10px;
+    left: 10px;
+}
+
+.game-divider {
+    height: 2px;
+    background-color: white;
+    margin: 10px 0;
+}
+
+.test-container {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	align-items: center;
+	justify-content: center;
+}
+
+/*------------------------------------------------------------------------*/
 
 .form-control, .form-control-lg {
 	border: 0px;

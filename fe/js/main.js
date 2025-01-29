@@ -11,7 +11,7 @@ async function loadPage(page) {
   }
 
   if (page === '/' || page == '/index.html') {
-    page = '/menu-auth';
+    page = '/game-game';
   }
 
   if (page.includes('menu-')) {
@@ -65,22 +65,17 @@ async function loadMenu(page) {
 async function loadGame(page) {
   try {
     const url = page;
-    const template = await fetch('/pages/templates/main.html');
     const response = await fetch(url);
+	
+	console.log(page);
 
     if (!response.ok) {
-      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
-       * exception is a mistake!!!*/
-      throw new Error('Game page not found');
+      throw new Error('Error loading template or page content');
     }
-
-    appContainer.innerHTML = await template.text();
-    /*
-    const content = await response.text();
-    appContainer.innerHTML = content;
-	*/
+    const response_content = await response.text();
+    appContainer.innerHTML = response_content;
   } catch (error) {
-    loadError('madre mia willy', error.message);
+    loadError('?', error.message);
   }
 }
 
