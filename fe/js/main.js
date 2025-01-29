@@ -7,26 +7,24 @@ async function loadPage(page) {
   let url;
 
   if (page === null) {
-	console.log("hola desgracia");
-	console.log(page);
     return;
   }
 
   if (page === '/' || page == '/index.html') {
-    page = 'menu-auth';
+    page = '/menu-auth';
   }
 
   if (page.includes('menu-')) {
-    page = page.replace('menu-', '');
+    page = page.replace('/menu-', '');
     url = `/pages/menus/${page}.html`;
     console.log(url);
     loadMenu(url);
   } else if (page.includes('game-')) {
-    page = page.replace('game-', '');
+    page = page.replace('/game-', '');
     url = `/pages/game/${page}.html`;
     loadGame(url);
   } else if (page.includes('modal-')) {
-    page = page.replace('modal-', '');
+    page = page.replace('/modal-', '');
     url = `/components/${page}.html`;
     loadModal(url);
   } else {
@@ -131,7 +129,7 @@ document.body.addEventListener('click', event => {
 
   if (link) {
     event.preventDefault();
-    const page = link.getAttribute('spa-loader');
+    const page = link.getAttribute('href');
     console.log(page);
     loadPage(page);
   }
