@@ -4,20 +4,20 @@ const modalBackground = document.getElementById('modalus-background');
 const modalContainer = document.querySelector('#modal-container');
 
 async function loadPage(page) {
+  if (!page) return;
+
+  // Cierra cualquier modal abierto ANTES de cambiar la página
+  closeModal();
+
   let url;
 
-  if (page === null) {
-    return;
-  }
-
   if (page === '/' || page == '/index.html') {
-    page = '/game-game';
+    page = '/menu-auth';
   }
 
   if (page.includes('menu-')) {
     page = page.replace('/menu-', '');
     url = `/pages/menus/${page}.html`;
-    console.log(url);
     loadMenu(url);
   } else if (page.includes('game-')) {
     page = page.replace('/game-', '');
@@ -28,10 +28,16 @@ async function loadPage(page) {
     url = `/components/${page}.html`;
     loadModal(url);
   } else {
-    const message = 'not found page: ${url}';
+    const message = `not found page: ${page}`;
     loadError(404, message);
   }
 }
+
+function closeModal() {
+  modalContainer.innerHTML = ""; // Borra el contenido del modal
+  modalBackground.hidden = true; // Oculta el fondo oscuro del modal
+}
+
 
 async function loadMenu(page) {
   try {
