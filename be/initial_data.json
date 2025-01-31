@@ -666,6 +666,110 @@
   }
 },
 {
+  "model": "core.user",
+  "pk": 5,
+  "fields": {
+    "created_at": "2025-01-31T17:40:16.237Z",
+    "updated_at": "2025-01-31T17:40:16.237Z",
+    "username": "Sofía",
+    "password": "sf_1*2*3*",
+    "avatar": null,
+    "email": "sofia@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 6,
+  "fields": {
+    "created_at": "2025-01-31T17:41:19.765Z",
+    "updated_at": "2025-01-31T17:41:19.765Z",
+    "username": "Javier",
+    "password": "Jvr_1-2-3* *",
+    "avatar": null,
+    "email": "javier@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 7,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Antonio",
+    "password": "NtN-@#@#~½¬~{",
+    "avatar": null,
+    "email": "antonio@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 8,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Laura",
+    "password": "sjadh fhh sbdbgd",
+    "avatar": null,
+    "email": "laura@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 9,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Elena",
+    "password": " hoprguhgdhdf dfjnvdjbdf",
+    "avatar": null,
+    "email": "elena@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 10,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Roberto",
+    "password": "**********",
+    "avatar": null,
+    "email": "roberto@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 11,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Alejandro",
+    "password": "            ",
+    "avatar": null,
+    "email": "alejandro@gmail.com",
+    "status": false
+  }
+},
+{
+  "model": "core.user",
+  "pk": 12,
+  "fields": {
+    "created_at": "2025-01-31T17:45:30.219Z",
+    "updated_at": "2025-01-31T17:45:30.219Z",
+    "username": "Manuel",
+    "password": "ASDFGHJERTYUIXCVBNM",
+    "avatar": null,
+    "email": "manuel@gmail.com",
+    "status": false
+  }
+},
+{
   "model": "core.friends",
   "pk": 1,
   "fields": {
@@ -703,6 +807,196 @@
     "friend_id": 1,
     "created_at": "2025-01-26T09:36:38.027Z",
     "status": 1
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 1,
+  "fields": {
+    "user_id": 5,
+    "victories": 5,
+    "defeats": 3,
+    "total_matches": 8,
+    "total_tournaments": 4,
+    "tournaments_victories": 1
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 2,
+  "fields": {
+    "user_id": 6,
+    "victories": 0,
+    "defeats": 2,
+    "total_matches": 2,
+    "total_tournaments": 2,
+    "tournaments_victories": 0
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 3,
+  "fields": {
+    "user_id": 7,
+    "victories": 5,
+    "defeats": 1,
+    "total_matches": 6,
+    "total_tournaments": 3,
+    "tournaments_victories": 2
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 4,
+  "fields": {
+    "user_id": 8,
+    "victories": 3,
+    "defeats": 3,
+    "total_matches": 6,
+    "total_tournaments": 4,
+    "tournaments_victories": 1
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 5,
+  "fields": {
+    "user_id": 9,
+    "victories": 6,
+    "defeats": 3,
+    "total_matches": 9,
+    "total_tournaments": 5,
+    "tournaments_victories": 2
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 6,
+  "fields": {
+    "user_id": 10,
+    "victories": 0,
+    "defeats": 4,
+    "total_matches": 4,
+    "total_tournaments": 4,
+    "tournaments_victories": 0
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 7,
+  "fields": {
+    "user_id": 11,
+    "victories": 5,
+    "defeats": 3,
+    "total_matches": 8,
+    "total_tournaments": 3,
+    "tournaments_victories": 0
+  }
+},
+{
+  "model": "core.stats",
+  "pk": 8,
+  "fields": {
+    "user_id": 12,
+    "victories": 0,
+    "defeats": 3,
+    "total_matches": 3,
+    "total_tournaments": 3,
+    "tournaments_victories": 0
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 1,
+  "fields": {
+    "tournament_name": "SuperLiga",
+    "start_date": "2025-01-24T18:19:17.990Z",
+    "end_date": "2025-01-25T18:19:17.990Z",
+    "players": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 2,
+  "fields": {
+    "tournament_name": "Copa del Rey",
+    "start_date": "2025-01-26T21:20:50.327Z",
+    "end_date": "2025-01-27T02:20:50.327Z",
+    "players": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 3,
+  "fields": {
+    "tournament_name": "Alevines",
+    "start_date": "2025-01-25T11:11:00Z",
+    "end_date": "2025-01-25T14:14:00Z",
+    "players": [
+      5,
+      9,
+      7,
+      10
+    ]
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 4,
+  "fields": {
+    "tournament_name": "Teresa Rivero",
+    "start_date": "2025-01-27T12:21:00Z",
+    "end_date": "2025-01-29T14:42:00Z",
+    "players": [
+      5,
+      9,
+      8,
+      11
+    ]
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 5,
+  "fields": {
+    "tournament_name": "Villa de Madrid",
+    "start_date": "2025-01-27T21:21:00Z",
+    "end_date": "2025-01-29T22:23:00Z",
+    "players": [
+      12,
+      9
+    ]
+  }
+},
+{
+  "model": "core.tournaments",
+  "pk": 6,
+  "fields": {
+    "tournament_name": "Super Bowl XLIX",
+    "start_date": "2025-01-30T05:00:00Z",
+    "end_date": "2025-01-30T08:58:00Z",
+    "players": [
+      8,
+      10
+    ]
   }
 }
 ]
