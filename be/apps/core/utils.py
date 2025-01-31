@@ -7,7 +7,7 @@ def serialize_user(user):
         "status": user.status,
     }
 
-def serializer_friends(user):
+def serializer_friend(user):
     return {
         "id": user.id,
         "user_id": user.user_id,
