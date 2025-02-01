@@ -62,9 +62,46 @@ async function loadMenu(page) {
       );
     }
     pageContainer.innerHTML = response_content;
-    //updateIcons(page);
+    updateIcons(page);
   } catch (error) {
     loadError('?', error.message);
+  }
+}
+
+function updateIcons(page) {
+  const leftButton = document.querySelector('.btn.position-absolute.bottom-0.start-0 i');
+  const rightButton = document.querySelector('.btn.position-absolute.bottom-0.end-0 i');
+
+  if (!leftButton || !rightButton) {
+    console.warn('Navigation buttons not found in the DOM');
+    return;
+  }
+
+  // Extract the page type from the URL
+  const isMenuPage = page.includes('/pages/menus/');
+  const isGamePage = page.includes('/pages/game/');
+  const pageType = page.split('/').pop().replace('.html', '');
+
+  // Set default attributes
+  leftButton.className = 'bi bi-person-circle';
+  leftButton.parentElement.setAttribute('href', '/modal-profile');
+  rightButton.className = 'bi bi-list';
+  rightButton.parentElement.setAttribute('href', '/modal-settings');
+
+  // Special cases for authentication pages
+  if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
+    leftButton.className = 'bi bi-question-circle';
+    leftButton.parentElement.setAttribute('href', '/modal-help');
+    rightButton.className = 'bi bi-globe';
+    rightButton.parentElement.setAttribute('href', '/modal-language');
+  }
+
+  // Special cases for game pages
+  if (isGamePage) {
+    leftButton.className = 'bi bi-arrow-left';
+    leftButton.parentElement.setAttribute('href', '/menu-auth');
+    rightButton.className = 'bi bi-pause';
+    rightButton.parentElement.setAttribute('href', '/modal-pause');
   }
 }
 
@@ -124,7 +161,7 @@ async function loadError(page, message) {
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
-    loadError('ay que se quema la casa', error.message);
+    
   }
 }
 
