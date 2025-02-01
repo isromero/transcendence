@@ -35,3 +35,17 @@ def serialize_tournaments(tournaments):
         "end_date" = tournaments.end_date,
         "players" = tournaments.players,
     }
+    
+def serialize_history(user):
+    return {
+        "id": user.id,
+        "user_id": user.user_id,
+        "result_user": user.result_user,
+        "opponent": user.opponent,
+        "result_opponent": user.result_opponent,
+        "type_match": user:type_match,
+        "tournament_id": user.tournament_id,
+        "position_match": user.position_match,
+        "date": user.date,
+        "position_tournament": user.position_tournament,
+    }

@@ -7,4 +7,5 @@ urlpatterns = [
     path("<int:user_id>/", FriendsView.as_view(), name="friend"),
     path("<int:user_id>/", StatsView.as_view(), name="stats"),
     path("<str:tournament_name>/<int:tournament_id>/", TournamentsView.as_view(), name="tournament"),
+    path("<int:user_id>/", HistoryView.as_view(), name="history"),
 ]

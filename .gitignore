@@ -1,8 +1,6 @@
 # Backend
 be/.env
 be/config/__pycache__/
-be/apps/core/forms/history.py
-be/apps/core/views/history.py
 
 # Frontend
 fe/.env
