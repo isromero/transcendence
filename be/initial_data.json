@@ -672,7 +672,7 @@
     "password": "123456",
     "avatar": null,
     "email": "pe@pi.to",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -685,7 +685,7 @@
     "password": "1234",
     "avatar": null,
     "email": "filo@go.nio",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -698,7 +698,7 @@
     "password": "asdfgh",
     "avatar": null,
     "email": "one@si.foro",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -711,7 +711,7 @@
     "password": "sf_1*2*3*",
     "avatar": null,
     "email": "sofia@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -724,7 +724,7 @@
     "password": "Jvr_1-2-3* *",
     "avatar": null,
     "email": "javier@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -737,7 +737,7 @@
     "password": "NtN-@#@#~½¬~{",
     "avatar": null,
     "email": "antonio@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -750,7 +750,7 @@
     "password": "sjadh fhh sbdbgd",
     "avatar": null,
     "email": "laura@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -763,7 +763,7 @@
     "password": " hoprguhgdhdf dfjnvdjbdf",
     "avatar": null,
     "email": "elena@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -776,7 +776,7 @@
     "password": "**********",
     "avatar": null,
     "email": "roberto@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -789,7 +789,7 @@
     "password": "            ",
     "avatar": null,
     "email": "alejandro@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {
@@ -802,7 +802,7 @@
     "password": "ASDFGHJERTYUIXCVBNM",
     "avatar": null,
     "email": "manuel@gmail.com",
-    "status": false
+    "is_online": false
   }
 },
 {

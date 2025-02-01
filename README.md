@@ -18,6 +18,18 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 3. Run docker compose build
 4. Run docker compose up
 
+### Virtual Environment be/
+It's not necessary to create a virtual environment in be/ but if you want to have it because linting and formatting is easier + VS Code can suggest you the imports.
+
+If not you can work inside the container and that's it.
+
+Inside be/ folder do this:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Migrations
 We don't use a virtual environment so you will need to run the migrations in the container.
 
