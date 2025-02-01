@@ -513,6 +513,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 7,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 7,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 7,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 7,
+    "codename": "view_user"
+  }
+},
+{
   "model": "auth.user",
   "pk": 1,
   "fields": {
@@ -951,10 +987,10 @@
     "start_date": "2025-01-25T11:11:00Z",
     "end_date": "2025-01-25T14:14:00Z",
     "players": [
-      5,
       9,
-      7,
-      10
+      10,
+      5,
+      7
     ]
   }
 },
@@ -966,10 +1002,10 @@
     "start_date": "2025-01-27T12:21:00Z",
     "end_date": "2025-01-29T14:42:00Z",
     "players": [
-      5,
-      9,
       8,
-      11
+      9,
+      11,
+      5
     ]
   }
 },
@@ -981,8 +1017,8 @@
     "start_date": "2025-01-27T21:21:00Z",
     "end_date": "2025-01-29T22:23:00Z",
     "players": [
-      12,
-      9
+      9,
+      12
     ]
   }
 },
@@ -997,6 +1033,666 @@
       8,
       10
     ]
+  }
+},
+{
+  "model": "core.history",
+  "pk": 1,
+  "fields": {
+    "user_id": 5,
+    "result_user": 10,
+    "opponent": 6,
+    "result_opponent": 8,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-25T03:35:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 2,
+  "fields": {
+    "user_id": 6,
+    "result_user": 8,
+    "opponent": 5,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-25T03:35:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 3,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 8,
+    "result_opponent": 7,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-26T03:41:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 4,
+  "fields": {
+    "user_id": 8,
+    "result_user": 7,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-26T03:41:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 5,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 10,
+    "result_opponent": 9,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-26T10:12:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 6,
+  "fields": {
+    "user_id": 10,
+    "result_user": 9,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-26T10:12:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 7,
+  "fields": {
+    "user_id": 11,
+    "result_user": 10,
+    "opponent": 12,
+    "result_opponent": 6,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-26T07:52:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 8,
+  "fields": {
+    "user_id": 12,
+    "result_user": 6,
+    "opponent": 11,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-26T07:52:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 9,
+  "fields": {
+    "user_id": 5,
+    "result_user": 10,
+    "opponent": 7,
+    "result_opponent": 7,
+    "type_match": "tournament_semi",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-28T05:20:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 10,
+  "fields": {
+    "user_id": 7,
+    "result_user": 7,
+    "opponent": 5,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-28T05:20:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 11,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 11,
+    "result_opponent": 8,
+    "type_match": "tournament_semi",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-28T12:00:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 12,
+  "fields": {
+    "user_id": 11,
+    "result_user": 8,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-28T12:00:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 13,
+  "fields": {
+    "user_id": 5,
+    "result_user": 9,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 1,
+    "position_match": 2,
+    "date": "2025-01-28T15:45:00Z",
+    "position_tournament": 2
+  }
+},
+{
+  "model": "core.history",
+  "pk": 14,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 5,
+    "result_opponent": 9,
+    "type_match": "tournament_final",
+    "tournament_id": 1,
+    "position_match": 1,
+    "date": "2025-01-28T15:45:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 15,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 6,
+    "result_opponent": 6,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-13T18:31:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 16,
+  "fields": {
+    "user_id": 6,
+    "result_user": 6,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-13T18:31:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 17,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 12,
+    "result_opponent": 9,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-13T21:46:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 18,
+  "fields": {
+    "user_id": 12,
+    "result_user": 9,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-13T21:46:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 19,
+  "fields": {
+    "user_id": 8,
+    "result_user": 10,
+    "opponent": 10,
+    "result_opponent": 7,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-13T17:15:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 20,
+  "fields": {
+    "user_id": 10,
+    "result_user": 7,
+    "opponent": 8,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-13T17:15:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 21,
+  "fields": {
+    "user_id": 5,
+    "result_user": 10,
+    "opponent": 11,
+    "result_opponent": 8,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-12T23:11:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 22,
+  "fields": {
+    "user_id": 11,
+    "result_user": 8,
+    "opponent": 5,
+    "result_opponent": 10,
+    "type_match": "tournament_quarter",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-12T23:11:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 23,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 9,
+    "result_opponent": 8,
+    "type_match": "tournament_semi",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-15T05:39:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 24,
+  "fields": {
+    "user_id": 9,
+    "result_user": 8,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-15T05:39:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 25,
+  "fields": {
+    "user_id": 8,
+    "result_user": 10,
+    "opponent": 5,
+    "result_opponent": 6,
+    "type_match": "tournament_semi",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-15T16:45:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 26,
+  "fields": {
+    "user_id": 5,
+    "result_user": 6,
+    "opponent": 8,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-15T16:45:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 27,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 8,
+    "result_opponent": 2,
+    "type_match": "tournament_final",
+    "tournament_id": 2,
+    "position_match": 1,
+    "date": "2025-01-17T08:04:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 28,
+  "fields": {
+    "user_id": 8,
+    "result_user": 2,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 2,
+    "position_match": 2,
+    "date": "2025-01-17T08:04:00Z",
+    "position_tournament": 2
+  }
+},
+{
+  "model": "core.history",
+  "pk": 29,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 5,
+    "result_opponent": 7,
+    "type_match": "tournament_semi",
+    "tournament_id": 3,
+    "position_match": 1,
+    "date": "2025-01-05T06:35:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 30,
+  "fields": {
+    "user_id": 5,
+    "result_user": 7,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 3,
+    "position_match": 2,
+    "date": "2025-01-05T06:35:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 31,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 10,
+    "result_opponent": 6,
+    "type_match": "tournament_semi",
+    "tournament_id": 3,
+    "position_match": 1,
+    "date": "2025-01-05T16:41:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 32,
+  "fields": {
+    "user_id": 10,
+    "result_user": 6,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 3,
+    "position_match": 2,
+    "date": "2025-01-05T16:41:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 33,
+  "fields": {
+    "user_id": 7,
+    "result_user": 10,
+    "opponent": 9,
+    "result_opponent": 4,
+    "type_match": "tournament_final",
+    "tournament_id": 3,
+    "position_match": 1,
+    "date": "2025-01-07T08:38:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 34,
+  "fields": {
+    "user_id": 9,
+    "result_user": 4,
+    "opponent": 7,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 3,
+    "position_match": 2,
+    "date": "2025-01-07T08:38:00Z",
+    "position_tournament": 2
+  }
+},
+{
+  "model": "core.history",
+  "pk": 35,
+  "fields": {
+    "user_id": 5,
+    "result_user": 10,
+    "opponent": 8,
+    "result_opponent": 6,
+    "type_match": "tournament_semi",
+    "tournament_id": 4,
+    "position_match": 1,
+    "date": "2025-01-02T06:39:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 36,
+  "fields": {
+    "user_id": 8,
+    "result_user": 6,
+    "opponent": 5,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 4,
+    "position_match": 2,
+    "date": "2025-01-02T06:39:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 37,
+  "fields": {
+    "user_id": 11,
+    "result_user": 10,
+    "opponent": 9,
+    "result_opponent": 9,
+    "type_match": "tournament_semi",
+    "tournament_id": 4,
+    "position_match": 1,
+    "date": "2025-01-02T16:45:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 38,
+  "fields": {
+    "user_id": 9,
+    "result_user": 9,
+    "opponent": 11,
+    "result_opponent": 10,
+    "type_match": "tournament_semi",
+    "tournament_id": 4,
+    "position_match": 2,
+    "date": "2025-01-02T16:45:00Z",
+    "position_tournament": 0
+  }
+},
+{
+  "model": "core.history",
+  "pk": 39,
+  "fields": {
+    "user_id": 5,
+    "result_user": 10,
+    "opponent": 11,
+    "result_opponent": 0,
+    "type_match": "tournament_final",
+    "tournament_id": 4,
+    "position_match": 1,
+    "date": "2025-01-04T08:42:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 40,
+  "fields": {
+    "user_id": 11,
+    "result_user": 0,
+    "opponent": 5,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 4,
+    "position_match": 2,
+    "date": "2025-01-04T08:42:00Z",
+    "position_tournament": 2
+  }
+},
+{
+  "model": "core.history",
+  "pk": 41,
+  "fields": {
+    "user_id": 9,
+    "result_user": 10,
+    "opponent": 12,
+    "result_opponent": 2,
+    "type_match": "tournament_final",
+    "tournament_id": 5,
+    "position_match": 1,
+    "date": "2025-01-30T10:47:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 42,
+  "fields": {
+    "user_id": 12,
+    "result_user": 2,
+    "opponent": 9,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 5,
+    "position_match": 2,
+    "date": "2025-01-30T10:47:00Z",
+    "position_tournament": 2
+  }
+},
+{
+  "model": "core.history",
+  "pk": 45,
+  "fields": {
+    "user_id": 8,
+    "result_user": 10,
+    "opponent": 10,
+    "result_opponent": 3,
+    "type_match": "tournament_final",
+    "tournament_id": 6,
+    "position_match": 1,
+    "date": "2025-01-31T23:37:00Z",
+    "position_tournament": 1
+  }
+},
+{
+  "model": "core.history",
+  "pk": 46,
+  "fields": {
+    "user_id": 10,
+    "result_user": 3,
+    "opponent": 8,
+    "result_opponent": 10,
+    "type_match": "tournament_final",
+    "tournament_id": 6,
+    "position_match": 2,
+    "date": "2025-01-31T23:37:00Z",
+    "position_tournament": 2
   }
 }
 ]
