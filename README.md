@@ -126,3 +126,13 @@ feat/file-upload
 fix/authentication-safari-login-issue
 perf/bump-dependencies
 ```
+
+#### How to save data
+
+After add some data to database, in order to keep it after compose down, follow this simple steps:
+Enter on backend container and save data into initial_data.json using:
+```code
+docker exec -it be bash
+python manage.py dumpdata --indent 2 > initial_data.json
+```
+That's it. Data will be loaded in the next container execution.
