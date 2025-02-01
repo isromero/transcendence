@@ -26,3 +26,12 @@ def serializer_stats(user):
         "total_tournaments": user.total_tournaments,
         "tournaments_victories": user.tournaments_victories,
     }
+
+def serialize_tournaments(tournaments):
+    return {
+        "id": tournaments.id,
+        "tournament_name": tournaments.tournament_name,
+        "start_date" = tournaments.start_date,
+        "end_date" = tournaments.end_date,
+        "players" = tournaments.players,
+    }
