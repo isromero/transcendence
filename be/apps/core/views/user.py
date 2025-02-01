@@ -19,10 +19,10 @@ class UserView(View):
             user = get_object_or_404(User, id=user_id)
             return JsonResponse({"data": serialize_user(user)}, status=200)
         else:
-            users = User.objects.all().values(
-                "id", "username", "email", "avatar", "status"
+            users = User.objects.all()
+            return JsonResponse(
+                {"data": [serialize_user(user) for user in users]}, status=200
             )
-            return JsonResponse({"data": list(users)}, status=200)
 
     def post(self, request):
         try:

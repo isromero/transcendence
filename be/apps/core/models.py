@@ -5,6 +5,7 @@ from django.templatetags.static import static
 
 class User(AbstractUser):
     # id, username, email, password are inherited from AbstractUser
+    email = models.EmailField(unique=True, max_length=50)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     avatar = models.URLField(

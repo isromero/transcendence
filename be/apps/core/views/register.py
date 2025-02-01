@@ -1,10 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
-from django.contrib.auth import get_user_model
 import json
 from apps.core.forms.register import RegisterForm
-
-User = get_user_model()
 
 
 class RegisterView(View):
