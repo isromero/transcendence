@@ -1,6 +1,8 @@
 # Backend
 be/.env
 be/config/__pycache__/
+be/apps/core/forms/tournaments.py
+be/apps/core/views/tournaments.py
 
 # Frontend
 fe/.env
