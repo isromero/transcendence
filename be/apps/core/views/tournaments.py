@@ -3,7 +3,7 @@ from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import Tournaments
 from apps.core.utils import serialize_tournament
-from apps.core.forms.user import TournamentsForm, ToyrnamentsPutForm
+from apps.core.forms.tournaments import TournamentsForm, ToyrnamentsPutForm
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -15,6 +15,7 @@ class TournamentsView(View):
             "id", "tournament_name", "start_date", "end_date", "players"
         )
         return JsonResponse(serialize_tournaments(tournaments), status=200)
+
     def post(self, request):
         try:
             data = json.loads(request.body)
@@ -25,6 +26,7 @@ class TournamentsView(View):
             return JsonResponse({"errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
+
     def put(self, request, tournament_id):
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         try:
@@ -36,6 +38,7 @@ class TournamentsView(View):
             return JsonResponse({"errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
+
     def delete(self, _, tournament_id):
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
