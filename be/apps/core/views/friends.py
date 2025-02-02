@@ -8,12 +8,16 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+
 @method_decorator(csrf_exempt, name="dispatch")
 class FriendsView(View):
-    def get(sefl, _, user_id):
+    def get(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
-        user_friends = Friends.objects.filter(user_id=user)
-        return JsonResponse(serialize_friends(user_friends), status=200)
+        friends_relations = Friends.objects.filter(user_id=user)
+        return JsonResponse(
+            {"data": [serialize_friend(relation) for relation in friends_relations]},
+            status=200,
+        )
 
     def post(self, request):
         try:
@@ -40,6 +44,7 @@ class FriendsView(View):
 
     def delete(self, user_id, friend_id):
         user_friends = Friends.objects.filter(user_id=user_id, friend_id=friend_id)
-        if user_friend.exist():
-            user.delete()
-            return HttpPesponse(status=204)
+        if user_friends.exists():
+            user_friends.delete()
+            return HttpResponse(status=204)
+        return HttpResponse(status=404)

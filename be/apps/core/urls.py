@@ -6,10 +6,14 @@ from apps.core.views.history import HistoryView
 from apps.core.views.tournaments import TournamentsView
 
 urlpatterns = [
-    path("", UserView.as_view(), name="users"),
-    path("<int:user_id>/", UserView.as_view(), name="user"),#no entiendo bien la funcion del nombre="user"
-    path("<int:user_id>/", FriendsView.as_view(), name="friend"),
-    path("<int:user_id>/", StatsView.as_view(), name="stats"),
-    path("<str:tournament_name>/<int:tournament_id>/", TournamentsView.as_view(), name="tournament"),
-    path("<int:user_id>/", HistoryView.as_view(), name="history"),
+    path("users", UserView.as_view()),
+    path("users/<int:user_id>", UserView.as_view()),
+    path("friends", FriendsView.as_view()),
+    path("friends/<int:user_id>", FriendsView.as_view()),
+    path("stats/<int:user_id>", StatsView.as_view()),
+    path(
+        "tournaments/<str:tournament_name>/<int:tournament_id>",
+        TournamentsView.as_view(),
+    ),
+    path("history", HistoryView.as_view()),
 ]

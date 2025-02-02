@@ -21,18 +21,18 @@ class User(models.Model):
 
 
 class Friends(models.Model):
-    STATUS_CHOICES = [
-        (0, "declined"),
-        (1, "accepted"),
-        (2, "sent"),
-    ]
+    class Status(models.TextChoices):
+        DECLINED = "declined"
+        ACCEPTED = "accepted"
+        SENT = "sent"
+
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     friend_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_friends"
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=STATUS_CHOICES)
+    status = models.CharField(choices=Status.choices, default=Status.SENT)
 
 
 class Stats(models.Model):
