@@ -12,7 +12,7 @@ class FriendForm(forms.ModelForm):
         friend_id = self.cleaned_data.get("friend_id")
         user_id = self.cleaned_data.get("user_id")
         friend = Friends.objects.filter(user_id=user_id, friend_id=friend_id)
-        if friend_id = user_id:
+        if friend_id == user_id:
             raise ValidationError("Error id")
         elif friend.exist():
             raise ValidationError("Already friends or is sent")

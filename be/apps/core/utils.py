@@ -7,7 +7,7 @@ def serialize_user(user):
         "status": user.status,
     }
 
-def serializer_friend(user):
+def serialize_friend(user):
     return {
         "id": user.id,
         "user_id": user.user_id,
@@ -16,7 +16,7 @@ def serializer_friend(user):
         "status": user.status,
     }
     
-def serializer_stats(user):
+def serialize_stats(user):
     return {
         "id": user.id,
         "user_id": user.user_id,
@@ -27,13 +27,13 @@ def serializer_stats(user):
         "tournaments_victories": user.tournaments_victories,
     }
 
-def serialize_tournaments(tournaments):
+def serialize_tournament(tournaments):
     return {
         "id": tournaments.id,
         "tournament_name": tournaments.tournament_name,
-        "start_date" = tournaments.start_date,
-        "end_date" = tournaments.end_date,
-        "players" = tournaments.players,
+        "start_date": tournaments.start_date,
+        "end_date": tournaments.end_date,
+        "players": tournaments.players,
     }
     
 def serialize_history(user):
@@ -43,7 +43,7 @@ def serialize_history(user):
         "result_user": user.result_user,
         "opponent": user.opponent,
         "result_opponent": user.result_opponent,
-        "type_match": user:type_match,
+        "type_match": user.type_match,
         "tournament_id": user.tournament_id,
         "position_match": user.position_match,
         "date": user.date,

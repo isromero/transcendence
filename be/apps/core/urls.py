@@ -1,5 +1,9 @@
 from django.urls import path
 from apps.core.views.user import UserView
+from apps.core.views.friends import FriendsView
+from apps.core.views.stats import StatsView
+from apps.core.views.history import HistoryView
+from apps.core.views.tournaments import TournamentsView
 
 urlpatterns = [
     path("", UserView.as_view(), name="users"),

@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 import re
 from apps.core.models import Tournaments
 
-class ToyrnamentsForm(forms.ModelForm):
+class TournamentsForm(forms.ModelForm):
     class Meta:
         model = Tournaments
         fields = ["tournament_name", "players"]
@@ -37,7 +37,7 @@ class ToyrnamentsForm(forms.ModelForm):
         if len(set(players)) != len(players):
             raise ValidationError ("There are duplicate players.")
 
-class ToyrnamentsPutForm(forms.ModelForm):
+class TournamentsPutForm(forms.ModelForm):
     class Meta:
         model = Tournaments
         fields = ["tournament_name", "players"]
