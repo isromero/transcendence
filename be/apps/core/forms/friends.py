@@ -15,7 +15,7 @@ class FriendForm(forms.ModelForm):
         friend_id = cleaned_data.get("friend_id")
         friend = Friends.objects.filter(user_id=user_id, friend_id=friend_id)
         if user_id == friend_id:
-            raise ValidationError("Error id")
+            raise ValidationError("You cannot send a friend request to yourself")
         elif friend.exists():
-            raise ValidationError("Already friends or is sent")
+            raise ValidationError("You are already friends")
         return cleaned_data
