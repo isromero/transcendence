@@ -6,3 +6,6 @@ be/config/__pycache__/
 fe/.env
 node_modules/
 package-lock.json
+
+# Monitoring
+monitoring/.env

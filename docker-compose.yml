@@ -37,8 +37,53 @@ services:
     networks:
       - transcendence_network
 
+  prometheus:
+    container_name: prom
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    restart: always
+    depends_on:
+      - be
+    volumes:
+      - ./monitoring/:/etc/prometheus/
+    networks:
+      - transcendence_network
+
+  grafana:
+    container_name: grf
+    image: grafana/grafana
+    ports:
+      - 3333:3333
+    volumes:
+      - grafana_data:/var/lib/grafana
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+    restart: always
+    depends_on:
+      - prometheus
+    networks:
+      - transcendence_network
+
+  postgres_exporter:
+    container_name: pg_exporter
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - 9187:9187
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+    command: '--no-collector.stat_bgwriter'
+    restart: always
+    depends_on:
+      prometheus:
+        condition: service_started
+    networks:
+      - transcendence_network
+
+
 volumes:
   db_data:
+  grafana_data:
 
 networks:
   transcendence_network:
