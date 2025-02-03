@@ -9,6 +9,8 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 - Docker and Docker Compose
 - Node.js 20.0.0 or higher
 - VS Code with recommended extensions (for linting and formatting)
+- Black formatter (`pip install black`) if you want to use it locally
+- Flake8 (`pip install flake8`) if you want to use it locally
 
 ### Development Environment
 1. Clone the repository
@@ -16,18 +18,38 @@ https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
 3. Run docker compose build
 4. Run docker compose up
 
+## Migrations
+We don't use a virtual environment so you will need to run the migrations in the container.
+
+```bash
+docker compose run --rm be python manage.py makemigrations
+docker compose run --rm be python manage.py migrate
+```
+
+#### How to save data
+
+After add some data to database, in order to keep it after compose down, follow this simple steps:
+Enter on backend container and save data into initial_data.json using:
+```code
+docker exec -it be bash
+python manage.py dumpdata --indent 2 > initial_data.json
+```
+That's it. Data will be loaded in the next container execution.
+
 ### Services
 The services will be available at:
 - Backend: http://localhost:8000
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3001
 - Database: http://localhost:5432
 
 ### Linting and Formatting VS Code
 Intall the following extensions:
 - ESLint
 - Prettier
+- Black Formatter -> ms-python.black-formatter
+- Flake8 -> ms-python.flake8 (you will need to install flake8 locally)
 
-### Code Quality Tools inside fe/
+### Frontend Code Quality Tools inside fe/
 #### ESLint
 - Lints JavaScript, HTML and CSS files
 - Run: `npm run lint`
@@ -42,31 +64,13 @@ Intall the following extensions:
 - Check all: `npm run check`
 - Fix all: `npm run fix`
 
-## Project Structure
+### Backend Code Quality Tools inside be/
+#### Black (Formatter)
+- Format all files: `black .`
+- Check format: `black . --check`
 
-- be/
-  - apps/ Contains all the applications
-    - core/ Contains all the core modules
-  - config/ Contains all the configuration files
-
-- fe/
-  - assets/ Contains all the assets
-    - fonts/ Contains all the fonts
-    - images/ Contains all the images
-  - css/ Contains all the CSS files
-    - styles.css Contains the main styles file
-    - pages/ Contains all the pages
-    - components/ Contains all the components
-  - js/ Contains all the JavaScript files
-    - main.js Contains the main JavaScript file
-    - components/ Contains all the components
-    - pages/ Contains all the pages
-    - services/ Contains all the services (API calls)
-    - utils/ Contains all the utility functions
-  - index.html/ Contains the main HTML file
-  - jsconfig.json/ Contains the JavaScript configuration file
-  - eslint.config.js/ Contains the ESLint configuration file
-  - .prettierrc Contains the Prettier configuration file
+#### Flake8 (Linter)
+- Check all files: `flake8`
 
 ## Commits and branch names
 

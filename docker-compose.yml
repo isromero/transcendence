@@ -7,7 +7,7 @@ services:
     volumes:
       - ./be:/app
     env_file:
-      - ./be/.env
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
     depends_on:
       - db
@@ -20,8 +20,10 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./be/.env
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
     networks:
       - transcendence_network
 
@@ -29,11 +31,9 @@ services:
     container_name: fe
     build: ./fe
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
       - ./fe:/app
-    env_file:
-      - ./fe/.env
     networks:
       - transcendence_network
 

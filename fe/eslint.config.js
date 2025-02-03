@@ -1,24 +1,28 @@
 import prettier from 'eslint-plugin-prettier';
 import promise from 'eslint-plugin-promise';
 import html from 'eslint-plugin-html';
-import css from 'eslint-plugin-css';
-
+import globals from 'globals';
+import cssPlugin from 'eslint-plugin-css';
 export default [
+  cssPlugin.configs['flat/recommended'],
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html', '**/*.css'],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.html'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.es2022,
+      },
     },
     plugins: {
       prettier,
       promise,
       html,
-      css,
     },
     rules: {
       // Basic error prevention
-      'no-console': 'warn', // Warns when console.* is used
+      'no-console': ['warn', { allow: ['error'] }], // Warns when console.* is used except for console.error
       'no-debugger': 'warn', // Warns when debugger statements are used
       'no-duplicate-case': 'error', // Prevents duplicate case labels in switch statements
       'no-irregular-whitespace': 'error', // Prevents irregular whitespace outside of strings

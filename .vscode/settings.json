@@ -1,9 +1,18 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.prettier": "explicit"
   },
-  "prettier.requireConfig": true
+  "prettier.requireConfig": true,
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+  },
+  "black-formatter.path": ["docker", "compose", "exec", "-T", "be", "black"],
+  "flake8.args": ["--config=.flake8"]
 }
