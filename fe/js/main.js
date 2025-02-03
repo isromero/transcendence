@@ -84,16 +84,16 @@ function updateIcons(page) {
 
   // Set default attributes
   leftButton.className = 'bi bi-person-circle';
-  leftButton.parentElement.setAttribute('href', '/modal-profile');
+  leftButton.parentElement.setAttribute('href', '/menu-profile');
   rightButton.className = 'bi bi-list';
-  rightButton.parentElement.setAttribute('href', '/modal-settings');
+  rightButton.parentElement.setAttribute('href', '/menu-settings');
 
   // Special cases for authentication pages
   if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
     leftButton.className = 'bi bi-question-circle';
     leftButton.parentElement.setAttribute('href', '/modal-help');
     rightButton.className = 'bi bi-globe';
-    rightButton.parentElement.setAttribute('href', '/modal-language');
+    rightButton.parentElement.setAttribute('href', '/modal-languages');
   }
 
   // Special cases for game pages
