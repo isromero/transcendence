@@ -38,6 +38,22 @@ function closeModal() {
   modalBackground.hidden = true; // Oculta el fondo oscuro del modal
 }
 
+// Cerrar el modal al hacer clic fuera del contenido
+modalBackground.addEventListener('click', (event) => {
+  if (event.target === modalBackground) {
+    closeModal();
+  }
+});
+
+// Cerrar el modal al seleccionar un idioma
+document.addEventListener('click', (event) => {
+  const languageButton = event.target.closest('.spa-link');
+  if (languageButton) {
+    closeModal(); // Cierra el modal antes de cambiar la página
+  }
+});
+
+
 
 async function loadMenu(page) {
   try {
