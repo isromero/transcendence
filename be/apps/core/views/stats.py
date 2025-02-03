@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 @method_decorator(csrf_exempt, name="dispatch")
 class StatsView(View):
     def get(self, _, user_id):
-        user = get_object_or_404(Stats, id=user_id)
+        user = get_object_or_404(Stats, user_id=user_id)
         return JsonResponse(serialize_stats(user), status=200)
 
     def post(self, request):
@@ -20,13 +20,13 @@ class StatsView(View):
             form = StatsForm(data)
             if form.is_valid():
                 user = form.save()
-                return JsonResponse(serializer_stats(user), status=201)
+                return JsonResponse(serialize_stats(user), status=201)
             return JsonResponse({"errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     def put(self, request, user_id):
-        user = get_object_or_404(Stats, id=user_id)
+        user = get_object_or_404(Stats, user_id=user_id)
         try:
             data = json.loads(request.body)
             form = StatsForm(data, instance=user)
@@ -38,6 +38,6 @@ class StatsView(View):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     def delete(self, _, user_id):
-        user = get_object_or_404(Stats, id=user_id)
+        user = get_object_or_404(Stats, user_id=user_id)
         user.delete()
         return HttpResponse(status=204)

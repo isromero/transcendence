@@ -21,7 +21,7 @@ def serialize_friend(friend_relation):
 def serialize_stats(user):
     return {
         "id": user.id,
-        "user_id": user.user_id,
+        "user_id": user.user_id.username,
         "victories": user.victories,
         "defeats": user.defeats,
         "total_matches": user.total_matches,
@@ -36,7 +36,7 @@ def serialize_tournament(tournaments):
         "tournament_name": tournaments.tournament_name,
         "start_date": tournaments.start_date,
         "end_date": tournaments.end_date,
-        "players": tournaments.players,
+        "players": [serialize_user(player) for player in tournaments.players.all()],
     }
 
 
