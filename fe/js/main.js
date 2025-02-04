@@ -1,37 +1,76 @@
 const appContainer = document.getElementById('app-container');
 const menuContainer = document.getElementById('menu-container');
-const modalBackground = document.getElementById('modalus-background');
-const modalContainer = document.querySelector('#modal-container');
+const modalBackground = document.getElementById('modal-background');
+const modalContainer = document.getElementById('modal-container');
+
+const pageMappings = {
+  // Auth pages
+  '/auth': '/pages/menus/auth.html',
+  '/login': '/pages/menus/login.html',
+  '/register': '/pages/menus/register.html',
+
+  // Main pages
+  '/': '/pages/menus/auth.html',
+  '/home': '/pages/menus/home.html',
+  '/create-match': '/pages/menus/create-match.html',
+  '/join-match': '/pages/menus/join-match.html',
+  '/match-settings': '/pages/menus/match-settings.html',
+  '/profile': '/pages/menus/profile.html',
+  '/edit-profile': '/pages/menus/edit-profile.html',
+  '/social': '/pages/menus/social.html',
+  '/friends': '/pages/menus/friends.html',
+  '/settings': '/pages/menus/settings.html',
+
+  // Game pages
+  '/game': '/pages/game/game.html',
+
+  // Modals
+  '/modal-help': '/components/help.html',
+  '/modal-languages': '/components/languages.html',
+  '/modal-spectate_menu': '/components/spectate_menu.html',
+  '/modal-edit_username': '/components/edit-username.html',
+  '/modal-edit_mail': '/components/edit-mail.html',
+  '/modal-edit_password': '/components/edit-password.html',
+  '/modal-verify_email': '/components/verify-email.html',
+  '/modal-end_game': '/components/end-game.html',
+  '/modal-end_tournament': '/components/end-game-tournament.html',
+};
+
+function getCleanPageKey(requestedPath) {
+  if (pageMappings[requestedPath]) {
+    return requestedPath;
+  }
+
+  const filePathKey = Object.keys(pageMappings).find(
+    key => pageMappings[key] === requestedPath
+  );
+
+  return filePathKey || requestedPath;
+}
 
 async function loadPage(page) {
-  if (!page) {
-    return;
-  }
+  try {
+    closeModal();
 
-  // Cierra cualquier modal abierto ANTES de cambiar la página
-  closeModal();
+    const cleanPage = getCleanPageKey(page);
 
-  let url;
+    const url = pageMappings[cleanPage];
+    if (!url) {
+      throw new Error(`Page ${cleanPage} not found`);
+    }
 
-  if (page === '/' || page === '/index.html') {
-    page = '/menu-auth';
-  }
+    if (url.includes('/components/')) {
+      await loadModal(url);
+    } else if (url.includes('/game/')) {
+      await loadGame(url);
+    } else {
+      await loadMenu(url);
+    }
 
-  if (page.includes('menu-')) {
-    page = page.replace('/menu-', '');
-    url = `/pages/menus/${page}.html`;
-    await loadMenu(url);
-  } else if (page.includes('game-')) {
-    page = page.replace('/game-', '');
-    url = `/pages/game/${page}.html`;
-    await loadGame(url); // TODO(ismael) : Remove this for the game??
-  } else if (page.includes('modal-')) {
-    page = page.replace('/modal-', '');
-    url = `/components/${page}.html`;
-    await loadModal(url);
-  } else {
-    const message = `not found page: ${page}`;
-    await loadError(404, message);
+    window.history.pushState({ page: cleanPage }, '', cleanPage);
+  } catch (error) {
+    console.error('Navigation error:', error);
+    loadErrorPage(page, error.message);
   }
 }
 
@@ -57,7 +96,8 @@ document.addEventListener('click', event => {
 
 async function loadMenu(page) {
   try {
-    const url = page;
+    // Use the cleaner URL to get the actual file path
+    const url = page; // Fallback to the original page if not found
     const response = await fetch(url);
     const template = await fetch('/pages/templates/menu.html');
 
@@ -66,8 +106,9 @@ async function loadMenu(page) {
     }
     const template_content = await template.text();
     appContainer.innerHTML = template_content;
+
     if (!response.ok) {
-      throw new Error('Error loading template or page content');
+      throw new Error('Error loading page content');
     }
 
     const response_content = await response.text();
@@ -78,9 +119,65 @@ async function loadMenu(page) {
       );
     }
     pageContainer.innerHTML = response_content;
+
     updateIcons(page);
   } catch (error) {
-    await loadError('?', error.message);
+    loadErrorPage(page, error.message);
+  }
+}
+
+async function loadGame(page) {
+  try {
+    const url = page;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Error loading template or page content');
+    }
+    const response_content = await response.text();
+    appContainer.innerHTML = response_content;
+    setTimeout(() => {
+      // TODO(ismael) : Remove this for the game??
+      //startGame();
+    }, 0);
+  } catch (error) {
+    loadErrorPage(page, error.message);
+  }
+}
+
+async function loadModal(page) {
+  try {
+    const url = page;
+    const response = await fetch(url);
+
+    modalBackground.hidden = false;
+
+    if (!response.ok) {
+      throw new Error('Error loading template or page content');
+    }
+
+    const response_content = await response.text();
+    modalContainer.innerHTML = response_content;
+  } catch (error) {
+    loadErrorPage(page, error.message);
+  }
+}
+
+function loadErrorPage(requestedPage, message) {
+  try {
+    const errorContent = `
+      <div class="text-center p-5">
+        <h2>Error loading page: ${requestedPage}</h2>
+        <p>${message}</p>
+        <a href="/" class="spa-link btn btn-primary">Return to Home</a>
+      </div>`;
+
+    appContainer.innerHTML = errorContent;
+    window.history.replaceState({ page: '/' }, '', '/');
+  } catch (error) {
+    console.error('Critical error handling failed:', error);
+    appContainer.innerHTML =
+      '<h1 class="text-center p-5">Critical error occurred</h1>';
   }
 }
 
@@ -104,9 +201,9 @@ function updateIcons(page) {
 
   // Set default attributes
   leftButton.className = 'bi bi-person-circle';
-  leftButton.parentElement.setAttribute('href', '/menu-profile');
+  leftButton.parentElement.setAttribute('href', '/profile');
   rightButton.className = 'bi bi-list';
-  rightButton.parentElement.setAttribute('href', '/menu-settings');
+  rightButton.parentElement.setAttribute('href', '/settings');
 
   // Special cases for authentication pages
   if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
@@ -119,70 +216,9 @@ function updateIcons(page) {
   // Special cases for game pages
   if (isGamePage) {
     leftButton.className = 'bi bi-arrow-left';
-    leftButton.parentElement.setAttribute('href', '/menu-auth');
+    leftButton.parentElement.setAttribute('href', '/auth');
     rightButton.className = 'bi bi-pause';
     rightButton.parentElement.setAttribute('href', '/modal-pause');
-  }
-}
-
-async function loadGame(page) {
-  try {
-    const url = page;
-    const response = await fetch(url);
-
-    console.log(page);
-
-    if (!response.ok) {
-      throw new Error('Error loading template or page content');
-    }
-    const response_content = await response.text();
-    appContainer.innerHTML = response_content;
-    setTimeout(() => {
-      // TODO(ismael) : Remove this for the game??
-      //startGame();
-    }, 0);
-  } catch (error) {
-    await loadError('?', error.message);
-  }
-}
-
-async function loadModal(page) {
-  try {
-    const url = page;
-    console.log(url);
-    const response = await fetch(url);
-
-    modalBackground.hidden = false;
-
-    if (!response.ok) {
-      throw new Error('Error loading template or page content');
-    }
-
-    const response_content = await response.text();
-    modalContainer.innerHTML = response_content;
-  } catch (error) {
-    await loadError('willyyyyyy', error.message);
-  }
-}
-
-async function loadError(page, message) {
-  try {
-    const url = page;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      /* TODO(samusanc): here goes an error checker for debug and other stuff, throw
-       * exception is a mistake!!!*/
-      throw new Error('Error page not found');
-    }
-
-    const content = await response.text();
-    pageContainer.innerHTML = content;
-
-    //window.history.pushState({ page }, '', page);
-    //updateIcons(page);
-  } catch (error) {
-    console.error('Error loading error page:', error);
   }
 }
 
@@ -192,14 +228,13 @@ document.body.addEventListener('click', event => {
   if (link) {
     event.preventDefault();
     const page = link.getAttribute('href');
-    console.log(page);
     loadPage(page);
   }
 });
 
 window.addEventListener('popstate', event => {
-  console.log('test');
-  const page = event.state?.page || '/';
+  const rawPage = event.state?.page || window.location.pathname;
+  const page = getCleanPageKey(rawPage);
   loadPage(page);
 });
 
