@@ -11,3 +11,8 @@ scrape_configs:
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres_exporter:9187']
+
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['be:8000']
+
