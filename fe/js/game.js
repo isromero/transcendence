@@ -1,3 +1,4 @@
+// TODO(ismael) : Remove this for the game??
 // Get the canvas and context
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');

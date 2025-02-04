@@ -4,56 +4,56 @@ const modalBackground = document.getElementById('modalus-background');
 const modalContainer = document.querySelector('#modal-container');
 
 async function loadPage(page) {
-  if (!page) return;
+  if (!page) {
+    return;
+  }
 
   // Cierra cualquier modal abierto ANTES de cambiar la página
   closeModal();
 
   let url;
 
-  if (page === '/' || page == '/index.html') {
+  if (page === '/' || page === '/index.html') {
     page = '/menu-auth';
   }
 
   if (page.includes('menu-')) {
     page = page.replace('/menu-', '');
     url = `/pages/menus/${page}.html`;
-    loadMenu(url);
+    await loadMenu(url);
   } else if (page.includes('game-')) {
     page = page.replace('/game-', '');
     url = `/pages/game/${page}.html`;
-    loadGame(url);
+    await loadGame(url); // TODO(ismael) : Remove this for the game??
   } else if (page.includes('modal-')) {
     page = page.replace('/modal-', '');
     url = `/components/${page}.html`;
-    loadModal(url);
+    await loadModal(url);
   } else {
     const message = `not found page: ${page}`;
-    loadError(404, message);
+    await loadError(404, message);
   }
 }
 
 function closeModal() {
-  modalContainer.innerHTML = ""; // Borra el contenido del modal
+  modalContainer.innerHTML = ''; // Borra el contenido del modal
   modalBackground.hidden = true; // Oculta el fondo oscuro del modal
 }
 
 // Cerrar el modal al hacer clic fuera del contenido
-modalBackground.addEventListener('click', (event) => {
+modalBackground.addEventListener('click', event => {
   if (event.target === modalBackground) {
     closeModal();
   }
 });
 
 // Cerrar el modal al seleccionar un idioma
-document.addEventListener('click', (event) => {
+document.addEventListener('click', event => {
   const languageButton = event.target.closest('.spa-link');
   if (languageButton) {
     closeModal(); // Cierra el modal antes de cambiar la página
   }
 });
-
-
 
 async function loadMenu(page) {
   try {
@@ -80,13 +80,17 @@ async function loadMenu(page) {
     pageContainer.innerHTML = response_content;
     updateIcons(page);
   } catch (error) {
-    loadError('?', error.message);
+    await loadError('?', error.message);
   }
 }
 
 function updateIcons(page) {
-  const leftButton = document.querySelector('.btn.position-absolute.bottom-0.start-0 i');
-  const rightButton = document.querySelector('.btn.position-absolute.bottom-0.end-0 i');
+  const leftButton = document.querySelector(
+    '.btn.position-absolute.bottom-0.start-0 i'
+  );
+  const rightButton = document.querySelector(
+    '.btn.position-absolute.bottom-0.end-0 i'
+  );
 
   if (!leftButton || !rightButton) {
     console.warn('Navigation buttons not found in the DOM');
@@ -134,10 +138,11 @@ async function loadGame(page) {
     const response_content = await response.text();
     appContainer.innerHTML = response_content;
     setTimeout(() => {
-      startGame();
+      // TODO(ismael) : Remove this for the game??
+      //startGame();
     }, 0);
   } catch (error) {
-    loadError('?', error.message);
+    await loadError('?', error.message);
   }
 }
 
@@ -156,7 +161,7 @@ async function loadModal(page) {
     const response_content = await response.text();
     modalContainer.innerHTML = response_content;
   } catch (error) {
-    loadError('willyyyyyy', error.message);
+    await loadError('willyyyyyy', error.message);
   }
 }
 
@@ -177,7 +182,7 @@ async function loadError(page, message) {
     //window.history.pushState({ page }, '', page);
     //updateIcons(page);
   } catch (error) {
-    
+    console.error('Error loading error page:', error);
   }
 }
 
@@ -200,7 +205,8 @@ window.addEventListener('popstate', event => {
 
 loadPage(window.location.pathname);
 
-function startGame() {
+// TODO(ismael) : Remove this for the game??
+/* function startGame() {
   const canvas = document.getElementById('pong');
   if (!canvas) {
     console.error('Canvas element not found!');
@@ -232,7 +238,7 @@ function startGame() {
 
   // Right paddle
   const rightPaddle = {
-    x: (canvas.width - paddleWidth) - 30,
+    x: canvas.width - paddleWidth - 30,
     y: canvas.height / 2 - paddleHeight / 2,
     width: paddleWidth,
     height: paddleHeight,
@@ -360,42 +366,4 @@ function startGame() {
 
   gameLoop();
 }
-=======
-const appContainer = document.getElementById('app-container');
-
-async function loadPage(page) {
-  try {
-    const url = page === '/' ? '/index.html' : `/pages${page}.html`;
-    const response = await fetch(url);
-
-    // TODO (samu): Error pages
-    if (!response.ok) {
-      throw new Error('Página no encontrada');
-    }
-
-    const content = await response.text();
-    appContainer.innerHTML = content;
-
-    window.history.pushState({ page }, '', page);
-  } catch (e) {
-    // TODO (samu): Error pages
-    appContainer.innerHTML =
-      '<div class="text-center"><h1>Error 404</h1><p>Página no encontrada.</p></div>';
-  }
-}
-
-document.body.addEventListener('click', event => {
-  const link = event.target.closest('a.spa-link');
-  if (link) {
-    event.preventDefault();
-    const page = link.getAttribute('href');
-    loadPage(page);
-  }
-});
-
-window.addEventListener('popstate', event => {
-  const page = event.state?.page || '/';
-  loadPage(page);
-});
-
-loadPage(window.location.pathname);
+ */
