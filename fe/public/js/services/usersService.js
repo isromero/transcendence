@@ -1,8 +1,9 @@
-import { config } from '../config.js';
+import { API_URL } from '../utils/constants.js';
 
+// TODO(ismael): Refactor this
 export async function getUsers() {
   try {
-    const response = await fetch(`${config.apiUrl}/users/`);
+    const response = await fetch(`${API_URL}/users`);
     if (!response.ok) {
       throw new Error('Failed to fetch users');
     }
@@ -14,7 +15,7 @@ export async function getUsers() {
 
 export async function getUser(id) {
   try {
-    const response = await fetch(`${config.apiUrl}/users/${id}/`);
+    const response = await fetch(`${API_URL}/users/${id}`);
     if (!response.ok) {
       throw new Error('Failed to fetch user');
     }
@@ -26,7 +27,7 @@ export async function getUser(id) {
 
 export async function createUser(user) {
   try {
-    const response = await fetch(`${config.apiUrl}/users/`, {
+    const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
       body: JSON.stringify(user),
     });
@@ -41,7 +42,7 @@ export async function createUser(user) {
 
 export async function updateUser(id, user) {
   try {
-    const response = await fetch(`${config.apiUrl}/users/${id}/`, {
+    const response = await fetch(`${API_URL}/users/${id}`, {
       method: 'PUT',
       body: JSON.stringify(user),
     });
@@ -56,7 +57,7 @@ export async function updateUser(id, user) {
 
 export async function deleteUser(id) {
   try {
-    const response = await fetch(`${config.apiUrl}/users/${id}/`, {
+    const response = await fetch(`${API_URL}/users/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) {
