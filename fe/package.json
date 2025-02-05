@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "live-server --host=0.0.0.0 --port=3001 --no-browser",
+    "start": "live-server ./public --host=0.0.0.0 --port=3001 --no-browser --entry-file=index.html",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -28,6 +28,7 @@
     "prettier": "^3.4.2"
   },
   "dependencies": {
-    "lint": "^0.8.19"
+    "lint": "^0.8.19",
+    "live-server": "^1.2.2"
   }
 }
