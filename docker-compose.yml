@@ -32,8 +32,10 @@ services:
     build: ./fe
     ports:
       - 3001:3001
+      - 3002:3002
     volumes:
       - ./fe:/app
+      - /app/node_modules
     networks:
       - transcendence_network
 
