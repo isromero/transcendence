@@ -31,6 +31,10 @@ async function loadPage(page) {
     const message = `not found page: ${page}`;
     loadError(404, message);
   }
+
+  updateText(); // 🔹 Ahora updateText está definida y se ejecutará correctamente.
+
+
 }
 
 function closeModal() {
