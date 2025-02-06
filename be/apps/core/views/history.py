@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
-from apps.core.models import History
+from apps.core.models import History, User
 from apps.core.utils import serialize_history
 from apps.core.forms.history import HistoryForm
 import json
@@ -12,7 +12,12 @@ from django.utils.decorators import method_decorator
 class HistoryView(View):
     def get(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
-        return JsonResponse(serialize_history(user), status=200)
+        user_history = History.objects.filter(user_id=user)
+        return JsonResponse(
+            {"data": [serialize_history(relation) for relation in user_history]},
+            status=200,
+        )
+        #return JsonResponse(serialize_history(user), status=200)
 
     def post(self, request):
         try:
@@ -38,6 +43,12 @@ class HistoryView(View):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     def delete(self, _, user_id):
-        user = get_object_or_404(History, id=user_id)
-        user.delete()
-        return HttpResponse(status=204)
+        deleted_count, _ = History.objects.filter(user_id=user_id).delete()
+    
+        if deleted_count == 0:
+            return JsonResponse({"error": "No history found for this user."}, status=404)
+
+        return JsonResponse({"message": f"{deleted_count} history records deleted successfully."}, status=204)
+        # user = get_object_or_404(History, user_id=user_id)
+        # user.delete()
+        # return HttpResponse(status=204)

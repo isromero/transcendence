@@ -40,16 +40,16 @@ def serialize_tournament(tournaments):
     }
 
 
-def serialize_history(user):
+def serialize_history(user_history):
     return {
-        "id": user.id,
-        "user_id": user.user_id,
-        "result_user": user.result_user,
-        "opponent": user.opponent,
-        "result_opponent": user.result_opponent,
-        "type_match": user.type_match,
-        "tournament_id": user.tournament_id,
-        "position_match": user.position_match,
-        "date": user.date,
-        "position_tournament": user.position_tournament,
+        "id": user_history.id,
+        "user_id": user_history.user_id.id,
+        "result_user": user_history.result_user,
+        "opponent": user_history.opponent.id,
+        "result_opponent": user_history.result_opponent,
+        "type_match": user_history.type_match,
+         "tournament_id": user_history.tournament_id.id if user_history.tournament_id else None,
+        "position_match": user_history.position_match,
+        "date": user_history.date,
+        "position_tournament": user_history.position_tournament,
     }
