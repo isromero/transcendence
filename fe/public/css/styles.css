@@ -280,3 +280,45 @@ canvas {
 .mt-8 {
   margin-top: 8rem;
 }
+
+
+/* Cambiar el hover de todos los botones */
+.btn:hover {
+  color: rgb(202, 192, 192) !important; /* Cambia el color del texto si es necesario */
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Personalizar botones específicos */
+.button-text-styles:hover {
+  background-color: var(--bs-background)!important; /* Azul */
+  color: white !important;
+}
+
+.cancel-button:hover {
+  background-color: #dc3545 !important; /* Rojo */
+  color: white !important;
+}
+
+.btn-custom-hover:hover {
+  background-color: var(--bs-success) !important; /* Color de Bootstrap success */
+  border-color: var(--bs-success) !important; /* Borde del mismo color */
+  color: white !important; /* Texto en blanco */
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+/* Estilo personalizado para el botón de cancelar */
+.login-button {
+  background-color: var(--bs-background); /* Rojo Bootstrap (danger) */
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover */
+.login-button:hover {
+  background-color: #dc3545; /* Rojo más oscuro */
+  border-color: #dc3545;
+  color: white;
+}
+
+
