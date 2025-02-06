@@ -1,18 +1,15 @@
 import { loadPage } from './router/router.js';
 import { getCleanPageKey } from './utils/helpers.js';
 
-// Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
   loadPage(window.location.pathname);
 });
 
-// Handle popstate events
 window.addEventListener('popstate', event => {
   const rawPage = event.state?.page || window.location.pathname;
   loadPage(getCleanPageKey(rawPage));
 });
 
-// Handle spa links and modal events
 document.body.addEventListener('click', event => {
   const modalLink = event.target.closest('[data-modal]');
   const spaLink = event.target.closest('.spa-link');
