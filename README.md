@@ -38,6 +38,15 @@ docker compose run --rm be python manage.py makemigrations
 docker compose run --rm be python manage.py migrate
 ```
 
+#### How to save data
+
+After add some data to database, in order to keep it after compose down, follow this simple steps:
+Enter on backend container and save data into initial_data.json using:
+```code
+docker exec -it be bash
+python manage.py dumpdata --indent 2 > initial_data.json
+```
+That's it. Data will be loaded in the next container execution.
 
 ### Services
 The services will be available at:
@@ -74,32 +83,6 @@ Intall the following extensions:
 
 #### Flake8 (Linter)
 - Check all files: `flake8`
-
-## Project Structure
-
-- be/
-  - apps/ Contains all the applications
-    - core/ Contains all the core modules
-  - config/ Contains all the configuration files
-
-- fe/
-  - assets/ Contains all the assets
-    - fonts/ Contains all the fonts
-    - images/ Contains all the images
-  - css/ Contains all the CSS files
-    - styles.css Contains the main styles file
-    - pages/ Contains all the pages
-    - components/ Contains all the components
-  - js/ Contains all the JavaScript files
-    - main.js Contains the main JavaScript file
-    - components/ Contains all the components
-    - pages/ Contains all the pages
-    - services/ Contains all the services (API calls)
-    - utils/ Contains all the utility functions
-  - index.html/ Contains the main HTML file
-  - jsconfig.json/ Contains the JavaScript configuration file
-  - eslint.config.js/ Contains the ESLint configuration file
-  - .prettierrc Contains the Prettier configuration file
 
 ## Commits and branch names
 
@@ -138,13 +121,3 @@ feat/file-upload
 fix/authentication-safari-login-issue
 perf/bump-dependencies
 ```
-
-#### How to save data
-
-After add some data to database, in order to keep it after compose down, follow this simple steps:
-Enter on backend container and save data into initial_data.json using:
-```code
-docker exec -it be bash
-python manage.py dumpdata --indent 2 > initial_data.json
-```
-That's it. Data will be loaded in the next container execution.

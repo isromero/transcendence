@@ -21,18 +21,18 @@ class User(AbstractUser):
 
 
 class Friends(models.Model):
-    STATUS_CHOICES = [
-        (0, "declined"),
-        (1, "accepted"),
-        (2, "sent"),
-    ]
+    class Status(models.TextChoices):
+        DECLINED = "declined"
+        ACCEPTED = "accepted"
+        SENT = "sent"
+
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends_as_user")
     friend_id = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_friends"
+        User, on_delete=models.CASCADE, related_name="friends_as_friend"
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=STATUS_CHOICES)
+    status = models.CharField(choices=Status.choices, default=Status.SENT)
 
 
 class Stats(models.Model):
@@ -64,7 +64,7 @@ class History(models.Model):
     )
     result_opponent = models.IntegerField()
     type_match = models.CharField(max_length=50)  # match o tournament_example
-    tournament_id = models.ForeignKey(Tournaments, on_delete=models.CASCADE)
+    tournament_id = models.ForeignKey(Tournaments, on_delete=models.CASCADE, null=True, blank=True)
     position_match = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
     position_tournament = models.IntegerField()

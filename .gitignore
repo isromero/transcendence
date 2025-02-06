@@ -2,8 +2,9 @@
 be/.env
 be/venv/
 be/config/__pycache__/
+be/venv/
 
 # Frontend
 fe/.env
-node_modules/
-package-lock.json
+fe/node_modules/
+fe/package-lock.json
