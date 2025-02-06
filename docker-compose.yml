@@ -83,6 +83,15 @@ services:
     networks:
       - transcendence_network
 
+  blackbox_exporter:
+    container_name: blackbox
+    image: prom/blackbox-exporter
+    ports:
+      - 9115:9115
+    restart: always
+    networks:
+      - transcendence_network
+
 
 volumes:
   db_data:
