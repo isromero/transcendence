@@ -2,8 +2,12 @@ from django.http import JsonResponse
 from django.views import View
 import json
 from apps.core.forms.register import RegisterForm
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from apps.core.utils import serialize_user
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RegisterView(View):
     def post(self, request):
         try:
@@ -15,7 +19,8 @@ class RegisterView(View):
                 user.set_password(form.cleaned_data["password"])
                 user.save()
                 return JsonResponse(
-                    {"message": "User registered successfully"}, status=201
+                    serialize_user(user),
+                    status=201,
                 )
 
             return JsonResponse({"errors": form.errors}, status=400)

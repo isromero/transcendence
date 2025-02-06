@@ -4,6 +4,8 @@ from apps.core.views.friends import FriendsView
 from apps.core.views.stats import StatsView
 from apps.core.views.history import HistoryView
 from apps.core.views.tournaments import TournamentsView
+from apps.core.views.login import LoginView
+from apps.core.views.register import RegisterView
 
 urlpatterns = [
     path("users", UserView.as_view()),
@@ -19,4 +21,6 @@ urlpatterns = [
         TournamentsView.as_view(),
     ),
     path("history", HistoryView.as_view()),
+    path("login", LoginView.as_view()),
+    path("register", RegisterView.as_view()),
 ]
