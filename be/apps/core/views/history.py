@@ -17,7 +17,6 @@ class HistoryView(View):
             {"data": [serialize_history(relation) for relation in user_history]},
             status=200,
         )
-        #return JsonResponse(serialize_history(user), status=200)
 
     def post(self, request):
         try:
@@ -30,14 +29,14 @@ class HistoryView(View):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-    def put(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
+    def put(self, request, history_id):
+        history_id = get_object_or_404(History, id=history_id)
         try:
             data = json.loads(request.body)
-            form = HistoryForm(data, instance=user)
+            form = HistoryForm(data, instance=history_id)
             if form.is_valid():
-                user = form.save()
-                return JsonResponse(serialize_history(user), status=200)
+                history_id = form.save()
+                return JsonResponse(serialize_history(history_id), status=200)
             return JsonResponse({"errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
@@ -49,6 +48,4 @@ class HistoryView(View):
             return JsonResponse({"error": "No history found for this user."}, status=404)
 
         return JsonResponse({"message": f"{deleted_count} history records deleted successfully."}, status=204)
-        # user = get_object_or_404(History, user_id=user_id)
-        # user.delete()
-        # return HttpResponse(status=204)
+

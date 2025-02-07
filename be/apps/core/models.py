@@ -51,6 +51,7 @@ class Tournaments(models.Model):
     start_date = models.DateTimeField(auto_now=True)
     end_date = models.DateTimeField(auto_now=True)
     players = models.ManyToManyField(User, related_name="tournaments_name")
+    
 
 
 class History(models.Model):
@@ -67,4 +68,4 @@ class History(models.Model):
     tournament_id = models.ForeignKey(Tournaments, on_delete=models.CASCADE, null=True, blank=True)
     position_match = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
-    position_tournament = models.IntegerField()
+    position_tournament = models.IntegerField(null=True, blank=True)

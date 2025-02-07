@@ -48,7 +48,7 @@ def serialize_history(user_history):
         "opponent": user_history.opponent.id,
         "result_opponent": user_history.result_opponent,
         "type_match": user_history.type_match,
-         "tournament_id": user_history.tournament_id.id if user_history.tournament_id else None,
+        "tournament_id": user_history.tournament_id.id if user_history.tournament_id else None,
         "position_match": user_history.position_match,
         "date": user_history.date,
         "position_tournament": user_history.position_tournament,
