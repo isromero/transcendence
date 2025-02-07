@@ -6,13 +6,13 @@
 #    By: samusanc <samusanc@student.42madrid>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/24 19:28:25 by samusanc          #+#    #+#              #
-#    Updated: 2025/02/06 20:18:02 by samusanc         ###   ########.fr        #
+#    Updated: 2025/02/06 20:24:08 by samusanc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 all: build up
 
-build: env						# build the docker image
+build:
 	docker-compose -f ./docker-compose.yml build	
 	docker image prune -f		# delete intermediate images
 
@@ -31,9 +31,6 @@ delvol:
 	if [ -n "$$(docker volume ls -qf dangling=true)" ]; then \
 		docker volume rm $$(docker volume ls -qf dangling=true); \
 	fi
-
-env:
-	bash ./srcs/requirements/tools/env.sh
 
 re: fclean all
 
