@@ -23,3 +23,10 @@ modalBackground.addEventListener('click', event => {
     closeModal();
   }
 });
+
+
+document.addEventListener('click', event => {
+  if (event.target.closest('[data-close-modal]')) {
+    closeModal();
+  }
+});
