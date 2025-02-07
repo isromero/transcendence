@@ -1,55 +1,57 @@
-ID,English,Spanish,Ukrainian
-1,Type password,Escribe la contraseña,Введіть пароль
-2,Account deletion info,Información sobre la eliminación de la cuenta,Інформація про видалення акаунта
-3,Learn about GDPR,Aprender sobre GDPR,Дізнайтеся про GDPR
-4,Cancel,Cancelar,Скасувати
-5,Accept,Aceptar,Прийняти
-6,Username:,Usuario:,Ім'я користувача:
-7,this is disabled,esto está deshabilitado,це відключено
-8,Data deletion info,Información sobre la eliminación de datos,Інформація про видалення даних
-9,New password,Nueva contraseña,Новий пароль
-10,Repeat password,Repite la contraseña,Повторіть пароль
-11,New username,Nuevo usuario,Нове ім'я користувача
-12,I forgot my password,Olvidé mi contraseña,Я забув свій пароль
-13,MATCH ENDED,PARTIDA TERMINADA,МАТЧ ЗАВЕРШЕНО
-14,WINNER,GANADOR,ПЕРЕМОЖЕЦЬ
-16,Spectate,Espectar,Спостерігати
-17,Return to Menu,Volver al Menú,Повернутися до меню
-18,Play Again,Jugar de nuevo,Грати знову
-19,Tournament,Torneo,Турнір
-20,Round nº 1,Ronda nº 1,Раунд № 1
-21,Match:,Partido:,Матч:
-23,Prev,Anterior,Попередній
-24,Next,Siguiente,Наступний
-25,Exit,Salir,Вийти
-26,Waiting Players,Esperando jugadores,Очікування гравців
-27,Code:,Código:,Код:
-28,New email,Nuevo correo,Нова електронна пошта
-29,Español名,Español,Іспанська
-30,English,Inglés,Англійська
-31,Login,Iniciar sesión,Увійти
-32,Enter the code sent to:,Ingrese el código enviado a:,Введіть код, надісланий на:
-34,Enter code:,Ingrese código:,Введіть код:
-35,Sign Up,Registrarse,Зареєструватися
-36,Transcendence,Trascendencia,Трансцендентність
-37,Local,Local,Локально
-38,Multiplayer,Multijugador,Мультиплеєр
-39,Username,Usuario,Ім'я користувача
-40,Email,Correo,Електронна пошта
-41,Password,Contraseña,Пароль
-42,Data Deletion,Eliminación de datos,Видалення даних
-43,Account Deletion,Eliminación de cuenta,Видалення акаунта
-44,Friends,Amigos,Друзі
-45,New Friend,Nuevo amigo,Новий друг
-46,Create match,Crear partida,Створити матч
-47,Join match,Unirse a partida,Приєднатися до матчу
-48,Nº of players,Nº de jugadores,Кількість гравців
-49,Points to win,Puntos para ganar,Очки для перемоги
-50,Register,Registrarse,Зареєструватися
-51,Email address,Dirección de correo,Електронна адреса
-52,Edit profile,Editar perfil,Редагувати профіль
-53,Language,Idioma,Мова
-54,My profile,Mi perfil,Мій профіль
-55,Wins:1,Victorias:1,Перемоги:1
-56,Loses:1,Derrotas:1,Поразки:1
-57,Total:1,Total:1,Загалом:1
+key,english,spanish,ukrainian
+edit-username,Username,Nombre de usuario,Ім'я користувача
+edit-mail,Email,Correo electrónico,Електронна пошта
+finish-login,Account Deletion,Eliminación de cuenta,Видалення акаунта
+Type-password,Type password,Escribe la contraseña,Введіть пароль
+account-deletion-info,Account deletion info,Información sobre la eliminación de la cuenta,Інформація про видалення акаунта
+learn-gdpr,Learn about GDPR,Aprender sobre GDPR,Дізнайтеся про GDPR
+cancel,Cancel,Cancelar,Скасувати
+accept,Accept,Aceptar,Прийняти
+username,Username:,Usuario:,Ім'я користувача:
+disabled,this is disabled,esto está deshabilitado,це відключено
+data-deletion-info,Data deletion info,Información sobre la eliminación de datos,Інформація про видалення даних
+new-password,New password,Nueva contraseña,Новий пароль
+repeat-password,Repeat password,Repite la contraseña,Повторіть пароль
+new-username,New username,Nuevo usuario,Нове ім'я користувача
+forgot-password,I forgot my password,Olvidé mi contraseña,Я забув свій пароль
+match-ended,MATCH ENDED,PARTIDA TERMINADA,МАТЧ ЗАВЕРШЕНО
+winner,WINNER,GANADOR,ПЕРЕМОЖЕЦЬ
+spectate,Spectate,Espectar,Спостерігати
+return-menu,Return to Menu,Volver al Menú,Повернутися до меню
+play-again,Play Again,Jugar de nuevo,Грати знову
+tournament,Tournament,Torneo,Турнір
+round-1,Round nº 1,Ronda nº 1,Раунд № 1
+match,Match:,Partido:,Матч:
+prev,Prev,Anterior,Попередній
+next,Next,Siguiente,Наступний
+exit,Exit,Salir,Вийти
+waiting-players,Waiting Players,Esperando jugadores,Очікування гравців
+code,Code:,Código:,Код:
+new-email,New email,Nuevo correo,Нова електронна пошта
+spanish,Español名,Español,Іспанська
+english,English,Inglés,Англійська
+login,Login,Iniciar sesión,Увійти
+enter-code,Enter the code sent to:,Ingrese el código enviado a:,Введіть код, надісланий на:
+enter-code-field,Enter code:,Ingrese código:,Введіть код:
+sign-up,Sign Up,Registrarse,Зареєструватися
+transcendence,Transcendence,Trascendencia,Трансцендентність
+local,Local,Local,Локально
+multiplayer,Multiplayer,Multijugador,Мультиплеєр
+password,Password,Contraseña,Пароль
+data-deletion,Data Deletion,Eliminación de datos,Видалення даних
+account-deletion,Account Deletion,Eliminación de cuenta,Видалення акаунта
+friends,Friends,Amigos,Друзі
+new-friend,New Friend,Nuevo amigo,Новий друг
+create-match,Create match,Crear partida,Створити матч
+join-match,Join match,Unirse a partida,Приєднатися до матчу
+num-players,Nº of players,Nº de jugadores,Кількість гравців
+points-win,Points to win,Puntos para ganar,Очки для перемоги
+register,Register,Registrarse,Зареєструватися
+email-address,Email address,Dirección de correo,Електронна адреса
+edit-profile,Edit profile,Editar perfil,Редагувати профіль
+language,Language,Idioma,Мова
+my-profile,My profile,Mi perfil,Мій профіль
+wins,Wins:1,Victorias:1,Перемоги:1
+loses,Loses:1,Derrotas:1,Поразки:1
+total,Total:1,Total:1,Загалом:1
+
