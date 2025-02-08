@@ -2,10 +2,11 @@ services:
   be:
     container_name: be
     build: ./be
+    user: django
     ports:
       - 8000:8000
     volumes:
-      - ./be:/app
+      - be_data:/app
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
@@ -97,6 +98,7 @@ volumes:
   db_data:
   grafana_data:
   prometheus_data:
+  be_data:
 
 networks:
   transcendence_network:

@@ -1,5 +1,6 @@
 FROM python:3.13.1-slim
-# RUN useradd -m imnotroot
+RUN addgroup --system django && \
+    adduser --system --ingroup django --uid 1000 --home /app django 
 WORKDIR /app
 RUN apt update && apt install -y \
 	postgresql-client \	
@@ -7,15 +8,13 @@ RUN apt update && apt install -y \
 
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
-# COPY --chown=iamnotroot:notroot. /app/
 COPY . /app/
-# USER iamnotroot
+RUN chown -R django:django /app
+USER django
 # Avoid buffering stdout and stderr (immediately print to console)
 ENV PYTHONUNBUFFERED 1
 # Avoid writing .pyc files (__pycache__) in local
 ENV PYTHONDONTWRITEBYTECODE=1
 EXPOSE 8000
-#RUN /app/script_bbdd hay que añadir al CMD este script
 RUN chmod +x /app/script_bbdd
 CMD ["sh" , "/app/script_bbdd"]
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
