@@ -1,3 +1,5 @@
+import { setLanguage } from './utlis/languages.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadMenu(page) {
@@ -19,6 +21,7 @@ export async function loadMenu(page) {
     const pageContent = await contentResponse.text();
     pageContainer.innerHTML = pageContent;
     updateIcons(page);
+    setLanguage('english');
   } catch (error) {
     console.error('Menu error:', error);
   }
@@ -50,22 +53,17 @@ function updateIcons(page) {
     leftHref = '/modal-help';
     rightIcon = 'bi bi-globe';
     rightHref = '/modal-languages';
-  }
-
-  else if (isGamePage) {
+  } else if (isGamePage) {
     leftIcon = 'bi bi-arrow-left';
     leftHref = '/auth';
     rightIcon = 'bi bi-pause';
     rightHref = '/modal-pause';
-  }
-
-  else if (pageType === 'social') {
+  } else if (pageType === 'social') {
     leftIcon = 'bi bi-joystick';
     leftHref = '/home';
     rightIcon = 'bi bi-list';
     rightHref = '/settings';
-  }
-  else if (pageType === 'settings') {
+  } else if (pageType === 'settings') {
     leftIcon = 'bi bi-person-circle';
     leftHref = '/profile';
     rightIcon = 'bi bi-joystick';
@@ -77,5 +75,3 @@ function updateIcons(page) {
   rightButton.className = rightIcon;
   rightButton.parentElement.setAttribute('href', rightHref);
 }
-
-
