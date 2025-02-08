@@ -42,8 +42,7 @@ services:
   prometheus:
     container_name: prom
     build: ./monitoring
-    # image: prom/prometheus
-    user: root
+    user: prometheus
     ports:
       - 9090:9090
     restart: always
