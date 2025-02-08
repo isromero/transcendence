@@ -2,10 +2,27 @@
  * setLanguage(newLang)
  * Changes the global language and updates all texts on the page.
  */
-export function setLanguage(newLang) {
+export function setLanguage() {
   csvToTranslations(csvData);
-  const currentLanguage = newLang;
+  const currentLanguage = getLanguage();
   updateTranslations(currentLanguage);
+}
+
+function getLanguage() {
+  if (getHTMLLang() === 'en') {
+    return 'english';
+  }
+  if (getHTMLLang() === 'es') {
+    return 'spanish';
+  }
+  if (getHTMLLang() === 'uk-USA') {
+    return 'ukrainian';
+  }
+  return 'english';
+}
+
+function getHTMLLang() {
+  return document.documentElement.lang;
 }
 
 /**

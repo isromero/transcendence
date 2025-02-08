@@ -20,7 +20,7 @@ export async function loadMenu(page) {
     const pageContent = await contentResponse.text();
     pageContainer.innerHTML = pageContent;
     updateIcons(page);
-    setLanguage('spanish');
+    setLanguage();
   } catch (error) {
     console.error('Menu error:', error);
   }
