@@ -26,9 +26,10 @@ urlpatterns = [
     path("tournaments", TournamentsView.as_view()),
     #GET de todos torneos #POST de un nuevo torneo, con todos los participantes
     
-
     path("history/<int:history_id>", HistoryView.as_view()),
-    #GET historial de un usuario #PUT actualizar el historial de un usuario #DELETE eliminar historial de un usuario
+    #PUT cambio de un historial en concreto #DELETE de un historial
+    path("history/<str:action>/<int:user_id>", HistoryView.as_view()),
+    #GET historial de un usuario #DELETE eliminar historial de un usuario
     path("history", HistoryView.as_view()),
-    #GET historial de todos los usuarios #POST crear historial de un usuario
+    #POST crear historial de un usuario
 ]
