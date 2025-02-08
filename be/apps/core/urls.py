@@ -18,8 +18,8 @@ urlpatterns = [
 
     path("<int:user_id>/stats", StatsView.as_view()),
     #GET acceder a estadistica de un usuario #PUT actualizar #DELETE eliminar
-    path("stats", StatsView.as_view()),
-    #POST crar una nueva estadistica
+    #path("stats", StatsView.as_view()),#si eliminamos modelo stats, no hace falta el POST ni PUT
+    #POST crea una nueva estadistica
 
     path("tournaments/<int:tournament_id>", TournamentsView.as_view()),
     #GET de un torneo especifico #PUT actualizacion de datos #DELETE eliminar un torneo

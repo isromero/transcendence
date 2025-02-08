@@ -23,15 +23,15 @@ def serialize_friend(friend_relation):
 def serialize_stats(user):
     return {
         "id": user.id,
-        "user_id": user.user_id.username,
-        "victories": user.victories,
-        "defeats": user.defeats,
-        "total_matches": user.total_matches,
-        "total_tournaments": user.total_tournaments,
-        "tournaments_victories": user.tournaments_victories,
+        "user_id": user.username,
+        "victories": History.objects.filter(user_id=user.id, position_match=1).count(),
+        "defeats": History.objects.filter(user_id=user.id).exclude(position_match=1).count(),
+        "total_matches": History.objects.filter(user_id=user.id).count(),
+        "total_tournaments": History.objects.filter(user_id=user.id).exclude(type_match="match").count(),
+        "tournaments_victories": History.objects.filter(user_id=user.id, position_tournament=1).count(),
     }
 
-
+#para peticion de un torneo especifico
 def serialize_tournament(tournament):
     return {
         "id": tournament.id,
@@ -56,6 +56,7 @@ def serialize_tournament(tournament):
         ]
     }
 
+#saca todos los torneos
 def serialize_tournaments(tournament):
     return {
         "id": tournament.id,
