@@ -18,6 +18,7 @@ services:
   db:
     container_name: db
     image: postgres
+    user: postgres
     ports:
       - 5432:5432
     env_file:
@@ -86,7 +87,7 @@ services:
 
   blackbox_exporter:
     container_name: blackbox
-    image: prom/blackbox-exporter
+    build: ./monitoring/blackbox
     ports:
       - 9115:9115
     restart: always
