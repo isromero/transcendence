@@ -24,7 +24,6 @@ modalBackground.addEventListener('click', event => {
   }
 });
 
-
 document.addEventListener('click', event => {
   if (event.target.closest('[data-close-modal]')) {
     closeModal();
