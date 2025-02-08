@@ -1,4 +1,0 @@
-css-modules in js file
-ts_ls in js file
-cssls in css file
-eslisnt in js file
