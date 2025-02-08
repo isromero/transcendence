@@ -41,7 +41,8 @@ services:
 
   prometheus:
     container_name: prom
-    image: prom/prometheus
+    build: ./monitoring
+    # image: prom/prometheus
     user: root
     ports:
       - 9090:9090
@@ -49,7 +50,6 @@ services:
     depends_on:
       - be
     volumes:
-      - ./monitoring/:/etc/prometheus/
       - prometheus_data:/prometheus
     networks:
       - transcendence_network
