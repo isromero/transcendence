@@ -1,3 +1,13 @@
+/*
+ * setLanguage(newLang)
+ * Changes the global language and updates all texts on the page.
+ */
+export function setLanguage(newLang) {
+  csvToTranslations(csvData);
+  const currentLanguage = newLang;
+  updateTranslations(currentLanguage);
+}
+
 /**
  * Converts a CSV string into a translations object.
  * The CSV should have a header row with columns like:
@@ -105,9 +115,12 @@ function translate(key, currentLanguage) {
  * according to the currentLanguage.
  */
 function updateTranslations(currentLanguage) {
+  const list = document.querySelectorAll('[data-i18n]');
+
+  console.log(list);
   document.querySelectorAll('[data-i18n]').forEach(function (el) {
     const key = el.getAttribute('data-i18n');
-    const newText = translate(key);
+    const newText = translate(key, currentLanguage);
 
     // Decide which property to update:
     if (
@@ -126,13 +139,4 @@ function updateTranslations(currentLanguage) {
       el.textContent = newText;
     }
   });
-}
-
-/**
- * setLanguage(newLang)
- * Changes the global language and updates all texts on the page.
- */
-function setLanguage(newLang) {
-  const currentLanguage = newLang;
-  updateTranslations(currentLanguage);
 }

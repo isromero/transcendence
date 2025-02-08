@@ -1,5 +1,4 @@
-import { setLanguage } from './utlis/languages.js';
-
+import { setLanguage } from '../utils/test.js';
 const appContainer = document.getElementById('app-container');
 
 export async function loadMenu(page) {
@@ -21,7 +20,7 @@ export async function loadMenu(page) {
     const pageContent = await contentResponse.text();
     pageContainer.innerHTML = pageContent;
     updateIcons(page);
-    setLanguage('english');
+    setLanguage('spanish');
   } catch (error) {
     console.error('Menu error:', error);
   }
