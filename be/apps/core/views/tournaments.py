@@ -1,8 +1,8 @@
 from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
-from apps.core.models import Tournaments
-from apps.core.utils import serialize_tournament
+from apps.core.models import Tournaments, History
+from apps.core.utils import serialize_tournament, serialize_tournaments
 from apps.core.forms.tournaments import TournamentsForm, TournamentsPutForm
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -10,13 +10,18 @@ from django.utils.decorators import method_decorator
 
 @method_decorator(csrf_exempt, name="dispatch")
 class TournamentsView(View):
-    def get(self, _):
-        tournaments = Tournaments.objects.all()
+    def get(self, _, tournament_id=None):
+        if tournament_id:
+            tournament = get_object_or_404(Tournaments, id=tournament_id)
+            
+            return JsonResponse(serialize_tournament(tournament), status=200)
+        else:
+            tournaments = Tournaments.objects.all()
 
-        return JsonResponse(
-            {"data": [serialize_tournament(relation) for relation in tournaments]},
-            status=200,
-        )
+            return JsonResponse(
+                {"data": [serialize_tournaments(tournament) for tournament in tournaments]},
+                status=200,
+            )
 
     def post(self, request):
         try:

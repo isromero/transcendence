@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 
-
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now=True)
@@ -19,7 +18,6 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
-
 class Friends(models.Model):
     class Status(models.TextChoices):
         DECLINED = "declined"
@@ -34,7 +32,6 @@ class Friends(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=Status.choices, default=Status.SENT)
 
-
 class Stats(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -44,15 +41,12 @@ class Stats(models.Model):
     total_tournaments = models.IntegerField(default=0)
     tournaments_victories = models.IntegerField(default=0)
 
-
 class Tournaments(models.Model):
     id = models.AutoField(primary_key=True)
     tournament_name = models.CharField(max_length=50)
     start_date = models.DateTimeField(auto_now=True)
     end_date = models.DateTimeField(auto_now=True)
-    players = models.ManyToManyField(User, related_name="tournaments_name")
-    
-
+    players = models.ManyToManyField(User, related_name="tournaments_name")  
 
 class History(models.Model):
     id = models.AutoField(primary_key=True)

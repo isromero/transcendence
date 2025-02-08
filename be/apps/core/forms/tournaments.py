@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 import re
-from apps.core.models import Tournaments
+from apps.core.models import Tournaments, History
 
 class TournamentsForm(forms.ModelForm):
     class Meta:
