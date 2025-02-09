@@ -1,0 +1,2 @@
+- [] implement languajes
+- [] implement visual impaired with the files changed in the commit
