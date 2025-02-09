@@ -1,4 +1,5 @@
-import { setLanguage } from '../utils/test.js';
+import { changeLanguage } from '../utils/languages.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadMenu(page) {
@@ -20,7 +21,9 @@ export async function loadMenu(page) {
     const pageContent = await contentResponse.text();
     pageContainer.innerHTML = pageContent;
     updateIcons(page);
-    setLanguage();
+
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+    await changeLanguage(savedLanguage);
   } catch (error) {
     console.error('Menu error:', error);
   }
@@ -35,7 +38,6 @@ function updateIcons(page) {
   );
 
   if (!leftButton || !rightButton) {
-    console.warn('Navigation buttons not found in the DOM');
     return;
   }
 

@@ -197,6 +197,12 @@ canvas {
   border-color: var(--bs-text-color-tertiary);
 }
 
+.login-button {
+  color: var(--bs-text-color);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-text-color);
+}
+
 .cancel-button {
   color: var(--bs-text-color);
   background-color: var(--bs-primary);
@@ -283,17 +289,23 @@ canvas {
 
 /* Cambiar el hover de todos los botones */
 .btn:hover {
-  color: rgb(
-    202,
-    192,
-    192
-  ) !important; /* Cambia el color del texto si es necesario */
+  color: var(--bs-text-color) !important;
   transition: background-color 0.3s ease-in-out;
 }
 
 /* Personalizar botones específicos */
 .button-text-styles:hover {
   background-color: var(--bs-background) !important; /* Azul */
+  color: white !important;
+}
+
+.login-button:hover {
+  background-color: var(--bs-secondary) !important;
+  color: white !important;
+}
+
+.accept-button:hover {
+  background-color: #dc3545 !important;
   color: white !important;
 }
 
@@ -314,7 +326,7 @@ canvas {
 }
 
 /* Estilo personalizado para el botón de cancelar */
-.login-button {
+.account-deletion-button {
   background-color: var(--bs-background); /* Rojo Bootstrap (danger) */
   color: #dc3545;
   border: 1px solid #dc3545;
@@ -322,7 +334,7 @@ canvas {
 }
 
 /* Hover */
-.login-button:hover {
+.account-deletion-button:hover {
   background-color: #dc3545; /* Rojo más oscuro */
   border-color: #dc3545;
   color: white;
