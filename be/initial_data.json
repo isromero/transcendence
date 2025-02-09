@@ -812,7 +812,7 @@
     "user_id": 1,
     "friend_id": 2,
     "created_at": "2025-01-26T09:24:28.408Z",
-    "status": 2
+    "status": "sent"
   }
 },
 {
@@ -822,7 +822,7 @@
     "user_id": 1,
     "friend_id": 3,
     "created_at": "2025-01-26T09:24:40.342Z",
-    "status": 1
+    "status": "accepted"
   }
 },
 {
@@ -832,7 +832,7 @@
     "user_id": 2,
     "friend_id": 3,
     "created_at": "2025-01-26T09:24:50.001Z",
-    "status": 0
+    "status": "declined"
   }
 },
 {
@@ -842,7 +842,7 @@
     "user_id": 3,
     "friend_id": 1,
     "created_at": "2025-01-26T09:36:38.027Z",
-    "status": 1
+    "status": "accepted"
   }
 },
 {
@@ -1041,7 +1041,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 10,
-    "opponent": 6,
+    "opponent_id": 6,
     "result_opponent": 8,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1056,7 +1056,7 @@
   "fields": {
     "user_id": 6,
     "result_user": 8,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1071,7 +1071,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 7,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1086,7 +1086,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 7,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1101,7 +1101,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 10,
+    "opponent_id": 10,
     "result_opponent": 9,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1116,7 +1116,7 @@
   "fields": {
     "user_id": 10,
     "result_user": 9,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1131,7 +1131,7 @@
   "fields": {
     "user_id": 11,
     "result_user": 10,
-    "opponent": 12,
+    "opponent_id": 12,
     "result_opponent": 6,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1146,7 +1146,7 @@
   "fields": {
     "user_id": 12,
     "result_user": 6,
-    "opponent": 11,
+    "opponent_id": 11,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 1,
@@ -1161,7 +1161,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 10,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 7,
     "type_match": "tournament_semi",
     "tournament_id": 1,
@@ -1176,7 +1176,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 7,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 1,
@@ -1191,7 +1191,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 11,
+    "opponent_id": 11,
     "result_opponent": 8,
     "type_match": "tournament_semi",
     "tournament_id": 1,
@@ -1206,7 +1206,7 @@
   "fields": {
     "user_id": 11,
     "result_user": 8,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 1,
@@ -1221,7 +1221,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 9,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 1,
@@ -1236,7 +1236,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 9,
     "type_match": "tournament_final",
     "tournament_id": 1,
@@ -1251,7 +1251,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 6,
+    "opponent_id": 6,
     "result_opponent": 6,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1266,7 +1266,7 @@
   "fields": {
     "user_id": 6,
     "result_user": 6,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1281,7 +1281,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 12,
+    "opponent_id": 12,
     "result_opponent": 9,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1296,7 +1296,7 @@
   "fields": {
     "user_id": 12,
     "result_user": 9,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1311,7 +1311,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 10,
-    "opponent": 10,
+    "opponent_id": 10,
     "result_opponent": 7,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1326,7 +1326,7 @@
   "fields": {
     "user_id": 10,
     "result_user": 7,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1341,7 +1341,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 10,
-    "opponent": 11,
+    "opponent_id": 11,
     "result_opponent": 8,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1356,7 +1356,7 @@
   "fields": {
     "user_id": 11,
     "result_user": 8,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 10,
     "type_match": "tournament_quarter",
     "tournament_id": 2,
@@ -1371,7 +1371,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 8,
     "type_match": "tournament_semi",
     "tournament_id": 2,
@@ -1386,7 +1386,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 8,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 2,
@@ -1401,7 +1401,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 10,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 6,
     "type_match": "tournament_semi",
     "tournament_id": 2,
@@ -1416,7 +1416,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 6,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 2,
@@ -1431,7 +1431,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 2,
     "type_match": "tournament_final",
     "tournament_id": 2,
@@ -1446,7 +1446,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 2,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 2,
@@ -1461,7 +1461,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 7,
     "type_match": "tournament_semi",
     "tournament_id": 3,
@@ -1476,7 +1476,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 7,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 3,
@@ -1491,7 +1491,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 10,
+    "opponent_id": 10,
     "result_opponent": 6,
     "type_match": "tournament_semi",
     "tournament_id": 3,
@@ -1506,7 +1506,7 @@
   "fields": {
     "user_id": 10,
     "result_user": 6,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 3,
@@ -1521,7 +1521,7 @@
   "fields": {
     "user_id": 7,
     "result_user": 10,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 4,
     "type_match": "tournament_final",
     "tournament_id": 3,
@@ -1536,7 +1536,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 4,
-    "opponent": 7,
+    "opponent_id": 7,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 3,
@@ -1551,7 +1551,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 10,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 6,
     "type_match": "tournament_semi",
     "tournament_id": 4,
@@ -1566,7 +1566,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 6,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 4,
@@ -1581,7 +1581,7 @@
   "fields": {
     "user_id": 11,
     "result_user": 10,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 9,
     "type_match": "tournament_semi",
     "tournament_id": 4,
@@ -1596,7 +1596,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 9,
-    "opponent": 11,
+    "opponent_id": 11,
     "result_opponent": 10,
     "type_match": "tournament_semi",
     "tournament_id": 4,
@@ -1611,7 +1611,7 @@
   "fields": {
     "user_id": 5,
     "result_user": 10,
-    "opponent": 11,
+    "opponent_id": 11,
     "result_opponent": 0,
     "type_match": "tournament_final",
     "tournament_id": 4,
@@ -1626,7 +1626,7 @@
   "fields": {
     "user_id": 11,
     "result_user": 0,
-    "opponent": 5,
+    "opponent_id": 5,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 4,
@@ -1641,7 +1641,7 @@
   "fields": {
     "user_id": 9,
     "result_user": 10,
-    "opponent": 12,
+    "opponent_id": 12,
     "result_opponent": 2,
     "type_match": "tournament_final",
     "tournament_id": 5,
@@ -1656,7 +1656,7 @@
   "fields": {
     "user_id": 12,
     "result_user": 2,
-    "opponent": 9,
+    "opponent_id": 9,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 5,
@@ -1671,7 +1671,7 @@
   "fields": {
     "user_id": 8,
     "result_user": 10,
-    "opponent": 10,
+    "opponent_id": 10,
     "result_opponent": 3,
     "type_match": "tournament_final",
     "tournament_id": 6,
@@ -1686,7 +1686,7 @@
   "fields": {
     "user_id": 10,
     "result_user": 3,
-    "opponent": 8,
+    "opponent_id": 8,
     "result_opponent": 10,
     "type_match": "tournament_final",
     "tournament_id": 6,
