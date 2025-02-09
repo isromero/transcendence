@@ -58,6 +58,7 @@ services:
   grafana:
     container_name: grf
     image: grafana/grafana
+    user: grafana
     ports:
       - 3333:3333
     volumes:
