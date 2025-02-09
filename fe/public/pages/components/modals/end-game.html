@@ -5,15 +5,21 @@
   <div id="title-container">
     <h1
       class="title-principal-styles position-absolute top-0 start-50 translate-middle-x"
+      data-translationKey="match-ended"
       style="margin-top: 5.5rem; white-space: nowrap; font-size: 2.5rem"
     >
       MATCH ENDED
     </h1>
   </div>
-  <div id="title-container" class="w-100 text-center">
-    <h1 class="title-principal-styles" style="margin-top: 5.5rem">WINNER</h1>
+  <div class="w-100 text-center" id="title-container">
+    <h1
+      class="title-principal-styles"
+      data-translationKey="winner"
+      style="margin-top: 5.5rem"
+    >
+      WINNER
+    </h1>
   </div>
-
   <div
     class="container text-center position-absolute top-20 start-50 translate-middle"
   >
@@ -21,18 +27,17 @@
       <div class="col-12">
         <div class="profile-circle mx-auto mb-3">
           <img
-            src="../assets/images/foto.jpg"
             alt="Profile Picture"
             class="rounded-circle border border-primary glowing-border border-3 text-principal-color"
-            width="120"
             height="120"
+            src="../assets/images/foto.jpg"
+            width="120"
           />
         </div>
         <h2 class="username secondary-title-color">Isromero</h2>
       </div>
     </div>
   </div>
-
   <!-- Contenedor de botones en la parte inferior -->
   <div
     class="container position-absolute bottom-0 start-50 translate-middle-x"
@@ -40,13 +45,21 @@
   >
     <div class="row">
       <div class="col-12 text-center">
-        <a href="/match-settings" class="spa-link">
-          <button class="btn button-text-styles button-text-size mb-3 w-100">
+        <a class="spa-link" href="/match-settings">
+          <button
+            aria-label="Play Again"
+            class="btn button-text-styles button-text-size mb-3 w-100"
+            data-translationKey="play-again"
+          >
             Play Again
           </button>
         </a>
-        <a href="/home" class="spa-link">
-          <button class="btn button-text-styles button-text-size w-100">
+        <a class="spa-link" href="/home">
+          <button
+            aria-label="Return to Menu"
+            class="btn button-text-styles button-text-size w-100"
+            data-translationKey="return-menu"
+          >
             Return to Menu
           </button>
         </a>

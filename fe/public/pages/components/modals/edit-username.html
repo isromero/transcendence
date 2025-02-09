@@ -5,7 +5,9 @@
   <div class="container mt-5" style="width: 95vw">
     <form>
       <div class="form-group mb-0">
-        <label class="form-secondary-title-color fs-3 text-center d-block"
+        <label
+          class="form-secondary-title-color fs-3 text-center d-block"
+          data-translationKey="new-username"
           >New username</label
         >
         <input
@@ -14,7 +16,9 @@
         />
       </div>
       <div class="form-group mb-5">
-        <label class="form-secondary-title-color fs-3 text-center d-block"
+        <label
+          class="form-secondary-title-color fs-3 text-center d-block"
+          data-translationKey="type-password"
           >Type password</label
         >
         <input
@@ -23,35 +27,28 @@
         />
       </div>
     </form>
-    <div class="col-12 text-center">
-      <a href="/login" class="spa-link"
-        ><button class="btn link-text-styles link-text-size w-100">
-          I forgot my password
-        </button></a
-      >
-      <button
-        class="btn link-text-styles link-text-size mb-4 w-100"
-        style="visibility: hidden"
-      ></button>
-    </div>
     <div class="d-flex justify-content-center gap-1 mb-3">
-      <a href="/edit-profile" class="spa-link" style="flex: 1">
+      <a class="spa-link" href="/edit-profile" style="flex: 1">
         <button
-          type="button"
+          aria-label="Cancel"
           class="btn cancel-button w-100 bs-primary border-primary-color"
+          data-translationKey="cancel"
           style="border-radius: 10px; height: 2.8rem"
+          type="button"
         >
           Cancel
         </button>
       </a>
-      <a href="/edit-profile" class="spa-link" style="flex: 1">
+      <a class="spa-link" href="/edit-profile" style="flex: 1">
         <button
-          type="submit"
+          aria-label="Accept"
           class="btn accept-button w-100 bs-primary"
-          style="border-radius: 10px; height: 2.8rem"
+          data-translationKey="finish-login"
           id="finish-login"
+          style="border-radius: 10px; height: 2.8rem"
+          type="submit"
         >
-          Accept
+          Account Deletion
         </button>
       </a>
     </div>

@@ -4,16 +4,46 @@
 >
   <div class="container mt-5" style="width: 95vw">
     <div class="col-12 text-center">
-      <a href="/login" class="spa-link"
-        ><button class="btn button-text-styles button-text-size w-100">
-          Español名
-        </button></a
-      >
-      <a href="/auth" class="spa-link"
-        ><button class="btn button-text-styles button-text-size mb-4 w-100">
+      <a onclick="changeLanguage('es')">
+        <button
+          aria-label="Español"
+          class="btn button-text-styles button-text-size w-100"
+          data-close-modal=""
+          data-translationKey="spanish"
+        >
+          Español
+        </button>
+      </a>
+      <a onclick="changeLanguage('en')">
+        <button
+          aria-label="English"
+          class="btn button-text-styles button-text-size w-100"
+          data-close-modal=""
+          data-translationKey="english"
+        >
           English
-        </button></a
+        </button>
+      </a>
+      <a onclick="changeLanguage('uk-UA')">
+        <button
+          aria-label="ukrainian"
+          class="btn button-text-styles button-text-size mb-4 w-100"
+          data-close-modal=""
+          data-translationKey="ukrainian"
+        >
+          Ukrainian
+        </button>
+      </a>
+    </div>
+    <div class="col-12 text-center mt-3">
+      <button
+        aria-label="Cancel"
+        class="btn cancel-button w-50"
+        data-close-modal=""
+        data-translationKey="cancel"
       >
+        Cancel
+      </button>
     </div>
   </div>
 </div>

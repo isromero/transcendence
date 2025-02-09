@@ -7,7 +7,7 @@ export function loadErrorPage(errorMessage) {
                 <h1 class="title-principal-styles mb-4">Error</h1>
                 <p class="form-secondary-title-color mb-4">${errorMessage}</p>
                 <a href="/auth" class="spa-link">
-                    <button class="btn accept-button bs-primary" style="border-radius: 10px; height: 2.8rem;">
+                    <button class="btn login-button bs-primary" style="border-radius: 10px; height: 2.8rem;">
                         Return to Home
                     </button>
                 </a>

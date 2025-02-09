@@ -1,3 +1,5 @@
+import { changeLanguage } from '../utils/languages.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadMenu(page) {
@@ -19,6 +21,9 @@ export async function loadMenu(page) {
     const pageContent = await contentResponse.text();
     pageContainer.innerHTML = pageContent;
     updateIcons(page);
+
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+    await changeLanguage(savedLanguage);
   } catch (error) {
     console.error('Menu error:', error);
   }
@@ -33,34 +38,41 @@ function updateIcons(page) {
   );
 
   if (!leftButton || !rightButton) {
-    console.warn('Navigation buttons not found in the DOM');
     return;
   }
 
-  // Extract the page type from the URL
-  const isMenuPage = page.includes('/pages/menus/');
   const isGamePage = page.includes('/pages/game/');
   const pageType = page.split('/').pop().replace('.html', '');
 
-  // Set default attributes
-  leftButton.className = 'bi bi-person-circle';
-  leftButton.parentElement.setAttribute('href', '/profile');
-  rightButton.className = 'bi bi-list';
-  rightButton.parentElement.setAttribute('href', '/settings');
+  let leftIcon = 'bi bi-person-circle';
+  let leftHref = '/social';
+  let rightIcon = 'bi bi-list';
+  let rightHref = '/settings';
 
-  // Special cases for authentication pages
   if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
-    leftButton.className = 'bi bi-question-circle';
-    leftButton.parentElement.setAttribute('href', '/modal-help');
-    rightButton.className = 'bi bi-globe';
-    rightButton.parentElement.setAttribute('href', '/modal-languages');
+    leftIcon = 'bi bi-question-circle';
+    leftHref = '/modal-help';
+    rightIcon = 'bi bi-globe';
+    rightHref = '/modal-languages';
+  } else if (isGamePage) {
+    leftIcon = 'bi bi-arrow-left';
+    leftHref = '/auth';
+    rightIcon = 'bi bi-pause';
+    rightHref = '/modal-pause';
+  } else if (pageType === 'social') {
+    leftIcon = 'bi bi-joystick';
+    leftHref = '/home';
+    rightIcon = 'bi bi-list';
+    rightHref = '/settings';
+  } else if (pageType === 'settings') {
+    leftIcon = 'bi bi-person-circle';
+    leftHref = '/profile';
+    rightIcon = 'bi bi-joystick';
+    rightHref = '/home';
   }
 
-  // Special cases for game pages
-  if (isGamePage) {
-    leftButton.className = 'bi bi-arrow-left';
-    leftButton.parentElement.setAttribute('href', '/auth');
-    rightButton.className = 'bi bi-pause';
-    rightButton.parentElement.setAttribute('href', '/modal-pause');
-  }
+  leftButton.className = leftIcon;
+  leftButton.parentElement.setAttribute('href', leftHref);
+  rightButton.className = rightIcon;
+  rightButton.parentElement.setAttribute('href', rightHref);
 }
