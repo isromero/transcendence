@@ -67,10 +67,7 @@ def serialize_tournaments(tournament):
             {
                 "user_id": player.id,
                 "username": player.username,
-                "position": History.objects.filter(user_id=player, tournament_id=tournament.id)
-                .order_by("position_tournament")
-                .values_list("position_tournament", flat=True)
-                .first()
+                "position": History.objects.filter(user_id=player, tournament_id=tournament.id).latest('date').position_tournament,
             }
             for player in tournament.players.all()
         ],

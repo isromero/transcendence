@@ -17,7 +17,7 @@ urlpatterns = [
     path("friends/<int:user_id>/<int:friend_id>/<str:action>", FriendsView.as_view()),
 
     path("<int:user_id>/stats", StatsView.as_view()),
-    #GET acceder a estadistica de un usuario #PUT actualizar #DELETE eliminar
+    #GET acceder a estadistica de un usuario
     #path("stats", StatsView.as_view()),#si eliminamos modelo stats, no hace falta el POST ni PUT
     #POST crea una nueva estadistica
 
