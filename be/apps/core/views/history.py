@@ -8,6 +8,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+
 @method_decorator(csrf_exempt, name="dispatch")
 class HistoryView(View):
     def get(self, _, action, **kwargs):
@@ -35,13 +36,13 @@ class HistoryView(View):
     def put(self, request, **kwargs):
         if "history_id" in kwargs:
             history_id = kwargs["history_id"]
-            history_id = get_object_or_404(History, id=history_id)
+            history_instance = get_object_or_404(History, id=history_id)
             try:
                 data = json.loads(request.body)
-                form = HistoryForm(data, instance=history_id)
+                form = HistoryForm(data, instance=history_instance)
                 if form.is_valid():
-                    history_id = form.save()
-                    return JsonResponse(serialize_history(history_id), status=200)
+                    history = form.save()
+                    return JsonResponse(serialize_history(history), status=200)
                 return JsonResponse({"errors": form.errors}, status=400)
             except json.JSONDecodeError:
                 return JsonResponse({"error": "Invalid JSON"}, status=400)
@@ -53,15 +54,25 @@ class HistoryView(View):
             deleted_count, _ = History.objects.filter(user_id=user_id).delete()
 
             if deleted_count == 0:
-                return JsonResponse({"error": "No history found for this user."}, status=404)
+                return JsonResponse(
+                    {"error": "No history found for this user."}, status=404
+                )
 
-            return JsonResponse({"message": f"{deleted_count} history records deleted successfully."}, status=204)
+            return JsonResponse(
+                {"message": f"{deleted_count} history records deleted successfully."},
+                status=204,
+            )
         elif "history_id" in kwargs and action == None:
             history_id = kwargs["history_id"]
             deleted_count, _ = History.objects.filter(id=history_id).delete()
 
             if deleted_count == 0:
-                return JsonResponse({"error": "No history found for this user."}, status=404)
+                return JsonResponse(
+                    {"error": "No history found for this user."}, status=404
+                )
 
-            return JsonResponse({"message": f"{deleted_count} history records deleted successfully."}, status=204)
+            return JsonResponse(
+                {"message": f"{deleted_count} history records deleted successfully."},
+                status=204,
+            )
         return JsonResponse({"error": "Invalid request1"}, status=400)

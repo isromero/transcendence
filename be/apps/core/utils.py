@@ -1,5 +1,6 @@
 from apps.core.models import History
 
+
 def serialize_user(user):
     return {
         "id": user.id,
@@ -20,18 +21,44 @@ def serialize_friend(friend_relation):
     }
 
 
-def serialize_stats(user):
+def serialize_stats(user, user_history):
     return {
         "id": user.id,
-        "user_id": user.username,
-        "victories": History.objects.filter(user_id=user.id, position_match=1).count(),
-        "defeats": History.objects.filter(user_id=user.id).exclude(position_match=1).count(),
-        "total_matches": History.objects.filter(user_id=user.id).count(),
-        "total_tournaments": History.objects.filter(user_id=user.id).exclude(type_match="match").count(),
-        "tournaments_victories": History.objects.filter(user_id=user.id, position_tournament=1).count(),
+        "username": user.username,
+        "victories": user_history.filter(position_match=1).count(),
+        "defeats": user_history.exclude(position_match=1).count(),
+        "total_matches": user_history.count(),
+        "tournaments_victories": user_history.filter(position_tournament=1).count(),
+        "tournaments_defeats": user_history.exclude(position_tournament=1).count(),
+        "total_tournaments": user_history.exclude(type_match="match").count(),
     }
 
-#para peticion de un torneo especifico
+
+def serialize_tournaments(tournament):
+    return {
+        "id": tournament.id,
+        "tournament_name": tournament.tournament_name,
+        "start_date": tournament.start_date,
+        "end_date": tournament.end_date,
+        "players": [
+            {
+                "user_id": player.id,
+                "username": player.username,
+                "position": (
+                    History.objects.filter(user_id=player, tournament_id=tournament.id)
+                    .latest("date")
+                    .position_tournament
+                    if History.objects.filter(
+                        user_id=player, tournament_id=tournament.id
+                    ).exists()  # Hack to test in local with bad initial data
+                    else None
+                ),
+            }
+            for player in tournament.players.all()
+        ],
+    }
+
+
 def serialize_tournament(tournament):
     return {
         "id": tournament.id,
@@ -49,27 +76,10 @@ def serialize_tournament(tournament):
             {
                 "player1": match.user_id.username,
                 "punctuation_player1": match.result_user,
-                "player2": match.opponent.username,
+                "player2": match.opponent_id.username,
                 "punctuation_player2": match.result_opponent,
             }
             for match in History.objects.filter(tournament_id=tournament.id)
-        ]
-    }
-
-#saca todos los torneos
-def serialize_tournaments(tournament):
-    return {
-        "id": tournament.id,
-        "tournament_name": tournament.tournament_name,
-        "start_date": tournament.start_date,
-        "end_date": tournament.end_date,
-        "players": [
-            {
-                "user_id": player.id,
-                "username": player.username,
-                "position": History.objects.filter(user_id=player, tournament_id=tournament.id).latest('date').position_tournament,
-            }
-            for player in tournament.players.all()
         ],
     }
 
@@ -79,10 +89,12 @@ def serialize_history(user_history):
         "id": user_history.id,
         "user_id": user_history.user_id.id,
         "result_user": user_history.result_user,
-        "opponent": user_history.opponent.id,
+        "opponent_id": user_history.opponent_id.id,
         "result_opponent": user_history.result_opponent,
         "type_match": user_history.type_match,
-        "tournament_id": user_history.tournament_id.id if user_history.tournament_id else None,
+        "tournament_id": (
+            user_history.tournament_id.id if user_history.tournament_id else None
+        ),
         "position_match": user_history.position_match,
         "date": user_history.date,
         "position_tournament": user_history.position_tournament,
