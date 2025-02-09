@@ -7,6 +7,8 @@ be/venv/
 fe/.env
 fe/node_modules/
 fe/package-lock.json
+fe/.ash_history
+fe/.npm/
 
 # Monitoring
 monitoring/.env

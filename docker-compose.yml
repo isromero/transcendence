@@ -32,12 +32,12 @@ services:
   fe:
     container_name: fe
     build: ./fe
+    user: fe
     ports:
       - 3001:3001
       - 3002:3002
     volumes:
-      - ./fe:/app
-      - /app/node_modules
+      - fe_data:/app
     networks:
       - transcendence_network
 
@@ -94,12 +94,12 @@ services:
     networks:
       - transcendence_network
 
-
 volumes:
   db_data:
   grafana_data:
   prometheus_data:
   be_data:
+  fe_data:
 
 networks:
   transcendence_network:
