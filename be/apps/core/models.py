@@ -1,6 +1,17 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 
+class AuditLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    entity_name = models.CharField(max_length=50)
+    record_id = models.IntegerField()
+    action = models.CharField(max_length=10)
+    old_data = models.JSONField(null=True, blank=True)
+    new_data = models.JSONField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    entity_id = models.IntegerField()
+    
+
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now=True)
