@@ -17,8 +17,17 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from .views.game import start_game, get_game_state
+
+urlpatterns = [
+    path('start/', start_game),
+    path('state/', get_game_state),
+]
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),
+    path('start/', start_game),
+    path('state/', get_game_state)
 ]

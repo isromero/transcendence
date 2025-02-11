@@ -339,3 +339,10 @@ canvas {
   border-color: #dc3545;
   color: white;
 }
+
+#pongCanvas {
+  background: black;
+  width: 800px;
+  height: 400px;
+}
+
