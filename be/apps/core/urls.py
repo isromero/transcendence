@@ -7,9 +7,9 @@ from apps.core.views.tournaments import TournamentsView
 
 urlpatterns = [
     path("users", UserView.as_view()),
-    #GET informacion de todos usuarios #POST crear un usuario #DELETE eliminat un usuario
+    #GET informacion de todos usuarios #POST crear un usuario 
     path("users/<int:user_id>", UserView.as_view()),
-    #GET informacion de un usuario #PUT actualizar un usuario
+    #GET informacion de un usuario #PUT actualizar un usuario #DELETE eliminar un usuario
 
     path("friends", FriendsView.as_view()),
     path("friends/<int:user_id>", FriendsView.as_view()),

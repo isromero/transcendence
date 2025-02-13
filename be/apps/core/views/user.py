@@ -5,6 +5,7 @@ from apps.core.models import User
 from apps.core.utils import serialize_user
 from apps.core.forms.user import UserForm
 import json
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -49,5 +50,10 @@ class UserView(View):
 
     def delete(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
-        user.delete()
+        user.username = "user_" + str(user.id)
+        user.password = ""
+        user.avatar = ""#esto hay que buscar
+        user.email = datetime.now()
+        user.status = False
+        user.save(update_fields=['username', 'password', 'avatar', 'email', 'status'])
         return HttpResponse(status=204)

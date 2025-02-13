@@ -3,6 +3,10 @@ from apps.core.models import User, Friends, Stats, Tournaments, History
 
 # Register your models here.
 
+# class AuditLog(admin.ModelAdmin):
+#     list_display = ("id", "entity_name", "record_id", "action",
+#                     "old_data", "new_data", "timestamp",
+#                     "entity_id",)
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "username", "email")
@@ -33,7 +37,6 @@ class HistoryAdmin(admin.ModelAdmin):
     list_display = ("id", "user_id", "result_user", "opponent",
                     "result_opponent", "type_match", "tournament_id",
                     "position_match", "date", "position_tournament",)
-
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Friends, FriendAdmin)

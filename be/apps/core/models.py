@@ -1,4 +1,5 @@
 from django.db import models
+import random
 from django.core.validators import MinLengthValidator
 
 class AuditLog(models.Model):
@@ -13,7 +14,7 @@ class AuditLog(models.Model):
     
 
 class User(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True, default=random.randint(100000, 999999), editable=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     username = models.CharField(

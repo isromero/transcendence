@@ -643,6 +643,14 @@
   "pk": 10,
   "fields": {
     "app_label": "core",
+    "model": "auditlog"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "core",
     "model": "history"
   }
 },
