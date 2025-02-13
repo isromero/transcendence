@@ -4,6 +4,7 @@ from apps.core.views.friends import FriendsView
 from apps.core.views.stats import StatsView
 from apps.core.views.history import HistoryView
 from apps.core.views.tournaments import TournamentsView
+from apps.core.views.game import GameView  # Asegúrate de importar GameView
 
 urlpatterns = [
     path("users", UserView.as_view()),
@@ -18,4 +19,5 @@ urlpatterns = [
     path("history/<int:history_id>", HistoryView.as_view()),
     path("history/<str:action>/<int:user_id>", HistoryView.as_view()),
     path("history", HistoryView.as_view()),
+    path("game/", GameView.as_view(), name="game"),  # Aquí se usa GameView
 ]
