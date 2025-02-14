@@ -19,5 +19,5 @@ urlpatterns = [
     path("history/<int:history_id>", HistoryView.as_view()),
     path("history/<str:action>/<int:user_id>", HistoryView.as_view()),
     path("history", HistoryView.as_view()),
-    path("game/", GameView.as_view(), name="game"),  # Aquí se usa GameView
+     path('game/', GameView.as_view(), name='game'),
 ]

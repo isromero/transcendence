@@ -1,61 +1,49 @@
+import threading
+import time
+
 # Configuración del juego
-WIDTH = 800
-HEIGHT = 400
-PADDLE_WIDTH = 20
-PADDLE_HEIGHT = 100
-BALL_SIZE = 20
-PADDLE_SPEED = 6
-BALL_SPEED = 3
+WIDTH, HEIGHT = 800, 400
+PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
+BALL_SIZE, PADDLE_SPEED, BALL_SPEED = 20, 6, 3
 
-# Inicializar posiciones
-left_paddle = {"x": 30, "y": HEIGHT // 2 - PADDLE_HEIGHT // 2, "dy": 0}
-right_paddle = {"x": WIDTH - 30 - PADDLE_WIDTH, "y": HEIGHT // 2 - PADDLE_HEIGHT // 2, "dy": 0}
-ball = {"x": WIDTH // 2, "y": HEIGHT // 2, "speedX": BALL_SPEED, "speedY": BALL_SPEED}
+left_paddle = {"x": 30, "y": HEIGHT // 2 - PADDLE_HEIGHT // 2, "dy": 0, "width": PADDLE_WIDTH, "height": PADDLE_HEIGHT}
+right_paddle = {"x": WIDTH - 30 - PADDLE_WIDTH, "y": HEIGHT // 2 - PADDLE_HEIGHT // 2, "dy": 0, "width": PADDLE_WIDTH, "height": PADDLE_HEIGHT}
+ball = {"x": WIDTH // 2, "y": HEIGHT // 2, "radius": BALL_SIZE, "speedX": BALL_SPEED, "speedY": BALL_SPEED}
 
-def update_paddles():
-    """ Mueve las paletas dentro de los límites del campo """
+def update_game():
+    while True:
+        move_paddles()
+        move_ball()
+        time.sleep(1 / 60)
+
+def move_paddles():
     left_paddle["y"] += left_paddle["dy"]
     right_paddle["y"] += right_paddle["dy"]
 
-    # Limitar las paletas dentro del área de juego
     left_paddle["y"] = max(0, min(HEIGHT - PADDLE_HEIGHT, left_paddle["y"]))
     right_paddle["y"] = max(0, min(HEIGHT - PADDLE_HEIGHT, right_paddle["y"]))
 
-def update_ball():
-    """ Mueve la pelota y detecta colisiones """
+def move_ball():
     ball["x"] += ball["speedX"]
     ball["y"] += ball["speedY"]
 
-    # Rebote con bordes superior e inferior
     if ball["y"] - BALL_SIZE <= 0 or ball["y"] + BALL_SIZE >= HEIGHT:
-        ball["speedY"] = -ball["speedY"]
+        ball["speedY"] *= -1
 
-    # Comprobación de colisión con las paletas
-    def check_paddle_collision(paddle):
-        if (
-            ball["x"] - BALL_SIZE <= paddle["x"] + PADDLE_WIDTH
-            and ball["x"] + BALL_SIZE >= paddle["x"]
-            and ball["y"] >= paddle["y"]
-            and ball["y"] <= paddle["y"] + PADDLE_HEIGHT
-        ):
-            relativeIntersectY = (ball["y"] - (paddle["y"] + PADDLE_HEIGHT / 2)) / (PADDLE_HEIGHT / 2)
-            bounceAngle = relativeIntersectY * (3.14 / 4)  # Ángulo de rebote máximo 45°
+    if check_collision(left_paddle) or check_collision(right_paddle):
+        ball["speedX"] *= -1
 
-            # Mantener la velocidad constante pero cambiar la dirección
-            speed = (ball["speedX"] ** 2 + ball["speedY"] ** 2) ** 0.5
-            ball["speedX"] = (-1 if paddle == right_paddle else 1) * abs(speed) * 1.1
-            ball["speedY"] = speed * relativeIntersectY * 1.1
-
-    check_paddle_collision(left_paddle)
-    check_paddle_collision(right_paddle)
-
-    # Reiniciar la pelota si sale de los límites
     if ball["x"] - BALL_SIZE <= 0 or ball["x"] + BALL_SIZE >= WIDTH:
         ball["x"], ball["y"] = WIDTH // 2, HEIGHT // 2
         ball["speedX"], ball["speedY"] = BALL_SPEED * (-1 if ball["speedX"] > 0 else 1), BALL_SPEED
 
+def check_collision(paddle):
+    return (
+        paddle["x"] < ball["x"] < paddle["x"] + PADDLE_WIDTH and
+        paddle["y"] < ball["y"] < paddle["y"] + PADDLE_HEIGHT
+    )
+
 def process_key_event(key, is_pressed):
-    """ Recibe eventos de teclado y actualiza la dirección de las paletas """
     if key == "w":
         left_paddle["dy"] = -PADDLE_SPEED if is_pressed else 0
     elif key == "s":
@@ -64,3 +52,36 @@ def process_key_event(key, is_pressed):
         right_paddle["dy"] = -PADDLE_SPEED if is_pressed else 0
     elif key == "ArrowDown":
         right_paddle["dy"] = PADDLE_SPEED if is_pressed else 0
+
+def update_paddles():
+    """ Lógica para actualizar las posiciones de las paletas """
+    global left_paddle, right_paddle
+    left_paddle['y'] += left_paddle['dy']
+    right_paddle['y'] += right_paddle['dy']
+
+    # Evitar que las paletas salgan del área de juego
+    left_paddle['y'] = max(0, min(left_paddle['y'], 400 - left_paddle['height']))
+    right_paddle['y'] = max(0, min(right_paddle['y'], 400 - right_paddle['height']))
+
+def update_ball():
+    """ Lógica para actualizar la posición de la pelota """
+    global ball
+    ball['x'] += ball['speedX']
+    ball['y'] += ball['speedY']
+
+    # Rebote en las paredes superior e inferior
+    if ball['y'] <= 0 or ball['y'] >= 400:
+        ball['speedY'] *= -1
+
+
+def game_loop():
+    """ Bucle infinito para actualizar el juego """
+    while True:
+        update_paddles()
+        update_ball()
+        time.sleep(0.016)  # ~60 FPS (1s / 60 = 0.016s)
+
+# Iniciar el hilo del juego
+threading.Thread(target=game_loop, daemon=True).start()
+game_thread = threading.Thread(target=update_game, daemon=True)
+game_thread.start()
