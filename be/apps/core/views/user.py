@@ -1,11 +1,13 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.views import View
 from django.shortcuts import get_object_or_404
-from apps.core.models import User
-from apps.core.utils import serialize_user
+from apps.core.models import User, Friends
+from apps.core.utils import serialize_user, serialize_other_user
 from apps.core.forms.user import UserForm
 import json
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
+import random
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -15,10 +17,13 @@ from django.utils.decorators import method_decorator
 
 @method_decorator(csrf_exempt, name="dispatch")
 class UserView(View):
-    def get(self, _, user_id=None):
+    def get(self, request: HttpRequest, user_id=None):
         if user_id:
             user = get_object_or_404(User, id=user_id)
-            return JsonResponse({"data": serialize_user(user)}, status=200)
+            if request.user.is_authenticated and request.user.id == user_id:
+                return JsonResponse({"data": serialize_user(user)}, status=200)
+            else:
+                return JsonResponse({"data": serialize_other_user(user)}, status=200)
         else:
             users = User.objects.all().values(
                 "id", "username", "email", "avatar", "status"
@@ -53,7 +58,10 @@ class UserView(View):
         user.username = "user_" + str(user.id)
         user.password = ""
         user.avatar = ""#esto hay que buscar
-        user.email = datetime.now()
+        user.email = time.time() + random.uniform(0.1, 1.0)
         user.status = False
-        user.save(update_fields=['username', 'password', 'avatar', 'email', 'status'])
+        user.deleted_user = True
+        friends = Friends.objects.filter(friend_id=user_id)
+        friends.delete()
+        user.save(update_fields=['username', 'password', 'avatar', 'email', 'status', 'deleted_user'])
         return HttpResponse(status=204)

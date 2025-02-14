@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.core.models import User, Friends, Stats, Tournaments, History
+from apps.core.models import User, Friends, Tournaments, History
 
 # Register your models here.
 
@@ -15,12 +15,6 @@ class UserAdmin(admin.ModelAdmin):
 
 class FriendAdmin(admin.ModelAdmin):
     list_display = ("id", "user_id", "friend_id", "status")
-
-
-class StatsAdmin(admin.ModelAdmin):
-    list_display = ("id", "user_id", "victories",
-                    "defeats", "total_matches",
-                    "total_tournaments", "tournaments_victories", )
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -40,6 +34,5 @@ class HistoryAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Friends, FriendAdmin)
-admin.site.register(Stats, StatsAdmin)
 admin.site.register(Tournaments, TournamentAdmin)
 admin.site.register(History, HistoryAdmin)

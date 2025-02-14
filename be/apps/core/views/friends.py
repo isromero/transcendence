@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import Friends, User
@@ -19,7 +19,7 @@ class FriendsView(View):
             status=200,
         )
 
-    def post(self, request):
+    def post(self, request: HttpRequest):
         try:
             data = json.loads(request.body)
             form = FriendForm(data)

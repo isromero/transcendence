@@ -7,8 +7,17 @@ def serialize_user(user):
         "email": user.email,
         "avatar": user.avatar,
         "status": user.status,
+        "deleted_user": user.deleted_user,
     }
 
+def serialize_other_user(user):
+    return {
+        "id": user.id,
+        "username": user.username,
+        "avatar": user.avatar,
+        "status": user.status,
+        "deleted_user": user.deleted_user,
+    }
 
 def serialize_friend(friend_relation):
     return {

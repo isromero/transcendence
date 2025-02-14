@@ -14,7 +14,7 @@ def save_audit(instance, method):
     AuditLog.objects.create(
         table=instance.__class__.__name__,
         instance_id=instance.pk,
-        action=action,
+        action=method,
         old_data=old_data,
         new_data=new_data,
     )
