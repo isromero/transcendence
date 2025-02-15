@@ -2,7 +2,7 @@
 be/.env
 be/config/__pycache__/
 be/venv/
-my_script
+./my_script
 
 # Frontend
 fe/.env

@@ -1,12 +1,87 @@
 #!/usr/bin/bash
 
 docker rm -f $(docker ps -aq)
-docker rmi -f $(docker images -q)
+#docker rmi -f $(docker images -q)
 docker volume rm $(docker volume ls -q)
-echo HOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAA
 docker system prune -af --volumes
 rm -rf be/apps/core/migrations/*_initial.py
 
 #docker-compose up
 #docker exec -it be bash
 
+# from apps.core.models import User, Friends, Tournaments, History
+# import random
+# from datetime import datetime, timedelta
+
+# user1 = User.objects.create(
+#     username='user1',
+#     password='password123',
+#     email='user1@example.com',
+#     avatar='http://example.com/avatar1.png',
+#     status=True
+# )
+
+# user2 = User.objects.create(
+#     username='user2',
+#     password='password123',
+#     email='user2@example.com',
+#     avatar='http://example.com/avatar2.png',
+#     status=True
+# )
+
+# user3 = User.objects.create(
+#     username='user3',
+#     password='password123',
+#     email='user3@example.com',
+#     avatar='http://example.com/avatar3.png',
+#     status=False
+# )
+
+# friend1 = Friends.objects.create(
+#     user_id=user1,
+#     friend_id=user2,
+#     status=Friends.Status.ACCEPTED
+# )
+
+# friend2 = Friends.objects.create(
+#     user_id=user2,
+#     friend_id=user3,
+#     status=Friends.Status.SENT
+# )
+
+# tournament1 = Tournaments.objects.create(
+#     tournament_name='Tournament 1',
+#     start_date=datetime.now(),
+#     end_date=datetime.now() + timedelta(days=7)
+# )
+
+# tournament2 = Tournaments.objects.create(
+#     tournament_name='Tournament 2',
+#     start_date=datetime.now() + timedelta(days=7),
+#     end_date=datetime.now() + timedelta(days=14)
+# )
+
+# tournament1.players.add(user1, user2)
+# tournament2.players.add(user2, user3)
+
+# history1 = History.objects.create(
+#     user_id=user1,
+#     result_user=3,
+#     opponent=user2,
+#     result_opponent=1,
+#     type_match='match',
+#     tournament_id=tournament1,
+#     position_match=1,
+#     position_tournament=None
+# )
+
+# history2 = History.objects.create(
+#     user_id=user2,
+#     result_user=2,
+#     opponent=user3,
+#     result_opponent=3,
+#     type_match='tournament',
+#     tournament_id=tournament2,
+#     position_match=2,
+#     position_tournament=3
+# )
