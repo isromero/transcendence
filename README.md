@@ -61,6 +61,9 @@ Intall the following extensions:
 - Black Formatter -> ms-python.black-formatter
 - Flake8 -> ms-python.flake8 (you will need to install flake8 locally)
 
+### Linting and Formatting NEOVIM  
+See [More on vim Linting](./fe/vim.md)
+
 ### Frontend Code Quality Tools inside fe/
 #### ESLint
 - Lints JavaScript, HTML and CSS files

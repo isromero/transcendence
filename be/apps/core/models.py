@@ -27,7 +27,9 @@ class Friends(models.Model):
         SENT = "sent"
 
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends_as_user")
+    user_id = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="friends_as_user"
+    )
     friend_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="friends_as_friend"
     )
@@ -55,16 +57,18 @@ class Tournaments(models.Model):
 
 class History(models.Model):
     id = models.AutoField(primary_key=True)
+    date = models.DateTimeField(auto_now=True)
     user_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_history"
     )
     result_user = models.IntegerField()
-    opponent = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="opponent"
+    opponent_id = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="opponent_history"
     )
     result_opponent = models.IntegerField()
-    type_match = models.CharField(max_length=50)  # match o tournament_example
-    tournament_id = models.ForeignKey(Tournaments, on_delete=models.CASCADE, null=True, blank=True)
+    type_match = models.CharField(max_length=50)
+    tournament_id = models.ForeignKey(
+        Tournaments, on_delete=models.CASCADE, null=True, blank=True
+    )
     position_match = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
-    position_tournament = models.IntegerField()
+    position_tournament = models.IntegerField(null=True, blank=True)

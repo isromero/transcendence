@@ -3,7 +3,8 @@
 docker rm -f $(docker ps -aq)
 docker rmi -f $(docker images -q)
 docker volume rm $(docker volume ls -q)
-rm -rf /home/lyandriy/transcendence/be/apps/core/migrations/*_initial.py
+#docker system prune -af --volumes
+rm -rf be/apps/core/migrations/*_initial.py
 
 #docker-compose up
 #docker exec -it be bash
