@@ -7,7 +7,7 @@ def serialize_user(user):
         "username": user.username,
         "email": user.email,
         "avatar": user.avatar,
-        "status": user.status,
+        "is_online": user.is_online,
     }
 
 

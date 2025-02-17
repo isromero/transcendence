@@ -1,20 +1,20 @@
 from django.db import models
-from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import AbstractUser
+from django.templatetags.static import static
 
 
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
+class User(AbstractUser):
+    # id, username, email, password are inherited from AbstractUser
+    email = models.EmailField(unique=True, max_length=50)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
-    username = models.CharField(
-        max_length=50, unique=True, validators=[MinLengthValidator(3)]
-    )
-    password = models.CharField(max_length=128, validators=[MinLengthValidator(8)])
     avatar = models.URLField(
-        null=True, blank=True
-    )  # cambiar a una url para avatar por defecto
-    email = models.EmailField(max_length=50, unique=True)
-    status = models.BooleanField(default=False)
+        null=True, blank=True, default=static("default_avatar.webp")
+    )
+    is_online = models.BooleanField(default=False)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.username

@@ -69,6 +69,16 @@
     "spanish": "Olvidé mi contraseña",
     "ukrainian": "Я забув свій пароль"
   },
+  "username": {
+    "english": "Username",
+    "spanish": "Nombre de usuario",
+    "ukrainian": "Ім'я користувача"
+  },
+  "password-confirmation": {
+    "english": "Password confirmation",
+    "spanish": "Confirmación de contraseña",
+    "ukrainian": "Підтвердження пароля"
+  },
   "new-username": {
     "english": "New username",
     "spanish": "Nuevo nombre de usuario",

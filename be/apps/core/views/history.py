@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import History, User
@@ -17,10 +17,20 @@ class HistoryView(View):
             user = get_object_or_404(User, id=user_id)
             user_history = History.objects.filter(user_id=user)
             return JsonResponse(
-                {"data": [serialize_history(relation) for relation in user_history]},
+                {
+                    "success": True,
+                    "message": "History retrieved successfully",
+                    "data": [serialize_history(relation) for relation in user_history],
+                },
                 status=200,
             )
-        return JsonResponse({"error": "Invalid request"}, status=400)
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid request",
+            },
+            status=400,
+        )
 
     def post(self, request):
         try:
@@ -28,7 +38,14 @@ class HistoryView(View):
             form = HistoryForm(data)
             if form.is_valid():
                 user = form.save()
-                return JsonResponse(serialize_history(user), status=201)
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "History created successfully",
+                        "data": serialize_history(user),
+                    },
+                    status=201,
+                )
             return JsonResponse({"errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
@@ -42,11 +59,29 @@ class HistoryView(View):
                 form = HistoryForm(data, instance=history_instance)
                 if form.is_valid():
                     history = form.save()
-                    return JsonResponse(serialize_history(history), status=200)
-                return JsonResponse({"errors": form.errors}, status=400)
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "History updated successfully",
+                            "data": serialize_history(history),
+                        },
+                        status=200,
+                    )
             except json.JSONDecodeError:
-                return JsonResponse({"error": "Invalid JSON"}, status=400)
-        return JsonResponse({"error": "Invalid request"}, status=400)
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Invalid JSON",
+                    },
+                    status=400,
+                )
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid request",
+            },
+            status=400,
+        )
 
     def delete(self, _, action=None, **kwargs):
         if "user_id" in kwargs and action == "delete":
@@ -55,11 +90,18 @@ class HistoryView(View):
 
             if deleted_count == 0:
                 return JsonResponse(
-                    {"error": "No history found for this user."}, status=404
+                    {
+                        "success": False,
+                        "message": "No history found for this user.",
+                    },
+                    status=404,
                 )
 
             return JsonResponse(
-                {"message": f"{deleted_count} history records deleted successfully."},
+                {
+                    "success": True,
+                    "message": f"{deleted_count} history records deleted successfully.",
+                },
                 status=204,
             )
         elif "history_id" in kwargs and action == None:
@@ -68,11 +110,24 @@ class HistoryView(View):
 
             if deleted_count == 0:
                 return JsonResponse(
-                    {"error": "No history found for this user."}, status=404
+                    {
+                        "success": False,
+                        "message": "No history found for this user.",
+                    },
+                    status=404,
                 )
 
             return JsonResponse(
-                {"message": f"{deleted_count} history records deleted successfully."},
+                {
+                    "success": True,
+                    "message": f"{deleted_count} history records deleted successfully.",
+                },
                 status=204,
             )
-        return JsonResponse({"error": "Invalid request1"}, status=400)
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid request",
+            },
+            status=400,
+        )

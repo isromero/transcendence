@@ -1,1698 +1,1035 @@
 [
-{
-  "model": "admin.logentry",
-  "pk": 1,
-  "fields": {
-    "action_time": "2025-01-25T16:42:19.449Z",
-    "user": 1,
-    "content_type": 7,
-    "object_id": "1",
-    "object_repr": "Pepito",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
+  {
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+      "created_at": "2025-01-25T16:42:19.447Z",
+      "updated_at": "2025-01-25T16:42:19.447Z",
+      "username": "Pepito",
+      "password": "123456",
+      "avatar": null,
+      "email": "pe@pi.to",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+      "created_at": "2025-01-25T16:42:57.268Z",
+      "updated_at": "2025-01-25T16:42:57.268Z",
+      "username": "filogonio",
+      "password": "1234",
+      "avatar": null,
+      "email": "filo@go.nio",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 3,
+    "fields": {
+      "created_at": "2025-01-25T16:43:19.564Z",
+      "updated_at": "2025-01-25T16:43:19.564Z",
+      "username": "onesiforo",
+      "password": "asdfgh",
+      "avatar": null,
+      "email": "one@si.foro",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 5,
+    "fields": {
+      "created_at": "2025-01-31T17:40:16.237Z",
+      "updated_at": "2025-01-31T17:40:16.237Z",
+      "username": "Sofía",
+      "password": "sf_1*2*3*",
+      "avatar": null,
+      "email": "sofia@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 6,
+    "fields": {
+      "created_at": "2025-01-31T17:41:19.765Z",
+      "updated_at": "2025-01-31T17:41:19.765Z",
+      "username": "Javier",
+      "password": "Jvr_1-2-3* *",
+      "avatar": null,
+      "email": "javier@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 7,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Antonio",
+      "password": "NtN-@#@#~½¬~{",
+      "avatar": null,
+      "email": "antonio@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 8,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Laura",
+      "password": "sjadh fhh sbdbgd",
+      "avatar": null,
+      "email": "laura@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 9,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Elena",
+      "password": " hoprguhgdhdf dfjnvdjbdf",
+      "avatar": null,
+      "email": "elena@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 10,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Roberto",
+      "password": "**********",
+      "avatar": null,
+      "email": "roberto@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 11,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Alejandro",
+      "password": "            ",
+      "avatar": null,
+      "email": "alejandro@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 12,
+    "fields": {
+      "created_at": "2025-01-31T17:45:30.219Z",
+      "updated_at": "2025-01-31T17:45:30.219Z",
+      "username": "Manuel",
+      "password": "ASDFGHJERTYUIXCVBNM",
+      "avatar": null,
+      "email": "manuel@gmail.com",
+      "is_online": false
+    }
+  },
+  {
+    "model": "core.friends",
+    "pk": 1,
+    "fields": {
+      "user_id": 1,
+      "friend_id": 2,
+      "created_at": "2025-01-26T09:24:28.408Z",
+      "status": "sent"
+    }
+  },
+  {
+    "model": "core.friends",
+    "pk": 2,
+    "fields": {
+      "user_id": 1,
+      "friend_id": 3,
+      "created_at": "2025-01-26T09:24:40.342Z",
+      "status": "accepted"
+    }
+  },
+  {
+    "model": "core.friends",
+    "pk": 3,
+    "fields": {
+      "user_id": 2,
+      "friend_id": 3,
+      "created_at": "2025-01-26T09:24:50.001Z",
+      "status": "declined"
+    }
+  },
+  {
+    "model": "core.friends",
+    "pk": 4,
+    "fields": {
+      "user_id": 3,
+      "friend_id": 1,
+      "created_at": "2025-01-26T09:36:38.027Z",
+      "status": "accepted"
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 1,
+    "fields": {
+      "user_id": 5,
+      "victories": 5,
+      "defeats": 3,
+      "total_matches": 8,
+      "total_tournaments": 4,
+      "tournaments_victories": 1
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 2,
+    "fields": {
+      "user_id": 6,
+      "victories": 0,
+      "defeats": 2,
+      "total_matches": 2,
+      "total_tournaments": 2,
+      "tournaments_victories": 0
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 3,
+    "fields": {
+      "user_id": 7,
+      "victories": 5,
+      "defeats": 1,
+      "total_matches": 6,
+      "total_tournaments": 3,
+      "tournaments_victories": 2
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 4,
+    "fields": {
+      "user_id": 8,
+      "victories": 3,
+      "defeats": 3,
+      "total_matches": 6,
+      "total_tournaments": 4,
+      "tournaments_victories": 1
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 5,
+    "fields": {
+      "user_id": 9,
+      "victories": 6,
+      "defeats": 3,
+      "total_matches": 9,
+      "total_tournaments": 5,
+      "tournaments_victories": 2
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 6,
+    "fields": {
+      "user_id": 10,
+      "victories": 0,
+      "defeats": 4,
+      "total_matches": 4,
+      "total_tournaments": 4,
+      "tournaments_victories": 0
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 7,
+    "fields": {
+      "user_id": 11,
+      "victories": 5,
+      "defeats": 3,
+      "total_matches": 8,
+      "total_tournaments": 3,
+      "tournaments_victories": 0
+    }
+  },
+  {
+    "model": "core.stats",
+    "pk": 8,
+    "fields": {
+      "user_id": 12,
+      "victories": 0,
+      "defeats": 3,
+      "total_matches": 3,
+      "total_tournaments": 3,
+      "tournaments_victories": 0
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 1,
+    "fields": {
+      "tournament_name": "SuperLiga",
+      "start_date": "2025-01-24T18:19:17.990Z",
+      "end_date": "2025-01-25T18:19:17.990Z",
+      "players": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 2,
+    "fields": {
+      "tournament_name": "Copa del Rey",
+      "start_date": "2025-01-26T21:20:50.327Z",
+      "end_date": "2025-01-27T02:20:50.327Z",
+      "players": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 3,
+    "fields": {
+      "tournament_name": "Alevines",
+      "start_date": "2025-01-25T11:11:00Z",
+      "end_date": "2025-01-25T14:14:00Z",
+      "players": [
+        9,
+        10,
+        5,
+        7
+      ]
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 4,
+    "fields": {
+      "tournament_name": "Teresa Rivero",
+      "start_date": "2025-01-27T12:21:00Z",
+      "end_date": "2025-01-29T14:42:00Z",
+      "players": [
+        8,
+        9,
+        11,
+        5
+      ]
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 5,
+    "fields": {
+      "tournament_name": "Villa de Madrid",
+      "start_date": "2025-01-27T21:21:00Z",
+      "end_date": "2025-01-29T22:23:00Z",
+      "players": [
+        9,
+        12
+      ]
+    }
+  },
+  {
+    "model": "core.tournaments",
+    "pk": 6,
+    "fields": {
+      "tournament_name": "Super Bowl XLIX",
+      "start_date": "2025-01-30T05:00:00Z",
+      "end_date": "2025-01-30T08:58:00Z",
+      "players": [
+        8,
+        10
+      ]
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 1,
+    "fields": {
+      "user_id": 5,
+      "result_user": 10,
+      "opponent_id": 6,
+      "result_opponent": 8,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-25T03:35:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 2,
+    "fields": {
+      "user_id": 6,
+      "result_user": 8,
+      "opponent_id": 5,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-25T03:35:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 3,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 8,
+      "result_opponent": 7,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-26T03:41:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 4,
+    "fields": {
+      "user_id": 8,
+      "result_user": 7,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-26T03:41:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 5,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 10,
+      "result_opponent": 9,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-26T10:12:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 6,
+    "fields": {
+      "user_id": 10,
+      "result_user": 9,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-26T10:12:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 7,
+    "fields": {
+      "user_id": 11,
+      "result_user": 10,
+      "opponent_id": 12,
+      "result_opponent": 6,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-26T07:52:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 8,
+    "fields": {
+      "user_id": 12,
+      "result_user": 6,
+      "opponent_id": 11,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-26T07:52:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 9,
+    "fields": {
+      "user_id": 5,
+      "result_user": 10,
+      "opponent_id": 7,
+      "result_opponent": 7,
+      "type_match": "tournament_semi",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-28T05:20:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 10,
+    "fields": {
+      "user_id": 7,
+      "result_user": 7,
+      "opponent_id": 5,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-28T05:20:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 11,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 11,
+      "result_opponent": 8,
+      "type_match": "tournament_semi",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-28T12:00:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 12,
+    "fields": {
+      "user_id": 11,
+      "result_user": 8,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-28T12:00:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 13,
+    "fields": {
+      "user_id": 5,
+      "result_user": 9,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 1,
+      "position_match": 2,
+      "date": "2025-01-28T15:45:00Z",
+      "position_tournament": 2
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 14,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 5,
+      "result_opponent": 9,
+      "type_match": "tournament_final",
+      "tournament_id": 1,
+      "position_match": 1,
+      "date": "2025-01-28T15:45:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 15,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 6,
+      "result_opponent": 6,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-13T18:31:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 16,
+    "fields": {
+      "user_id": 6,
+      "result_user": 6,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-13T18:31:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 17,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 12,
+      "result_opponent": 9,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-13T21:46:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 18,
+    "fields": {
+      "user_id": 12,
+      "result_user": 9,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-13T21:46:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 19,
+    "fields": {
+      "user_id": 8,
+      "result_user": 10,
+      "opponent_id": 10,
+      "result_opponent": 7,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-13T17:15:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 20,
+    "fields": {
+      "user_id": 10,
+      "result_user": 7,
+      "opponent_id": 8,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-13T17:15:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 21,
+    "fields": {
+      "user_id": 5,
+      "result_user": 10,
+      "opponent_id": 11,
+      "result_opponent": 8,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-12T23:11:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 22,
+    "fields": {
+      "user_id": 11,
+      "result_user": 8,
+      "opponent_id": 5,
+      "result_opponent": 10,
+      "type_match": "tournament_quarter",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-12T23:11:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 23,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 9,
+      "result_opponent": 8,
+      "type_match": "tournament_semi",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-15T05:39:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 24,
+    "fields": {
+      "user_id": 9,
+      "result_user": 8,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-15T05:39:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 25,
+    "fields": {
+      "user_id": 8,
+      "result_user": 10,
+      "opponent_id": 5,
+      "result_opponent": 6,
+      "type_match": "tournament_semi",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-15T16:45:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 26,
+    "fields": {
+      "user_id": 5,
+      "result_user": 6,
+      "opponent_id": 8,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-15T16:45:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 27,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 8,
+      "result_opponent": 2,
+      "type_match": "tournament_final",
+      "tournament_id": 2,
+      "position_match": 1,
+      "date": "2025-01-17T08:04:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 28,
+    "fields": {
+      "user_id": 8,
+      "result_user": 2,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 2,
+      "position_match": 2,
+      "date": "2025-01-17T08:04:00Z",
+      "position_tournament": 2
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 29,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 5,
+      "result_opponent": 7,
+      "type_match": "tournament_semi",
+      "tournament_id": 3,
+      "position_match": 1,
+      "date": "2025-01-05T06:35:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 30,
+    "fields": {
+      "user_id": 5,
+      "result_user": 7,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 3,
+      "position_match": 2,
+      "date": "2025-01-05T06:35:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 31,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 10,
+      "result_opponent": 6,
+      "type_match": "tournament_semi",
+      "tournament_id": 3,
+      "position_match": 1,
+      "date": "2025-01-05T16:41:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 32,
+    "fields": {
+      "user_id": 10,
+      "result_user": 6,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 3,
+      "position_match": 2,
+      "date": "2025-01-05T16:41:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 33,
+    "fields": {
+      "user_id": 7,
+      "result_user": 10,
+      "opponent_id": 9,
+      "result_opponent": 4,
+      "type_match": "tournament_final",
+      "tournament_id": 3,
+      "position_match": 1,
+      "date": "2025-01-07T08:38:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 34,
+    "fields": {
+      "user_id": 9,
+      "result_user": 4,
+      "opponent_id": 7,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 3,
+      "position_match": 2,
+      "date": "2025-01-07T08:38:00Z",
+      "position_tournament": 2
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 35,
+    "fields": {
+      "user_id": 5,
+      "result_user": 10,
+      "opponent_id": 8,
+      "result_opponent": 6,
+      "type_match": "tournament_semi",
+      "tournament_id": 4,
+      "position_match": 1,
+      "date": "2025-01-02T06:39:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 36,
+    "fields": {
+      "user_id": 8,
+      "result_user": 6,
+      "opponent_id": 5,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 4,
+      "position_match": 2,
+      "date": "2025-01-02T06:39:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 37,
+    "fields": {
+      "user_id": 11,
+      "result_user": 10,
+      "opponent_id": 9,
+      "result_opponent": 9,
+      "type_match": "tournament_semi",
+      "tournament_id": 4,
+      "position_match": 1,
+      "date": "2025-01-02T16:45:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 38,
+    "fields": {
+      "user_id": 9,
+      "result_user": 9,
+      "opponent_id": 11,
+      "result_opponent": 10,
+      "type_match": "tournament_semi",
+      "tournament_id": 4,
+      "position_match": 2,
+      "date": "2025-01-02T16:45:00Z",
+      "position_tournament": 0
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 39,
+    "fields": {
+      "user_id": 5,
+      "result_user": 10,
+      "opponent_id": 11,
+      "result_opponent": 0,
+      "type_match": "tournament_final",
+      "tournament_id": 4,
+      "position_match": 1,
+      "date": "2025-01-04T08:42:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 40,
+    "fields": {
+      "user_id": 11,
+      "result_user": 0,
+      "opponent_id": 5,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 4,
+      "position_match": 2,
+      "date": "2025-01-04T08:42:00Z",
+      "position_tournament": 2
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 41,
+    "fields": {
+      "user_id": 9,
+      "result_user": 10,
+      "opponent_id": 12,
+      "result_opponent": 2,
+      "type_match": "tournament_final",
+      "tournament_id": 5,
+      "position_match": 1,
+      "date": "2025-01-30T10:47:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 42,
+    "fields": {
+      "user_id": 12,
+      "result_user": 2,
+      "opponent_id": 9,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 5,
+      "position_match": 2,
+      "date": "2025-01-30T10:47:00Z",
+      "position_tournament": 2
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 45,
+    "fields": {
+      "user_id": 8,
+      "result_user": 10,
+      "opponent_id": 10,
+      "result_opponent": 3,
+      "type_match": "tournament_final",
+      "tournament_id": 6,
+      "position_match": 1,
+      "date": "2025-01-31T23:37:00Z",
+      "position_tournament": 1
+    }
+  },
+  {
+    "model": "core.history",
+    "pk": 46,
+    "fields": {
+      "user_id": 10,
+      "result_user": 3,
+      "opponent_id": 8,
+      "result_opponent": 10,
+      "type_match": "tournament_final",
+      "tournament_id": 6,
+      "position_match": 2,
+      "date": "2025-01-31T23:37:00Z",
+      "position_tournament": 2
+    }
   }
-},
-{
-  "model": "admin.logentry",
-  "pk": 2,
-  "fields": {
-    "action_time": "2025-01-25T16:42:57.270Z",
-    "user": 1,
-    "content_type": 7,
-    "object_id": "2",
-    "object_repr": "filogonio",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 3,
-  "fields": {
-    "action_time": "2025-01-25T16:43:19.566Z",
-    "user": 1,
-    "content_type": 7,
-    "object_id": "3",
-    "object_repr": "onesiforo",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 4,
-  "fields": {
-    "action_time": "2025-01-26T09:24:28.410Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "1",
-    "object_repr": "Friends object (1)",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 5,
-  "fields": {
-    "action_time": "2025-01-26T09:24:40.342Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "2",
-    "object_repr": "Friends object (2)",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 6,
-  "fields": {
-    "action_time": "2025-01-26T09:24:50.001Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "3",
-    "object_repr": "Friends object (3)",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 7,
-  "fields": {
-    "action_time": "2025-01-26T09:36:38.027Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "4",
-    "object_repr": "Friends object (4)",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 8,
-  "fields": {
-    "action_time": "2025-01-26T09:37:22.237Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "3",
-    "object_repr": "Friends object (3)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 9,
-  "fields": {
-    "action_time": "2025-01-26T09:37:30.747Z",
-    "user": 1,
-    "content_type": 11,
-    "object_id": "3",
-    "object_repr": "Friends object (3)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 1,
-  "fields": {
-    "name": "Can add log entry",
-    "content_type": 1,
-    "codename": "add_logentry"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 2,
-  "fields": {
-    "name": "Can change log entry",
-    "content_type": 1,
-    "codename": "change_logentry"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 3,
-  "fields": {
-    "name": "Can delete log entry",
-    "content_type": 1,
-    "codename": "delete_logentry"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 4,
-  "fields": {
-    "name": "Can view log entry",
-    "content_type": 1,
-    "codename": "view_logentry"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 5,
-  "fields": {
-    "name": "Can add permission",
-    "content_type": 2,
-    "codename": "add_permission"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 6,
-  "fields": {
-    "name": "Can change permission",
-    "content_type": 2,
-    "codename": "change_permission"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 7,
-  "fields": {
-    "name": "Can delete permission",
-    "content_type": 2,
-    "codename": "delete_permission"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 8,
-  "fields": {
-    "name": "Can view permission",
-    "content_type": 2,
-    "codename": "view_permission"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 9,
-  "fields": {
-    "name": "Can add group",
-    "content_type": 3,
-    "codename": "add_group"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 10,
-  "fields": {
-    "name": "Can change group",
-    "content_type": 3,
-    "codename": "change_group"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 11,
-  "fields": {
-    "name": "Can delete group",
-    "content_type": 3,
-    "codename": "delete_group"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 12,
-  "fields": {
-    "name": "Can view group",
-    "content_type": 3,
-    "codename": "view_group"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 13,
-  "fields": {
-    "name": "Can add user",
-    "content_type": 4,
-    "codename": "add_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 14,
-  "fields": {
-    "name": "Can change user",
-    "content_type": 4,
-    "codename": "change_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 15,
-  "fields": {
-    "name": "Can delete user",
-    "content_type": 4,
-    "codename": "delete_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 16,
-  "fields": {
-    "name": "Can view user",
-    "content_type": 4,
-    "codename": "view_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 17,
-  "fields": {
-    "name": "Can add content type",
-    "content_type": 5,
-    "codename": "add_contenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 18,
-  "fields": {
-    "name": "Can change content type",
-    "content_type": 5,
-    "codename": "change_contenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 19,
-  "fields": {
-    "name": "Can delete content type",
-    "content_type": 5,
-    "codename": "delete_contenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 20,
-  "fields": {
-    "name": "Can view content type",
-    "content_type": 5,
-    "codename": "view_contenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 21,
-  "fields": {
-    "name": "Can add session",
-    "content_type": 6,
-    "codename": "add_session"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 22,
-  "fields": {
-    "name": "Can change session",
-    "content_type": 6,
-    "codename": "change_session"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 23,
-  "fields": {
-    "name": "Can delete session",
-    "content_type": 6,
-    "codename": "delete_session"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 24,
-  "fields": {
-    "name": "Can view session",
-    "content_type": 6,
-    "codename": "view_session"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 25,
-  "fields": {
-    "name": "Can add users",
-    "content_type": 7,
-    "codename": "add_users"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 26,
-  "fields": {
-    "name": "Can change users",
-    "content_type": 7,
-    "codename": "change_users"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 27,
-  "fields": {
-    "name": "Can delete users",
-    "content_type": 7,
-    "codename": "delete_users"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 28,
-  "fields": {
-    "name": "Can view users",
-    "content_type": 7,
-    "codename": "view_users"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 29,
-  "fields": {
-    "name": "Can add tournaments",
-    "content_type": 8,
-    "codename": "add_tournaments"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 30,
-  "fields": {
-    "name": "Can change tournaments",
-    "content_type": 8,
-    "codename": "change_tournaments"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 31,
-  "fields": {
-    "name": "Can delete tournaments",
-    "content_type": 8,
-    "codename": "delete_tournaments"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 32,
-  "fields": {
-    "name": "Can view tournaments",
-    "content_type": 8,
-    "codename": "view_tournaments"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 33,
-  "fields": {
-    "name": "Can add stats",
-    "content_type": 9,
-    "codename": "add_stats"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 34,
-  "fields": {
-    "name": "Can change stats",
-    "content_type": 9,
-    "codename": "change_stats"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 35,
-  "fields": {
-    "name": "Can delete stats",
-    "content_type": 9,
-    "codename": "delete_stats"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 36,
-  "fields": {
-    "name": "Can view stats",
-    "content_type": 9,
-    "codename": "view_stats"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 37,
-  "fields": {
-    "name": "Can add history",
-    "content_type": 10,
-    "codename": "add_history"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 38,
-  "fields": {
-    "name": "Can change history",
-    "content_type": 10,
-    "codename": "change_history"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 39,
-  "fields": {
-    "name": "Can delete history",
-    "content_type": 10,
-    "codename": "delete_history"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 40,
-  "fields": {
-    "name": "Can view history",
-    "content_type": 10,
-    "codename": "view_history"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 41,
-  "fields": {
-    "name": "Can add friends",
-    "content_type": 11,
-    "codename": "add_friends"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 42,
-  "fields": {
-    "name": "Can change friends",
-    "content_type": 11,
-    "codename": "change_friends"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 43,
-  "fields": {
-    "name": "Can delete friends",
-    "content_type": 11,
-    "codename": "delete_friends"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 44,
-  "fields": {
-    "name": "Can view friends",
-    "content_type": 11,
-    "codename": "view_friends"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 45,
-  "fields": {
-    "name": "Can add user",
-    "content_type": 7,
-    "codename": "add_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 46,
-  "fields": {
-    "name": "Can change user",
-    "content_type": 7,
-    "codename": "change_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 47,
-  "fields": {
-    "name": "Can delete user",
-    "content_type": 7,
-    "codename": "delete_user"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 48,
-  "fields": {
-    "name": "Can view user",
-    "content_type": 7,
-    "codename": "view_user"
-  }
-},
-{
-  "model": "auth.user",
-  "pk": 1,
-  "fields": {
-    "password": "pbkdf2_sha256$870000$pWtaUw5nrYYdl5xbDAEno9$wQnfpk4c+t261mBJo8cpWpTWpRJOYvUyTA1zmJ9BD7E=",
-    "last_login": "2025-01-25T16:39:35.424Z",
-    "is_superuser": true,
-    "username": "PepeGF",
-    "first_name": "",
-    "last_name": "",
-    "email": "",
-    "is_staff": true,
-    "is_active": true,
-    "date_joined": "2025-01-25T16:39:26.443Z",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 1,
-  "fields": {
-    "app_label": "admin",
-    "model": "logentry"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 2,
-  "fields": {
-    "app_label": "auth",
-    "model": "permission"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 3,
-  "fields": {
-    "app_label": "auth",
-    "model": "group"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 4,
-  "fields": {
-    "app_label": "auth",
-    "model": "user"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 5,
-  "fields": {
-    "app_label": "contenttypes",
-    "model": "contenttype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 6,
-  "fields": {
-    "app_label": "sessions",
-    "model": "session"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 7,
-  "fields": {
-    "app_label": "core",
-    "model": "user"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 8,
-  "fields": {
-    "app_label": "core",
-    "model": "tournaments"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 9,
-  "fields": {
-    "app_label": "core",
-    "model": "stats"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 10,
-  "fields": {
-    "app_label": "core",
-    "model": "history"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 11,
-  "fields": {
-    "app_label": "core",
-    "model": "friends"
-  }
-},
-{
-  "model": "sessions.session",
-  "pk": "y70213whjtk7gx2sbboycyaxosggohab",
-  "fields": {
-    "session_data": ".eJxVjDsOwjAQBe_iGlle-U9Jzxms9a6NA8iR4qRC3B0ipYD2zcx7iYTb2tI2ypImFmcB4vS7ZaRH6TvgO_bbLGnu6zJluSvyoENeZy7Py-H-HTQc7VtHXSp4zCYTgLMuIoMHHZWLlotlbRRkDgGIYwXS5IqpGByTr2SUFe8P3hU4Bw:1tbjC3:rFKhD464xTg1LTnpYTZN87EGxyygSwCo1-SqdnCx9QA",
-    "expire_date": "2025-02-08T16:39:35.428Z"
-  }
-},
-{
-  "model": "core.user",
-  "pk": 1,
-  "fields": {
-    "created_at": "2025-01-25T16:42:19.447Z",
-    "updated_at": "2025-01-25T16:42:19.447Z",
-    "username": "Pepito",
-    "password": "123456",
-    "avatar": null,
-    "email": "pe@pi.to",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 2,
-  "fields": {
-    "created_at": "2025-01-25T16:42:57.268Z",
-    "updated_at": "2025-01-25T16:42:57.268Z",
-    "username": "filogonio",
-    "password": "1234",
-    "avatar": null,
-    "email": "filo@go.nio",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 3,
-  "fields": {
-    "created_at": "2025-01-25T16:43:19.564Z",
-    "updated_at": "2025-01-25T16:43:19.564Z",
-    "username": "onesiforo",
-    "password": "asdfgh",
-    "avatar": null,
-    "email": "one@si.foro",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 5,
-  "fields": {
-    "created_at": "2025-01-31T17:40:16.237Z",
-    "updated_at": "2025-01-31T17:40:16.237Z",
-    "username": "Sofía",
-    "password": "sf_1*2*3*",
-    "avatar": null,
-    "email": "sofia@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 6,
-  "fields": {
-    "created_at": "2025-01-31T17:41:19.765Z",
-    "updated_at": "2025-01-31T17:41:19.765Z",
-    "username": "Javier",
-    "password": "Jvr_1-2-3* *",
-    "avatar": null,
-    "email": "javier@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 7,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Antonio",
-    "password": "NtN-@#@#~½¬~{",
-    "avatar": null,
-    "email": "antonio@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 8,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Laura",
-    "password": "sjadh fhh sbdbgd",
-    "avatar": null,
-    "email": "laura@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 9,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Elena",
-    "password": " hoprguhgdhdf dfjnvdjbdf",
-    "avatar": null,
-    "email": "elena@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 10,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Roberto",
-    "password": "**********",
-    "avatar": null,
-    "email": "roberto@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 11,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Alejandro",
-    "password": "            ",
-    "avatar": null,
-    "email": "alejandro@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.user",
-  "pk": 12,
-  "fields": {
-    "created_at": "2025-01-31T17:45:30.219Z",
-    "updated_at": "2025-01-31T17:45:30.219Z",
-    "username": "Manuel",
-    "password": "ASDFGHJERTYUIXCVBNM",
-    "avatar": null,
-    "email": "manuel@gmail.com",
-    "status": false
-  }
-},
-{
-  "model": "core.friends",
-  "pk": 1,
-  "fields": {
-    "user_id": 1,
-    "friend_id": 2,
-    "created_at": "2025-01-26T09:24:28.408Z",
-    "status": "sent"
-  }
-},
-{
-  "model": "core.friends",
-  "pk": 2,
-  "fields": {
-    "user_id": 1,
-    "friend_id": 3,
-    "created_at": "2025-01-26T09:24:40.342Z",
-    "status": "accepted"
-  }
-},
-{
-  "model": "core.friends",
-  "pk": 3,
-  "fields": {
-    "user_id": 2,
-    "friend_id": 3,
-    "created_at": "2025-01-26T09:24:50.001Z",
-    "status": "declined"
-  }
-},
-{
-  "model": "core.friends",
-  "pk": 4,
-  "fields": {
-    "user_id": 3,
-    "friend_id": 1,
-    "created_at": "2025-01-26T09:36:38.027Z",
-    "status": "accepted"
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 1,
-  "fields": {
-    "user_id": 5,
-    "victories": 5,
-    "defeats": 3,
-    "total_matches": 8,
-    "total_tournaments": 4,
-    "tournaments_victories": 1
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 2,
-  "fields": {
-    "user_id": 6,
-    "victories": 0,
-    "defeats": 2,
-    "total_matches": 2,
-    "total_tournaments": 2,
-    "tournaments_victories": 0
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 3,
-  "fields": {
-    "user_id": 7,
-    "victories": 5,
-    "defeats": 1,
-    "total_matches": 6,
-    "total_tournaments": 3,
-    "tournaments_victories": 2
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 4,
-  "fields": {
-    "user_id": 8,
-    "victories": 3,
-    "defeats": 3,
-    "total_matches": 6,
-    "total_tournaments": 4,
-    "tournaments_victories": 1
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 5,
-  "fields": {
-    "user_id": 9,
-    "victories": 6,
-    "defeats": 3,
-    "total_matches": 9,
-    "total_tournaments": 5,
-    "tournaments_victories": 2
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 6,
-  "fields": {
-    "user_id": 10,
-    "victories": 0,
-    "defeats": 4,
-    "total_matches": 4,
-    "total_tournaments": 4,
-    "tournaments_victories": 0
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 7,
-  "fields": {
-    "user_id": 11,
-    "victories": 5,
-    "defeats": 3,
-    "total_matches": 8,
-    "total_tournaments": 3,
-    "tournaments_victories": 0
-  }
-},
-{
-  "model": "core.stats",
-  "pk": 8,
-  "fields": {
-    "user_id": 12,
-    "victories": 0,
-    "defeats": 3,
-    "total_matches": 3,
-    "total_tournaments": 3,
-    "tournaments_victories": 0
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 1,
-  "fields": {
-    "tournament_name": "SuperLiga",
-    "start_date": "2025-01-24T18:19:17.990Z",
-    "end_date": "2025-01-25T18:19:17.990Z",
-    "players": [
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12
-    ]
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 2,
-  "fields": {
-    "tournament_name": "Copa del Rey",
-    "start_date": "2025-01-26T21:20:50.327Z",
-    "end_date": "2025-01-27T02:20:50.327Z",
-    "players": [
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12
-    ]
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 3,
-  "fields": {
-    "tournament_name": "Alevines",
-    "start_date": "2025-01-25T11:11:00Z",
-    "end_date": "2025-01-25T14:14:00Z",
-    "players": [
-      9,
-      10,
-      5,
-      7
-    ]
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 4,
-  "fields": {
-    "tournament_name": "Teresa Rivero",
-    "start_date": "2025-01-27T12:21:00Z",
-    "end_date": "2025-01-29T14:42:00Z",
-    "players": [
-      8,
-      9,
-      11,
-      5
-    ]
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 5,
-  "fields": {
-    "tournament_name": "Villa de Madrid",
-    "start_date": "2025-01-27T21:21:00Z",
-    "end_date": "2025-01-29T22:23:00Z",
-    "players": [
-      9,
-      12
-    ]
-  }
-},
-{
-  "model": "core.tournaments",
-  "pk": 6,
-  "fields": {
-    "tournament_name": "Super Bowl XLIX",
-    "start_date": "2025-01-30T05:00:00Z",
-    "end_date": "2025-01-30T08:58:00Z",
-    "players": [
-      8,
-      10
-    ]
-  }
-},
-{
-  "model": "core.history",
-  "pk": 1,
-  "fields": {
-    "user_id": 5,
-    "result_user": 10,
-    "opponent_id": 6,
-    "result_opponent": 8,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-25T03:35:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 2,
-  "fields": {
-    "user_id": 6,
-    "result_user": 8,
-    "opponent_id": 5,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-25T03:35:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 3,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 8,
-    "result_opponent": 7,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-26T03:41:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 4,
-  "fields": {
-    "user_id": 8,
-    "result_user": 7,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-26T03:41:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 5,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 10,
-    "result_opponent": 9,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-26T10:12:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 6,
-  "fields": {
-    "user_id": 10,
-    "result_user": 9,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-26T10:12:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 7,
-  "fields": {
-    "user_id": 11,
-    "result_user": 10,
-    "opponent_id": 12,
-    "result_opponent": 6,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-26T07:52:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 8,
-  "fields": {
-    "user_id": 12,
-    "result_user": 6,
-    "opponent_id": 11,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-26T07:52:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 9,
-  "fields": {
-    "user_id": 5,
-    "result_user": 10,
-    "opponent_id": 7,
-    "result_opponent": 7,
-    "type_match": "tournament_semi",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-28T05:20:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 10,
-  "fields": {
-    "user_id": 7,
-    "result_user": 7,
-    "opponent_id": 5,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-28T05:20:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 11,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 11,
-    "result_opponent": 8,
-    "type_match": "tournament_semi",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-28T12:00:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 12,
-  "fields": {
-    "user_id": 11,
-    "result_user": 8,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-28T12:00:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 13,
-  "fields": {
-    "user_id": 5,
-    "result_user": 9,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 1,
-    "position_match": 2,
-    "date": "2025-01-28T15:45:00Z",
-    "position_tournament": 2
-  }
-},
-{
-  "model": "core.history",
-  "pk": 14,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 5,
-    "result_opponent": 9,
-    "type_match": "tournament_final",
-    "tournament_id": 1,
-    "position_match": 1,
-    "date": "2025-01-28T15:45:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 15,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 6,
-    "result_opponent": 6,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-13T18:31:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 16,
-  "fields": {
-    "user_id": 6,
-    "result_user": 6,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-13T18:31:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 17,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 12,
-    "result_opponent": 9,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-13T21:46:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 18,
-  "fields": {
-    "user_id": 12,
-    "result_user": 9,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-13T21:46:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 19,
-  "fields": {
-    "user_id": 8,
-    "result_user": 10,
-    "opponent_id": 10,
-    "result_opponent": 7,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-13T17:15:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 20,
-  "fields": {
-    "user_id": 10,
-    "result_user": 7,
-    "opponent_id": 8,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-13T17:15:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 21,
-  "fields": {
-    "user_id": 5,
-    "result_user": 10,
-    "opponent_id": 11,
-    "result_opponent": 8,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-12T23:11:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 22,
-  "fields": {
-    "user_id": 11,
-    "result_user": 8,
-    "opponent_id": 5,
-    "result_opponent": 10,
-    "type_match": "tournament_quarter",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-12T23:11:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 23,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 9,
-    "result_opponent": 8,
-    "type_match": "tournament_semi",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-15T05:39:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 24,
-  "fields": {
-    "user_id": 9,
-    "result_user": 8,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-15T05:39:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 25,
-  "fields": {
-    "user_id": 8,
-    "result_user": 10,
-    "opponent_id": 5,
-    "result_opponent": 6,
-    "type_match": "tournament_semi",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-15T16:45:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 26,
-  "fields": {
-    "user_id": 5,
-    "result_user": 6,
-    "opponent_id": 8,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-15T16:45:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 27,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 8,
-    "result_opponent": 2,
-    "type_match": "tournament_final",
-    "tournament_id": 2,
-    "position_match": 1,
-    "date": "2025-01-17T08:04:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 28,
-  "fields": {
-    "user_id": 8,
-    "result_user": 2,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 2,
-    "position_match": 2,
-    "date": "2025-01-17T08:04:00Z",
-    "position_tournament": 2
-  }
-},
-{
-  "model": "core.history",
-  "pk": 29,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 5,
-    "result_opponent": 7,
-    "type_match": "tournament_semi",
-    "tournament_id": 3,
-    "position_match": 1,
-    "date": "2025-01-05T06:35:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 30,
-  "fields": {
-    "user_id": 5,
-    "result_user": 7,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 3,
-    "position_match": 2,
-    "date": "2025-01-05T06:35:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 31,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 10,
-    "result_opponent": 6,
-    "type_match": "tournament_semi",
-    "tournament_id": 3,
-    "position_match": 1,
-    "date": "2025-01-05T16:41:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 32,
-  "fields": {
-    "user_id": 10,
-    "result_user": 6,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 3,
-    "position_match": 2,
-    "date": "2025-01-05T16:41:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 33,
-  "fields": {
-    "user_id": 7,
-    "result_user": 10,
-    "opponent_id": 9,
-    "result_opponent": 4,
-    "type_match": "tournament_final",
-    "tournament_id": 3,
-    "position_match": 1,
-    "date": "2025-01-07T08:38:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 34,
-  "fields": {
-    "user_id": 9,
-    "result_user": 4,
-    "opponent_id": 7,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 3,
-    "position_match": 2,
-    "date": "2025-01-07T08:38:00Z",
-    "position_tournament": 2
-  }
-},
-{
-  "model": "core.history",
-  "pk": 35,
-  "fields": {
-    "user_id": 5,
-    "result_user": 10,
-    "opponent_id": 8,
-    "result_opponent": 6,
-    "type_match": "tournament_semi",
-    "tournament_id": 4,
-    "position_match": 1,
-    "date": "2025-01-02T06:39:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 36,
-  "fields": {
-    "user_id": 8,
-    "result_user": 6,
-    "opponent_id": 5,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 4,
-    "position_match": 2,
-    "date": "2025-01-02T06:39:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 37,
-  "fields": {
-    "user_id": 11,
-    "result_user": 10,
-    "opponent_id": 9,
-    "result_opponent": 9,
-    "type_match": "tournament_semi",
-    "tournament_id": 4,
-    "position_match": 1,
-    "date": "2025-01-02T16:45:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 38,
-  "fields": {
-    "user_id": 9,
-    "result_user": 9,
-    "opponent_id": 11,
-    "result_opponent": 10,
-    "type_match": "tournament_semi",
-    "tournament_id": 4,
-    "position_match": 2,
-    "date": "2025-01-02T16:45:00Z",
-    "position_tournament": 0
-  }
-},
-{
-  "model": "core.history",
-  "pk": 39,
-  "fields": {
-    "user_id": 5,
-    "result_user": 10,
-    "opponent_id": 11,
-    "result_opponent": 0,
-    "type_match": "tournament_final",
-    "tournament_id": 4,
-    "position_match": 1,
-    "date": "2025-01-04T08:42:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 40,
-  "fields": {
-    "user_id": 11,
-    "result_user": 0,
-    "opponent_id": 5,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 4,
-    "position_match": 2,
-    "date": "2025-01-04T08:42:00Z",
-    "position_tournament": 2
-  }
-},
-{
-  "model": "core.history",
-  "pk": 41,
-  "fields": {
-    "user_id": 9,
-    "result_user": 10,
-    "opponent_id": 12,
-    "result_opponent": 2,
-    "type_match": "tournament_final",
-    "tournament_id": 5,
-    "position_match": 1,
-    "date": "2025-01-30T10:47:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 42,
-  "fields": {
-    "user_id": 12,
-    "result_user": 2,
-    "opponent_id": 9,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 5,
-    "position_match": 2,
-    "date": "2025-01-30T10:47:00Z",
-    "position_tournament": 2
-  }
-},
-{
-  "model": "core.history",
-  "pk": 45,
-  "fields": {
-    "user_id": 8,
-    "result_user": 10,
-    "opponent_id": 10,
-    "result_opponent": 3,
-    "type_match": "tournament_final",
-    "tournament_id": 6,
-    "position_match": 1,
-    "date": "2025-01-31T23:37:00Z",
-    "position_tournament": 1
-  }
-},
-{
-  "model": "core.history",
-  "pk": 46,
-  "fields": {
-    "user_id": 10,
-    "result_user": 3,
-    "opponent_id": 8,
-    "result_opponent": 10,
-    "type_match": "tournament_final",
-    "tournament_id": 6,
-    "position_match": 2,
-    "date": "2025-01-31T23:37:00Z",
-    "position_tournament": 2
-  }
-}
 ]

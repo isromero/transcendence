@@ -135,6 +135,7 @@ canvas {
 .form-control,
 .form-control-lg {
   border: 0px;
+  color: var(--bs-text-color);
 }
 
 .card,
@@ -346,3 +347,7 @@ canvas {
   height: 400px;
 }
 
+/* FORMS */
+.invalid-feedback {
+  color: #dc3545;
+}
