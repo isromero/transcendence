@@ -5,3 +5,4 @@ flake8==7.1.0
 python-dotenv==1.0.0
 django-cors-headers==4.6.0
 channels==4.2.0
+daphne==4.1.2

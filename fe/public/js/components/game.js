@@ -1,3 +1,5 @@
+import { parseAndSetContent } from '../utils/helpers.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadGame(page) {
@@ -8,12 +10,14 @@ export async function loadGame(page) {
       throw new Error('Error loading template or page content');
     }
 
-    const response_content = await response.text();
-    appContainer.innerHTML = response_content;
+    const responseContent = await response.text();
+    appContainer.innerHTML = responseContent;
 
     setTimeout(() => {
       startGame();
     }, 0);
+
+    parseAndSetContent(appContainer, responseContent);
   } catch (error) {
     console.error('Error loading game:', error.message);
   }
@@ -56,19 +60,29 @@ function startGame() {
     x: canvas.width / 2,
     y: canvas.height / 2,
     radius: ballSize,
-    speedX: 4,  // Aumentamos la velocidad a 4
-    speedY: 4,  // Aumentamos la velocidad a 4
+    speedX: 4, // Aumentamos la velocidad a 4
+    speedY: 4, // Aumentamos la velocidad a 4
     color: 'white',
   };
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     ctx.fillStyle = leftPaddle.color;
-    ctx.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+    ctx.fillRect(
+      leftPaddle.x,
+      leftPaddle.y,
+      leftPaddle.width,
+      leftPaddle.height
+    );
 
     ctx.fillStyle = rightPaddle.color;
-    ctx.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
+    ctx.fillRect(
+      rightPaddle.x,
+      rightPaddle.y,
+      rightPaddle.width,
+      rightPaddle.height
+    );
 
     ctx.fillStyle = ball.color;
     ctx.beginPath();
@@ -91,11 +105,16 @@ function startGame() {
         ball.y >= paddle.y &&
         ball.y <= paddle.y + paddle.height
       ) {
-        let relativeIntersectY = (ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2);
-        let bounceAngle = relativeIntersectY * Math.PI / 4;
+        const relativeIntersectY =
+          (ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2);
+        const bounceAngle = (relativeIntersectY * Math.PI) / 4;
 
-        let speed = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
-        ball.speedX = (paddle === leftPaddle ? 1 : -1) * Math.cos(bounceAngle) * speed * 1.1;
+        const speed = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
+        ball.speedX =
+          (paddle === leftPaddle ? 1 : -1) *
+          Math.cos(bounceAngle) *
+          speed *
+          1.1;
         ball.speedY = Math.sin(bounceAngle) * speed * 1.1;
       }
     }
@@ -106,8 +125,8 @@ function startGame() {
     if (ball.x - ball.radius <= 0 || ball.x + ball.radius >= canvas.width) {
       ball.x = canvas.width / 2;
       ball.y = canvas.height / 2;
-      ball.speedX = 4 * (Math.random() > 0.5 ? 1 : -1);  // Mantener la velocidad más alta
-      ball.speedY = 4 * (Math.random() > 0.5 ? 1 : -1);  // Mantener la velocidad más alta
+      ball.speedX = 4 * (Math.random() > 0.5 ? 1 : -1); // Mantener la velocidad más alta
+      ball.speedY = 4 * (Math.random() > 0.5 ? 1 : -1); // Mantener la velocidad más alta
     }
   }
 
@@ -116,12 +135,18 @@ function startGame() {
   function movePaddles() {
     leftPaddle.y += leftPaddle.dy;
     rightPaddle.y += rightPaddle.dy;
-  
+
     // Limitar las paletas dentro del área del campo
-    leftPaddle.y = Math.max(0, Math.min(canvas.height - leftPaddle.height, leftPaddle.y));
-    rightPaddle.y = Math.max(0, Math.min(canvas.height - rightPaddle.height, rightPaddle.y));
+    leftPaddle.y = Math.max(
+      0,
+      Math.min(canvas.height - leftPaddle.height, leftPaddle.y)
+    );
+    rightPaddle.y = Math.max(
+      0,
+      Math.min(canvas.height - rightPaddle.height, rightPaddle.y)
+    );
   }
-  
+
   // Manejador de eventos de las teclas presionadas (keydown)
   document.addEventListener('keydown', event => {
     // Mueve la paleta derecha
@@ -131,7 +156,7 @@ function startGame() {
     if (event.key === 'ArrowDown') {
       rightPaddle.dy = paddleSpeed;
     }
-  
+
     // Mueve la paleta izquierda
     if (event.key === 'w') {
       leftPaddle.dy = -paddleSpeed;
@@ -140,20 +165,19 @@ function startGame() {
       leftPaddle.dy = paddleSpeed;
     }
   });
-  
+
   // Manejador de eventos de las teclas soltadas (keyup)
   document.addEventListener('keyup', event => {
     // Detener el movimiento de la paleta derecha
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       rightPaddle.dy = 0;
     }
-  
+
     // Detener el movimiento de la paleta izquierda
     if (event.key === 'w' || event.key === 's') {
       leftPaddle.dy = 0;
     }
   });
-  
 
   function gameLoop() {
     draw();

@@ -16,15 +16,15 @@ from apps.core.consumers import GameConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
+django_asgi_app = get_asgi_application()
+
+websocket_urlpatterns = [
+    path("ws/game/", GameConsumer.as_asgi()),
+]
+
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
-        "websocket": AuthMiddlewareStack(
-            URLRouter(
-                [
-                    path("ws/game/", GameConsumer.as_asgi()),
-                ]
-            )
-        ),
+        "http": django_asgi_app,
+        "websocket": AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
     }
 )

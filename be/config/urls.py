@@ -22,5 +22,4 @@ from apps.core.views.game import GameView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),
-    path("game/", GameView.as_view(), name="game"),  # Agregar la ruta del juego aquí
 ]

@@ -7,6 +7,8 @@ from apps.core.views.tournaments import TournamentsView
 from apps.core.views.login import LoginView
 from apps.core.views.register import RegisterView
 from apps.core.views.game import GameView
+from django.urls import re_path
+from . import consumers
 
 urlpatterns = [
     path("users", UserView.as_view()),
@@ -23,5 +25,5 @@ urlpatterns = [
     path("history", HistoryView.as_view()),
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
-     path('game', GameView.as_view(), name='game'),
+    path("game", GameView.as_view(), name="game"),
 ]

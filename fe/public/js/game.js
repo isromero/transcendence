@@ -1,5 +1,4 @@
 import { API_URL } from './utils/constants.js';
-
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
@@ -9,62 +8,84 @@ canvas.height = 400;
 let leftPaddle, rightPaddle, ball;
 let ws;
 
-function initWebSocket() {
-  ws = new WebSocket('ws://localhost:8000/ws/game/');
+function initGame() {
+  const canvas = document.getElementById('pong');
+  const ctx = canvas.getContext('2d');
 
-  ws.onopen = () => {
-    console.log('Connected to game server');
-  };
+  canvas.width = 800;
+  canvas.height = 400;
 
-  ws.onmessage = event => {
-    const gameState = JSON.parse(event.data);
-    updateGameState(gameState);
-  };
+  function initWebSocket() {
+    ws = new WebSocket(`ws://localhost:8000/ws/game/`);
 
-  ws.onclose = () => {
-    console.log('Disconnected from game server');
-    // Reconectar después de un tiempo
-    setTimeout(initWebSocket, 1000);
-  };
-}
+    ws.onopen = () => {
+      console.log('Conectado al servidor de juego');
+    };
 
-function updateGameState(gameState) {
-  leftPaddle = gameState.left_paddle;
-  rightPaddle = gameState.right_paddle;
-  ball = gameState.ball;
-  draw();
-}
+    ws.onmessage = event => {
+      const gameState = JSON.parse(event.data);
+      updateGameState(gameState);
+    };
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = 'white';
-  ctx.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
-  ctx.fillRect(
-    rightPaddle.x,
-    rightPaddle.y,
-    rightPaddle.width,
-    rightPaddle.height
-  );
-
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function sendKeyEvent(key, isPressed) {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(
-      JSON.stringify({
-        type: 'key_event',
-        key,
-        is_pressed: isPressed,
-      })
-    );
+    ws.onclose = () => {
+      console.log('Desconectado del servidor de juego');
+      setTimeout(initWebSocket, 1000); // Reconectar
+    };
   }
+
+  function updateGameState(gameState) {
+    // Actualizar estado del juego
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar paletas
+    ctx.fillStyle = 'white';
+    const { left_paddle, right_paddle, ball } = gameState;
+
+    ctx.fillRect(
+      left_paddle.x,
+      left_paddle.y,
+      left_paddle.width,
+      left_paddle.height
+    );
+    ctx.fillRect(
+      right_paddle.x,
+      right_paddle.y,
+      right_paddle.width,
+      right_paddle.height
+    );
+
+    // Dibujar pelota
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function sendKeyEvent(key, isPressed) {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: 'key_event',
+          key,
+          is_pressed: isPressed,
+        })
+      );
+    }
+  }
+
+  // Eventos de teclado
+  document.addEventListener('keydown', event => {
+    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+      sendKeyEvent(event.key, true);
+    }
+  });
+
+  document.addEventListener('keyup', event => {
+    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+      sendKeyEvent(event.key, false);
+    }
+  });
+
+  initWebSocket();
 }
 
-document.addEventListener('keydown', event => sendKeyEvent(event.key, true));
-document.addEventListener('keyup', event => sendKeyEvent(event.key, false));
-
-initWebSocket();
+initGame();
