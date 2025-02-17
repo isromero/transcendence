@@ -1,6 +1,8 @@
 import threading
 import time
 import asyncio
+import math
+import copy
 
 # Configuración del juego
 WIDTH, HEIGHT = 800, 400
@@ -9,12 +11,25 @@ BALL_SIZE, PADDLE_SPEED, BALL_SPEED = 20, 6, 3
 
 
 class GameState:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(GameState, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
     def __init__(self):
+        if self._initialized:
+            return
+
         self.WIDTH, self.HEIGHT = WIDTH, HEIGHT
         self.PADDLE_WIDTH, self.PADDLE_HEIGHT = PADDLE_WIDTH, PADDLE_HEIGHT
         self.BALL_SIZE = BALL_SIZE
         self.PADDLE_SPEED = PADDLE_SPEED
         self.BALL_SPEED = BALL_SPEED
+        self.running = False
+        self.last_update = time.time()
 
         self.left_paddle = {
             "x": 30,
@@ -40,6 +55,8 @@ class GameState:
             "speedY": self.BALL_SPEED,
         }
 
+        self._initialized = True
+
     def process_key_event(self, key, is_pressed):
         if key == "w":
             self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
@@ -50,47 +67,81 @@ class GameState:
         elif key == "ArrowDown":
             self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
 
+    def start_game(self):
+        self.running = True
+        self.ball = {
+            "x": self.WIDTH // 2,
+            "y": self.HEIGHT // 2,
+            "radius": self.BALL_SIZE,
+            "speedX": self.BALL_SPEED,
+            "speedY": self.BALL_SPEED,
+        }
+
     def update(self):
+        current_time = time.time()
+        dt = current_time - self.last_update
+        self.last_update = current_time
+
         self._update_paddles()
-        self._update_ball()
+        if self.running:
+            self._update_ball(dt)
 
     def _update_paddles(self):
         for paddle in [self.left_paddle, self.right_paddle]:
             paddle["y"] += paddle["dy"]
-            paddle["y"] = max(0, min(self.HEIGHT - self.PADDLE_HEIGHT, paddle["y"]))
+            paddle["y"] = max(0, min(self.HEIGHT - paddle["height"], paddle["y"]))
 
-    def _update_ball(self):
-        self.ball["x"] += self.ball["speedX"]
-        self.ball["y"] += self.ball["speedY"]
+    def _update_ball(self, dt):
+        # Actualizar posición de la pelota
+        self.ball["x"] += self.ball["speedX"] * dt * 60
+        self.ball["y"] += self.ball["speedY"] * dt * 60
 
-        # Rebotes
+        # Colisión con paredes superior e inferior
         if self.ball["y"] <= 0 or self.ball["y"] >= self.HEIGHT:
             self.ball["speedY"] *= -1
 
-        # Colisiones con paletas
-        if self._check_collision(self.left_paddle) or self._check_collision(
-            self.right_paddle
-        ):
-            self.ball["speedX"] *= -1
+        # Colisión con paletas
+        for paddle in [self.left_paddle, self.right_paddle]:
+            if self._check_paddle_collision(paddle):
+                self.ball["speedX"] *= -1.1  # Aumentar velocidad ligeramente
 
-        # Reset si la pelota sale
+        # Verificar si la pelota salió del campo
         if self.ball["x"] <= 0 or self.ball["x"] >= self.WIDTH:
-            self._reset_ball()
+            self.ball["x"] = self.WIDTH // 2
+            self.ball["y"] = self.HEIGHT // 2
+            self.ball["speedX"] = self.BALL_SPEED * (-1 if self.ball["x"] <= 0 else 1)
+            self.ball["speedY"] = self.BALL_SPEED
 
-    def _check_collision(self, paddle):
+    def _check_paddle_collision(self, paddle):
         return (
-            paddle["x"] < self.ball["x"] < paddle["x"] + self.PADDLE_WIDTH
-            and paddle["y"] < self.ball["y"] < paddle["y"] + self.PADDLE_HEIGHT
+            self.ball["x"] - self.ball["radius"] <= paddle["x"] + paddle["width"]
+            and self.ball["x"] + self.ball["radius"] >= paddle["x"]
+            and self.ball["y"] - self.ball["radius"] <= paddle["y"] + paddle["height"]
+            and self.ball["y"] + self.ball["radius"] >= paddle["y"]
         )
 
-    def _reset_ball(self):
-        self.ball["x"] = self.WIDTH // 2
-        self.ball["y"] = self.HEIGHT // 2
-        self.ball["speedX"] *= -1
-
     def get_state(self):
-        return {
-            "left_paddle": self.left_paddle,
-            "right_paddle": self.right_paddle,
-            "ball": self.ball,
+        state = {
+            "left_paddle": {
+                "x": round(self.left_paddle["x"]),
+                "y": round(self.left_paddle["y"]),
+                "dy": self.left_paddle["dy"],
+                "width": self.left_paddle["width"],
+                "height": self.left_paddle["height"],
+            },
+            "right_paddle": {
+                "x": round(self.right_paddle["x"]),
+                "y": round(self.right_paddle["y"]),
+                "dy": self.right_paddle["dy"],
+                "width": self.right_paddle["width"],
+                "height": self.right_paddle["height"],
+            },
+            "ball": {
+                "x": round(self.ball["x"]),
+                "y": round(self.ball["y"]),
+                "radius": self.ball["radius"],
+                "speedX": round(self.ball["speedX"], 2),
+                "speedY": round(self.ball["speedY"], 2),
+            },
         }
+        return state
