@@ -9,6 +9,7 @@ let leftPaddle, rightPaddle, ball;
 let ws;
 
 function initGame() {
+  console.log('aaa');
   const canvas = document.getElementById('pong');
   const ctx = canvas.getContext('2d');
 
@@ -74,13 +75,13 @@ function initGame() {
 
   // Eventos de teclado
   document.addEventListener('keydown', event => {
-    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+    if (['w', 's', 'W', 'S', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, true);
     }
   });
 
   document.addEventListener('keyup', event => {
-    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+    if (['w', 's', 'W', 'S', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, false);
     }
   });

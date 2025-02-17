@@ -14,7 +14,7 @@ export async function loadGame(page) {
     appContainer.innerHTML = responseContent;
 
     setTimeout(() => {
-      startGame();
+      startGame(); // TODO: LLAMAR A INIT GAME
     }, 0);
 
     parseAndSetContent(appContainer, responseContent);
@@ -23,6 +23,7 @@ export async function loadGame(page) {
   }
 }
 
+// TODO: DELETE THIS FUNCTION. TIENE TODA LA LÓGICA EN EL FRONT, Y HABRÍA QUE COGER LOS DATOS DEL WEBSOCKET
 function startGame() {
   const canvas = document.getElementById('pong');
   if (!canvas) {
@@ -158,10 +159,10 @@ function startGame() {
     }
 
     // Mueve la paleta izquierda
-    if (event.key === 'w') {
+    if (event.key === 'w' || event.key === 'W') {
       leftPaddle.dy = -paddleSpeed;
     }
-    if (event.key === 's') {
+    if (event.key === 's' || event.key === 'S') {
       leftPaddle.dy = paddleSpeed;
     }
   });
@@ -174,7 +175,12 @@ function startGame() {
     }
 
     // Detener el movimiento de la paleta izquierda
-    if (event.key === 'w' || event.key === 's') {
+    if (
+      event.key === 'w' ||
+      event.key === 's' ||
+      event.key === 'W' ||
+      event.key === 'S'
+    ) {
       leftPaddle.dy = 0;
     }
   });
