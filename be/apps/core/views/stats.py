@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import Stats, History, User
@@ -13,4 +13,11 @@ class StatsView(View):
     def get(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
         user_history = History.objects.filter(user_id=user, position_match=1)
-        return JsonResponse(serialize_stats(user, user_history), status=200)
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Stats retrieved successfully",
+                "data": serialize_stats(user, user_history),
+            },
+            status=200,
+        )

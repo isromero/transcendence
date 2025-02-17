@@ -45,15 +45,45 @@ class LoginView(View):
                 if user:
                     login(request, user)
                     cache.delete(attempts_key)
-                    return JsonResponse(serialize_user(user), status=200)
-
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Login successful",
+                            "data": serialize_user(user),
+                        },
+                        status=200,
+                    )
                 # Increment time with attempts
                 cache.set(attempts_key, attempts + 1, 300)  # 5 minutes
-                return JsonResponse({"error": "Invalid credentials"}, status=401)
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Invalid credentials",
+                    },
+                    status=401,
+                )
 
-            return JsonResponse({"errors": form.errors}, status=400)
-
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid credentials",
+                    "errors": form.errors,
+                },
+                status=400,
+            )
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid JSON",
+                },
+                status=400,
+            )
         except Exception as e:
-            return JsonResponse({"error": "An unexpected error occurred"}, status=500)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "An unexpected error occurred",
+                },
+                status=500,
+            )

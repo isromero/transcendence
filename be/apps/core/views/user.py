@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import User
@@ -17,23 +17,24 @@ class UserView(View):
     def get(self, _, user_id=None):
         if user_id:
             user = get_object_or_404(User, id=user_id)
-            return JsonResponse({"data": serialize_user(user)}, status=200)
+            return JsonResponse(
+                {
+                    "success": True,
+                    "message": "User retrieved successfully",
+                    "data": serialize_user(user),
+                },
+                status=200,
+            )
         else:
             users = User.objects.all()
             return JsonResponse(
-                {"data": [serialize_user(user) for user in users]}, status=200
+                {
+                    "success": True,
+                    "message": "Users retrieved successfully",
+                    "data": [serialize_user(user) for user in users],
+                },
+                status=200,
             )
-
-    def post(self, request):
-        try:
-            data = json.loads(request.body)
-            form = UserForm(data)
-            if form.is_valid():
-                user = form.save()
-                return JsonResponse(serialize_user(user), status=201)
-            return JsonResponse({"errors": form.errors}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     def put(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
@@ -42,12 +43,35 @@ class UserView(View):
             form = UserForm(data, instance=user)
             if form.is_valid():
                 user = form.save()
-                return JsonResponse(serialize_user(user), status=200)
-            return JsonResponse({"errors": form.errors}, status=400)
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "User updated successfully",
+                        "data": serialize_user(user),
+                    },
+                    status=200,
+                )
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "User update failed",
+                    "errors": form.errors,
+                },
+                status=400,
+            )
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse(
+                {"success": False, "message": "Invalid JSON"},
+                status=400,
+            )
 
     def delete(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
         user.delete()
-        return HttpResponse(status=204)
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "User deleted successfully",
+            },
+            status=204,
+        )

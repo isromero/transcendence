@@ -135,6 +135,7 @@ canvas {
 .form-control,
 .form-control-lg {
   border: 0px;
+  color: var(--bs-text-color);
 }
 
 .card,
@@ -338,4 +339,9 @@ canvas {
   background-color: #dc3545; /* Rojo más oscuro */
   border-color: #dc3545;
   color: white;
+}
+
+/* FORMS */
+.invalid-feedback {
+  color: #dc3545;
 }

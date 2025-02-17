@@ -8,6 +8,8 @@ class AuthenticationMiddleware:
     def __call__(self, request):
         public_paths = ["/api/login", "/api/register"]
 
+        print(request)
+
         if (
             request.path.startswith("/api/")
             and request.path not in public_paths

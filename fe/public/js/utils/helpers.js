@@ -30,6 +30,7 @@ export function parseAndSetContent(container, htmlString) {
   scripts.forEach(script => {
     const newScript = document.createElement('script');
     newScript.async = false; // Ensure scripts are executed in the order they appear
+    newScript.type = 'module';
     if (script.src) {
       newScript.src = script.src;
     } else {
@@ -37,4 +38,47 @@ export function parseAndSetContent(container, htmlString) {
     }
     script.parentNode.replaceChild(newScript, script);
   });
+}
+
+// Global validation of forms
+export function initGlobalValidation(root = document) {
+  // Select all forms within the container we receive (by default, document)
+  const forms = root.querySelectorAll('.needs-validation');
+
+  forms.forEach(form => {
+    // To avoid re-initializing a form that already has listeners:
+    if (!form.dataset.validationInitialized) {
+      form.dataset.validationInitialized = 'true';
+
+      form.addEventListener(
+        'submit',
+        event => {
+          event.preventDefault();
+          if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+          }
+          // Emit a custom event if it is valid
+          form.dispatchEvent(
+            new CustomEvent('formValid', { bubbles: true, cancelable: true })
+          );
+        },
+        false
+      );
+    }
+  });
+}
+
+export function showSuccessToast(message) {
+  const toastEl = document.getElementById('successToast');
+  toastEl.querySelector('.toast-body').textContent = message;
+  const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+  toast.show();
+}
+export function showErrorToast(message) {
+  const toastEl = document.getElementById('errorToast');
+  toastEl.querySelector('.toast-body').textContent = message;
+  const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+  toast.show();
 }

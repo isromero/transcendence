@@ -19,11 +19,27 @@ class RegisterView(View):
                 user.set_password(form.cleaned_data["password"])
                 user.save()
                 return JsonResponse(
-                    serialize_user(user),
+                    {
+                        "success": True,
+                        "message": "Registration successful",
+                        "data": serialize_user(user),
+                    },
                     status=201,
                 )
 
-            return JsonResponse({"errors": form.errors}, status=400)
-
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Registration failed",
+                    "errors": form.errors,
+                },
+                status=400,
+            )
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid JSON",
+                },
+                status=400,
+            )

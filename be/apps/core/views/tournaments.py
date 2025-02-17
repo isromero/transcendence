@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import Tournaments, History
@@ -15,15 +15,24 @@ class TournamentsView(View):
         if tournament_id:
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
-            return JsonResponse(serialize_tournament(tournament), status=200)
+            return JsonResponse(
+                {
+                    "success": True,
+                    "message": "Tournament retrieved successfully",
+                    "data": serialize_tournament(tournament),
+                },
+                status=200,
+            )
         else:
             tournaments = Tournaments.objects.all()
 
             return JsonResponse(
                 {
+                    "success": True,
+                    "message": "Tournaments retrieved successfully",
                     "data": [
                         serialize_tournaments(tournament) for tournament in tournaments
-                    ]
+                    ],
                 },
                 status=200,
             )
@@ -34,10 +43,30 @@ class TournamentsView(View):
             form = TournamentsForm(data)
             if form.is_valid():
                 tournament = form.save()
-                return JsonResponse(serialize_tournament(tournament), status=201)
-            return JsonResponse({"errors": form.errors}, status=400)
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Tournament created successfully",
+                        "data": serialize_tournament(tournament),
+                    },
+                    status=201,
+                )
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Tournament creation failed",
+                    "errors": form.errors,
+                },
+                status=400,
+            )
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid JSON",
+                },
+                status=400,
+            )
 
     def put(self, request, tournament_id):
         tournament = get_object_or_404(Tournaments, id=tournament_id)
@@ -45,13 +74,39 @@ class TournamentsView(View):
             data = json.loads(request.body)
             form = TournamentsPutForm(data, instance=tournament)
             if form.is_valid():
-                user = form.save()
-                return JsonResponse(serialize_tournament(tournament), status=200)
-            return JsonResponse({"errors": form.errors}, status=400)
+                tournament = form.save()
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Tournament updated successfully",
+                        "data": serialize_tournament(tournament),
+                    },
+                    status=200,
+                )
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Tournament update failed",
+                    "errors": form.errors,
+                },
+                status=400,
+            )
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid JSON",
+                },
+                status=400,
+            )
 
     def delete(self, _, tournament_id):
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
-        return HttpResponse(status=204)
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Tournament deleted successfully",
+            },
+            status=204,
+        )
