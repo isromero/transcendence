@@ -6,47 +6,28 @@ from apps.core.models import Tournaments, History
 class TournamentsForm(forms.ModelForm):
     class Meta:
         model = Tournaments
-        fields = ["tournament_name", "players"]
+        fields = ["tournament_name", "max_players"]
 
     def clean_tournament_name(self):
         tournament_name = self.cleaned_data.get("tournament_name")
-        if (
-            Tournaments.objects.filter(tournament_name=tournament_name).exists()
-            and self.instance.tournament_name != tournament_name
-        ):
+        if not tournament_name:
+            raise ValidationError("Tournament name is required")
+            
+        if Tournaments.objects.filter(tournament_name=tournament_name).exists():
             raise ValidationError("Tournament name already exists")
-        if not re.match("^[a-zA-Z0-9_-]+$", tournament_name):
+            
+        if not re.match("^[a-zA-Z0-9_-]{3,50}$", tournament_name):
             raise ValidationError(
-                "Tournament name can only contain letters, numbers, underscores and hyphens"
+                "Tournament name must be 3-50 characters and can only contain letters, numbers, underscores and hyphens"
             )
         return tournament_name
     
-    def clean_players(self):
+    def clean_max_players(self):
+        max_players = self.cleaned_data.get("max_players")
+        if not max_players:
+            raise ValidationError("Max players is required")
             
-        players = self.cleaned_data.get("players")
-        if players.count() < 4:
-            raise ValidationError ("Insufficient players.")
-        if players.count() > 16:
-            raise ValidationError ("Too many players.")
-        if players.count() % 2 != 0:
-            raise ValidationError ("The number of players must be even.")
-        if len(set(players)) != len(players):
-            raise ValidationError ("There are duplicate players.")
-        return players
-
-class TournamentsPutForm(forms.ModelForm):
-    class Meta:
-        model = Tournaments
-        fields = ["tournament_name", "players"]
-
-    def clean_players(self):
-        players = self.cleaned_data.get("players")
-        if players.count() < 4:
-            raise ValidationError ("Insufficient players.")
-        if players.count() > 16:
-            raise ValidationError ("Too many players.")
-        if players.count() % 2 != 0:
-            raise ValidationError ("The number of players must be even.")
-        if len(set(players)) != len(players):
-            raise ValidationError ("There are duplicate players.")
-        return players
+        if max_players not in [4, 6, 8]:
+            raise ValidationError("Tournament must have 4, 6 or 8 players")
+            
+        return max_players

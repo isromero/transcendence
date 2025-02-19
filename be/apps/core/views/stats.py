@@ -12,5 +12,5 @@ from django.utils.decorators import method_decorator
 class StatsView(View):
     def get(self, _, user_id):
         user = get_object_or_404(User, id=user_id)
-        user_history = History.objects.filter(user_id=user, position_match=1)
+        user_history = History.objects.filter(user_id=user)
         return JsonResponse(serialize_stats(user, user_history), status=200)
