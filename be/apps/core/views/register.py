@@ -5,6 +5,8 @@ from apps.core.forms.register import RegisterForm
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from apps.core.utils import serialize_user
+from apps.core.utils import create_response
+from apps.core.utils import handle_form_errors
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -14,32 +16,16 @@ class RegisterView(View):
             data = json.loads(request.body)
             form = RegisterForm(data)
 
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.set_password(form.cleaned_data["password"])
-                user.save()
-                return JsonResponse(
-                    {
-                        "success": True,
-                        "message": "Registration successful",
-                        "data": serialize_user(user),
-                    },
-                    status=201,
-                )
+            if not form.is_valid():
+                return handle_form_errors(form)
 
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Registration failed",
-                    "errors": form.errors,
-                },
-                status=400,
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+
+            return create_response(
+                data=serialize_user(user), message="Registration successful", status=201
             )
+
         except json.JSONDecodeError:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Invalid JSON",
-                },
-                status=400,
-            )
+            return create_response(error="Invalid JSON", status=400)
