@@ -7,7 +7,7 @@ import copy
 # Configuración del juego
 WIDTH, HEIGHT = 800, 400
 PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
-BALL_SIZE, PADDLE_SPEED, BALL_SPEED = 20, 6, 3
+BALL_SIZE, PADDLE_SPEED, BALL_SPEED = 20, 8, 6
 
 
 class GameState:
@@ -96,9 +96,15 @@ class GameState:
         self.ball["x"] += self.ball["speedX"] * dt * 60
         self.ball["y"] += self.ball["speedY"] * dt * 60
 
-        # Colisión con paredes superior e inferior
-        if self.ball["y"] <= 0 or self.ball["y"] >= self.HEIGHT:
-            self.ball["speedY"] *= -1
+            # Colisión con paredes superior e inferior
+        if self.ball["y"] - self.ball["radius"] <= 0:
+            self.ball["y"] = self.ball["radius"]  # Asegurar que la pelota no atraviese el borde
+            self.ball["speedY"] *= -1  # Invertir dirección
+
+        elif self.ball["y"] + self.ball["radius"] >= self.HEIGHT:
+            self.ball["y"] = self.HEIGHT - self.ball["radius"]  # Ajustar posición
+            self.ball["speedY"] *= -1  # Invertir dirección
+
 
         # Colisión con paletas
         for paddle in [self.left_paddle, self.right_paddle]:
@@ -113,12 +119,33 @@ class GameState:
             self.ball["speedY"] = self.BALL_SPEED
 
     def _check_paddle_collision(self, paddle):
-        return (
-            self.ball["x"] - self.ball["radius"] <= paddle["x"] + paddle["width"]
-            and self.ball["x"] + self.ball["radius"] >= paddle["x"]
-            and self.ball["y"] - self.ball["radius"] <= paddle["y"] + paddle["height"]
-            and self.ball["y"] + self.ball["radius"] >= paddle["y"]
-        )
+        next_x = self.ball["x"] + self.ball["speedX"]  # Predecir la siguiente posición X
+        next_y = self.ball["y"] + self.ball["speedY"]  # Predecir la siguiente posición Y
+
+        # Verificar si la pelota va a chocar en el siguiente frame
+        if (
+            next_x - self.ball["radius"] <= paddle["x"] + paddle["width"]
+            and next_x + self.ball["radius"] >= paddle["x"]
+            and next_y + self.ball["radius"] >= paddle["y"]
+            and next_y - self.ball["radius"] <= paddle["y"] + paddle["height"]
+        ):
+            # Calcular el ángulo de rebote según el punto de impacto
+            relative_intersect_y = (self.ball["y"] - (paddle["y"] + paddle["height"] / 2)) / (paddle["height"] / 2)
+            bounce_angle = relative_intersect_y * (math.pi / 4)  # Máximo 45 grados
+
+            # Mantener la velocidad constante pero ajustando dirección
+            speed = math.sqrt(self.ball["speedX"] ** 2 + self.ball["speedY"] ** 2)  # Mantiene la velocidad actual
+            direction = -1 if self.ball["x"] < self.WIDTH // 2 else 1
+
+            # Aplicar el rebote sin recolocar la pelota
+            self.ball["speedX"] = math.cos(bounce_angle) * direction * speed
+            self.ball["speedY"] = math.sin(bounce_angle) * speed
+
+            return True
+
+        return False
+
+
 
     def get_state(self):
         state = {

@@ -1,66 +1,57 @@
 import { API_URL } from './utils/constants.js';
+
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
 canvas.width = 800;
 canvas.height = 400;
 
-let leftPaddle, rightPaddle, ball;
 let ws;
 
 function initGame() {
-  console.log('aaa');
-  const canvas = document.getElementById('pong');
-  const ctx = canvas.getContext('2d');
+  console.log('Iniciando juego...');
+  
+  // Iniciar WebSocket
+  ws = new WebSocket(`ws://localhost:8000/ws/game/`);
 
-  canvas.width = 800;
-  canvas.height = 400;
+  ws.onopen = () => {
+    console.log('Conectado al servidor de juego');
+  };
 
-  function initWebSocket() {
-    ws = new WebSocket(`ws://localhost:8000/ws/game/`);
+  // Recibir datos del WebSocket
+  ws.onmessage = event => {
+    const gameState = JSON.parse(event.data);
+    updateGameState(gameState);
+  };
 
-    ws.onopen = () => {
-      console.log('Conectado al servidor de juego');
-    };
+  ws.onclose = () => {
+    console.log('Desconectado del servidor de juego');
+    setTimeout(initWebSocket, 1000); // Reconectar si se desconecta
+  };
 
-    ws.onmessage = event => {
-      const gameState = JSON.parse(event.data);
-      updateGameState(gameState);
-    };
-
-    ws.onclose = () => {
-      console.log('Desconectado del servidor de juego');
-      setTimeout(initWebSocket, 1000); // Reconectar
-    };
-  }
-
+  // Inicializar las palas y la pelota
   function updateGameState(gameState) {
-    // Actualizar estado del juego
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Dibujar paletas
-    ctx.fillStyle = 'white';
+  
     const { left_paddle, right_paddle, ball } = gameState;
-
-    ctx.fillRect(
-      left_paddle.x,
-      left_paddle.y,
-      left_paddle.width,
-      left_paddle.height
-    );
-    ctx.fillRect(
-      right_paddle.x,
-      right_paddle.y,
-      right_paddle.width,
-      right_paddle.height
-    );
-
+  
+    // Dibujar paleta izquierda
+    ctx.fillStyle = left_paddle.color || "#ff4d6d"; // Si no hay color, usa uno por defecto
+    ctx.fillRect(left_paddle.x, left_paddle.y, left_paddle.width, left_paddle.height);
+  
+    // Dibujar paleta derecha
+    ctx.fillStyle = right_paddle.color || "#ff4d6d";
+    ctx.fillRect(right_paddle.x, right_paddle.y, right_paddle.width, right_paddle.height);
+  
     // Dibujar pelota
+    ctx.fillStyle = ball.color || "white";
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fill();
   }
+  
 
+  // Enviar el evento de tecla al servidor
   function sendKeyEvent(key, isPressed) {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(
@@ -73,7 +64,7 @@ function initGame() {
     }
   }
 
-  // Eventos de teclado
+  // Manejar los eventos de teclado
   document.addEventListener('keydown', event => {
     if (['w', 's', 'W', 'S', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, true);
@@ -85,8 +76,6 @@ function initGame() {
       sendKeyEvent(event.key, false);
     }
   });
-
-  initWebSocket();
 }
 
 initGame();
