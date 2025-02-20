@@ -17,8 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from apps.core.views.auth import auth_login, auth_callback, auth_logout
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),
+	path("auth/login/", auth_login, name="auth_login"),
+    path("auth/callback/", auth_callback, name="auth_callback"),
+    path("auth/logout/", auth_logout, name="auth_logout"),
 ]
+
