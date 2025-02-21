@@ -9,9 +9,9 @@ const form = document.getElementById('username');
       }
   
       const data = await response.json();
-      console.log("API Response:", data);
-      form.textContent = data.username;
-      console.log(form);
+      form.textContent = data.data.username;
+      console.log(data.data.username);
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
