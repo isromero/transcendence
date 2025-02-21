@@ -341,6 +341,12 @@ canvas {
   color: white;
 }
 
+#pongCanvas {
+  background: black;
+  width: 800px;
+  height: 400px;
+}
+
 /* FORMS */
 .invalid-feedback {
   color: #dc3545;

@@ -6,6 +6,9 @@ from apps.core.views.history import HistoryView
 from apps.core.views.tournaments import TournamentsView
 from apps.core.views.login import LoginView
 from apps.core.views.register import RegisterView
+from apps.core.views.game import GameView
+from django.urls import re_path
+from . import consumers
 
 urlpatterns = [
     # Users routes
@@ -25,4 +28,5 @@ urlpatterns = [
     # Auth routes
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
+    path("game", GameView.as_view(), name="game"),
 ]
