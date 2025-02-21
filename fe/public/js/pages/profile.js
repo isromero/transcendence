@@ -1,4 +1,4 @@
-let form = document.getElementById('username');
+const form = document.getElementById('username');
 
 (async function() {
     try {
@@ -10,7 +10,7 @@ let form = document.getElementById('username');
   
       const data = await response.json();
       console.log("API Response:", data);
-      form = '<h2 class="username text-principal-color profile-title" id="username">hola</h2>"';
+      form.textContent = data.username;
       console.log(form);
     } catch (error) {
       console.error('Error fetching data:', error);
