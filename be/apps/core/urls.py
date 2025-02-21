@@ -24,6 +24,7 @@ urlpatterns = [
     path("tournaments", TournamentsView.as_view()),
     path("tournaments/<str:join_code>", TournamentsView.as_view()),
     # History routes (only match information)
+    path("history", HistoryView.as_view()),
     path("history/match/<uuid:match_id>", HistoryView.as_view()),
     # Auth routes
     path("login", LoginView.as_view()),
