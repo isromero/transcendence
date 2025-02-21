@@ -9,6 +9,8 @@ from apps.core.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from apps.core.utils import serialize_user
+from apps.core.utils import create_response
+from apps.core.utils import handle_form_errors
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -21,69 +23,36 @@ class LoginView(View):
             attempts = cache.get(attempts_key, 0)
 
             if attempts >= 5:
-                return JsonResponse(
-                    {"error": "Too many attempts. Please try again later"}, status=429
+                return create_response(
+                    error="Too many attempts. Please try again later", status=429
                 )
 
             data = json.loads(request.body)
             form = LoginForm(data)
 
-            if form.is_valid():
-                login_field = form.cleaned_data["login"]
-                password = form.cleaned_data["password"]
+            if not form.is_valid():
+                return handle_form_errors(form)
 
-                # Try to find the user by email or username
-                try:
-                    user = User.objects.get(
-                        Q(username=login_field) | Q(email=login_field)
-                    )
-                    # Authenticate with the email because in our model we use the USERNAME_FIELD as email
-                    user = authenticate(email=user.email, password=password)
-                except User.DoesNotExist:
-                    user = None
+            login_field = form.cleaned_data["login"]
+            password = form.cleaned_data["password"]
 
-                if user:
-                    login(request, user)
-                    cache.delete(attempts_key)
-                    return JsonResponse(
-                        {
-                            "success": True,
-                            "message": "Login successful",
-                            "data": serialize_user(user),
-                        },
-                        status=200,
-                    )
-                # Increment time with attempts
-                cache.set(attempts_key, attempts + 1, 300)  # 5 minutes
-                return JsonResponse(
-                    {
-                        "success": False,
-                        "message": "Invalid credentials",
-                    },
-                    status=401,
+            try:
+                user = User.objects.get(Q(username=login_field) | Q(email=login_field))
+                user = authenticate(email=user.email, password=password)
+            except User.DoesNotExist:
+                user = None
+
+            if user:
+                login(request, user)
+                cache.delete(attempts_key)
+                return create_response(
+                    data=serialize_user(user), message="Login successful"
                 )
 
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Invalid credentials",
-                    "errors": form.errors,
-                },
-                status=400,
-            )
+            cache.set(attempts_key, attempts + 1, 300)
+            return create_response(error="Invalid credentials", status=401)
+
         except json.JSONDecodeError:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Invalid JSON",
-                },
-                status=400,
-            )
+            return create_response(error="Invalid JSON", status=400)
         except Exception as e:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "An unexpected error occurred",
-                },
-                status=500,
-            )
+            return create_response(error="An unexpected error occurred", status=500)

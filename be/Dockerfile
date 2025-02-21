@@ -12,7 +12,6 @@ ENV PYTHONUNBUFFERED 1
 # Avoid writing .pyc files (__pycache__) in local
 ENV PYTHONDONTWRITEBYTECODE=1
 EXPOSE 8000
-#RUN /app/script_bbdd hay que añadir al CMD este script
 RUN chmod +x /app/script_bbdd
 CMD ["sh" , "/app/script_bbdd"]
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

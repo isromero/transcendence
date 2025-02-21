@@ -76,9 +76,32 @@ export function showSuccessToast(message) {
   const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
   toast.show();
 }
-export function showErrorToast(message) {
+
+export function showErrorToast(response) {
   const toastEl = document.getElementById('errorToast');
-  toastEl.querySelector('.toast-body').textContent = message;
+  let message = '';
+
+  if (typeof response === 'string') {
+    message = response;
+  } else if (response.error) {
+    if (response.error.type === 'validation_error') {
+      // Handle form validation errors
+      const errors = response.error.fields;
+      message = Object.entries(errors)
+        .map(
+          ([field, msg]) => `${field === '__all__' ? 'Error' : field}: ${msg}`
+        )
+        .join('\n');
+    } else {
+      // Handle simple error messages
+      message = response.error;
+    }
+  } else {
+    message = 'An unexpected error occurred';
+  }
+
+  const messageEl = toastEl.querySelector('.toast-body');
+  messageEl.innerHTML = message.replace(/\n/g, '<br>');
   const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
   toast.show();
 }

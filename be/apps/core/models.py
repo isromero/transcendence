@@ -1,12 +1,14 @@
 from django.db import models
+import random
 from django.contrib.auth.models import AbstractUser
 from django.templatetags.static import static
+import uuid
 
 
 class User(AbstractUser):
     # id, username, email, password are inherited from AbstractUser
     email = models.EmailField(unique=True, max_length=50)
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     avatar = models.URLField(
         null=True, blank=True, default=static("default_avatar.webp")
@@ -15,6 +17,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+    deleted_user = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -37,38 +40,50 @@ class Friends(models.Model):
     status = models.CharField(choices=Status.choices, default=Status.SENT)
 
 
-class Stats(models.Model):
-    id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    victories = models.IntegerField(default=0)
-    defeats = models.IntegerField(default=0)
-    total_matches = models.IntegerField(default=0)
-    total_tournaments = models.IntegerField(default=0)
-    tournaments_victories = models.IntegerField(default=0)
-
-
 class Tournaments(models.Model):
     id = models.AutoField(primary_key=True)
+    join_code = models.CharField(max_length=6, unique=True)
     tournament_name = models.CharField(max_length=50)
     start_date = models.DateTimeField(auto_now=True)
     end_date = models.DateTimeField(auto_now=True)
     players = models.ManyToManyField(User, related_name="tournaments_name")
+    current_round = models.IntegerField(default=1)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("pending", "Pending"),
+            ("ready", "Ready"),
+            ("in_progress", "In Progress"),
+            ("completed", "Completed"),
+        ],
+        default="pending",
+    )
+    max_players = models.IntegerField(default=8)
 
 
 class History(models.Model):
     id = models.AutoField(primary_key=True)
+    match_id = models.UUIDField(default=None, null=True, blank=True)
     date = models.DateTimeField(auto_now=True)
     user_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_history"
     )
-    result_user = models.IntegerField()
+    result_user = models.IntegerField(default=0)
     opponent_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="opponent_history"
     )
-    result_opponent = models.IntegerField()
-    type_match = models.CharField(max_length=50)
+    result_opponent = models.IntegerField(default=0)
+    type_match = models.CharField(
+        max_length=50,
+        choices=[
+            ("tournament_quarter", "Tournament Quarter Finals"),
+            ("tournament_semi", "Tournament Semi Finals"),
+            ("tournament_final", "Tournament Finals"),
+            ("match", "Local Match"),
+        ],
+    )
+    local_match = models.BooleanField(default=True)
     tournament_id = models.ForeignKey(
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )
-    position_match = models.IntegerField()
-    position_tournament = models.IntegerField(null=True, blank=True)
+    tournament_match_number = models.IntegerField(null=True, blank=True)
