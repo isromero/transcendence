@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from apps.core.views.auth import auth_login, auth_callback, auth_logout
+from apps.core.views.auth import auth_login, auth_callback, auth_logout, wololo
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,5 +25,6 @@ urlpatterns = [
 	path("auth/login/", auth_login, name="auth_login"),
     path("auth/callback/", auth_callback, name="auth_callback"),
     path("auth/logout/", auth_logout, name="auth_logout"),
+    path("auth/wololo/", wololo, name="wololo"),
 ]
 

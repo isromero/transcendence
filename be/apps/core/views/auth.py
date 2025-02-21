@@ -56,7 +56,8 @@ def auth_callback(request: HttpRequest):
 
     login(request, user)
 
-    return redirect("/api/users")
+    return redirect("/auth/wololo")
+    # return redirect("/api/users")
 
 def auth_logout(request:HttpRequest) -> HttpResponse:
     """Cierra la sesión del usuario"""
@@ -64,3 +65,10 @@ def auth_logout(request:HttpRequest) -> HttpResponse:
     print("Sesión cerrada")
     return HttpResponse("Sesión cerrada. Gracias por participar")
     return redirect("/")
+
+def wololo(request:HttpRequest) -> HttpResponse:
+    """Para testear los valores que tiene la request"""
+    wololo = ""
+    for key, value in vars(request).items():
+        print(key, "->", value)
+    return HttpResponse(vars(request))
