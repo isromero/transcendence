@@ -11,7 +11,7 @@ class AuthenticationMiddleware:
 
         if (
             request.path.startswith("/api/")
-            and request.path not in public_paths
+            and not any(request.path.startswith(path) for path in public_paths)
             and not request.user.is_authenticated
         ):
             return JsonResponse({"error": "Authentication required"}, status=401)

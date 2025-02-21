@@ -31,15 +31,38 @@ class HistoryView(View):
                 "type": match.type_match,
                 "status": "finished" if game_finished else "in_progress",
                 "can_play": not game_finished,
-                "players": [
-                    {
-                        "id": history.user_id.id,
-                        "username": history.user_id.username,
-                        "score": history.result_user,
-                        "is_winner": history.result_user >= 5,
-                    }
-                    for history in matches
-                ],
+                "players": (
+                    # For local matches, only two fixed players
+                    [
+                        {
+                            "id": match.user_id.id,
+                            "username": match.user_id.username,
+                            "score": match.result_user,
+                            "is_winner": match.result_user >= 5,
+                            "is_player1": True,
+                        },
+                        {
+                            "id": match.opponent_id.id,
+                            "username": match.opponent_id.username,
+                            "score": match.result_opponent,
+                            "is_winner": match.result_opponent >= 5,
+                            "is_player1": False,
+                        },
+                    ]
+                    if match.local_match
+                    else
+                    # For tournaments, use the loop to get both perspectives
+                    [
+                        {
+                            "id": history.user_id.id,
+                            "username": history.user_id.username,
+                            "score": history.result_user,
+                            "is_winner": history.result_user >= 5,
+                            "is_player1": history.user_id == match.user_id,
+                        }
+                        for history in matches
+                    ]
+                ),
                 "tournament_info": (
                     {
                         "id": match.tournament_id.id,
