@@ -69,6 +69,6 @@ def auth_logout(request:HttpRequest) -> HttpResponse:
 def wololo(request:HttpRequest) -> HttpResponse:
     """Para testear los valores que tiene la request"""
     wololo = ""
-    for key, value in vars(request).items():
-        print(key, "->", value)
+    # for key, value in vars(request).items():
+    #     print(key, "->", value)
     return HttpResponse(vars(request))
