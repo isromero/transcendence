@@ -5,9 +5,13 @@ class AuthenticationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request):
-        # TODO (ismael): delete /api/game and /ws/game when finished
-        public_paths = ["/api/login", "/api/register", "/api/game", "/ws/game"]
+    def _call_(self, request):
+        public_paths = [
+            "/api/login",
+            "/api/register",
+            "/api/history",
+            "/api/history/match",
+        ]
 
         if (
             request.path.startswith("/api/")

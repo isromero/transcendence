@@ -8,6 +8,7 @@ export const pageMappings = {
   '/create-match': '/pages/menus/create-match.html',
   '/join-match': '/pages/menus/join-match.html',
   '/match-settings': '/pages/menus/match-settings.html',
+  '/match-settings-local': '/pages/menus/match-settings-local.html',
   '/profile': '/pages/menus/profile.html',
   '/edit-profile': '/pages/menus/edit-profile.html',
   '/social': '/pages/menus/social.html',

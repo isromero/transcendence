@@ -89,10 +89,11 @@ class HistoryView(View):
                 )
 
             match_id = uuid.uuid4()
+            user = User.objects.get(id=1)
             History.objects.create(
                 match_id=match_id,
-                user_id=request.user,
-                opponent_id=request.user,
+                user_id=user,
+                opponent_id=user,
                 type_match="match",
                 local_match=True,
                 result_user=0,
