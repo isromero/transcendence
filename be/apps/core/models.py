@@ -15,7 +15,9 @@ class User(models.Model):
     )  # cambiar a una url para avatar por defecto
     email = models.EmailField(max_length=50, unique=True)
     status = models.BooleanField(default=False)
-
+    # esto lo he añadido xq al heredar del modelo User de django, 
+    # no me dejaba crear el usuario en la base de datos y hacer el login
+    last_login = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return self.username
 

@@ -7,13 +7,17 @@ from apps.core.forms.user import UserForm
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
 
 
+# @method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(csrf_exempt, name="dispatch")
-class UserView(View):
+class UserView(LoginRequiredMixin, View):
+    login_url = "/auth/login"
+    redirect_field_name = "redirect_to"
     def get(self, _, user_id=None):
         if user_id:
             user = get_object_or_404(User, id=user_id)
