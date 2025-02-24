@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout
 # from django.contrib.auth.models import User
 from apps.core.models import User
 from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
 
 
 def auth_login(request: HttpRequest) -> HttpResponse:
@@ -23,7 +24,7 @@ def auth_login(request: HttpRequest) -> HttpResponse:
     )
     return redirect(auth_url)
 
-def auth_callback(request: HttpRequest):
+def auth_callback(request: HttpRequest) -> JsonResponse:
     """Recibe el código de autorización y obtiene el access token"""
     code = request.GET.get("code")
     if not code:
@@ -57,9 +58,24 @@ def auth_callback(request: HttpRequest):
     print("\n\nuser:", user, "\ncreated", created)
 
     login(request, user)
+    csrf_token = get_token(request)
+    response = JsonResponse({"message" : "Login successful"})
+    response.set_cookie(
+        "csrftoken", 
+        csrf_token, 
+        httponly=False, 
+        secure=False,
+        samesite="Lax",)
+    response.set_cookie(
+        "sessionid", 
+        request.session.session_key, 
+        httponly=True, 
+        secure=False,
+        samesite="Lax",)
     # aquí hay que redirigir a la página de inicio de la app
     # o devolver la información necesaria para que el frontend redirija
-    return redirect("/auth/wololo")
+    # return redirect("/auth/wololo")
+    return response
     # return redirect("/api/users")
 
 def auth_logout(request:HttpRequest) -> HttpResponse:
