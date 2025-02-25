@@ -1,9 +1,10 @@
 import requests
 import time
 import math
+import threading  # 👈 Para ejecutar la actualización en un hilo separado
 
 API_URL = "http://localhost:8000/api/history/match/"
-#TODO LLEVAR MATCH ID DEL FRONT AL BACK
+
 class GameState:
     def __init__(self, match_id=None):
         self.WIDTH, self.HEIGHT = 800, 400
@@ -38,32 +39,20 @@ class GameState:
             "speedY": self.BALL_SPEED,
         }
 
-        self.scores = {"left": 0, "right": 0}  
+        self.scores = {"left": 0, "right": 0}
         self.match_id = match_id
-
-    def process_key_event(self, key, is_pressed):
-        """Maneja los eventos de teclado para mover las paletas"""
-        if key == "w":
-            self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "s":
-            self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowUp":
-            self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowDown":
-            self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
 
     def start_game(self, match_id):
         """Inicia el juego con un ID de partido"""
-        if match_id:  # Verifica que match_id no sea None
+        if match_id:
             self.match_id = match_id
-            print(f"✅ Match ID asignado: {self.match_id}")  # Agrega un mensaje de depuración
+            print(f"✅ Match ID asignado: {self.match_id}")
         else:
             print("⚠️ No se proporcionó un match_id válido.") 
 
-            self.running = True
-            self.scores = {"left": 0, "right": 0}
-            self.reset_ball()
-
+        self.running = True
+        self.scores = {"left": 0, "right": 0}
+        self.reset_ball()
 
     def reset_ball(self):
         """Reinicia la pelota en el centro"""
@@ -109,38 +98,52 @@ class GameState:
         if self.ball["x"] <= 0:
             print("⚽ Gol del jugador de la derecha")
             self.scores["right"] += 1
-            self._send_score_update(is_player1=False)  # Derecha → is_player1=False
+            threading.Thread(target=self._send_score_update, args=(False,), daemon=True).start()  # ✅ Ahora en un hilo
             self.reset_ball()
 
         # Gol en la portería derecha (punto para el jugador izquierdo)
         elif self.ball["x"] >= self.WIDTH:
             print("⚽ Gol del jugador de la izquierda")
             self.scores["left"] += 1
-            self._send_score_update(is_player1=True)  # Izquierda → is_player1=True
+            threading.Thread(target=self._send_score_update, args=(True,), daemon=True).start()  # ✅ Ahora en un hilo
             self.reset_ball()
+    def process_key_event(self, key, is_pressed):
+        """Maneja los eventos de teclado para mover las paletas"""
+        if key == "w":
+            self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+        elif key == "s":
+            self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+        elif key == "ArrowUp":
+            self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+        elif key == "ArrowDown":
+            self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+
 
     def _send_score_update(self, is_player1):
-        """Envía la puntuación a la API"""
+        """Envía la puntuación a la API en un hilo separado"""
         if not self.match_id:
             print("⚠️ No hay match_id, no se puede enviar el puntaje.")
             return
 
         payload = {"is_player1": is_player1}
-        print(f"🔄 Enviando PUT a {API_URL}{self.match_id} con datos: {payload}")
+        url = f"{API_URL}{self.match_id}"
+        headers = {"Content-Type": "application/json"}
+
+        print(f"📡 Enviando PUT a {url} con datos: {payload}")
 
         try:
-            url = f"{API_URL}{self.match_id}"
-            headers = {"Content-Type": "application/json"}
-            response = requests.put(url, json=payload, headers=headers)
+            response = requests.put(url, json=payload, headers=headers, timeout=5)
+            response.raise_for_status()
 
-            print(f"📡 Respuesta de la API ({response.status_code}): {response.text}")
-
-            if response.status_code == 200:
-                print(f"✅ Punto registrado correctamente para {'izquierda' if is_player1 else 'derecha'}.")
-            else:
-                print(f"⚠️ Error al actualizar puntaje ({response.status_code}): {response.text}")
+            print(f"✅ Puntaje actualizado correctamente: {response.json()}")
+        except requests.exceptions.Timeout:
+            print("⏳ La solicitud de actualización de puntuación tardó demasiado. Reintentando en la próxima actualización...")
+        except requests.exceptions.ConnectionError:
+            print("❌ No se pudo conectar con la API. Verifica que el servidor está en ejecución.")
+        except requests.exceptions.HTTPError as e:
+            print(f"⚠️ Error HTTP al actualizar puntaje: {e.response.status_code} - {e.response.text}")
         except requests.exceptions.RequestException as e:
-            print(f"❌ Error de conexión con la API: {e}")
+            print(f"❌ Error inesperado al actualizar puntaje: {e}")
 
     def _check_paddle_collision(self, paddle):
         """Verifica si la pelota choca con una paleta"""

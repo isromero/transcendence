@@ -8,7 +8,36 @@ canvas.height = 400;
 
 let ws;
 
-function initGame() {
+// 🔄 **Función global para actualizar el estado del juego**
+function updateGameState(gameState) {
+  console.log('📌 Recibiendo estado del juego:', gameState);
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const { left_paddle, right_paddle, ball } = gameState;
+
+  if (!left_paddle || !right_paddle || !ball) {
+    console.error('❌ Estado del juego inválido:', gameState);
+    return;
+  }
+
+  // Dibujar paleta izquierda
+  ctx.fillStyle = left_paddle.color || '#ff4d6d';
+  ctx.fillRect(left_paddle.x, left_paddle.y, left_paddle.width, left_paddle.height);
+
+  // Dibujar paleta derecha
+  ctx.fillStyle = right_paddle.color || '#ff4d6d';
+  ctx.fillRect(right_paddle.x, right_paddle.y, right_paddle.width, right_paddle.height);
+
+  // Dibujar pelota
+  ctx.fillStyle = ball.color || 'white';
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// 🎮 **Función de inicialización del juego**
+export function initGame() {
   console.log('Iniciando juego...');
 
   const path = window.location.pathname;
@@ -26,84 +55,51 @@ function initGame() {
 
   ws.onopen = () => {
     console.log('Conectado al servidor de juego');
-    // Enviar el match_id al servidor
-    ws.send(
-      JSON.stringify({
-        type: 'init_game',
-        match_id: matchId,
-      })
-    );
+    ws.send(JSON.stringify({ type: 'init_game', match_id: matchId }));
   };
 
-  // Recibir datos del WebSocket
   ws.onmessage = event => {
+    console.log('📡 Mensaje recibido del servidor');
     const gameState = JSON.parse(event.data);
     updateGameState(gameState);
   };
 
   ws.onclose = () => {
     console.log('Desconectado del servidor de juego');
-    setTimeout(initGame, 1000); // Reconectar si se desconecta
+    setTimeout(initGame, 1000);
   };
 
-  // Inicializar las palas y la pelota
-  function updateGameState(gameState) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const { left_paddle, right_paddle, ball } = gameState;
-
-    // Dibujar paleta izquierda
-    ctx.fillStyle = left_paddle.color || '#ff4d6d'; // Si no hay color, usa uno por defecto
-    ctx.fillRect(
-      left_paddle.x,
-      left_paddle.y,
-      left_paddle.width,
-      left_paddle.height
-    );
-
-    // Dibujar paleta derecha
-    ctx.fillStyle = right_paddle.color || '#ff4d6d';
-    ctx.fillRect(
-      right_paddle.x,
-      right_paddle.y,
-      right_paddle.width,
-      right_paddle.height
-    );
-
-    // Dibujar pelota
-    ctx.fillStyle = ball.color || 'white';
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Enviar el evento de tecla al servidor
-  function sendKeyEvent(key, isPressed) {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          type: 'key_event',
-          key,
-          is_pressed: isPressed,
-        })
-      );
-    }
-  }
-
-  // Manejar los eventos de teclado
+  // 📌 **Eventos de teclado**
   document.addEventListener('keydown', event => {
-    if (['w', 's', 'W', 'S', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, true);
     }
   });
 
   document.addEventListener('keyup', event => {
-    if (['w', 's', 'W', 'S', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, false);
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// 📡 **Función para enviar eventos de teclado al backend**
+function sendKeyEvent(key, isPressed) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'key_event', key, is_pressed: isPressed }));
+  }
+}
+
+// 📌 **Ejecutar `initGame()` cuando el DOM esté listo**
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('📌 DOM completamente cargado, iniciando juego...');
+    initGame();
+  });
+} else {
+  console.log('📌 DOM ya cargado, iniciando juego directamente...');
   initGame();
-});
+}
+
+// 🔄 Hacer que initGame sea accesible desde la consola
+window.initGame = initGame;
