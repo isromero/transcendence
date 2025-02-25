@@ -14,7 +14,6 @@ export const pageMappings = {
   '/social': '/pages/menus/social.html',
   '/friends': '/pages/menus/friends.html',
   '/settings': '/pages/menus/settings.html',
-  '/game': '/pages/game/game.html',
   '/game/:id': '/pages/game/game.html',
 
   // Modals (no user routes)

@@ -19,7 +19,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django_asgi_app = get_asgi_application()
 
 websocket_urlpatterns = [
-    path("ws/game/", GameConsumer.as_asgi()),
+    path("ws/game/<str:match_id>", GameConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter(

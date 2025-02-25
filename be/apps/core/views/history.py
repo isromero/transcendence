@@ -153,8 +153,9 @@ class HistoryView(View):
                 else:
                     match.result_opponent += 1
                 match.save()
-                print(f"✅ Puntuación actualizada: {match.result_user} - {match.result_opponent}")
-
+                print(
+                    f"✅ Puntuación actualizada: {match.result_user} - {match.result_opponent}"
+                )
 
                 return create_response(
                     data={

@@ -5,7 +5,7 @@ import math
 API_URL = "http://localhost:8000/api/history/match/"
 #TODO LLEVAR MATCH ID DEL FRONT AL BACK
 class GameState:
-    def __init__(self):
+    def __init__(self, match_id=None):
         self.WIDTH, self.HEIGHT = 800, 400
         self.PADDLE_WIDTH, self.PADDLE_HEIGHT = 20, 100
         self.BALL_SIZE = 20
@@ -39,7 +39,7 @@ class GameState:
         }
 
         self.scores = {"left": 0, "right": 0}  
-        self.match_id = None  
+        self.match_id = match_id
 
     def process_key_event(self, key, is_pressed):
         """Maneja los eventos de teclado para mover las paletas"""

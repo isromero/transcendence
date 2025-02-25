@@ -18,4 +18,3 @@ export async function loadGame(page) {
     console.error('Error loading game:', error.message);
   }
 }
-

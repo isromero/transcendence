@@ -8,27 +8,50 @@ logger = logging.getLogger(__name__)
 
 
 class GameConsumer(AsyncWebsocketConsumer):
-    game_state = GameState()
-    _game_loop_task = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.game_state = None
+        self._game_loop_task = None
 
-    @classmethod
-    async def start_game_loop(cls):
-        """Inicia el game loop como método de clase"""
-        if cls._game_loop_task is None:
+    async def connect(self):
+        """Maneja la conexión de un nuevo cliente"""
+        logger.info("Nuevo cliente conectando")
+        self.match_id = self.scope["url_route"]["kwargs"]["match_id"]
+
+        await self.channel_layer.group_add("game_group", self.channel_name)
+        await self.accept()
+
+        self.__class__.channel_layer = self.channel_layer
+
+        # Initialize GameState with match_id
+        self.game_state = GameState(self.match_id)
+
+        # Ensure game_state is initialized before starting the loop
+        if self.game_state and (
+            not self._game_loop_task or self._game_loop_task.done()
+        ):
+            await self.start_game_loop()
+
+        initial_state = self.game_state.get_state()
+        logger.info(f"Estado inicial enviado: {initial_state}")
+        await self.send(json.dumps(initial_state))
+
+    async def start_game_loop(self):
+        """Inicia el game loop como método de instancia"""
+        if self._game_loop_task is None:
             logger.info("Iniciando nuevo game loop")
-            cls.game_state.running = True
-            cls._game_loop_task = asyncio.create_task(cls._game_loop())
+            self.game_state.running = True
+            self._game_loop_task = asyncio.create_task(self._game_loop())
 
-    @classmethod
-    async def _game_loop(cls):
+    async def _game_loop(self):
         """Game loop con mejor manejo de errores"""
         logger.info("Game loop iniciado")
         try:
-            while cls.game_state.running:
-                cls.game_state.update()
-                state = cls.game_state.get_state()
-                if hasattr(cls, "channel_layer"):
-                    await cls.channel_layer.group_send(
+            while self.game_state.running:
+                self.game_state.update()
+                state = self.game_state.get_state()
+                if hasattr(self, "channel_layer"):
+                    await self.channel_layer.group_send(
                         "game_group", {"type": "game_update", "game_state": state}
                     )
                 await asyncio.sleep(1 / 60)  # 60 FPS
@@ -37,26 +60,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             logger.error(f"Error en game loop: {e}")
         finally:
-            cls._game_loop_task = None
-            cls.game_state.running = False
-
-
-    async def connect(self):
-        """Maneja la conexión de un nuevo cliente"""
-        logger.info("Nuevo cliente conectando")
-        await self.channel_layer.group_add("game_group", self.channel_name)
-        await self.accept()
-
-        self.__class__.channel_layer = self.channel_layer
-
-        # Asegurar que el game loop solo se inicia si no está corriendo
-        if not self._game_loop_task or self._game_loop_task.done():
-            await self.start_game_loop()
-
-        initial_state = self.game_state.get_state()
-        logger.info(f"Estado inicial enviado: {initial_state}")
-        await self.send(json.dumps(initial_state))
-
+            self._game_loop_task = None
+            self.game_state.running = False
 
     async def disconnect(self, close_code):
         """Maneja la desconexión de un cliente"""
@@ -78,7 +83,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     logger.info("Game loop detenido correctamente")
                 self._game_loop_task = None
                 self.game_state.running = False
-
 
     async def receive(self, text_data):
         """Maneja los mensajes recibidos de los clientes"""

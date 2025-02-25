@@ -1,4 +1,3 @@
-<header class="text-white text-center py-1 mt-0"></header>
 <h1
   class="title-principal-styles position-absolute top-0 start-50 translate-middle-x mt-5"
 >
@@ -48,8 +47,6 @@
                     Create Match
                   </button>
                 </a>
-                
-
               </div>
             </form>
           </div>
@@ -58,70 +55,3 @@
     </div>
   </div>
 </div>
-
-<script>
-document.getElementById("createMatchBtn").addEventListener("click", async function (event) {
-    event.preventDefault(); // Evita el comportamiento predeterminado del botón
-
-    const pointsToWin = document.querySelector("input.form-control").value;
-
-    if (!pointsToWin || isNaN(pointsToWin) || pointsToWin <= 0) {
-        alert("Please enter a valid number of points to win.");
-        return;
-    }
-
-    try {
-        const response = await fetch("http://localhost:8000/api/history", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCSRFToken() // Asegúrate de incluir el CSRF Token si Django lo requiere
-            },
-            body: JSON.stringify({
-                local_match: true,
-                points_to_win: parseInt(pointsToWin, 10)
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "Failed to create match.");
-        }
-
-        const matchId = data.data.match_id;
-
-        // Buscar el enlace <a>
-        const gameLink = document.getElementById("gameLink");
-
-        if (gameLink) {
-            // Si el enlace existe, cambiar href y simular clic
-            gameLink.href = `/game/${matchId}`;
-            gameLink.click();
-        } else {
-            // Si no existe, cambiar la URL manualmente con pushState
-            window.history.pushState({}, "", `/game/${matchId}`);
-            console.log("URL changed to /game/" + matchId);
-            
-            // Llamar manualmente a la lógica de la SPA si es necesario
-            if (typeof onRouteChange === "function") {
-                onRouteChange(`/game/${matchId}`);
-            }
-        }
-
-    } catch (error) {
-        console.error("Error creating match:", error);
-        alert("Error creating match. Please try again.");
-    }
-});
-
-// Función para obtener el CSRF Token si Django lo requiere
-function getCSRFToken() {
-    const cookieValue = document.cookie
-        .split("; ")
-        .find(row => row.startsWith("csrftoken="))
-        ?.split("=")[1];
-    return cookieValue || "";
-}
-
-</script>
