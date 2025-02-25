@@ -69,6 +69,14 @@ export function initGame() {
     setTimeout(initGame, 1000);
   };
 
+  window.addEventListener("beforeunload", () => {
+    if (ws) {
+      ws.send(JSON.stringify({ type: "disconnect" }));
+      ws.close();
+    }
+  });
+  
+
   // 📌 **Eventos de teclado**
   document.addEventListener('keydown', event => {
     if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -81,6 +89,14 @@ export function initGame() {
       sendKeyEvent(event.key, false);
     }
   });
+
+  window.addEventListener("beforeunload", () => {
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "disconnect" }));  // Notifica al servidor
+        socket.close();  // Cierra el socket
+    }
+});
+
 }
 
 // 📡 **Función para enviar eventos de teclado al backend**

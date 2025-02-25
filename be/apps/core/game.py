@@ -107,6 +107,7 @@ class GameState:
             self.scores["left"] += 1
             threading.Thread(target=self._send_score_update, args=(True,), daemon=True).start()  # ✅ Ahora en un hilo
             self.reset_ball()
+            
     def process_key_event(self, key, is_pressed):
         """Maneja los eventos de teclado para mover las paletas"""
         if key == "w":
@@ -167,6 +168,8 @@ class GameState:
 
             return True
         return False
+    
+    
 
     def get_state(self):
         """Devuelve el estado actual del juego"""
