@@ -1,35 +1,16 @@
-import threading
-import time
-import asyncio
-import math
-import copy
 import requests
-
-# Configuración del juego
-WIDTH, HEIGHT = 800, 400
-PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
-BALL_SIZE, PADDLE_SPEED, BALL_SPEED = 20, 8, 6
+import time
+import math
 
 API_URL = "http://localhost:8000/api/history/match/"
-
+#TODO LLEVAR MATCH ID DEL FRONT AL BACK
 class GameState:
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(GameState, cls).__new__(cls)
-            cls._instance._initialized = False
-        return cls._instance
-
     def __init__(self):
-        if self._initialized:
-            return
-
-        self.WIDTH, self.HEIGHT = WIDTH, HEIGHT
-        self.PADDLE_WIDTH, self.PADDLE_HEIGHT = PADDLE_WIDTH, PADDLE_HEIGHT
-        self.BALL_SIZE = BALL_SIZE
-        self.PADDLE_SPEED = PADDLE_SPEED
-        self.BALL_SPEED = BALL_SPEED
+        self.WIDTH, self.HEIGHT = 800, 400
+        self.PADDLE_WIDTH, self.PADDLE_HEIGHT = 20, 100
+        self.BALL_SIZE = 20
+        self.PADDLE_SPEED = 8
+        self.BALL_SPEED = 6
         self.running = False
         self.last_update = time.time()
 
@@ -57,11 +38,11 @@ class GameState:
             "speedY": self.BALL_SPEED,
         }
 
-        self.scores = {"left": 0, "right": 0}  # Puntuaciones de los jugadores
-        self.match_id = None  # ID del partido
-        self._initialized = True
+        self.scores = {"left": 0, "right": 0}  
+        self.match_id = None  
 
     def process_key_event(self, key, is_pressed):
+        """Maneja los eventos de teclado para mover las paletas"""
         if key == "w":
             self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
         elif key == "s":
@@ -72,12 +53,20 @@ class GameState:
             self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
 
     def start_game(self, match_id):
-        self.running = True
-        self.match_id = match_id  # Guardar el ID del partido
-        self.scores = {"left": 0, "right": 0}  # Reiniciar puntajes
-        self.reset_ball()
+        """Inicia el juego con un ID de partido"""
+        if match_id:  # Verifica que match_id no sea None
+            self.match_id = match_id
+            print(f"✅ Match ID asignado: {self.match_id}")  # Agrega un mensaje de depuración
+        else:
+            print("⚠️ No se proporcionó un match_id válido.") 
+
+            self.running = True
+            self.scores = {"left": 0, "right": 0}
+            self.reset_ball()
+
 
     def reset_ball(self):
+        """Reinicia la pelota en el centro"""
         self.ball = {
             "x": self.WIDTH // 2,
             "y": self.HEIGHT // 2,
@@ -87,6 +76,7 @@ class GameState:
         }
 
     def update(self):
+        """Actualiza el estado del juego"""
         current_time = time.time()
         dt = current_time - self.last_update
         self.last_update = current_time
@@ -96,22 +86,18 @@ class GameState:
             self._update_ball(dt)
 
     def _update_paddles(self):
+        """Mueve las paletas dentro de los límites"""
         for paddle in [self.left_paddle, self.right_paddle]:
             paddle["y"] += paddle["dy"]
             paddle["y"] = max(0, min(self.HEIGHT - paddle["height"], paddle["y"]))
 
     def _update_ball(self, dt):
-        # Actualizar posición de la pelota
+        """Mueve la pelota y detecta colisiones"""
         self.ball["x"] += self.ball["speedX"] * dt * 60
         self.ball["y"] += self.ball["speedY"] * dt * 60
 
-        # Colisión con paredes superior e inferior
-        if self.ball["y"] - self.ball["radius"] <= 0:
-            self.ball["y"] = self.ball["radius"]
-            self.ball["speedY"] *= -1
-
-        elif self.ball["y"] + self.ball["radius"] >= self.HEIGHT:
-            self.ball["y"] = self.HEIGHT - self.ball["radius"]
+        # Colisión con paredes
+        if self.ball["y"] - self.ball["radius"] <= 0 or self.ball["y"] + self.ball["radius"] >= self.HEIGHT:
             self.ball["speedY"] *= -1
 
         # Colisión con paletas
@@ -119,52 +105,45 @@ class GameState:
             if self._check_paddle_collision(paddle):
                 self.ball["speedX"] *= -1.1
 
-        # Verificar si la pelota salió del campo
+        # Gol en la portería izquierda (punto para el jugador derecho)
         if self.ball["x"] <= 0:
-            self.scores["right"] += 1  # Punto para el jugador de la derecha
-            self._send_score_update(False)  # Player 1 es False (derecha)
-            
-            if self.scores["right"] >= 50000:  # Fin del juego si llega a 5 puntos
-                self._end_game(winner="right")
-                return
-
+            print("⚽ Gol del jugador de la derecha")
+            self.scores["right"] += 1
+            self._send_score_update(is_player1=False)  # Derecha → is_player1=False
             self.reset_ball()
 
+        # Gol en la portería derecha (punto para el jugador izquierdo)
         elif self.ball["x"] >= self.WIDTH:
-            self.scores["left"] += 1  # Punto para el jugador de la izquierda
-            self._send_score_update(True)  # Player 1 es True (izquierda)
-
-            if self.scores["left"] >= 50000:  # Fin del juego si llega a 5 puntos
-                self._end_game(winner="left")
-                return
-
+            print("⚽ Gol del jugador de la izquierda")
+            self.scores["left"] += 1
+            self._send_score_update(is_player1=True)  # Izquierda → is_player1=True
             self.reset_ball()
 
-        #print(f"Puntaje: {self.scores}")
-
-
-    def _send_score_update(self, player1):
-        """Envía una solicitud PUT al servidor cuando se anota un punto."""
+    def _send_score_update(self, is_player1):
+        """Envía la puntuación a la API"""
         if not self.match_id:
+            print("⚠️ No hay match_id, no se puede enviar el puntaje.")
             return
-        
-        payload = {
-            "player1": player1,
-            "score": 1  # Se suma un punto al jugador correspondiente
-        }
+
+        payload = {"is_player1": is_player1}
+        print(f"🔄 Enviando PUT a {API_URL}{self.match_id} con datos: {payload}")
 
         try:
             url = f"{API_URL}{self.match_id}"
-            response = requests.put(url, json=payload)
+            headers = {"Content-Type": "application/json"}
+            response = requests.put(url, json=payload, headers=headers)
+
+            print(f"📡 Respuesta de la API ({response.status_code}): {response.text}")
 
             if response.status_code == 200:
-                print(f"Punto registrado correctamente para {'izquierda' if player1 else 'derecha'}.")
+                print(f"✅ Punto registrado correctamente para {'izquierda' if is_player1 else 'derecha'}.")
             else:
-                print(f"Error al actualizar el puntaje: {response.status_code}, {response.text}")
+                print(f"⚠️ Error al actualizar puntaje ({response.status_code}): {response.text}")
         except requests.exceptions.RequestException as e:
-            print(f"Error al conectar con la API: {e}")
+            print(f"❌ Error de conexión con la API: {e}")
 
     def _check_paddle_collision(self, paddle):
+        """Verifica si la pelota choca con una paleta"""
         next_x = self.ball["x"] + self.ball["speedX"]
         next_y = self.ball["y"] + self.ball["speedY"]
 
@@ -184,36 +163,13 @@ class GameState:
             self.ball["speedY"] = math.sin(bounce_angle) * speed
 
             return True
-
         return False
 
     def get_state(self):
+        """Devuelve el estado actual del juego"""
         return {
             "left_paddle": self.left_paddle,
             "right_paddle": self.right_paddle,
             "ball": self.ball,
             "scores": self.scores,
         }
-    
-    def _end_game(self, winner):
-        """Finaliza el juego y envía la actualización final al servidor."""
-        print(f"¡Juego terminado! Ganador: {winner}")
-        self.running = False  # Detener la actualización del juego
-        
-        # Enviar resultado final al servidor
-        if self.match_id:
-            payload = {
-                "match_id": self.match_id,
-                "winner": winner
-            }
-            try:
-                url = f"{API_URL}{self.match_id}/end"
-                response = requests.put(url, json=payload)
-
-                if response.status_code == 200:
-                    print(f"Resultado final registrado: Ganador -> {winner}.")
-                else:
-                    print(f"Error al registrar el resultado final: {response.status_code}, {response.text}")
-            except requests.exceptions.RequestException as e:
-                print(f"Error al conectar con la API: {e}")
-
