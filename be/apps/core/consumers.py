@@ -42,24 +42,27 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         """Maneja la desconexión de un cliente"""
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
-
         logger.info(f"Cliente desconectado de la partida {self.match_id}")
 
-        # Eliminar jugador de la partida
         if self.match_id in self.__class__.games:
             self.__class__.games[self.match_id]["players"].discard(self)
 
-            # Si no hay jugadores en la partida, la eliminamos
+            # Si no quedan jugadores en la partida, la eliminamos
             if not self.__class__.games[self.match_id]["players"]:
-                logger.info(f"No quedan jugadores en la partida {self.match_id}, deteniendo el juego...")
-                if self.__class__.games[self.match_id]["loop_task"]:
-                    self.__class__.games[self.match_id]["loop_task"].cancel()
-                    try:
-                        await self.__class__.games[self.match_id]["loop_task"]
-                    except asyncio.CancelledError:
-                        logger.info(f"Game loop de {self.match_id} detenido correctamente")
+                logger.info(f"⚠️ No quedan jugadores en la partida {self.match_id}, eliminándola...")
 
-                del self.__class__.games[self.match_id]  # Eliminar la partida
+                loop_task = self.__class__.games[self.match_id].get("loop_task")
+                if loop_task:
+                    loop_task.cancel()
+                    try:
+                        await loop_task
+                    except asyncio.CancelledError:
+                        logger.info(f"✅ Loop de juego {self.match_id} detenido correctamente")
+
+                del self.__class__.games[self.match_id]
+                logger.info(f"✅ Partida {self.match_id} eliminada correctamente")
+
+
 
     async def receive(self, text_data):
         """Maneja los mensajes recibidos de los clientes"""

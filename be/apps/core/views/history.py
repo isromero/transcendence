@@ -138,7 +138,7 @@ class HistoryView(View):
 
             # Verify if the match is finished
             match = matches.first()
-            if max(match.result_user, match.result_opponent) >= 5000:
+            if max(match.result_user, match.result_opponent) >= 5:
                 return create_response(
                     error="This match is already finished", status=400
                 )

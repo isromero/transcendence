@@ -1,4 +1,5 @@
 import { API_URL } from './utils/constants.js';
+import { loadPage } from './router/router.js';
 
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
@@ -7,33 +8,56 @@ canvas.width = 800;
 canvas.height = 400;
 
 let ws;
+let animationFrameId = null;
+let gameEnded = false;
 
-// 🔄 **Función global para actualizar el estado del juego**
 function updateGameState(gameState) {
-  console.log('📌 Recibiendo estado del juego:', gameState);
-  
+  // console.log('📌 Estado del juego:', gameState);
+
+  if (gameEnded) return;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const { left_paddle, right_paddle, ball } = gameState;
+  const { left_paddle, right_paddle, ball, scores } = gameState;
 
-  if (!left_paddle || !right_paddle || !ball) {
-    console.error('❌ Estado del juego inválido:', gameState);
+  if (!left_paddle || !right_paddle || !ball || !scores) {
+    console.error('❌ Estado inválido:', gameState);
     return;
   }
 
-  // Dibujar paleta izquierda
-  ctx.fillStyle = left_paddle.color || '#ff4d6d';
+  ctx.fillStyle = '#ff4d6d';
   ctx.fillRect(left_paddle.x, left_paddle.y, left_paddle.width, left_paddle.height);
-
-  // Dibujar paleta derecha
-  ctx.fillStyle = right_paddle.color || '#ff4d6d';
   ctx.fillRect(right_paddle.x, right_paddle.y, right_paddle.width, right_paddle.height);
 
-  // Dibujar pelota
-  ctx.fillStyle = ball.color || 'white';
+  ctx.fillStyle = 'white';
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
   ctx.fill();
+
+  // 📌 **Si alguien llega a 5 puntos, mostrar el modal y detener el juego**
+  if (scores.left >= 5 || scores.right >= 5) {
+    console.log('🎉 Fin del juego! Mostrando modal...');
+
+    gameEnded = true;
+    stopGame();
+
+    // Usar `loadPage` para abrir el modal correctamente en tu sistema
+    console.log('📌 Abriendo modal...');
+    loadPage('/modal-end-game');
+    console.log('📌 Modal abierto correctamente.');
+  } else {
+    // Si el juego no ha terminado, seguir animando
+    animationFrameId = requestAnimationFrame(() => updateGameState(gameState));
+  }
+}
+
+// ✅ Asegurar que `stopGame()` detenga el juego completamente
+function stopGame() {
+  console.log("🛑 Juego detenido");
+  if (animationFrameId !== null) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 }
 
 // 🎮 **Función de inicialización del juego**
@@ -54,12 +78,10 @@ export function initGame() {
   ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
 
   ws.onopen = () => {
-    console.log('Conectado al servidor de juego');
     ws.send(JSON.stringify({ type: 'init_game', match_id: matchId }));
   };
 
   ws.onmessage = event => {
-    console.log('📡 Mensaje recibido del servidor');
     const gameState = JSON.parse(event.data);
     updateGameState(gameState);
   };
@@ -75,7 +97,6 @@ export function initGame() {
       ws.close();
     }
   });
-  
 
   // 📌 **Eventos de teclado**
   document.addEventListener('keydown', event => {
@@ -90,13 +111,13 @@ export function initGame() {
     }
   });
 
-  window.addEventListener("beforeunload", () => {
-    if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: "disconnect" }));  // Notifica al servidor
-        socket.close();  // Cierra el socket
+  window.addEventListener("popstate", () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      console.log("🔙 Navegando atrás, cerrando WebSocket...");
+      ws.send(JSON.stringify({ type: "disconnect" }));
+      ws.close();
     }
-});
-
+  });
 }
 
 // 📡 **Función para enviar eventos de teclado al backend**
@@ -116,6 +137,3 @@ if (document.readyState === 'loading') {
   console.log('📌 DOM ya cargado, iniciando juego directamente...');
   initGame();
 }
-
-// 🔄 Hacer que initGame sea accesible desde la consola
-window.initGame = initGame;

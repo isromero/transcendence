@@ -82,6 +82,11 @@ class GameState:
 
     def _update_ball(self, dt):
         """Mueve la pelota y detecta colisiones"""
+        if self.scores["left"] >= 5 or self.scores["right"] >= 5:
+            print("🏁 El juego ha terminado.")
+            self.running = False  # ✅ Detener el juego
+            return
+
         self.ball["x"] += self.ball["speedX"] * dt * 60
         self.ball["y"] += self.ball["speedY"] * dt * 60
 
@@ -96,17 +101,20 @@ class GameState:
 
         # Gol en la portería izquierda (punto para el jugador derecho)
         if self.ball["x"] <= 0:
-            print("⚽ Gol del jugador de la derecha")
             self.scores["right"] += 1
-            threading.Thread(target=self._send_score_update, args=(False,), daemon=True).start()  # ✅ Ahora en un hilo
+            print(f"⚽ Gol del jugador de la derecha - Puntuación: {self.scores['left']} - {self.scores['right']}")
+            if self.scores["right"] < 5:  # ✅ Solo enviar si el juego sigue en curso
+                threading.Thread(target=self._send_score_update, args=(False,), daemon=True).start()
             self.reset_ball()
 
         # Gol en la portería derecha (punto para el jugador izquierdo)
         elif self.ball["x"] >= self.WIDTH:
-            print("⚽ Gol del jugador de la izquierda")
             self.scores["left"] += 1
-            threading.Thread(target=self._send_score_update, args=(True,), daemon=True).start()  # ✅ Ahora en un hilo
+            print(f"⚽ Gol del jugador de la izquierda - Puntuación: {self.scores['left']} - {self.scores['right']}")
+            if self.scores["left"] < 5:  # ✅ Solo enviar si el juego sigue en curso
+                threading.Thread(target=self._send_score_update, args=(True,), daemon=True).start()
             self.reset_ball()
+
             
     def process_key_event(self, key, is_pressed):
         """Maneja los eventos de teclado para mover las paletas"""
