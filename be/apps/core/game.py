@@ -103,7 +103,7 @@ class GameState:
         if self.ball["x"] <= 0:
             self.scores["right"] += 1
             print(f"⚽ Gol del jugador de la derecha - Puntuación: {self.scores['left']} - {self.scores['right']}")
-            if self.scores["right"] < 5:  # ✅ Solo enviar si el juego sigue en curso
+            if self.scores["right"] <= 5:  # ✅ Solo enviar si el juego sigue en curso
                 threading.Thread(target=self._send_score_update, args=(False,), daemon=True).start()
             self.reset_ball()
 
@@ -111,7 +111,7 @@ class GameState:
         elif self.ball["x"] >= self.WIDTH:
             self.scores["left"] += 1
             print(f"⚽ Gol del jugador de la izquierda - Puntuación: {self.scores['left']} - {self.scores['right']}")
-            if self.scores["left"] < 5:  # ✅ Solo enviar si el juego sigue en curso
+            if self.scores["left"] <= 5:  # ✅ Solo enviar si el juego sigue en curso
                 threading.Thread(target=self._send_score_update, args=(True,), daemon=True).start()
             self.reset_ball()
 
