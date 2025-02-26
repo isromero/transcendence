@@ -58,23 +58,52 @@ function stopGame() {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
   }
+  
+  if (ws) {
+    ws.close();
+  }
 }
 
+async function checkIfGameFinished(matchId) {
+  try {
+    const response = await fetch(`${API_URL}/history/match/${matchId}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Error fetching match data');
+    }
+
+    if (data.data.status === 'finished') {
+      console.log('🎉 Partida ya finalizada, mostrando pantalla de fin de juego...');
+      loadPage('/modal-end-game');
+      return true; // Indica que el juego ya terminó
+    }
+
+    return false; // La partida sigue en curso
+  } catch (error) {
+    console.error('❌ Error al comprobar el estado del juego:', error);
+    return false;
+  }
+}
+
+
 // 🎮 **Función de inicialización del juego**
-export function initGame() {
+export async function initGame() {
   console.log('Iniciando juego...');
 
   const path = window.location.pathname;
   const matchId = path.split('/game/')[1];
-
-  console.log(matchId);
 
   if (!matchId) {
     console.log('No se encontró un match_id en la URL');
     return;
   }
 
-  // Iniciar WebSocket
+  // 🔎 Comprobar si el juego ya terminó antes de abrir WebSocket
+  const gameFinished = await checkIfGameFinished(matchId);
+  if (gameFinished) return;
+
+  // Iniciar WebSocket si la partida sigue en curso
   ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
 
   ws.onopen = () => {
@@ -98,7 +127,6 @@ export function initGame() {
     }
   });
 
-  // 📌 **Eventos de teclado**
   document.addEventListener('keydown', event => {
     if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
       sendKeyEvent(event.key, true);
@@ -119,6 +147,7 @@ export function initGame() {
     }
   });
 }
+
 
 // 📡 **Función para enviar eventos de teclado al backend**
 function sendKeyEvent(key, isPressed) {
