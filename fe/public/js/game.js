@@ -122,8 +122,15 @@ export async function initGame() {
 
   ws.onclose = () => {
     console.log('Desconectado del servidor de juego');
-    setTimeout(initGame, 1000);
-  };
+
+    if (!gameEnded) {  // ✅ Solo reiniciar si la partida NO ha terminado
+        console.log('♻️ Reconectando en 1 segundo...');
+        setTimeout(initGame, 1000);
+    } else {
+        console.log('🛑 La partida terminó, no se reiniciará el juego.');
+    }
+};
+
 
   window.addEventListener("beforeunload", () => {
     if (ws) {

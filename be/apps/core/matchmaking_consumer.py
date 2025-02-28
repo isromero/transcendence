@@ -36,7 +36,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             player1 = self.queue.pop()
             player2 = self.queue.pop()
 
-            # ✅ Crear la partida en el backend usando requests (en un hilo separado)
+            # ✅ Crear la partida en el backend usando requests
             match_id = await self.create_match()
 
             if not match_id:
@@ -47,9 +47,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
             logger.info(f"🎮 Match ID generado desde el backend: {match_id}")
 
-            # ✅ Enviar el mismo match_id a ambos jugadores
-            await player1.send(json.dumps({"type": "start_match", "match_id": match_id}))
-            await player2.send(json.dumps({"type": "start_match", "match_id": match_id}))
+            # ✅ Enviar el match_id y asignar roles de jugadores
+            await player1.send(json.dumps({"type": "start_match", "match_id": match_id, "player": "left"}))
+            await player2.send(json.dumps({"type": "start_match", "match_id": match_id, "player": "right"}))
+
 
     async def create_match(self):
         """ Llama al backend para crear la partida usando requests en un hilo separado """
