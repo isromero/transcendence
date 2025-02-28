@@ -12,10 +12,15 @@ document.getElementById("multiplayer-btn").addEventListener("click", () => {
     
     ws.onmessage = async (event) => {
         const data = JSON.parse(event.data);
-
+        console.log("📩 [WebSocket] Mensaje recibido:", data);
+    
         if (data.type === "start_match") {
             console.log("✅ Emparejados, creando partida...");
-            sessionStorage.removeItem("matchmaking_active"); // ❗ Liberar cuando se inicia la partida
+            console.log("🎮 Rol recibido desde el servidor:", data.player); // <-- Aquí
+    
+            sessionStorage.removeItem("matchmaking_active");
+            sessionStorage.setItem("player_role", data.player); // <-- Guardar correctamente
+    
             window.location.href = `/game/${data.match_id}`;
         } else if (data.type === "error") {
             console.error(`❌ Error: ${data.message}`);
@@ -23,6 +28,7 @@ document.getElementById("multiplayer-btn").addEventListener("click", () => {
             sessionStorage.removeItem("matchmaking_active");
         }
     };
+    
 
     ws.onclose = () => {
         console.log("🔴 Conexión de matchmaking cerrada");

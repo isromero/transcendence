@@ -139,17 +139,22 @@ export async function initGame() {
     }
   });
 
-  document.addEventListener('keydown', event => {
-    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
-      sendKeyEvent(event.key, true);
-    }
-  });
+  const playerRole = sessionStorage.getItem("player_role"); // "left" o "right"
 
-  document.addEventListener('keyup', event => {
-    if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
-      sendKeyEvent(event.key, false);
+document.addEventListener('keydown', event => {
+    if ((playerRole === "left" && ['w', 's'].includes(event.key)) ||
+        (playerRole === "right" && ['ArrowUp', 'ArrowDown'].includes(event.key))) {
+        sendKeyEvent(event.key, true);
     }
-  });
+});
+
+document.addEventListener('keyup', event => {
+    if ((playerRole === "left" && ['w', 's'].includes(event.key)) ||
+        (playerRole === "right" && ['ArrowUp', 'ArrowDown'].includes(event.key))) {
+        sendKeyEvent(event.key, false);
+    }
+});
+
 
   window.addEventListener("popstate", () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
