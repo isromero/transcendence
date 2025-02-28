@@ -12,7 +12,12 @@ let animationFrameId = null;
 let gameEnded = false;
 
 function updateGameState(gameState) {
-  // console.log('📌 Estado del juego:', gameState);
+
+
+  if (gameState.type === 'init' && gameState.state) {
+    gameState = gameState.state; // ⚡ Reemplazarlo con gameState.state
+  }
+  
 
   if (gameEnded) return;
 
