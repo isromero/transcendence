@@ -13,6 +13,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from apps.core.consumers import GameConsumer
+from apps.core.matchmaking_consumer import MatchmakingConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
@@ -20,6 +21,7 @@ django_asgi_app = get_asgi_application()
 
 websocket_urlpatterns = [
     path("ws/game/<str:match_id>", GameConsumer.as_asgi()),
+    path("ws/matchmaking", MatchmakingConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter(
