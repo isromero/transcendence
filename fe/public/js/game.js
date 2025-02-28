@@ -141,19 +141,24 @@ export async function initGame() {
 
   const playerRole = sessionStorage.getItem("player_role"); // "left" o "right"
 
-document.addEventListener('keydown', event => {
-    if ((playerRole === "left" && ['w', 's'].includes(event.key)) ||
+  document.addEventListener('keydown', event => {
+    const isLocalMatch = !playerRole; // Si no hay "playerRole", es local
+    if (isLocalMatch || 
+        (playerRole === "left" && ['w', 's'].includes(event.key)) ||
         (playerRole === "right" && ['ArrowUp', 'ArrowDown'].includes(event.key))) {
         sendKeyEvent(event.key, true);
     }
 });
 
 document.addEventListener('keyup', event => {
-    if ((playerRole === "left" && ['w', 's'].includes(event.key)) ||
+    const isLocalMatch = !playerRole; // Si no hay "playerRole", es local
+    if (isLocalMatch || 
+        (playerRole === "left" && ['w', 's'].includes(event.key)) ||
         (playerRole === "right" && ['ArrowUp', 'ArrowDown'].includes(event.key))) {
         sendKeyEvent(event.key, false);
     }
 });
+
 
 
   window.addEventListener("popstate", () => {
