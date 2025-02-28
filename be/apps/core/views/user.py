@@ -15,9 +15,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # @method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(csrf_exempt, name="dispatch")
+# class UserView(View):
 class UserView(LoginRequiredMixin, View):
     login_url = "/auth/login"
     redirect_field_name = "redirect_to"
+    
+    def handle_no_permission(self):
+        """Evita la redirección y devuelve un error JSON si el usuario no está autenticado"""
+        
+        return JsonResponse({"error": "Authentication required"}, status=401)
+
     def get(self, _, user_id=None):
         if user_id:
             user = get_object_or_404(User, id=user_id)

@@ -26,6 +26,7 @@ def auth_login(request: HttpRequest) -> HttpResponse:
 
 def auth_callback(request: HttpRequest) -> JsonResponse:
     """Recibe el código de autorización y obtiene el access token"""
+    print("AUTH CALLBACK")
     code = request.GET.get("code")
     if not code:
         return JsonResponse({"error": "No authorization code provided"}, status=400)
