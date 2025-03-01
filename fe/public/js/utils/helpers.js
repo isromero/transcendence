@@ -14,29 +14,51 @@ export function getCleanPageKey(requestedPath) {
 // * Parse the HTML content and create script elements to be executed
 // * This is ultra important to execute the scripts in a SPA
 export function parseAndSetContent(container, htmlString) {
+  // Parse the HTML content
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
 
-  // Empty the current content
+  // Clear the container
   container.innerHTML = '';
 
-  // Transfer all nodes of the parsed content
+  // Add all non-script nodes
   Array.from(doc.body.childNodes).forEach(node => {
-    container.appendChild(node.cloneNode(true));
+    if (node.nodeName !== 'SCRIPT') {
+      container.appendChild(node.cloneNode(true));
+    }
   });
 
-  // Search and execute scripts
-  const scripts = Array.from(container.querySelectorAll('script'));
+  // Process scripts
+  const scripts = Array.from(doc.body.querySelectorAll('script'));
+
   scripts.forEach(script => {
-    const newScript = document.createElement('script');
-    newScript.async = false; // Ensure scripts are executed in the order they appear
-    newScript.type = 'module';
     if (script.src) {
-      newScript.src = script.src;
-    } else {
-      newScript.textContent = script.textContent;
+      const scriptSrc = script.src;
+      const scriptType =
+        script.type || (scriptSrc.endsWith('.js') ? 'module' : '');
+
+      // ! This is probably not the best solution but it works to force the script to be executed
+      // ! In browsers, if a script is added to the DOM and it has a src, it won't be executed
+      // ! if was cached, so we need to force a new load of the script
+      if (scriptType === 'module') {
+        // For ES modules, use a dynamic import with a cache-busting query parameter
+        const uuid = crypto.randomUUID(); // Generate a unique ID for the script so it's not cached
+        const cacheBuster = `?_cb=${uuid}`;
+
+        const importUrl = scriptSrc.includes('?')
+          ? `${scriptSrc}&_cb=${uuid}`
+          : `${scriptSrc}${cacheBuster}`;
+
+        // Create a new script element
+        const newScript = document.createElement('script');
+        newScript.type = 'module';
+        newScript.src = importUrl;
+        newScript.dataset.originalSrc = scriptSrc; // Store original src for reference
+        newScript.dataset.managedBy = 'spa'; // Mark this script as managed by our SPA
+
+        document.body.appendChild(newScript);
+      }
     }
-    script.parentNode.replaceChild(newScript, script);
   });
 }
 

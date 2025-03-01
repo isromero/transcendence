@@ -22,8 +22,6 @@ class HistoryView(View):
             match = matches.first()
             game_finished = max(match.result_user, match.result_opponent) >= 5
 
-            # TODO: CHECK IF YOU CAN PLAY OR NOT
-
             match_data = {
                 "match_id": str(match.match_id),
                 "is_tournament": match.tournament_id is not None,

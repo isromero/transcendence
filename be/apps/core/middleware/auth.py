@@ -5,12 +5,10 @@ class AuthenticationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def _call_(self, request):
+    def __call__(self, request):
         public_paths = [
             "/api/login",
             "/api/register",
-            "/api/history",
-            "/api/history/match",
         ]
 
         if (

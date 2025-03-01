@@ -43,24 +43,27 @@ export async function loadPage(page) {
     closeModal();
 
     const cleanPage = getCleanPageKey(page).replace(/\/$/, '');
-    const match = matchRoute(cleanPage);
+    const matchedRoute = matchRoute(cleanPage);
 
-    if (!match) {
+    if (!matchedRoute) {
       throw new Error(`Page ${cleanPage} not found`);
     }
 
-    const { url, params } = match;
+    // TODO: Params are not being used, is it needed for future use?
+    // TODO: BTW, matchRoute is totally necessary because of dynamic routing
+    // TODO: But the params returned are not being used
+    const { url, params } = matchedRoute;
 
     if (url.includes('/components/')) {
-      await loadModal(url, params);
+      await loadModal(url);
     } else if (url.includes('/game/')) {
-      await loadGame(url, params);
+      await loadGame(url);
+      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
     } else {
-      await loadMenu(url, params);
+      await loadMenu(url);
       window.history.pushState({ page: cleanPage, params }, '', cleanPage);
     }
   } catch (error) {
-    console.error('Navigation error:', error);
     loadErrorPage(error.message);
   }
 }
