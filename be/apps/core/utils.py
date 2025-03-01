@@ -1,13 +1,41 @@
 from apps.core.models import History
+from django.db import models
+import secrets
+import time
+from apps.core.models import Tournaments
+from django.http import JsonResponse
+
+
+def create_response(data=None, message=None, error=None, status=200):
+    response = {
+        "success": error is None,
+        "data": data,
+        "message": message,
+        "error": error,
+    }
+    return JsonResponse(response, status=status)
+
+
+def handle_form_errors(form):
+    """
+    Handles form validation errors and returns the first error message for each field
+    """
+    errors = {}
+    for field, error_list in form.errors.items():
+        errors[field] = error_list[0]
+
+    return create_response(
+        error={"type": "validation_error", "fields": errors}, status=400
+    )
 
 
 def serialize_user(user):
     return {
         "id": user.id,
         "username": user.username,
-        "email": user.email,
         "avatar": user.avatar,
-        "status": user.status,
+        "is_online": user.is_online,
+        "deleted_user": user.deleted_user,
     }
 
 
@@ -22,80 +50,147 @@ def serialize_friend(friend_relation):
 
 
 def serialize_stats(user, user_history):
+    tournament_matches = user_history.exclude(type_match="match")
+    tournament_wins = tournament_matches.filter(
+        result_user__gt=models.F("result_opponent")
+    )
+
     return {
         "id": user.id,
         "username": user.username,
-        "victories": user_history.filter(position_match=1).count(),
-        "defeats": user_history.exclude(position_match=1).count(),
+        "victories": user_history.filter(
+            result_user__gt=models.F("result_opponent")
+        ).count(),
+        "defeats": user_history.filter(
+            result_user__lt=models.F("result_opponent")
+        ).count(),
         "total_matches": user_history.count(),
-        "tournaments_victories": user_history.filter(position_tournament=1).count(),
-        "tournaments_defeats": user_history.exclude(position_tournament=1).count(),
-        "total_tournaments": user_history.exclude(type_match="match").count(),
-    }
-
-
-def serialize_tournaments(tournament):
-    return {
-        "id": tournament.id,
-        "tournament_name": tournament.tournament_name,
-        "start_date": tournament.start_date,
-        "end_date": tournament.end_date,
-        "players": [
-            {
-                "user_id": player.id,
-                "username": player.username,
-                "position": (
-                    History.objects.filter(user_id=player, tournament_id=tournament.id)
-                    .latest("date")
-                    .position_tournament
-                    if History.objects.filter(
-                        user_id=player, tournament_id=tournament.id
-                    ).exists()  # Hack to test in local with bad initial data
-                    else None
-                ),
-            }
-            for player in tournament.players.all()
-        ],
+        "tournaments_victories": tournament_wins.count(),
+        "tournaments_defeats": tournament_matches.count() - tournament_wins.count(),
+        "total_tournaments": tournament_matches.values("tournament_id")
+        .distinct()
+        .count(),
     }
 
 
 def serialize_tournament(tournament):
+    matches = History.objects.filter(tournament_id=tournament.id)
+
     return {
         "id": tournament.id,
         "tournament_name": tournament.tournament_name,
-        "start_date": tournament.start_date,
-        "end_date": tournament.end_date,
+        "status": tournament.status,
+        "current_round": tournament.current_round,
+        "join_code": tournament.join_code if tournament.status == "pending" else None,
         "players": [
-            {
-                "user_id": player.id,
-                "username": player.username,
-            }
+            {"id": player.id, "username": player.username}
             for player in tournament.players.all()
         ],
-        "matches": [
-            {
-                "player1": match.user_id.username,
-                "punctuation_player1": match.result_user,
-                "player2": match.opponent_id.username,
-                "punctuation_player2": match.result_opponent,
-            }
-            for match in History.objects.filter(tournament_id=tournament.id)
-        ],
+        "matches": {
+            "quarter_finals": [
+                {
+                    "match_id": str(match.match_id),
+                    "match_number": match.tournament_match_number,
+                    "player1": {
+                        "id": match.user_id.id,
+                        "username": match.user_id.username,
+                        "score": match.result_user,
+                    },
+                    "player2": {
+                        "id": match.opponent_id.id,
+                        "username": match.opponent_id.username,
+                        "score": match.result_opponent,
+                    },
+                }
+                for match in matches.filter(type_match="tournament_quarter").distinct(
+                    "match_id"
+                )
+            ],
+            "semi_finals": [
+                {
+                    "match_id": str(match.match_id),
+                    "match_number": match.tournament_match_number,
+                    "player1": {
+                        "id": match.user_id.id,
+                        "username": match.user_id.username,
+                        "score": match.result_user,
+                    },
+                    "player2": {
+                        "id": match.opponent_id.id,
+                        "username": match.opponent_id.username,
+                        "score": match.result_opponent,
+                    },
+                }
+                for match in matches.filter(type_match="tournament_semi").distinct(
+                    "match_id"
+                )
+            ],
+            "finals": [
+                {
+                    "match_id": str(match.match_id),
+                    "match_number": match.tournament_match_number,
+                    "player1": {
+                        "id": match.user_id.id,
+                        "username": match.user_id.username,
+                        "score": match.result_user,
+                    },
+                    "player2": {
+                        "id": match.opponent_id.id,
+                        "username": match.opponent_id.username,
+                        "score": match.result_opponent,
+                    },
+                }
+                for match in matches.filter(type_match="tournament_final").distinct(
+                    "match_id"
+                )
+            ],
+        },
     }
 
 
 def serialize_history(user_history):
     return {
-        "id": user_history.id,
-        "user_id": user_history.user_id.id,
-        "result_user": user_history.result_user,
-        "opponent_id": user_history.opponent_id.id,
-        "result_opponent": user_history.result_opponent,
+        "match_id": str(user_history.match_id),
         "type_match": user_history.type_match,
-        "tournament_id": (
-            user_history.tournament_id.id if user_history.tournament_id else None
-        ),
-        "position_match": user_history.position_match,
+        "is_local": user_history.local_match,
+        "is_tournament": user_history.tournament_id is not None,
         "date": user_history.date,
-        "position_tournament": user_history.position_tournament,
+        "players": {
+            "player1": {
+                "id": user_history.user_id.id,
+                "username": user_history.user_id.username,
+                "score": user_history.result_user,
+            },
+            "player2": {
+                "id": user_history.opponent_id.id,
+                "username": user_history.opponent_id.username,
+                "score": user_history.result_opponent,
+            },
+        },
+        "tournament_info": (
+            {
+                "id": user_history.tournament_id.id,
+                "name": user_history.tournament_id.tournament_name,
+                "match_number": user_history.tournament_match_number,
+            }
+            if user_history.tournament_id
+            else None
+        ),
     }
+
+
+def generate_join_code():
+    """Generates a unique 6 character code"""
+    allowed_chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
+
+    max_attempts = 10  # Avoid infinite loop
+    for _ in range(max_attempts):
+        code = "".join(secrets.choice(allowed_chars) for _ in range(6))
+
+        if not Tournaments.objects.filter(join_code=code).exists():
+            return code
+
+    # If after 10 attempts we don't find a unique code, we add the timestamp
+    timestamp = str(int(time.time()))[-2:]  # last 2 digits of the timestamp
+    code = "".join(secrets.choice(allowed_chars) for _ in range(4))
+    return code + timestamp

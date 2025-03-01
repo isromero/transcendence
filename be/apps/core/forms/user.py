@@ -11,12 +11,15 @@ class UserForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
+
         if User.objects.filter(email=email).exists() and self.instance.email != email:
             raise ValidationError("Email already exists")
+
         return email.lower()
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+
         if (
             User.objects.filter(username=username).exists()
             and self.instance.username != username

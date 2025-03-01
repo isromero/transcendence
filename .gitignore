@@ -1,8 +1,10 @@
 # Backend
 be/.env
+be/venv/
 be/config/__pycache__/
 be/venv/
 be/.cache/
+./my_script
 
 # Frontend
 fe/.env

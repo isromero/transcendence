@@ -1,4 +1,6 @@
 import { changeLanguage } from '../utils/languages.js';
+import { parseAndSetContent } from '../utils/helpers.js';
+import { initGlobalValidation } from '../utils/helpers.js';
 
 const appContainer = document.getElementById('app-container');
 
@@ -10,7 +12,7 @@ export async function loadMenu(page) {
     }
 
     const templateContent = await templateResponse.text();
-    appContainer.innerHTML = templateContent;
+    parseAndSetContent(appContainer, templateContent);
 
     const pageContainer = document.getElementById('page-container');
     const contentResponse = await fetch(page);
@@ -19,11 +21,13 @@ export async function loadMenu(page) {
     }
 
     const pageContent = await contentResponse.text();
-    pageContainer.innerHTML = pageContent;
-    updateIcons(page);
+    parseAndSetContent(pageContainer, pageContent);
 
+    updateIcons(page);
     const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
     await changeLanguage(savedLanguage);
+
+    initGlobalValidation(pageContainer);
   } catch (error) {
     console.error('Menu error:', error);
   }

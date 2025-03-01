@@ -44,6 +44,54 @@
       </div>
     </div>
 
+    <!-- Toast container -->
+    <div
+      class="position-fixed top-0 end-0 p-3"
+      style="z-index: 9999"
+      id="toastContainer"
+    >
+      <!-- Error toast -->
+      <div
+        id="errorToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Error</strong>
+          <button
+            type="button"
+            class="btn-close btn-close-white ms-2 mb-1"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">
+          <!-- Here will go the dynamic error message -->
+        </div>
+      </div>
+      <!-- Success toast -->
+      <div
+        id="successToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header bg-success text-white">
+          <strong class="me-auto">Success</strong>
+          <button
+            type="button"
+            class="btn-close btn-close-white ms-2 mb-1"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body"></div>
+      </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

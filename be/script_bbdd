@@ -1,8 +1,5 @@
 #!/bin/bash
 
-
-#!/bin/bash
-
 echo "Starting script"
 until pg_isready -h db -p 5432 -q; do
   sleep 1
@@ -19,4 +16,5 @@ if not User.objects.filter(username='root').exists():
     User.objects.create_superuser('root', 'root@example.com', 'password123')
 EOF
 
-exec python manage.py runserver 0.0.0.0:8000
+# Execute in background
+exec uvicorn config.asgi:application --reload --host 0.0.0.0 --port 8000

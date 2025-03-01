@@ -1,28 +1,18 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: samusanc <samusanc@student.42madrid>       +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/06/24 19:28:25 by samusanc          #+#    #+#              #
-#    Updated: 2025/02/06 20:24:08 by samusanc         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# Check if docker-compose or docker compose is available
+COMPOSE := $(shell command -v docker-compose || echo "docker compose")
 
 all: build up
 
 build:
-	docker-compose -f ./docker-compose.yml build	
-	docker image prune -f		# delete intermediate images
+	$(COMPOSE) build
 
-up:								# up the docker image and rebuilding if it is nescessary
-	docker-compose -f ./docker-compose.yml up --build	
+up:
+	$(COMPOSE) up --build
 
-down:							# down the docker image
-	docker-compose -f ./docker-compose.yml down	
+down:
+	$(COMPOSE) down
 
-stop:							# stop all containers
+stop:
 	if [ -n "$$(docker ps -aq)" ]; then \
 		docker stop $$(docker ps -aq); \
 	fi
@@ -32,13 +22,19 @@ delvol:
 		docker volume rm $$(docker volume ls -qf dangling=true); \
 	fi
 
-re: fclean all
+clean-migrations:
+	rm -rf be/apps/core/migrations/*_initial.py
+
+# Clean all relationed to the compose file
+clean-compose: 
+	$(COMPOSE) down --rmi all --volumes
+
+re: clean-compose clean-migrations all
 
 fclean: down clean delvol
 	docker system prune -a -f
-	#docker volume prune -a -f
 
-# delete only containers, dont delete images or volumes
+# Delete only containers, dont delete images or volumes
 clean: stop
 	if [ -n "$$(docker ps -aq)" ]; then \
 		docker rm $$(docker ps -aq); \

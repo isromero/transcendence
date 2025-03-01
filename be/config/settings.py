@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "apps.core",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.middleware.auth.AuthenticationMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -80,6 +82,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+ASGI_APPLICATION = "config.asgi.application"
+
+# Communication layer between consumers
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -145,3 +151,4 @@ OAUTH42_REDIRECT_URI = os.getenv("OAUTH42_REDIRECT_URI")
 OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
 OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
 OAUTH42_USER_INFO_URL = "https://api.intra.42.fr/v2/me"
+AUTH_USER_MODEL = "core.User"
