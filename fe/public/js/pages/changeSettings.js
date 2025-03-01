@@ -37,26 +37,7 @@ export const changeSettings = {
       return null;
     }
 
-    showSuccessToast("username changed");
-    return result.data || result;
-  },
-  changeMail: async (login, password, id) => {
-    const response = await fetch(`${API_URL}/login`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ login, password, id }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
-      return null;
-    }
-
-    showSuccessToast("mail changed");
+    showSuccessToast("password changed");
     return result.data || result;
   },
 };
