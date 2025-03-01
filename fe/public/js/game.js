@@ -33,7 +33,7 @@ function resetGameState() {
   hasNavigatedAway = false;
 }
 
-function updateGameState(gameState) {
+async function updateGameState(gameState) {
   try {
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
@@ -76,7 +76,7 @@ function updateGameState(gameState) {
       gameEnded = true;
       stopGame();
 
-      loadPage('/modal-end-game');
+      await loadPage('/modal-end-game');
     } else {
       // If the game is not ended, continue animating
       animationFrameId = requestAnimationFrame(() =>
@@ -116,7 +116,7 @@ async function checkIfGameFinished(matchId) {
     }
 
     if (data.data && data.data.status === 'finished') {
-      loadPage('/modal-end-game');
+      await loadPage('/modal-end-game');
       return true;
     }
 
@@ -128,7 +128,7 @@ async function checkIfGameFinished(matchId) {
 }
 
 export async function initGame() {
-  // Prevent multiple simultaneous initializations
+  // Evitar inicializaciones múltiples simultáneas
   if (isInitializing) {
     return;
   }
@@ -158,14 +158,14 @@ export async function initGame() {
       return;
     }
 
-    // Check if the game already finished before opening WebSocket
+    // Comprobar si el juego ya terminó antes de abrir WebSocket
     const gameFinished = await checkIfGameFinished(matchId);
     if (gameFinished) {
       isInitializing = false;
       return;
     }
 
-    // Start WebSocket if the game is still in progress
+    // Iniciar WebSocket si la partida sigue en curso
     try {
       ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
 
@@ -311,7 +311,7 @@ if (
   window.location.pathname.includes('/game/')
 ) {
   try {
-    initGame();
+    await initGame();
   } catch (error) {
     showErrorToast(`Error initializing the game: ${error}`);
   }

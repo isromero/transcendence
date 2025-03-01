@@ -58,7 +58,7 @@ export async function loadPage(page) {
       await loadModal(url);
     } else if (url.includes('/game/')) {
       await loadGame(url);
-      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
+      window.history.replaceState({ page: cleanPage, params }, '', cleanPage);
     } else {
       await loadMenu(url);
       window.history.pushState({ page: cleanPage, params }, '', cleanPage);
