@@ -7,6 +7,9 @@ from apps.core.views.tournaments import TournamentsView
 from apps.core.views.login import LoginView
 from apps.core.views.register import RegisterView
 from apps.core.views.game import GameView
+from apps.core.views.auth import OAuthLogin, LogoutView, OAuthCallback
+# from apps.core.views.auth import OAuthLogin, auth_login, auth_callback, auth_logout
+
 from django.urls import re_path
 from . import consumers
 
@@ -30,4 +33,7 @@ urlpatterns = [
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
     path("game", GameView.as_view(), name="game"),
+    path("auth/login", OAuthLogin.as_view(), name="auth_login"),
+    # path("auth/callback/", auth_callback, name="auth_callback"),
+    path("auth/logout/", LogoutView.as_view(), name="auth_logout"),
 ]
