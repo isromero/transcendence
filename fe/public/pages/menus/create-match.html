@@ -7,25 +7,26 @@
   <div class="container">
     <div class="row">
       <div class="col-12 text-center">
-        <a class="spa-link" href="/match-settings"
-          ><button
-            aria-label="Local"
-            class="btn button-text-styles button-text-size mb-3 w-100"
-            data-translationKey="local"
-          >
-            Local
-          </button></a
+        <button
+          id="local-match-btn"
+          aria-label="Local"
+          class="btn button-text-styles button-text-size mb-3 w-100"
+          data-translationKey="local"
         >
-        <a class="spa-link" href="/match-settings"
-          ><button
-            aria-label="Multiplayer"
-            class="btn button-text-styles button-text-size w-100"
-            data-translationKey="multiplayer"
-          >
-            Multiplayer
-          </button></a
+          Local
+        </button>
+        <button
+          id="multiplayer-btn"
+          aria-label="Multiplayer"
+          class="btn button-text-styles button-text-size mb-3 w-100"
+          data-translationKey="multiplayer"
         >
+        Multiplayer
+        </button>
       </div>
     </div>
   </div>
 </div>
+<script defer type="module" src="/js/pages/createMatch.js"></script>
+<script defer type="module" src="/js/pages/matchmaking.js"></script>
+

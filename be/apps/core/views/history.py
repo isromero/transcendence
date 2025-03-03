@@ -22,8 +22,6 @@ class HistoryView(View):
             match = matches.first()
             game_finished = max(match.result_user, match.result_opponent) >= 5
 
-            # TODO: CHECK IF YOU CAN PLAY OR NOT
-
             match_data = {
                 "match_id": str(match.match_id),
                 "is_tournament": match.tournament_id is not None,
@@ -89,10 +87,12 @@ class HistoryView(View):
                 )
 
             match_id = uuid.uuid4()
+            user = User.objects.get(id=request.user.id)
+
             History.objects.create(
                 match_id=match_id,
-                user_id=request.user,
-                opponent_id=request.user,
+                user_id=user,
+                opponent_id=user,
                 type_match="match",
                 local_match=True,
                 result_user=0,
@@ -119,6 +119,7 @@ class HistoryView(View):
                     },
                 ],
             }
+            print(f"Match ID: {match_id}")
             return create_response(
                 data=match_data, message="Local match created successfully", status=201
             )
@@ -128,6 +129,8 @@ class HistoryView(View):
     def put(self, request, match_id=None):
         """Update match score"""
         try:
+            print(f"Recibiendo PUT para match_id={match_id}")
+            print(f"Datos recibidos: {request.body}")
             matches = History.objects.filter(match_id=match_id)
             if not matches.exists():
                 return create_response(error="Match not found", status=404)

@@ -3,8 +3,8 @@ from apps.core.models import User, Friends, Tournaments, History
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ("id", "username", "email")
-    search_fields = ("id", "username", "email")
+    list_display = ("id", "username")
+    search_fields = ("id", "username")
 
 
 class FriendAdmin(admin.ModelAdmin):

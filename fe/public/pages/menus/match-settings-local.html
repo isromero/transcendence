@@ -1,4 +1,3 @@
-<header class="text-white text-center py-1 mt-0"></header>
 <h1
   class="title-principal-styles position-absolute top-0 start-50 translate-middle-x mt-5"
 >
@@ -13,18 +12,7 @@
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form>
-              <div class="form-group mb-3">
-                <label
-                  class="form-secondary-title-color fs-3"
-                  data-translationKey="num-players"
-                  >Nº of players</label
-                >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  style="border-radius: 20px"
-                />
-              </div>
+            <form id="match-form">
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color fs-3"
@@ -48,13 +36,13 @@
                     Cancel
                   </button>
                 </a>
-                <a class="spa-link" href="/game" style="flex: 1">
+                <a id="gameLink" class="spa-link" href="/game" style="flex: 1">
                   <button
-                    aria-label="Accept"
+                    id="createMatchBtn"
                     class="btn login-button w-100"
                     data-translationKey="create-match"
                     style="border-radius: 10px; height: 2.8rem"
-                    type="submit"
+                    type="button"
                   >
                     Create Match
                   </button>

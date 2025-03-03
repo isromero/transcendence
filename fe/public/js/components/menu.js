@@ -65,14 +65,14 @@ function updateIcons(page) {
     rightHref = '/modal-pause';
   } else if (pageType === 'social') {
     leftIcon = 'bi bi-joystick';
-    leftHref = '/home';
+    leftHref = '/';
     rightIcon = 'bi bi-list';
     rightHref = '/settings';
   } else if (pageType === 'settings') {
     leftIcon = 'bi bi-person-circle';
     leftHref = '/profile';
     rightIcon = 'bi bi-joystick';
-    rightHref = '/home';
+    rightHref = '/';
   }
 
   leftButton.className = leftIcon;

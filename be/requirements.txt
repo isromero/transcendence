@@ -6,3 +6,4 @@ python-dotenv==1.0.0
 django-cors-headers==4.6.0
 channels==4.2.0
 uvicorn[standard]==0.34.0
+requests==2.26.0

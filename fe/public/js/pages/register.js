@@ -1,10 +1,10 @@
 import { authService } from '../services/auth.js';
 import { showErrorToast } from '../utils/helpers.js';
+import { loadPage } from '../router/router.js';
 const form = document.getElementById('registerForm');
 
 form.addEventListener('formValid', async () => {
   const user = {
-    email: document.getElementById('email').value,
     username: document.getElementById('username').value,
     password: document.getElementById('password').value,
     password_confirmation: document.getElementById('password-confirmation')
@@ -16,7 +16,10 @@ form.addEventListener('formValid', async () => {
     return;
   }
 
-  await authService.register(user);
+  const result = await authService.register(user);
+  if (result) {
+    loadPage('/auth');
+  }
 });
 
 // Toggle password visibility
