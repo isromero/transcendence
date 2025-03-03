@@ -7,7 +7,7 @@ from apps.core.models import User
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["username", "email"]
+        fields = ["username"]
 
     def clean_email(self):
         email = self.cleaned_data.get("email")

@@ -13,6 +13,7 @@ export const pageMappings = {
   '/social': '/pages/menus/social.html',
   '/friends': '/pages/menus/friends.html',
   '/settings': '/pages/menus/settings.html',
+  '/edit-password': '/pages/menus/edit-password.html',
   '/game': '/pages/game/game.html',
 
   // Modals (no user routes)
@@ -20,7 +21,6 @@ export const pageMappings = {
   '/modal-add-friend': '/pages/components/modals/add-friend.html',
   '/modal-data-deletion': '/pages/components/modals/data-deletion.html',
   '/modal-edit-mail': '/pages/components/modals/edit-mail.html',
-  '/modal-edit-password': '/pages/components/modals/edit-password.html',
   '/modal-edit-username': '/pages/components/modals/edit-username.html',
   '/modal-end-game-tournament':
     '/pages/components/modals/end-game-tournament.html',
