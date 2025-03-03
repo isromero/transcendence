@@ -1,13 +1,21 @@
 import { loadPage } from './router/router.js';
 import { getCleanPageKey } from './utils/helpers.js';
+import { checkAuth } from './utils/auth-middleware.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadPage(window.location.pathname);
+  const initialPath = window.location.pathname;
+  if (checkAuth(initialPath)) {
+    await loadPage(initialPath);
+  }
 });
 
 window.addEventListener('popstate', async event => {
   const rawPage = event.state?.page || window.location.pathname;
-  await loadPage(getCleanPageKey(rawPage));
+  const cleanPage = getCleanPageKey(rawPage);
+
+  if (checkAuth(cleanPage)) {
+    await loadPage(cleanPage);
+  }
 });
 
 document.body.addEventListener('click', async event => {
@@ -21,6 +29,9 @@ document.body.addEventListener('click', async event => {
   } else if (spaLink) {
     event.preventDefault();
     const page = spaLink.getAttribute('href');
-    await loadPage(page);
+
+    if (checkAuth(page)) {
+      await loadPage(page);
+    }
   }
 });

@@ -9,6 +9,8 @@ class AuthenticationMiddleware:
         public_paths = [
             "/api/login",
             "/api/register",
+            "/api/logout",
+            "/api/check-auth",
         ]
 
         if (

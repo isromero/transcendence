@@ -33,12 +33,12 @@ class LoginView(View):
             if not form.is_valid():
                 return handle_form_errors(form)
 
-            login_field = form.cleaned_data["login"]
+            username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
             try:
-                user = User.objects.get(Q(username=login_field) | Q(email=login_field))
-                user = authenticate(email=user.email, password=password)
+                user = User.objects.get(username=username)
+                user = authenticate(username=user.username, password=password)
             except User.DoesNotExist:
                 user = None
 

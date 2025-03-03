@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class GameConsumer(AsyncWebsocketConsumer):
     games = {}  # Diccionario que manejará múltiples partidas (clave: match_id)
-    
+
     async def connect(self):
         """Maneja la conexión de un nuevo cliente"""
         self.match_id = self.scope["url_route"]["kwargs"]["match_id"]
@@ -49,7 +49,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             # Si no quedan jugadores en la partida, la eliminamos
             if not self.__class__.games[self.match_id]["players"]:
-                logger.info(f"⚠️ No quedan jugadores en la partida {self.match_id}, eliminándola...")
+                logger.info(
+                    f"⚠️ No quedan jugadores en la partida {self.match_id}, eliminándola..."
+                )
 
                 loop_task = self.__class__.games[self.match_id].get("loop_task")
                 if loop_task:
@@ -57,12 +59,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                     try:
                         await loop_task
                     except asyncio.CancelledError:
-                        logger.info(f"✅ Loop de juego {self.match_id} detenido correctamente")
+                        logger.info(
+                            f"✅ Loop de juego {self.match_id} detenido correctamente"
+                        )
 
                 del self.__class__.games[self.match_id]
                 logger.info(f"✅ Partida {self.match_id} eliminada correctamente")
-
-
 
     async def receive(self, text_data):
         """Maneja los mensajes recibidos de los clientes"""
@@ -74,24 +76,29 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             # ✅ Enviar estado actualizado tras cada evento de teclado
             updated_state = game.get_state()
-            await self.channel_layer.group_send(self.group_name, {
-                "type": "game_update",
-                "game_state": updated_state
-            })
-
+            await self.channel_layer.group_send(
+                self.group_name, {"type": "game_update", "game_state": updated_state}
+            )
 
     async def start_game_loop(self):
         """Inicia el loop de juego para la partida actual"""
         self.__class__.games[self.match_id]["state"].running = True
-        self.__class__.games[self.match_id]["loop_task"] = asyncio.create_task(self._game_loop())
+        self.__class__.games[self.match_id]["loop_task"] = asyncio.create_task(
+            self._game_loop()
+        )
 
     async def _game_loop(self):
         """Loop principal del juego"""
         try:
-            while self.match_id in self.__class__.games and self.__class__.games[self.match_id]["state"].running:
-                self.__class__.games[self.match_id]["state"].update()
+            while (
+                self.match_id in self.__class__.games
+                and self.__class__.games[self.match_id]["state"].running
+            ):
+                await self.__class__.games[self.match_id]["state"].update()
                 state = self.__class__.games[self.match_id]["state"].get_state()
-                await self.channel_layer.group_send(self.group_name, {"type": "game_update", "game_state": state})
+                await self.channel_layer.group_send(
+                    self.group_name, {"type": "game_update", "game_state": state}
+                )
                 await asyncio.sleep(1 / 60)  # 60 FPS
         except asyncio.CancelledError:
             logger.info(f"Game loop de {self.match_id} cancelado correctamente")

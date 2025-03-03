@@ -1,6 +1,6 @@
-import { API_URL } from './utils/constants.js';
 import { loadPage } from './router/router.js';
 import { showErrorToast } from './utils/helpers.js';
+import { historyService } from './services/history.js';
 
 let canvas;
 let ctx;
@@ -108,14 +108,9 @@ function stopGame() {
 
 async function checkIfGameFinished(matchId) {
   try {
-    const response = await fetch(`${API_URL}/history/match/${matchId}`);
-    const data = await response.json();
+    const data = await historyService.getMatchHistory(matchId);
 
-    if (!response.ok) {
-      throw new Error(data.error || 'Error fetching match data');
-    }
-
-    if (data.data && data.data.status === 'finished') {
+    if (data && data.status === 'finished') {
       await loadPage('/modal-end-game');
       return true;
     }
@@ -128,7 +123,7 @@ async function checkIfGameFinished(matchId) {
 }
 
 export async function initGame() {
-  // Evitar inicializaciones múltiples simultáneas
+  // Prevent multiple simultaneous initializations
   if (isInitializing) {
     return;
   }
@@ -158,14 +153,14 @@ export async function initGame() {
       return;
     }
 
-    // Comprobar si el juego ya terminó antes de abrir WebSocket
+    // Check if the game already finished before opening WebSocket
     const gameFinished = await checkIfGameFinished(matchId);
     if (gameFinished) {
       isInitializing = false;
       return;
     }
 
-    // Iniciar WebSocket si la partida sigue en curso
+    // Start WebSocket if the game is still ongoing
     try {
       ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
 

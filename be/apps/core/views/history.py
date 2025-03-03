@@ -87,7 +87,8 @@ class HistoryView(View):
                 )
 
             match_id = uuid.uuid4()
-            user = User.objects.get(id=1)
+            user = User.objects.get(id=request.user.id)
+
             History.objects.create(
                 match_id=match_id,
                 user_id=user,
@@ -151,9 +152,6 @@ class HistoryView(View):
                 else:
                     match.result_opponent += 1
                 match.save()
-                print(
-                    f"✅ Puntuación actualizada: {match.result_user} - {match.result_opponent}"
-                )
 
                 return create_response(
                     data={

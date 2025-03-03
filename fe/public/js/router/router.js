@@ -4,23 +4,36 @@ import { loadGame } from '../components/game.js';
 import { loadMenu } from '../components/menu.js';
 import { getCleanPageKey } from '../utils/helpers.js';
 import { loadErrorPage } from '../components/error.js';
+import { checkAuth } from '../utils/auth-middleware.js';
 
 function matchRoute(path) {
+  const normalizedPath = path === '' ? '/' : path;
+
+  // Special case for root path
+  if (normalizedPath === '/' && pageMappings[''] !== undefined) {
+    return { url: pageMappings[''], params: {} };
+  }
+
   // Exact match
-  if (pageMappings[path]) {
-    return { url: pageMappings[path], params: {} };
+  if (pageMappings[normalizedPath]) {
+    return { url: pageMappings[normalizedPath], params: {} };
   }
 
   // If not exact match, try dynamic routes
   for (const pattern in pageMappings) {
-    const regexPattern = `${
+    // Skip non-dynamic routes
+    if (!pattern.includes(':')) {
+      continue;
+    }
+
+    const regexPattern = `^${
       pattern
         .replace(/:[a-zA-Z]+/g, '([^/]+)') // :id -> ([^/]+)
-        .replace(/\//g, '\\/') // Scape /
+        .replace(/\//g, '\\/') // Escape /
     }$`;
 
     const regex = new RegExp(regexPattern);
-    const match = path.match(regex);
+    const match = normalizedPath.match(regex);
 
     if (match) {
       // Extract the names of the parameters from the original pattern
@@ -43,6 +56,16 @@ export async function loadPage(page) {
     closeModal();
 
     const cleanPage = getCleanPageKey(page).replace(/\/$/, '');
+
+    // Check authentication before loading the page
+    // Skip auth check for modals
+    if (!cleanPage.startsWith('/modal-')) {
+      const isAuthorized = await checkAuth(cleanPage);
+      if (!isAuthorized) {
+        return; // Auth middleware will handle the redirect
+      }
+    }
+
     const matchedRoute = matchRoute(cleanPage);
 
     if (!matchedRoute) {
@@ -58,7 +81,7 @@ export async function loadPage(page) {
       await loadModal(url);
     } else if (url.includes('/game/')) {
       await loadGame(url);
-      window.history.replaceState({ page: cleanPage, params }, '', cleanPage);
+      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
     } else {
       await loadMenu(url);
       window.history.pushState({ page: cleanPage, params }, '', cleanPage);
