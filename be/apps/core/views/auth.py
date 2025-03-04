@@ -1,20 +1,22 @@
 from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.views import View
-import requests
 from django.shortcuts import redirect, render
 from django.conf import settings
 from django.contrib.auth import login, logout
-# from django.contrib.auth.models import User
-from apps.core.models import User
 from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
 from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from apps.core.utils import create_response
+from apps.core.models import User
+import requests
 import json
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
-    def get(self, request: HttpRequest):
+    def post(self, request: HttpRequest):
         try:
             # Rate limiting
             ip = request.META.get("REMOTE_ADDR")
@@ -37,25 +39,12 @@ class OAuthLogin(View):
         except Exception as e:
             return create_response(error="An unexpected error occurred", status=500)
 
-
-# def auth_login(request: HttpRequest) -> HttpResponse:
-#     """Redirige al usuario a la API de 42 para autenticarse"""
-#     print("\n\nEstos son los datos de la API de 42: \n\n",
-#           settings.OAUTH42_CLIENT_ID, "\n",
-#           settings.OAUTH42_REDIRECT_URI, "\n",
-#           settings.OAUTH42_TOKEN_URL)
-#     auth_url = (
-#         f"https://api.intra.42.fr/oauth/authorize?"
-#         f"client_id={settings.OAUTH42_CLIENT_ID}"
-#         f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
-#         f"&response_type=code"
-#     )
-#     return redirect(auth_url)
-
+@method_decorator(csrf_exempt, name="dispatch")
 class OAuthCallback(View):
     def get(self, request: HttpRequest) -> JsonResponse:
         print("AUTH CALLBACK", request.method)
         code = request.GET.get("code")
+        print("AUTH CALLBACK", code)
         if not code:
             return JsonResponse({"error": "No authorization code provided"}, status=400)
         data = {
@@ -68,6 +57,8 @@ class OAuthCallback(View):
         response = requests.post(settings.OAUTH42_TOKEN_URL, data=data)
         
         if response.status_code != 200:
+            print("RESPONSE STATUS CODE", response.status_code)
+            print("RESPONSE TEXT", response.text)
             return JsonResponse({"error": "Failed to obtain access token"}, status=400)
         token_data = response.json()
         access_token = token_data.get("access_token")
@@ -107,12 +98,13 @@ class OAuthCallback(View):
         return response
         # return redirect("/api/users")       
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def post(self, request:HttpRequest):
-        logout(request)  # Cierra la sesión del usuario
+        logout(request)
         response = JsonResponse({"message": "Logout successful"})
-        response.delete_cookie("sessionid")  # Elimina la cookie de sesión
-        response.delete_cookie("csrftoken")  # (Opcional) Elimina la cookie CSRF si se usa
+        response.delete_cookie("sessionid")
+        response.delete_cookie("csrftoken")
         return response
 
 def auth_logout(request:HttpRequest) -> HttpResponse:
@@ -139,12 +131,15 @@ def auth_logout(request:HttpRequest) -> HttpResponse:
 
 def wololo(request:HttpRequest) -> HttpResponse:
     """Para testear los valores que tiene la request"""
+    # print if user is logged in
+    print("User is authenticated: ", request.user.is_authenticated)
     wololo = ""
     # try:
     #     for key, value in vars(request).items():
     #         print(key, "->", value)
     # except Exception as e:
     #     return HttpResponse("Session ID: " + request.COOKIES["sessionid"] + "<br>" + "CSRF Token: " + request.COOKIES["csrftoken"])
+    return HttpResponse("-X"*20 + "WOLOLOOOOOOO" * 3 + "-X"*20)
     return HttpResponse("Session ID: " + request.COOKIES["sessionid"] + "<br>" + "CSRF Token: " + request.COOKIES["csrftoken"])
     return HttpResponse(vars(request))
 
@@ -202,3 +197,20 @@ def wololo(request:HttpRequest) -> HttpResponse:
 #     # return redirect("/auth/wololo")
 #     return response
 #     # return redirect("/api/users")
+
+
+
+# def auth_login(request: HttpRequest) -> HttpResponse:
+#     """Redirige al usuario a la API de 42 para autenticarse"""
+#     print("\n\nEstos son los datos de la API de 42: \n\n",
+#           settings.OAUTH42_CLIENT_ID, "\n",
+#           settings.OAUTH42_REDIRECT_URI, "\n",
+#           settings.OAUTH42_TOKEN_URL)
+#     auth_url = (
+#         f"https://api.intra.42.fr/oauth/authorize?"
+#         f"client_id={settings.OAUTH42_CLIENT_ID}"
+#         f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
+#         f"&response_type=code"
+#     )
+#     return redirect(auth_url)
+
