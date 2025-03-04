@@ -3,7 +3,7 @@ from django.views import View
 from django.shortcuts import redirect, render
 from django.conf import settings
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required 
 from django.middleware.csrf import get_token
 from django.core.cache import cache
 from django.utils.decorators import method_decorator
@@ -13,6 +13,49 @@ from apps.core.models import User
 import requests
 import json
 
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LoginWithToken(View):
+    def post(self, request: HttpRequest) -> JsonResponse:
+        print("------- VAMOS POR EL BUEN CAMINO -------")
+        # print("REQUEST FULL INFO:", request.__dict__)
+        print("REQUEST HEADERS:", request.headers)
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return create_response(error="No valid access token provided", status=400)
+        token = auth_header.split("Bearer ")[1]
+        print(token)
+        if not token:
+            return create_response(error="No access token provided", status=400)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
+        if response.status_code != 200:
+            return create_response(error="Invalid or expired token", status=401)
+        user_data = response.json()
+        username = user_data.get("login")
+        email = user_data.get("email")
+        user, created = User.objects.get_or_create(username=username, email=email)
+        if created:
+            user.set_unusable_password()
+            user.save()
+        print("Antes de loguear:", user, created)
+        login(request, user)
+        print("Después de loguear:", user, created)
+        csrf_token = get_token(request)
+        response = create_response(message=f"{username}: Login successful")
+        response.set_cookie(
+            "csrftoken", 
+            csrf_token, 
+            httponly=False, 
+            secure=False,
+            samesite="Lax",)
+        response.set_cookie(
+            "sessionid", 
+            request.session.session_key, 
+            httponly=True, 
+            secure=False,
+            samesite="Lax",)
+        return response
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
