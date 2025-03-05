@@ -235,7 +235,7 @@ export async function initGame() {
 function handleKeyDown(event) {
   try {
     const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = !playerRole;
+    const isLocalMatch = true;
 
     if (
       isLocalMatch ||
@@ -252,7 +252,7 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
   try {
     const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = !playerRole;
+    const isLocalMatch = true;
 
     if (
       isLocalMatch ||
