@@ -52,6 +52,19 @@ async function updateGameState(gameState) {
       return;
     }
 
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.setLineDash([10, 10]);
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = 'white';
+    ctx.font = '40px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
+
     ctx.fillStyle = '#ff4d6d';
     ctx.fillRect(
       left_paddle.x,
@@ -221,7 +234,7 @@ export async function initGame() {
 function handleKeyDown(event) {
   try {
     const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = !playerRole;
+    const isLocalMatch = true;
 
     if (
       isLocalMatch ||
@@ -238,7 +251,7 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
   try {
     const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = !playerRole;
+    const isLocalMatch = true;
 
     if (
       isLocalMatch ||

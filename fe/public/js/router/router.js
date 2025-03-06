@@ -55,7 +55,7 @@ export async function loadPage(page) {
   try {
     closeModal();
 
-    const cleanPage = getCleanPageKey(page).replace(/\/$/, '');
+    let cleanPage = getCleanPageKey(page).replace(/\/$/, '');
 
     // Check authentication before loading the page
     // Skip auth check for modals
@@ -67,6 +67,10 @@ export async function loadPage(page) {
     }
 
     const matchedRoute = matchRoute(cleanPage);
+
+    if (cleanPage === '') {
+      cleanPage = '/';
+    }
 
     if (!matchedRoute) {
       throw new Error(`Page ${cleanPage} not found`);
