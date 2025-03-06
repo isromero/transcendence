@@ -14,7 +14,11 @@ export const pageMappings = {
   '/friends': '/pages/menus/friends.html',
   '/settings': '/pages/menus/settings.html',
   '/game/:id': '/pages/game/game.html',
+
   '/tournament': '/pages/menus/tournament.html',
+
+  '/tournament-settings': '/pages/menus/tournament-settings.html',
+
 
   // Modals (no user routes)
   '/modal-account-deletion': '/pages/components/modals/account-deletion.html',

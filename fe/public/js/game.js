@@ -60,7 +60,6 @@ async function updateGameState(gameState) {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    
     ctx.fillStyle = 'white';
     ctx.font = '40px Arial';
     ctx.textAlign = 'center';
