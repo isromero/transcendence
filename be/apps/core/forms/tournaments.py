@@ -27,7 +27,7 @@ class TournamentsForm(forms.ModelForm):
         if not max_players:
             raise ValidationError("Max players is required")
             
-        if max_players not in [4, 6, 8]:
-            raise ValidationError("Tournament must have 4, 6 or 8 players")
+        if max_players not in [4, 8]:
+            raise ValidationError("Tournament must have 4 or 8 players")
             
         return max_players
