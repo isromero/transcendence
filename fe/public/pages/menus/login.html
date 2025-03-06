@@ -7,18 +7,18 @@
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form id="loginForm" class="needs-validation" novalidate>
+            <form>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color fs-3"
-                  data-translationKey="username"
-                  for="username"
-                  >Username</label
+                  data-translationKey="email-address"
+                  for="email"
+                  >Email address</label
                 >
                 <input
                   class="form-control form-control-lg bs-secondary"
-                  id="username"
-                  type="text"
+                  id="email"
+                  type="email"
                 />
               </div>
               <div class="form-group mb-3">
@@ -28,23 +28,12 @@
                   for="password"
                   >Password</label
                 >
-                <div class="input-group">
-                  <input
-                    class="form-control form-control-lg bs-secondary"
-                    id="password"
-                    type="password"
-                    required
-                  />
-                  <button
-                    class="btn text-white bg-transparent border-0 position-absolute end-0 top-50 translate-middle-y"
-                    type="button"
-                    id="togglePassword"
-                    aria-label="Toggle password visibility"
-                  >
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  <div class="invalid-feedback">Password is required</div>
-                </div>
+                <input
+                  class="form-control form-control-lg bs-secondary"
+                  data-translationKey="password"
+                  id="password"
+                  type="password"
+                />
               </div>
               <div class="d-flex justify-content-center mt-4">
                 <a
@@ -75,16 +64,17 @@
                     Cancel
                   </button>
                 </a>
-                <button
-                  id="login-button"
-                  aria-label="Login"
-                  class="btn login-button flex-grow-1"
-                  data-translationKey="login"
-                  style="border-radius: 10px; height: 2.8rem"
-                  type="submit"
-                >
-                  Login
-                </button>
+                <a class="spa-link" href="#" style="flex: 1">
+                  <button
+                    aria-label="Login"
+                    class="btn login-button w-100 bs-primary border-primary-color"
+                    data-translationKey="login"
+                    style="border-radius: 10px; height: 2.8rem"
+                    type="button"
+                  >
+                    Login
+                  </button>
+                </a>
               </div>
             </form>
           </div>
@@ -93,4 +83,3 @@
     </div>
   </div>
 </div>
-<script type="module" src="/js/pages/login.js"></script>
