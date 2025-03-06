@@ -91,7 +91,9 @@ document.getElementById("multiplayer-btn").addEventListener("click", () => {
 // TODO:IMSAA LEEE AQUIII!!! FIJATE QUE LA LOGICA DE ENCIMA DE CANCEL BTN Y LA DE DEBAJO DE POPSTATE SON LA MISMA
 // Manejo del botón "atrás" del navegador (popstate)
 window.addEventListener("popstate", () => {
+
     console.log("🔙 Usuario navegó hacia atrás");
+    document.getElementById("multiplayer-btn").removeEventListener("click", () => {});
 
     // Si el matchmaking está activo, replicamos la acción de cancelar cola
     if (sessionStorage.getItem("matchmaking_active")) {
