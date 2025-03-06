@@ -26,4 +26,12 @@ document.addEventListener('click', async function (event) {
       showErrorToast(`Error creating matchmaking: ${error}. Please try again.`);
     }
   }
+  if (event.target && event.target.id === 'tournament-btn') {
+    try {
+      await loadPage(`/tournament-settings`);
+      //initMatchmaking();
+    } catch (error) {
+      showErrorToast(`Error creating matchmaking: ${error}. Please try again.`);
+    }
+  }
 });

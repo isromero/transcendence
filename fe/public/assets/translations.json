@@ -164,6 +164,31 @@
     "spanish": "Eliminación de datos",
     "ukrainian": "Видалення даних"
   },
+  "tournament-name": {
+    "english": "Tournament name",
+    "spanish": "Nombre del torneo",
+    "ukrainian": "Назва турніру"
+  },
+  "max-players": {
+    "english": "Max players",
+    "spanish": "Limite de jugadores",
+    "ukrainian": "Максимум гравців"
+  },
+  "create-tournaments": {
+    "english": "Create tournaments",
+    "spanish": "Crear torneo",
+    "ukrainian": "Створити турнір"
+  },
+  "tournament": {
+    "english": "Tournament",
+    "spanish": "Torneo",
+    "ukrainian": "Турнір"
+  },
+  "your-name": {
+    "english": "Your name",
+    "spanish": "Tu nombre",
+    "ukrainian": "Твоє ім'я"
+  },
   "language": {
     "english": "Language",
     "spanish": "Idioma",
