@@ -16,8 +16,9 @@ export const pageMappings = {
   '/game/:id': '/pages/game/game.html',
 
   '/tournament': '/pages/menus/tournament.html',
+  '/tournament-big': '/pages/menus/tournament-big.html',
 
-  '/tournament-settings': '/pages/menus/tournament-settings.html',
+
 
 
   // Modals (no user routes)
