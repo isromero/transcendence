@@ -38,9 +38,9 @@ export const usersService = {
       console.error('Error fetching user:', e);
     }
   },
-  updateUser: async (id, user) => {
+  updateUser: async user => {
     try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

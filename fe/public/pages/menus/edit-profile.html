@@ -1,23 +1,24 @@
 <div class="bs-primary d-flex justify-content-center align-items-center vh-100">
-
   <div class="container">
     <div class="row">
       <div class="col-12 text-center">
         <button
+          id="changeUsernameButton"
           aria-label="Username"
           class="btn button-text-styles button-text-size w-100"
           data-translationKey="edit-username"
           data-modal="edit-username"
         >
-          Username
+          Change Username
         </button>
         <button
+          id="changePasswordButton"
           aria-label="Password"
           class="btn button-text-styles button-text-size w-100"
           data-translationKey="edit-password"
           data-modal="edit-password"
         >
-          Password
+          Change Password
         </button>
       </div>
     </div>
@@ -33,17 +34,6 @@
     >
       <a class="spa-link" href="/" style="flex: 1">
         <button
-          aria-label="Data Deletion"
-          class="account-deletion-button w-100"
-          data-translationKey="data-deletion"
-          style="border-radius: 0.4rem; height: 2.5rem"
-          type="button"
-        >
-          Data Deletion
-        </button>
-      </a>
-      <a class="spa-link" href="/" style="flex: 1">
-        <button
           aria-label="Account Deletion"
           class="account-deletion-button w-100"
           data-translationKey="account-deletion"
@@ -56,3 +46,4 @@
     </div>
   </div>
 </div>
+<script defer type="module" src="/js/pages/editProfile.js"></script>
