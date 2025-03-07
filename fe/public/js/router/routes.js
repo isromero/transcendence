@@ -15,7 +15,7 @@ export const pageMappings = {
   '/settings': '/pages/menus/settings.html',
   '/game/:id': '/pages/game/game.html',
 
-  '/tournament': '/pages/menus/tournament.html',
+  '/tournament/:id': '/pages/menus/tournament.html',
   '/tournament-big': '/pages/menus/tournament-big.html',
 
 

@@ -1,74 +1,27 @@
-<header class="text-white text-center py-1 mt-0"></header>
-<div
-  class="d-flex justify-content-center align-items-center"
-  style="min-height: 100vh"
->
+
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh">
   <div class="container mt-5" style="width: 80vw">
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form>
+            <form id="joinTournamentForm">
               <div class="form-group mb-3">
-                <label
-                  class="form-secondary-title-color text-center w-100"
-                  data-translationKey="your-name"
-                  style="font-size: 2.5rem"
-                  >Your name:</label
-                >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  style="border-radius: 20px"
-                />
+                <label class="form-secondary-title-color text-center w-100" style="font-size: 2.5rem">Your name:</label>
+                <input id="username" type="text" class="form-control form-control-lg bs-secondary" style="border-radius: 20px" required />
               </div>
               <div class="form-group mb-3">
-                <label
-                  class="form-secondary-title-color text-center w-100"
-                  data-translationKey="enter-code-field"
-                  style="font-size: 2.5rem"
-                  >Enter code:</label
-                >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  style="border-radius: 20px"
-                />
-              </div>
-              <div class="form-group mb-3">
-                <label
-                  class="form-secondary-title-color text-center w-100"
-                  data-translationKey="your-name"
-                  style="font-size: 2.5rem"
-                  >Your name:</label
-                >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  style="border-radius: 20px"
-                />
+                <label class="form-secondary-title-color text-center w-100" style="font-size: 2.5rem">Enter code:</label>
+                <input id="joinCode" type="text" class="form-control form-control-lg bs-secondary" style="border-radius: 20px" required />
               </div>
               <div class="d-flex justify-content-center gap-2">
                 <a class="spa-link" href="/" style="flex: 1">
-                  <button
-                    aria-label="Cancel"
-                    class="btn cancel-button w-100 bs-primary border-primary-color"
-                    data-translationKey="cancel"
-                    style="border-radius: 10px; height: 2.8rem"
-                    type="button"
-                  >
-                    Cancel
-                  </button>
+                  <button class="btn cancel-button w-100 bs-primary border-primary-color" style="border-radius: 10px; height: 2.8rem" type="button">Cancel</button>
                 </a>
-                <a class="spa-link" href="/game-game" style="flex: 1">
-                  <button
-                    aria-label="Accept"
-                    class="btn login-button w-100"
-                    data-translationKey="join-match"
-                    style="border-radius: 10px; height: 2.8rem"
-                    type="submit"
-                  >
-                    Join Match
-                  </button>
-                </a>
+                <button id="joinButton" class="btn login-button w-100" style="border-radius: 10px; height: 2.8rem" type="submit">Join Match</button>
               </div>
+              <p id="responseMessage" class="text-center mt-3"></p>
             </form>
           </div>
         </div>
@@ -76,3 +29,5 @@
     </div>
   </div>
 </div>
+<script defer type="module" src="/js/utils/joinTournament.js"></script>
+

@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagrama de Torneo Vertical</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-</head>
-<body>
+
+<div class="text-center mb-4">
+  <h2 id="tournament-name" class="tournament-title">Tournament Name</h2>
+  <h5 id="join-code" class="text-muted tournament-title">Join Code: XXXX</h5>
+</div>
+
   <div class="container mt-5 tournament-container">
     <div class="row text-center">
+
+      <div class="col-12 mb-4">
+        <button id="start-tournament-btn" class="btn btn-success">Iniciar Torneo</button>
+      </div>
+      
       
       <!-- Cuartos de Final -->
       <div class="col-12 mb-2">
@@ -130,49 +131,6 @@
       
     </div>
   </div>
-  <style>
-    .scroll-container {
-      max-height: 400px;
-      overflow-y: auto;
-    }
 
-    .player-info {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  <script defer type="module" src="/js/services/tournament-service.js"></script>
 
-    /* Nueva clase para controlar el tamaño de las imágenes */
-    .player-img {
-      width: 20px; /* Tamaño reducido */
-      height: 20px; /* Tamaño reducido */
-      object-fit: cover;
-      margin-right: 10px;
-    }
-
-    .final-winner {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .final-winner span {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    .match-result {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Asegura que el contenido no ocupe toda la pantalla */
-    .tournament-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

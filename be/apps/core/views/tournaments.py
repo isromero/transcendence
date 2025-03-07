@@ -22,11 +22,16 @@ class TournamentsView(View):
         """Get tournament information when joining a tournament"""
         try:
             if join_code:
+                print("DEBUGGGGGGGGGGGGGGGGGGGGGGGGGGG")
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
-                if tournament.status != "pending":
-                    return JsonResponse(
-                        {"error": "Tournament is not accepting players"}, status=400
-                    )
+                
+                # if tournament.status != "pending":
+                #     return JsonResponse(
+                #         print("DEBUGGGGGGGGGGGGGGGGGGGGGGGGGGG22222222222222222222"),
+                #         {"error": "Tournament is not accepting players"}, status=400
+                #     )
+                #TODO ISMA ESTA COMPROBACION DEBERIA ESTAR EN PUT , ERES UN INUTIL (SOY SAMU)
+                
 
                 return JsonResponse(
                     {
@@ -72,20 +77,26 @@ class TournamentsView(View):
         except Exception as e:
             return create_response(error=str(e), status=400)
 
-    def put(self, request, tournament_id=None):
+    def put(self, request):
         """Handles joining the tournament and starting the tournament"""
         try:
             data = json.loads(request.body)
             action = data.get("action")
+            tournament_id = data.get("tournament_id")  # Obtener el tournament_id desde el cuerpo de la solicitud
+
+            if not tournament_id:
+                return JsonResponse({"error": "Tournament ID is required"}, status=400)
+
+            tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
                 join_code = data.get("join_code")
-                tournament = get_object_or_404(Tournaments, join_code=join_code)
+                
+                if tournament.join_code != join_code:
+                    return JsonResponse({"error": "Invalid join code"}, status=400)
 
                 if tournament.status != "pending":
-                    return JsonResponse(
-                        {"error": "Tournament is not accepting players"}, status=400
-                    )
+                    return JsonResponse({"error": "Tournament is not accepting players"}, status=400)
 
                 if tournament.players.count() >= tournament.max_players:
                     return JsonResponse({"error": "Tournament is full"}, status=400)
@@ -97,16 +108,11 @@ class TournamentsView(View):
                     tournament.status = "ready"
 
                 tournament.save()
-                return JsonResponse(
-                    {"message": "Joined tournament successfully"}, status=200
-                )
+                return JsonResponse({"message": "Joined tournament successfully"}, status=200)
 
             elif action == "start":
-                tournament = get_object_or_404(Tournaments, id=tournament_id)
                 if tournament.status != "ready":
-                    return JsonResponse(
-                        {"error": "Tournament is not ready to start"}, status=400
-                    )
+                    return JsonResponse({"error": "Tournament is not ready to start"}, status=400)
 
                 players = list(tournament.players.all())
                 random.shuffle(players)  # Shuffle players randomly
@@ -173,66 +179,62 @@ class TournamentsView(View):
                         )
 
                 tournament.status = "in_progress"
-                tournament.current_round = (
-                    1 if quarter_players else 2
-                )  # If there are no quarters, we start in semifinals
+                tournament.current_round = 1 if quarter_players else 2  # If there are no quarters, we start in semifinals
                 tournament.save()
 
-                return JsonResponse(
-                    {
-                        "message": "Tournament started successfully",
-                        "matches": {
-                            "quarter_finals": (
-                                [
-                                    {
-                                        "match_id": str(match.match_id),
-                                        "match_number": match.tournament_match_number,
-                                        "player1": {
-                                            "id": match.user_id.id,
-                                            "username": match.user_id.username,
-                                        },
-                                        "player2": {
-                                            "id": match.opponent_id.id,
-                                            "username": match.opponent_id.username,
-                                        },
-                                    }
-                                    for match in History.objects.filter(
-                                        tournament_id=tournament,
-                                        type_match="tournament_quarter",
-                                    ).distinct("match_id")
-                                ]
-                                if quarter_players
-                                else []
-                            ),
-                            "semi_finals": (
-                                [
-                                    {
-                                        "match_id": str(match.match_id),
-                                        "match_number": match.tournament_match_number,
-                                        "player1": {
-                                            "id": match.user_id.id,
-                                            "username": match.user_id.username,
-                                        },
-                                        "player2": {
-                                            "id": match.opponent_id.id,
-                                            "username": match.opponent_id.username,
-                                        },
-                                    }
-                                    for match in History.objects.filter(
-                                        tournament_id=tournament,
-                                        type_match="tournament_semi",
-                                    ).distinct("match_id")
-                                ]
-                                if direct_to_semis
-                                else []
-                            ),
-                        },
+                return JsonResponse({
+                    "message": "Tournament started successfully",
+                    "matches": {
+                        "quarter_finals": (
+                            [
+                                {
+                                    "match_id": str(match.match_id),
+                                    "match_number": match.tournament_match_number,
+                                    "player1": {
+                                        "id": match.user_id.id,
+                                        "username": match.user_id.username,
+                                    },
+                                    "player2": {
+                                        "id": match.opponent_id.id,
+                                        "username": match.opponent_id.username,
+                                    },
+                                }
+                                for match in History.objects.filter(
+                                    tournament_id=tournament,
+                                    type_match="tournament_quarter",
+                                ).distinct("match_id")
+                            ]
+                            if quarter_players
+                            else []
+                        ),
+                        "semi_finals": (
+                            [
+                                {
+                                    "match_id": str(match.match_id),
+                                    "match_number": match.tournament_match_number,
+                                    "player1": {
+                                        "id": match.user_id.id,
+                                        "username": match.user_id.username,
+                                    },
+                                    "player2": {
+                                        "id": match.opponent_id.id,
+                                        "username": match.opponent_id.username,
+                                    },
+                                }
+                                for match in History.objects.filter(
+                                    tournament_id=tournament,
+                                    type_match="tournament_semi",
+                                ).distinct("match_id")
+                            ]
+                            if direct_to_semis
+                            else []
+                        ),
                     },
-                    status=200,
-                )
+                }, status=200)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
 
     def delete(
         self, _, tournament_id

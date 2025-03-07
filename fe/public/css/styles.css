@@ -368,3 +368,48 @@ canvas {
 }
 
 
+
+
+/*tournament*/
+
+.scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Nueva clase para controlar el tamaño de las imágenes */
+.player-img {
+  width: 20px; /* Tamaño reducido */
+  height: 20px; /* Tamaño reducido */
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.final-winner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.final-winner span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.match-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Asegura que el contenido no ocupe toda la pantalla */
+.tournament-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
