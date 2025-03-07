@@ -134,7 +134,7 @@ class TournamentsView(View):
                             user_id=quarter_players[i],
                             opponent_id=quarter_players[i + 1],
                             type_match="tournament_quarter",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -145,7 +145,7 @@ class TournamentsView(View):
                             user_id=quarter_players[i + 1],
                             opponent_id=quarter_players[i],
                             type_match="tournament_quarter",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -161,7 +161,7 @@ class TournamentsView(View):
                             user_id=direct_to_semis[i],
                             opponent_id=direct_to_semis[i + 1],
                             type_match="tournament_semi",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -172,7 +172,7 @@ class TournamentsView(View):
                             user_id=direct_to_semis[i + 1],
                             opponent_id=direct_to_semis[i],
                             type_match="tournament_semi",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -189,7 +189,7 @@ class TournamentsView(View):
                             [
                                 {
                                     "match_id": str(match.match_id),
-                                    "match_number": match.tournament_match_number,
+                                    "tournament_match_number": match.tournament_match_number,
                                     "player1": {
                                         "id": match.user_id.id,
                                         "username": match.user_id.username,
@@ -211,7 +211,7 @@ class TournamentsView(View):
                             [
                                 {
                                     "match_id": str(match.match_id),
-                                    "match_number": match.tournament_match_number,
+                                    "tournament_match_number": match.tournament_match_number,
                                     "player1": {
                                         "id": match.user_id.id,
                                         "username": match.user_id.username,
@@ -253,7 +253,7 @@ class TournamentsView(View):
                 user_id=winners[i],
                 opponent_id=winners[i + 1],
                 type_match=next_type,
-                match_number=(i // 2) + 1,
+                tournament_match_number=(i // 2) + 1,
                 result_user=0,
                 result_opponent=0,
                 local_match=False,
@@ -264,7 +264,7 @@ class TournamentsView(View):
                 user_id=winners[i + 1],
                 opponent_id=winners[i],
                 type_match=next_type,
-                match_number=(i // 2) + 1,
+                tournament_match_number=(i // 2) + 1,
                 result_user=0,
                 result_opponent=0,
                 local_match=False,

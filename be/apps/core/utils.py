@@ -90,7 +90,7 @@ def serialize_tournament(tournament):
             "quarter_finals": [
                 {
                     "match_id": str(match.match_id),
-                    "match_number": match.tournament_match_number,
+                    "tournament_match_number": match.tournament_match_number,
                     "player1": {
                         "id": match.user_id.id,
                         "username": match.user_id.username,
@@ -109,7 +109,7 @@ def serialize_tournament(tournament):
             "semi_finals": [
                 {
                     "match_id": str(match.match_id),
-                    "match_number": match.tournament_match_number,
+                    "tournament_match_number": match.tournament_match_number,
                     "player1": {
                         "id": match.user_id.id,
                         "username": match.user_id.username,
@@ -128,7 +128,7 @@ def serialize_tournament(tournament):
             "finals": [
                 {
                     "match_id": str(match.match_id),
-                    "match_number": match.tournament_match_number,
+                    "tournament_match_number": match.tournament_match_number,
                     "player1": {
                         "id": match.user_id.id,
                         "username": match.user_id.username,
@@ -171,7 +171,7 @@ def serialize_history(user_history):
             {
                 "id": user_history.tournament_id.id,
                 "name": user_history.tournament_id.tournament_name,
-                "match_number": user_history.tournament_match_number,
+                "tournament_match_number": user_history.tournament_match_number,
             }
             if user_history.tournament_id
             else None
