@@ -10,7 +10,6 @@ class AuthenticationMiddleware:
         public_paths = ["/api/login", "/api/register", "/api/game", "/ws/game",
                         "/api/auth/login",
                         "/auth/callback",
-                        "/api/auth/wololo",
                         "/api/auth/token-login",]
 
         if (

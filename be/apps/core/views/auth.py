@@ -1,9 +1,8 @@
-from django.http import JsonResponse, HttpResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest
 from django.views import View
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib.auth import login, logout
-# from django.contrib.auth.decorators import login_required 
 from django.middleware.csrf import get_token
 from django.core.cache import cache
 from django.utils.decorators import method_decorator
@@ -13,59 +12,16 @@ from apps.core.models import User
 import requests
 import json
 
-
-@method_decorator(csrf_exempt, name="dispatch")
-class LoginWithToken(View):
-    def post(self, request: HttpRequest) -> JsonResponse:
-        print("------- VAMOS POR EL BUEN CAMINO -------")
-        # print("REQUEST FULL INFO:", request.__dict__)
-        print("REQUEST HEADERS:", request.headers)
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.startswith("Bearer "):
-            return create_response(error="No valid access token provided", status=400)
-        token = auth_header.split("Bearer ")[1]
-        print(token)
-        if not token:
-            return create_response(error="No access token provided", status=400)
-        headers = {"Authorization": f"Bearer {token}"}
-        response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
-        if response.status_code != 200:
-            return create_response(error="Invalid or expired token", status=401)
-        user_data = response.json()
-        username = user_data.get("login")
-        email = user_data.get("email")
-        user, created = User.objects.get_or_create(username=username, email=email)
-        if created:
-            user.set_unusable_password()
-            user.save()
-        print("Antes de loguear:", user, created)
-        login(request, user)
-        print("Después de loguear:", user, created)
-        csrf_token = get_token(request)
-        response = create_response(message=f"{username}: Login successful")
-        response.set_cookie(
-            "csrftoken", 
-            csrf_token, 
-            httponly=False, 
-            secure=False,
-            samesite="Lax",)
-        response.set_cookie(
-            "sessionid", 
-            request.session.session_key, 
-            httponly=True, 
-            secure=False,
-            samesite="Lax",)
-        return response
-
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
     def post(self, request: HttpRequest):
+        # if user is authenticated, return error
+        if request.user.is_authenticated:
+            return create_response(error="User is already authenticated", status=400)
         try:
-            # Rate limiting
             ip = request.META.get("REMOTE_ADDR")
             attempts_key = f"login_attempts_{ip}"
             attempts = cache.get(attempts_key, 0)
-
             if attempts >= 5:
                 return create_response(
                     error="Too many attempts. Please try again later", status=429
@@ -76,18 +32,18 @@ class OAuthLogin(View):
                 f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
                 f"&response_type=code"
                  )
-            return redirect(auth_url)  
+            return redirect(auth_url)
+            # return HttpResponse(auth_url) # pendiente de probar después de integrar en el frontend
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
         except Exception as e:
+            # se peude devolver un error 500???
             return create_response(error="An unexpected error occurred", status=500)
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthCallback(View):
     def get(self, request: HttpRequest) -> JsonResponse:
-        print("AUTH CALLBACK", request.method)
         code = request.GET.get("code")
-        print("AUTH CALLBACK", code)
         if not code:
             return JsonResponse({"error": "No authorization code provided"}, status=400)
         data = {
@@ -98,48 +54,36 @@ class OAuthCallback(View):
             "redirect_uri": settings.OAUTH42_REDIRECT_URI,
         }
         response = requests.post(settings.OAUTH42_TOKEN_URL, data=data)
-        
         if response.status_code != 200:
-            print("RESPONSE STATUS CODE", response.status_code)
-            print("RESPONSE TEXT", response.text)
             return JsonResponse({"error": "Failed to obtain access token"}, status=400)
+
         token_data = response.json()
         access_token = token_data.get("access_token")
         if not access_token:
             return JsonResponse({"error": "Failed to obtain access token"}, status=400)
+
         headers = {"Authorization": f"Bearer {access_token}"}
         user_info_response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
         if user_info_response.status_code != 200:
             return JsonResponse({"error": "Failed to obtain user info"}, status=400)
+
         user_info = user_info_response.json()
         username = user_info.get("login")
-        user_id = user_info.get("id")
-        email = user_info.get("email")
-
-        user, created = User.objects.get_or_create(username=username, email=email)
-        print("\n\nusername:", username, "\nuser_id", user_id, "\nemail", email)
-        print("\n\nuser:", user, "\ncreated", created)
+        # email = user_info.get("email")
+        # user, created = User.objects.get_or_create(username=username, email=email)
+        user, created = User.objects.get_or_create(username=username)
 
         login(request, user)
-        csrf_token = get_token(request)
         response = JsonResponse({"message" : "Login successful"})
-        response.set_cookie(
-            "csrftoken", 
-            csrf_token, 
-            httponly=False, 
-            secure=False,
-            samesite="Lax",)
         response.set_cookie(
             "sessionid", 
             request.session.session_key, 
             httponly=True, 
             secure=False,
             samesite="Lax",)
-        # aquí hay que redirigir a la página de inicio de la app
+        # TODO: aquí hay que redirigir a la página de inicio de la app
         # o devolver la información necesaria para que el frontend redirija
-        # return redirect("/auth/wololo")
         return response
-        # return redirect("/api/users")       
 
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
@@ -147,113 +91,34 @@ class LogoutView(View):
         logout(request)
         response = JsonResponse({"message": "Logout successful"})
         response.delete_cookie("sessionid")
-        response.delete_cookie("csrftoken")
         return response
 
-def auth_logout(request:HttpRequest) -> HttpResponse:
-    """Cierra la sesión del usuario"""
-    print("Session ID: ", request.COOKIES["sessionid"], 
-          "\nCSRF Token: ", request.COOKIES["csrftoken"],
-          "\nSession Key: ", request.session.session_key,
-          "\nUser: ", request.user)
-    # antes de cerrar sesión hay un usuario (request.user==login de 42)
-    # antes de cerrar sesión hay una sesión (request.session.session_key==sessionid)
-    logout(request)
-    # despues de cerrar sesión no hay usuario (request.user==AnonymousUser)
-    # despues de cerrar sesión no hay sesión (request.session.session_key==None)
-    # pero no cambia ni sessionid ni csrftoken, logout no los modifica
-    print("Sesión cerrada:")
-    print("Session ID: ", request.COOKIES["sessionid"], 
-          "\nCSRF Token: ", request.COOKIES["csrftoken"],
-          "\nUser: ", request.user,
-          "\nSession Key: ", request.session.session_key)
-    
-    # aquí hay que redirigir a la ¿página de inicio? de la app
-    return HttpResponse("Sesión cerrada. Gracias por participar")
-    return redirect("/")
-
-def wololo(request:HttpRequest) -> HttpResponse:
-    """Para testear los valores que tiene la request"""
-    # print if user is logged in
-    print("User is authenticated: ", request.user.is_authenticated)
-    wololo = ""
-    # try:
-    #     for key, value in vars(request).items():
-    #         print(key, "->", value)
-    # except Exception as e:
-    #     return HttpResponse("Session ID: " + request.COOKIES["sessionid"] + "<br>" + "CSRF Token: " + request.COOKIES["csrftoken"])
-    return HttpResponse("-X"*20 + "WOLOLOOOOOOO" * 3 + "-X"*20)
-    return HttpResponse("Session ID: " + request.COOKIES["sessionid"] + "<br>" + "CSRF Token: " + request.COOKIES["csrftoken"])
-    return HttpResponse(vars(request))
-
-# def auth_callback(request: HttpRequest) -> JsonResponse:
-#     """Recibe el código de autorización y obtiene el access token"""
-#     print("AUTH CALLBACK", request.method)
-#     code = request.GET.get("code")
-#     if not code:
-#         return JsonResponse({"error": "No authorization code provided"}, status=400)
-#     data = {
-#         "grant_type": "authorization_code",
-#         "client_id": settings.OAUTH42_CLIENT_ID,
-#         "client_secret": settings.OAUTH42_CLIENT_SECRET,
-#         "code": code,
-#         "redirect_uri": settings.OAUTH42_REDIRECT_URI,
-#     }
-#     response = requests.post(settings.OAUTH42_TOKEN_URL, data=data)
-    
-#     if response.status_code != 200:
-#         return JsonResponse({"error": "Failed to obtain access token"}, status=400)
-#     token_data = response.json()
-#     access_token = token_data.get("access_token")
-#     if not access_token:
-#         return JsonResponse({"error": "Failed to obtain access token"}, status=400)
-#     headers = {"Authorization": f"Bearer {access_token}"}
-#     user_info_response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
-#     if user_info_response.status_code != 200:
-#         return JsonResponse({"error": "Failed to obtain user info"}, status=400)
-#     user_info = user_info_response.json()
-#     username = user_info.get("login")
-#     user_id = user_info.get("id")
-#     email = user_info.get("email")
-
-#     user, created = User.objects.get_or_create(username=username, email=email)
-#     print("\n\nusername:", username, "\nuser_id", user_id, "\nemail", email)
-#     print("\n\nuser:", user, "\ncreated", created)
-
-#     login(request, user)
-#     csrf_token = get_token(request)
-#     response = JsonResponse({"message" : "Login successful"})
-#     response.set_cookie(
-#         "csrftoken", 
-#         csrf_token, 
-#         httponly=False, 
-#         secure=False,
-#         samesite="Lax",)
-#     response.set_cookie(
-#         "sessionid", 
-#         request.session.session_key, 
-#         httponly=True, 
-#         secure=False,
-#         samesite="Lax",)
-#     # aquí hay que redirigir a la página de inicio de la app
-#     # o devolver la información necesaria para que el frontend redirija
-#     # return redirect("/auth/wololo")
-#     return response
-#     # return redirect("/api/users")
-
-
-
-# def auth_login(request: HttpRequest) -> HttpResponse:
-#     """Redirige al usuario a la API de 42 para autenticarse"""
-#     print("\n\nEstos son los datos de la API de 42: \n\n",
-#           settings.OAUTH42_CLIENT_ID, "\n",
-#           settings.OAUTH42_REDIRECT_URI, "\n",
-#           settings.OAUTH42_TOKEN_URL)
-#     auth_url = (
-#         f"https://api.intra.42.fr/oauth/authorize?"
-#         f"client_id={settings.OAUTH42_CLIENT_ID}"
-#         f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
-#         f"&response_type=code"
-#     )
-#     return redirect(auth_url)
-
+# TODO (jose): eliminar para producción, solo sirve para pruebas con postman
+@method_decorator(csrf_exempt, name="dispatch")
+class LoginWithToken(View):
+    def post(self, request: HttpRequest) -> JsonResponse:
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return create_response(error="No valid access token provided", status=400)
+        token = auth_header.split("Bearer ")[1]
+        if not token:
+            return create_response(error="No access token provided", status=400)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
+        if response.status_code != 200:
+            return create_response(error="Invalid or expired token", status=401)
+        user_data = response.json()
+        username = user_data.get("login")
+        user, created = User.objects.get_or_create(username=username)
+        if created:
+            user.set_unusable_password()
+            user.save()
+        login(request, user)
+        response = create_response(message=f"{username}: Login successful")
+        response.set_cookie(
+            "sessionid", 
+            request.session.session_key, 
+            httponly=True, 
+            secure=False,
+            samesite="Lax",)
+        return response
