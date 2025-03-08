@@ -59,9 +59,8 @@ MIDDLEWARE = [
     "apps.core.middleware.auth.AuthenticationMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "config.urls"
