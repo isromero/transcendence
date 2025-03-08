@@ -4,6 +4,8 @@ import secrets
 import time
 from apps.core.models import Tournaments
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+import re
 
 
 def create_response(data=None, message=None, error=None, status=200):
@@ -27,6 +29,46 @@ def handle_form_errors(form):
     return create_response(
         error={"type": "validation_error", "fields": errors}, status=400
     )
+
+
+def validate_username(username):
+    """Validates username according to our rules"""
+    if not username:
+        raise ValidationError("Username is required")
+
+    if not re.match("^[a-zA-Z0-9_-]+$", username):
+        raise ValidationError(
+            "Username can only contain letters, numbers, underscores and hyphens"
+        )
+
+    if len(username) < 3:
+        raise ValidationError("Username must be at least 3 characters long")
+
+    if len(username) > 20:
+        raise ValidationError("Username must be at most 20 characters long")
+
+    return username.lower()
+
+
+def validate_password(password):
+    """Validates password according to our rules"""
+    if not password:
+        raise ValidationError("Password is required")
+
+    if len(password) < 8:
+        raise ValidationError("Password must be at least 8 characters long")
+
+    if len(password) > 128:
+        raise ValidationError("Password must be at most 128 characters long")
+
+    if not re.search("[A-Z]", password):
+        raise ValidationError("Password must contain at least one uppercase letter")
+
+    if not re.search("[a-z]", password):
+        raise ValidationError("Password must contain at least one lowercase letter")
+
+    if not re.search("[0-9]", password):
+        raise ValidationError("Password must contain at least one number")
 
 
 def serialize_user(user):

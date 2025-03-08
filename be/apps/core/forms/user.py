@@ -1,8 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
-import re
 from apps.core.models import User
+from apps.core.utils import validate_username, validate_password
 
 
 class UserForm(forms.ModelForm):
@@ -24,12 +24,12 @@ class UserForm(forms.ModelForm):
         old_password = cleaned_data.get("oldPassword")
         new_password = cleaned_data.get("newPassword")
 
-        # Si no hay cambios
+        # If there are no changes
         if not username and not old_password and not new_password:
             raise ValidationError("No changes provided")
 
-        # Validar cambio de username
-        if username is not None and username != self.instance.username:
+        # Validate username change
+        if "username" in self.data:
             if not old_username:
                 raise ValidationError("Old username is required")
             if old_username != self.instance.username:
@@ -39,21 +39,17 @@ class UserForm(forms.ModelForm):
             if not check_password(password, self.instance.password):
                 raise ValidationError("Password is incorrect")
 
-            # Validaciones del registro
-            if not re.match("^[a-zA-Z0-9_-]+$", username):
-                raise ValidationError(
-                    "Username can only contain letters, numbers, underscores and hyphens"
-                )
-            if len(username) < 3:
-                raise ValidationError("Username must be at least 3 characters long")
-            if len(username) > 20:
-                raise ValidationError("Username must be at most 20 characters long")
+            # Validate the new username
+            validate_username(username)
 
-            # Verificar si el nuevo username ya existe
-            if User.objects.filter(username=username.lower()).exists():
+            # Verify if the new username already exists
+            if (
+                User.objects.filter(username=username.lower()).exists()
+                and self.instance.username.lower() != username.lower()
+            ):
                 raise ValidationError("Username already exists")
 
-        # Validar cambio de contraseña
+        # Verify password change
         if new_password or old_password:
             if not old_password:
                 raise ValidationError("Old password is required to set a new password")
@@ -66,28 +62,15 @@ class UserForm(forms.ModelForm):
                     "New password must be different from old password"
                 )
 
-            # Validaciones del registro para la contraseña
-            if len(new_password) < 8:
-                raise ValidationError("Password must be at least 8 characters long")
-            if len(new_password) > 128:
-                raise ValidationError("Password must be at most 128 characters long")
-            if not re.search("[A-Z]", new_password):
-                raise ValidationError(
-                    "Password must contain at least one uppercase letter"
-                )
-            if not re.search("[a-z]", new_password):
-                raise ValidationError(
-                    "Password must contain at least one lowercase letter"
-                )
-            if not re.search("[0-9]", new_password):
-                raise ValidationError("Password must contain at least one number")
+            # Validate new password
+            validate_password(new_password)
 
         return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
 
-        # Siempre mantener el username actual si no se proporciona uno nuevo
+        # Always keep the current username if no new one is provided
         if "username" not in self.cleaned_data:
             user.username = self.instance.username
 
