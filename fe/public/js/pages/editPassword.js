@@ -11,7 +11,7 @@ export function editPassword() {
 
   form.addEventListener('formValid', async () => {
     const user = {
-      username: usernameInput.value,
+      oldUsername: usernameInput.value, // oldUsername = actual username, but be have to receive like this
       oldPassword: oldPasswordInput.value,
       newPassword: newPasswordInput.value,
     };

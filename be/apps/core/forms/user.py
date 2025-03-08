@@ -30,6 +30,9 @@ class UserForm(forms.ModelForm):
 
         # Validate username change
         if username:
+            if old_username != self.instance.username:
+                raise ValidationError("Username is incorrect")
+
             # Only validate old_username if we are changing the username
             if username.lower() != self.instance.username.lower():
                 if not old_username:

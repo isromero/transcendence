@@ -38,13 +38,6 @@ class UserView(View):
 
         try:
             data = json.loads(request.body)
-            # Ensure the user can only update their own profile
-            if data.get("username") != request.user.username:
-                return create_response(
-                    error="Unauthorized",
-                    message="Username is incorrect",  # If we say forbidden the user will know that exists an user with X username, so I prefer to say that is incorrect
-                    status=400,
-                )
 
             form = UserForm(data, instance=request.user)
             if form.is_valid():
