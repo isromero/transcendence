@@ -70,7 +70,7 @@ function updateIcons(page) {
     rightHref = '/settings';
   } else if (pageType === 'settings') {
     leftIcon = 'bi bi-person-circle';
-    leftHref = '/profile';
+    leftHref = '/social';
     rightIcon = 'bi bi-joystick';
     rightHref = '/';
   }

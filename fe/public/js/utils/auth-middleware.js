@@ -25,20 +25,22 @@ export async function isAuthenticated() {
 
 // Middleware function to check authentication before loading a page
 export async function checkAuth(path) {
-  // If it's a public route, allow access
-  if (
-    publicRoutes.some(route => path === route || path.startsWith('/modal-'))
-  ) {
-    return true;
-  }
-
-  // If user is authenticated, allow access
   const authenticated = await isAuthenticated();
-  if (authenticated) {
-    return true;
+  const isPublicRoute = publicRoutes.some(
+    route => path === route || path.startsWith('/modal-')
+  );
+
+  // If authenticated and trying to access public routes (auth)
+  if (authenticated && isPublicRoute) {
+    loadPage('/');
+    return false;
   }
 
-  // If not authenticated and trying to access protected route, redirect to auth
-  loadPage('/auth');
-  return false;
+  // If not authenticated and trying to access protected routes
+  if (!authenticated && !isPublicRoute) {
+    loadPage('/auth');
+    return false;
+  }
+
+  return true;
 }

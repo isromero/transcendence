@@ -10,10 +10,10 @@ from apps.core.utils import create_response
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class StatsView(View):
-    def get(self, _, user_id):
+class ProfileView(View):
+    def get(self, request):
         try:
-            user = get_object_or_404(User, id=user_id)
+            user = request.user
             user_history = History.objects.filter(user_id=user)
             return create_response(data=serialize_stats(user, user_history))
         except Exception as e:
