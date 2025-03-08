@@ -1,5 +1,7 @@
 import { API_URL } from "../utils/constants.js";
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
+import { loadPage } from '../router/router.js';
+import { initGame } from '../game.js';
 
 // Obtener el join_code desde la URL
 function getJoinCodeFromURL() {
@@ -62,12 +64,29 @@ window.addEventListener("beforeunload", () => {
 
 
 document.getElementById("start-tournament-btn")?.addEventListener("click", async function () {
-  console.log("Button clicked!");  // Verifica si el evento de clic se dispara
-  const joinCode = document.getElementById("join-code").textContent.split(":")[1].trim();  // Obtener el joinCode del HTML
-  
-  // Realizar la solicitud GET para obtener el ID del torneo usando el joinCode
+  console.log("Button clicked!");  
+  const joinCode = document.getElementById("join-code").textContent.split(":")[1].trim();  
+
   try {
-      // Solicitar los detalles del torneo con el joinCode
+      // 1️⃣ Obtener el usuario actual desde /profile
+      const userResponse = await fetch(`${API_URL}/profile`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+      });
+
+      const userData = await userResponse.json();
+      console.log("Raw userData:", userData);  // 👀 Ver qué devuelve la API
+
+      if (!userResponse.ok || !userData?.data?.id) {  // ⚠️ Cambiado
+          showErrorToast("Failed to get user data.");
+          return;
+      }
+
+      const currentUserId = userData.data.id;  // ⚠️ Cambiado
+      console.log("Current user ID:", currentUserId);
+
+      // 2️⃣ Obtener el torneo para extraer el tournamentId
       const getResponse = await fetch(`${API_URL}/tournaments/${joinCode}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -75,35 +94,50 @@ document.getElementById("start-tournament-btn")?.addEventListener("click", async
       });
 
       const tournamentData = await getResponse.json();
-      console.log("Tournament data:", tournamentData);
-
       if (!getResponse.ok || !tournamentData?.id) {
-          showErrorToast(tournamentData?.error || "Tournament not found or unavailable.");
-          return; // Salir si no se encuentra el torneo
+          showErrorToast("Tournament not found.");
+          return;
       }
 
-      const tournamentId = tournamentData.id;  // Obtener el tournamentId del GET response
-      
-      // Enviar solicitud PUT para iniciar el torneo
+      const tournamentId = tournamentData.id;
+
+      // 3️⃣ Iniciar el torneo y recibir los partidos con los match_id
       const response = await fetch(`${API_URL}/tournaments`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({
-              action: "start",
-              tournament_id: tournamentId,  // Usar el tournamentId extraído
-          }),
+          body: JSON.stringify({ action: "start", tournament_id: tournamentId }),
       });
 
-      console.log("EMPIEZA EL TORNEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-
       const result = await response.json();
-
-      if (response.ok) {
-          showSuccessToast("Tournament started successfully!");
-      } else {
-          showErrorToast(result?.error || "Failed to start the tournament.");
+      if (!response.ok || !result?.matches) {
+          showErrorToast(result?.error || "Failed to start tournament.");
+          return;
       }
+
+      console.log("Tournament started:", result);
+
+      showSuccessToast("Tournament started!");
+
+      // 4️⃣ Buscar el partido del usuario
+      let userMatchId = null;
+      Object.values(result.matches).flat().forEach(match => {
+          if (match.player1?.id === currentUserId || match.player2?.id === currentUserId) {
+              userMatchId = match.match_id;
+          }
+      });
+      
+      if (!userMatchId) {
+          showErrorToast("No match found for your user.");
+          return;
+      }
+
+      console.log("User match ID:", userMatchId);
+
+      // 5️⃣ Redirigir a la partida del usuario
+      await loadPage(`/game/${userMatchId}`);
+      await initGame();
+
   } catch (error) {
       console.error("Error starting tournament:", error);
       showErrorToast("An error occurred while starting the tournament.");

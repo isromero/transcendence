@@ -111,8 +111,8 @@ class TournamentsView(View):
                 return JsonResponse({"message": "Joined tournament successfully"}, status=200)
 
             elif action == "start":
-                if tournament.status != "ready":
-                    return JsonResponse({"error": "Tournament is not ready to start"}, status=400)
+                # if tournament.status != "ready" or tournament.status == "in_progress":
+                #     return JsonResponse({"error": "Tournament is not ready to start"}, status=400)
 
                 players = list(tournament.players.all())
                 random.shuffle(players)  # Shuffle players randomly
