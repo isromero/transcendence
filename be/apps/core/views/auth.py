@@ -33,12 +33,13 @@ class OAuthLogin(View):
                 f"&response_type=code"
                  )
             return redirect(auth_url)
-            # return HttpResponse(auth_url) # pendiente de probar después de integrar en el frontend
+            # return HttpResponse(auth_url) #  pendiente de probar después de integrar en el frontend
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
         except Exception as e:
             # se peude devolver un error 500???
             return create_response(error="An unexpected error occurred", status=500)
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthCallback(View):
@@ -46,6 +47,16 @@ class OAuthCallback(View):
         code = request.GET.get("code")
         if not code:
             return JsonResponse({"error": "No authorization code provided"}, status=400)
+        token_data = self.exchange_code_for_token(code)
+        if "error" in token_data:
+            return JsonResponse(token_data, status=400)
+        user_info = self.get_user_info(token_data.get("access_token"))
+        if "error" in user_info:
+            return JsonResponse(user_info, status=400)
+        response = self.authenticate_and_login(request, user_info)
+        return response
+    
+    def exchange_code_for_token(self, code: str) -> dict:
         data = {
             "grant_type": "authorization_code",
             "client_id": settings.OAUTH42_CLIENT_ID,
@@ -53,37 +64,38 @@ class OAuthCallback(View):
             "code": code,
             "redirect_uri": settings.OAUTH42_REDIRECT_URI,
         }
-        response = requests.post(settings.OAUTH42_TOKEN_URL, data=data)
-        if response.status_code != 200:
-            return JsonResponse({"error": "Failed to obtain access token"}, status=400)
-
-        token_data = response.json()
-        access_token = token_data.get("access_token")
+        api_response = requests.post(settings.OAUTH42_TOKEN_URL, data=data)
+        if api_response.status_code != 200:
+            return {"error": "Failed to obtain access token"}
+        return api_response.json()
+    
+    def get_user_info(self, access_token: str) -> dict:
         if not access_token:
-            return JsonResponse({"error": "Failed to obtain access token"}, status=400)
-
+            return {"error": "Invalid access token"}
         headers = {"Authorization": f"Bearer {access_token}"}
-        user_info_response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
-        if user_info_response.status_code != 200:
-            return JsonResponse({"error": "Failed to obtain user info"}, status=400)
+        api_response = requests.get(settings.OAUTH42_USER_INFO_URL, headers=headers)
+        if api_response.status_code != 200:
+            return {"error": "Failed to obtain user information"}
+        return api_response.json()
 
-        user_info = user_info_response.json()
+    def authenticate_and_login(self, request: HttpRequest, user_info: dict) -> JsonResponse:
         username = user_info.get("login")
-        # email = user_info.get("email")
-        # user, created = User.objects.get_or_create(username=username, email=email)
+        if not username:
+            return JsonResponse({"error": "Invalid user information"}, status=400)
         user, created = User.objects.get_or_create(username=username)
-
+        if created:
+            user.set_unusable_password()
+            user.save()
         login(request, user)
-        response = JsonResponse({"message" : "Login successful"})
+        response = JsonResponse({"message": f"{username}: Login successful"})
         response.set_cookie(
             "sessionid", 
             request.session.session_key, 
             httponly=True, 
             secure=False,
             samesite="Lax",)
-        # TODO: aquí hay que redirigir a la página de inicio de la app
-        # o devolver la información necesaria para que el frontend redirija
         return response
+    
 
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
@@ -92,6 +104,7 @@ class LogoutView(View):
         response = JsonResponse({"message": "Logout successful"})
         response.delete_cookie("sessionid")
         return response
+
 
 # TODO (jose): eliminar para producción, solo sirve para pruebas con postman
 @method_decorator(csrf_exempt, name="dispatch")
