@@ -1,5 +1,17 @@
 services:
 
+   nginx:
+    image: nginx:latest
+    volumes:
+      - .nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      - be
+      - fe
+    networks:
+      - transcendence_network
+
   be:
     container_name: be
     build: ./be
