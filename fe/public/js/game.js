@@ -175,7 +175,7 @@ export async function initGame() {
 
     // Start WebSocket if the game is still ongoing
     try {
-      ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
+      ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${matchId}`);
 
       ws.onopen = () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
