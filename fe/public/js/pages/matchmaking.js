@@ -1,6 +1,6 @@
-import { loadPage } from './router/router.js';
-import { initGame } from './game.js';
-import { showErrorToast } from './utils/helpers.js';
+import { loadPage } from '../router/router.js';
+import { initGame } from '../game.js';
+import { showErrorToast } from '../utils/helpers.js';
 
 let ws;
 let multiplayerBtn;
