@@ -10,7 +10,7 @@ import random
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.templatetags.static import static
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
@@ -56,46 +56,35 @@ class UserView(View):
                 error="Invalid JSON", message="User update failed", status=400
             )
 
-    def delete(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
-        if request.user.id == user_id:
-            anon_user, _ = User.objects.get_or_create(username="deleted_user")
-            random_numb = time.time() + random.uniform(0.1, 1.0)
+    def delete(self, request):
+        try:
+            user = request.user
+
+            # Anonymize user data
             user.password = ""
             user.avatar = static("default_avatar.webp")
             user.is_online = False
             user.deleted_user = True
+            user.username = f"anonymized_user_{user.id}"
 
             # Delete user friends
-            friends = Friends.objects.filter(user_id=user_id)
-            friends.delete()
-            # Delete user from friend lists
-            for friend in Friends.objects.filter(friend_id=user_id):
-                friend.friend_id = anon_user
+            Friends.objects.filter(user_id=user.id).delete()
+            # Update user from friend lists
+            Friends.objects.filter(friend_id=user.id).update(friend_id=user)
 
-            # TODO (ismael): I think this is bad bcs we need to anonymize the history of the user
             # Delete user history
-            history = History.objects.filter(user_id=user_id)
-            history.delete()
+            History.objects.filter(user_id=user.id).delete()
 
-            # Anonymize the user from other users' history lists
-            for history in History.objects.filter(opponent_id=user_id):
-                history.opponent_id = anon_user
-
-            # Anonymize the user from tournaments
-            for tournament in Tournaments.objects.filter(players=user):
-                tournament.players.remove(user)
-                tournament.players.add(anon_user)
-            user.username = "anonymized_user_" + str(user.id)
             user.save()
-            return JsonResponse(
-                {
-                    "message": "Your account and all associated data have been permanently deleted."
-                },
+
+            logout(request)
+
+            return create_response(
+                message="Your account and all associated data have been permanently deleted.",
                 status=204,
             )
-        else:
-            return JsonResponse(
-                {"error": "You do not have permission to delete this user's data."},
-                status=403,
+
+        except Exception as e:
+            return create_response(
+                error=str(e), message="Error deleting account", status=500
             )

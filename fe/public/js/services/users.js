@@ -60,13 +60,12 @@ export const usersService = {
       showSuccessToast(result.message);
       return result.data || result;
     } catch (e) {
-      console.error('Error updating user:', e);
-      showErrorToast('Network error');
+      showErrorToast(`Error updating account: ${e}`);
     }
   },
-  deleteUser: async id => {
+  deleteUser: async () => {
     try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -75,18 +74,20 @@ export const usersService = {
         credentials: 'include',
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result?.success) {
-        showErrorToast(result?.message);
-        return null;
+      if (response.status === 204) {
+        showSuccessToast('Account successfully deleted');
+        return true;
       }
 
-      showSuccessToast(result.message);
-      return result.data || result;
+      if (!response.ok) {
+        showErrorToast('Error deleting account');
+        return false;
+      }
+
+      return false;
     } catch (e) {
-      console.error('Error deleting user:', e);
-      showErrorToast('Network error');
+      showErrorToast(`Error deleting account: ${e}`);
+      return false;
     }
   },
 };
