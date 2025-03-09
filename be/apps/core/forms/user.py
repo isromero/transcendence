@@ -7,15 +7,7 @@ from apps.core.models import User
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["username", "email"]
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-
-        if User.objects.filter(email=email).exists() and self.instance.email != email:
-            raise ValidationError("Email already exists")
-
-        return email.lower()
+        fields = ["username"]
 
     def clean_username(self):
         username = self.cleaned_data.get("username")

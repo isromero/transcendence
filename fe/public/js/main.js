@@ -1,26 +1,37 @@
 import { loadPage } from './router/router.js';
 import { getCleanPageKey } from './utils/helpers.js';
+import { checkAuth } from './utils/auth-middleware.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadPage(window.location.pathname);
+document.addEventListener('DOMContentLoaded', async () => {
+  const initialPath = window.location.pathname;
+  if (checkAuth(initialPath)) {
+    await loadPage(initialPath);
+  }
 });
 
-window.addEventListener('popstate', event => {
+window.addEventListener('popstate', async event => {
   const rawPage = event.state?.page || window.location.pathname;
-  loadPage(getCleanPageKey(rawPage));
+  const cleanPage = getCleanPageKey(rawPage);
+
+  if (checkAuth(cleanPage)) {
+    await loadPage(cleanPage);
+  }
 });
 
-document.body.addEventListener('click', event => {
+document.body.addEventListener('click', async event => {
   const modalLink = event.target.closest('[data-modal]');
   const spaLink = event.target.closest('.spa-link');
 
   if (modalLink) {
     event.preventDefault();
     const modalPage = modalLink.getAttribute('data-modal');
-    loadPage(`/modal-${modalPage}`);
+    await loadPage(`/modal-${modalPage}`);
   } else if (spaLink) {
     event.preventDefault();
     const page = spaLink.getAttribute('href');
-    loadPage(page);
+
+    if (checkAuth(page)) {
+      await loadPage(page);
+    }
   }
 });

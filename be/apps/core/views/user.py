@@ -88,7 +88,6 @@ class UserView(View):
             random_numb = time.time() + random.uniform(0.1, 1.0)
             user.password = ""
             user.avatar = static("default_avatar.webp")
-            user.email = f"deleted_user_{random_numb}@anon.com"
             user.is_online = False
             user.deleted_user = True
 

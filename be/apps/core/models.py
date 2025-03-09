@@ -6,8 +6,7 @@ import uuid
 
 
 class User(AbstractUser):
-    # id, username, email, password are inherited from AbstractUser
-    email = models.EmailField(unique=True, max_length=50)
+    # id, username, password are inherited from AbstractUser
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     avatar = models.URLField(
@@ -15,8 +14,8 @@ class User(AbstractUser):
     )
     is_online = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []  # Required fields for create superuser
     deleted_user = models.BooleanField(default=False)
 
     """ avatar = models.URLField(

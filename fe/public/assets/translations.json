@@ -9,11 +9,6 @@
     "spanish": "Iniciar sesión",
     "ukrainian": "Увійти"
   },
-  "email-address": {
-    "english": "Email address",
-    "spanish": "Dirección de correo electrónico",
-    "ukrainian": "Електронна пошта"
-  },
   "password": {
     "english": "Password",
     "spanish": "Contraseña",
@@ -84,11 +79,6 @@
     "spanish": "Nuevo nombre de usuario",
     "ukrainian": "Нове ім'я користувача"
   },
-  "new-email": {
-    "english": "New email",
-    "spanish": "Nuevo correo electrónico",
-    "ukrainian": "Новий електронний лист"
-  },
   "new-password": {
     "english": "New password",
     "spanish": "Nueva contraseña",
@@ -103,11 +93,6 @@
     "english": "Change Username",
     "spanish": "Cambiar nombre de usuario",
     "ukrainian": "Змінити ім'я користувача"
-  },
-  "edit-mail": {
-    "english": "Change Email",
-    "spanish": "Cambiar correo electrónico",
-    "ukrainian": "Змінити електронну пошту"
   },
   "edit-password": {
     "english": "Change Password",

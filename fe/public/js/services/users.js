@@ -4,7 +4,14 @@ import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 export const usersService = {
   getUsers: async () => {
     try {
-      const response = await fetch(`${API_URL}/users`);
+      const response = await fetch(`${API_URL}/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -15,7 +22,14 @@ export const usersService = {
   },
   getUser: async id => {
     try {
-      const response = await fetch(`${API_URL}/users/${id}`);
+      const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch user');
       }
@@ -30,8 +44,10 @@ export const usersService = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify(user),
+        credentials: 'include',
       });
 
       const result = await response.json();
@@ -52,6 +68,11 @@ export const usersService = {
     try {
       const response = await fetch(`${API_URL}/users/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
       });
 
       const result = await response.json();

@@ -1,16 +1,15 @@
 import { API_URL } from '../utils/constants.js';
-import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
-import { loadPage } from '../router/router.js';
+import { showErrorToast } from '../utils/helpers.js';
 
-export const authService = {
-  login: async user => {
-    const response = await fetch(`${API_URL}/login`, {
+export const historyService = {
+  createMatch: async () => {
+    const response = await fetch(`${API_URL}/history`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify({ local_match: true }),
       credentials: 'include',
     });
 
@@ -21,33 +20,11 @@ export const authService = {
       return null;
     }
 
-    showSuccessToast(result.message);
     return result.data || result;
   },
-  register: async user => {
-    const response = await fetch(`${API_URL}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
-      return null;
-    }
-
-    showSuccessToast(result.message);
-    return result.data || result;
-  },
-  logout: async () => {
-    // TODO: Implement in backend
-    const response = await fetch(`${API_URL}/logout`, {
-      method: 'POST',
+  getMatch: async matchId => {
+    const response = await fetch(`${API_URL}/history/${matchId}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -59,11 +36,28 @@ export const authService = {
 
     if (!response.ok || !result?.success) {
       showErrorToast(result?.message || result?.error);
-      return false;
+      return null;
     }
 
-    showSuccessToast(result.message);
-    loadPage('/auth');
-    return true;
+    return result.data || result;
+  },
+  getMatchHistory: async matchId => {
+    const response = await fetch(`${API_URL}/history/match/${matchId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result?.success) {
+      showErrorToast(result?.message || result?.error);
+      return null;
+    }
+
+    return result.data || result;
   },
 };

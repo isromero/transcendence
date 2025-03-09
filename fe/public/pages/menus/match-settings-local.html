@@ -1,4 +1,3 @@
-<header class="text-white text-center py-1 mt-0"></header>
 <div
   class="d-flex justify-content-center align-items-center"
   style="min-height: 100vh"
@@ -8,13 +7,12 @@
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form>
+            <form id="match-form">
               <div class="form-group mb-3">
                 <label
-                  class="form-secondary-title-color text-center w-100"
-                  data-translationKey="enter-code-field"
-                  style="font-size: 2.5rem"
-                  >Enter code:</label
+                  class="form-secondary-title-color fs-3"
+                  data-translationKey="points-win"
+                  >Points to win</label
                 >
                 <input
                   class="form-control form-control-lg bs-secondary"
@@ -33,15 +31,15 @@
                     Cancel
                   </button>
                 </a>
-                <a class="spa-link" href="/game-game" style="flex: 1">
+                <a id="gameLink" class="spa-link" href="/game" style="flex: 1">
                   <button
-                    aria-label="Accept"
+                    id="createMatchBtn"
                     class="btn login-button w-100"
-                    data-translationKey="join-match"
+                    data-translationKey="create-match"
                     style="border-radius: 10px; height: 2.8rem"
-                    type="submit"
+                    type="button"
                   >
-                    Join Match
+                    Create Match
                   </button>
                 </a>
               </div>
