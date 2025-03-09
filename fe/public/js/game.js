@@ -45,7 +45,7 @@ async function updateGameState(gameState) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const { left_paddle, right_paddle, ball, scores } = gameState;
+    const { left_paddle, right_paddle, ball, scores, countdown } = gameState;
 
     if (!left_paddle || !right_paddle || !ball || !scores) {
       console.error('Invalid game state:', gameState);
@@ -64,6 +64,12 @@ async function updateGameState(gameState) {
     ctx.font = '40px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
+    if (countdown && countdown > 0) {
+      ctx.fillStyle = 'white';
+      ctx.font = '80px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.ceil(countdown), canvas.width / 2, canvas.height / 2);
+    }
 
     ctx.fillStyle = '#ff4d6d';
     ctx.fillRect(
@@ -135,6 +141,26 @@ async function checkIfGameFinished(matchId) {
   }
 }
 
+async function startCountdown() {
+  const countdownElement = document.getElementById('countdown');
+  let count = 5;
+
+  return new Promise(resolve => {
+    const interval = setInterval(() => {
+      console.log("Countdown:", count); // Debugging
+
+      countdownElement.textContent = count;
+      count--;
+
+      if (count < 0) {
+        clearInterval(interval);
+        countdownElement.style.display = 'none'; // Ocultar el contador
+        resolve();
+      }
+    }, 1000);
+  });
+}
+
 export async function initGame() {
   // Prevent multiple simultaneous initializations
   if (isInitializing) {
@@ -142,6 +168,7 @@ export async function initGame() {
   }
 
   isInitializing = true;
+  await startCountdown(); 
 
   try {
     resetGameState();

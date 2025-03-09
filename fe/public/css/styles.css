@@ -413,3 +413,20 @@ canvas {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+
+.countdown-display {
+  font-size: 100px;
+  font-weight: bold;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+#countdown {
+  position: absolute;
+  z-index: 100;
+}

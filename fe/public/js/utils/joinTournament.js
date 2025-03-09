@@ -20,7 +20,7 @@ async function joinTournament(username, joinCode) {
     });
 
     const tournamentData = await getResponse.json();
-    console.log("Tournament data:", tournamentData);
+    // console.log("Tournament data:", tournamentData);
 
     if (!getResponse.ok || !tournamentData?.id) {
       showErrorToast(tournamentData?.error || "Tournament not found or unavailable.");
@@ -79,7 +79,7 @@ document.getElementById("joinTournamentForm").addEventListener("submit", async f
   const tournamentData = await joinTournament(username, joinCode);
   if (tournamentData) {
     // Tournament joined successfully, proceed to the next steps if needed
-    console.log("Tournament data after joining:", tournamentData);
+    // console.log("Tournament data after joining:", tournamentData);
   }
 });
 

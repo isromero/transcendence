@@ -25,7 +25,7 @@ async function fetchTournamentData(joinCode) {
     }
 
     const tournamentData = await response.json();
-    console.log("Tournament data:", tournamentData);
+    // console.log("Tournament data:", tournamentData);
     updateTournamentUI(tournamentData);
   } catch (error) {
     console.error("Failed to fetch tournament data:", error);

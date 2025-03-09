@@ -18,6 +18,7 @@ class GameState:
         self.running = False
         self.last_update = time.time()
         self.fps_cap = 60
+        self.countdown = 0  # Countdown timer in seconds
 
         self.left_paddle = {
             "x": 30,
@@ -59,6 +60,7 @@ class GameState:
         self.game_over = False
         self.scores = {"left": 0, "right": 0}
         self.reset_ball()
+        self.countdown = 5  # Set a 5-second countdown when starting the game
 
     def reset_ball(self):
         """Reset ball to the center"""
@@ -84,17 +86,18 @@ class GameState:
     async def update(self):
         """Update game state"""
         current_time = time.time()
-        dt = min(
-            current_time - self.last_update, 1 / 30
-        )  # Limita dt para evitar saltos grandes
+        dt = min(current_time - self.last_update, 1 / 30)
         self.last_update = current_time
 
-        # Factor de escala de tiempo para mantener velocidad constante
-        time_factor = dt * self.fps_cap
+        if self.countdown > 0:
+            self.countdown -= dt
+            if self.countdown < 0:
+                self.countdown = 0
 
-        self._update_paddles(time_factor)
-        if self.running and not self.game_over:
-            await self._update_ball(time_factor)
+        self._update_paddles(dt * self.fps_cap)
+
+        if self.running and not self.game_over and self.countdown <= 0:
+            await self._update_ball(dt * self.fps_cap)
 
     def _update_paddles(self, time_factor):
         """Move paddles within the limits"""
@@ -282,6 +285,7 @@ class GameState:
             "right_paddle": self.right_paddle,
             "ball": self.ball,
             "scores": self.scores,
+            "countdown": max(0, self.countdown)
         }
 
     @database_sync_to_async
