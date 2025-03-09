@@ -100,6 +100,9 @@ class OAuthCallback(View):
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def post(self, request:HttpRequest):
+        user = request.user
+        user.is_online = False
+        user.save(update_fields=["is_online"])
         logout(request)
         response = JsonResponse({"message": "Logout successful"})
         response.delete_cookie("sessionid")
@@ -125,7 +128,8 @@ class LoginWithToken(View):
         user, created = User.objects.get_or_create(username=username)
         if created:
             user.set_unusable_password()
-            user.save()
+        user.is_online = True
+        user.save()
         login(request, user)
         response = create_response(message=f"{username}: Login successful")
         response.set_cookie(
