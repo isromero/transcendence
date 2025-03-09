@@ -134,10 +134,10 @@
     "spanish": "Editar perfil",
     "ukrainian": "Редагувати профіль"
   },
-  "join-match": {
-    "english": "Join match",
-    "spanish": "Unirse a la partida",
-    "ukrainian": "Приєднатися до гри"
+  "join-tournament": {
+    "english": "Join tournament",
+    "spanish": "Unirse al torneo",
+    "ukrainian": "Приєднатися до турніру"
   },
   "wins": {
     "english": "Wins",

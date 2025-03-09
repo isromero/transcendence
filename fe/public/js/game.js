@@ -147,7 +147,7 @@ async function startCountdown() {
 
   return new Promise(resolve => {
     const interval = setInterval(() => {
-      console.log("Countdown:", count); // Debugging
+      console.log('Countdown:', count); // Debugging
 
       countdownElement.textContent = count;
       count--;
@@ -168,7 +168,7 @@ export async function initGame() {
   }
 
   isInitializing = true;
-  await startCountdown(); 
+  await startCountdown();
 
   try {
     resetGameState();

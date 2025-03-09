@@ -7,12 +7,14 @@ let multiplayerBtn;
 let queueStatus;
 let localMatchBtn;
 let cancelQueueBtn;
+let tournamentBtn;
 
 export function initMatchmaking() {
   multiplayerBtn = document.getElementById('multiplayer-btn');
   queueStatus = document.getElementById('queue-status');
   localMatchBtn = document.getElementById('local-match-btn');
   cancelQueueBtn = document.getElementById('cancel-queue-btn');
+  tournamentBtn = document.getElementById('tournament-btn');
 
   if (sessionStorage.getItem('matchmaking_active')) {
     showErrorToast('You are already in a matchmaking.');
@@ -38,6 +40,7 @@ function handleQueue() {
   // Hide the buttons
   localMatchBtn.style.display = 'none';
   multiplayerBtn.style.display = 'none';
+  tournamentBtn.style.display = 'none';
 
   sessionStorage.setItem('matchmaking_active', 'true');
 
@@ -82,4 +85,5 @@ function cleanupMatchmaking() {
   queueStatus.style.display = 'none';
   localMatchBtn.style.display = 'block';
   multiplayerBtn.style.display = 'block';
+  tournamentBtn.style.display = 'block';
 }

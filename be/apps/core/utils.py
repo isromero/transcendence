@@ -120,8 +120,11 @@ def serialize_tournament(tournament):
 
     return {
         "id": tournament.id,
+        "start_date": tournament.start_date,
         "tournament_name": tournament.tournament_name,
         "status": tournament.status,
+        "current_players": tournament.players.count(),
+        "max_players": tournament.max_players,
         "current_round": tournament.current_round,
         "join_code": tournament.join_code if tournament.status == "pending" else None,
         "players": [
