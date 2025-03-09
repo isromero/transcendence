@@ -94,7 +94,7 @@ class TournamentsView(View):
                 tournament.players.add(request.user)
 
                 # If we reach the necessary number of players, change the status
-                if tournament.players.count() >= 4:
+                if tournament.players.count() == tournament.max_players:
                     tournament.status = "ready"
 
                 tournament.save()
@@ -103,8 +103,10 @@ class TournamentsView(View):
                 )
 
             elif action == "start":
-                # if tournament.status != "ready" or tournament.status == "in_progress":
-                #     return JsonResponse({"error": "Tournament is not ready to start"}, status=400)
+                if tournament.status != "ready":
+                    return create_response(
+                        error="Tournament is not ready to start", status=400
+                    )
 
                 players = list(tournament.players.all())
                 random.shuffle(players)  # Shuffle players randomly

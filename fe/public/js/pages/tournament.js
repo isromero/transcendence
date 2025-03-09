@@ -10,17 +10,22 @@ function getJoinCodeFromURL() {
 }
 
 const joinCode = getJoinCodeFromURL();
-
 const startTournamentBtn = document.getElementById('start-tournament-btn');
+
+function getUserMatch(tournament, currentUserId) {
+  const match = Object.values(tournament.matches)
+    .flat()
+    .find(
+      match =>
+        match?.player1?.id === currentUserId ||
+        match?.player2?.id === currentUserId
+    );
+
+  return match?.match_id;
+}
+
 startTournamentBtn.addEventListener('click', async function () {
   try {
-    const profile = await profileService.getProfile();
-    if (!profile) {
-      return;
-    }
-
-    const currentUserId = profile.data.id;
-
     const tournament = await tournamentService.getTournament(joinCode);
     if (!tournament) {
       return;
@@ -39,27 +44,6 @@ startTournamentBtn.addEventListener('click', async function () {
     if (!tournamentAfterStarting) {
       return;
     }
-
-    // Search for the user's match
-    let userMatchId = null;
-    Object.values(tournamentAfterStarting.matches)
-      .flat()
-      .forEach(match => {
-        if (
-          match?.player1?.id === currentUserId ||
-          match?.player2?.id === currentUserId
-        ) {
-          userMatchId = match.match_id;
-        }
-      });
-
-    if (!userMatchId) {
-      showErrorToast('No match found for your user.');
-      return;
-    }
-
-    await loadPage(`/game/${userMatchId}`);
-    await initGame();
   } catch (error) {
     showErrorToast(
       `An error occurred while starting the tournament. ${error.message}`
@@ -70,6 +54,31 @@ startTournamentBtn.addEventListener('click', async function () {
 const intervalId = setInterval(async () => {
   const tournament = await tournamentService.getTournament(joinCode);
   updateTournamentUI(tournament);
+  if (tournament.status === 'ready') {
+    startTournamentBtn.disabled = false;
+  } else if (tournament.status === 'in_progress') {
+    clearInterval(intervalId);
+
+    const profile = await profileService.getProfile();
+    if (!profile) {
+      return;
+    }
+
+    const currentUserId = profile.data.id;
+
+    console.log(currentUserId);
+    console.log(tournament);
+    console.log(getUserMatch(tournament, currentUserId));
+
+    const userMatchId = getUserMatch(tournament, currentUserId);
+    if (!userMatchId) {
+      showErrorToast('No match found for your user.');
+      return;
+    }
+
+    await loadPage(`/game/${userMatchId}`);
+    await initGame();
+  }
 }, 1000);
 
 window.addEventListener('beforeunload', () => {

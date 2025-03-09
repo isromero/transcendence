@@ -126,7 +126,7 @@ def serialize_tournament(tournament):
         "current_players": tournament.players.count(),
         "max_players": tournament.max_players,
         "current_round": tournament.current_round,
-        "join_code": tournament.join_code if tournament.status == "pending" else None,
+        "join_code": tournament.join_code,
         "players": [
             {"id": player.id, "username": player.username}
             for player in tournament.players.all()
