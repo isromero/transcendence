@@ -1,9 +1,9 @@
 import { changeLanguage } from '../utils/languages.js';
-import { initGlobalValidation } from '../utils/helpers.js';
+import { initGlobalValidation, parseAndSetContent } from '../utils/helpers.js';
 
 const modalContainer = document.getElementById('modal-container');
 const modalBackground = document.getElementById('modal-background');
-let shouldCloseModal = true; // Variable para controlar si el modal debe cerrarse
+let shouldCloseModal = true; // Variable to control if the modal should be closed
 
 export function closeModal() {
   modalContainer.innerHTML = '';
@@ -13,15 +13,17 @@ export function closeModal() {
 export async function loadModal(page) {
   try {
     const response = await fetch(page);
-    modalBackground.hidden = false;
-    const content = await response.text();
-    modalContainer.innerHTML = content;
 
-    // Verificamos si el modal es de tipo end-game o end-game-tournament
+    modalBackground.hidden = false;
+
+    const content = await response.text();
+    parseAndSetContent(modalContainer, content);
+
+    // Check if the modal is of type end-game or end-game-tournament
     if (page.includes('end-game') || page.includes('end-game-tournament')) {
-      shouldCloseModal = false; // No cerramos el modal si es de este tipo
+      shouldCloseModal = false; // Do not close the modal if it is of this type
     } else {
-      shouldCloseModal = true; // En otros casos, sí cerramos el modal
+      shouldCloseModal = true; // In other cases, close the modal
     }
 
     const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
@@ -33,10 +35,14 @@ export async function loadModal(page) {
   }
 }
 
-// Solo cerramos el modal si la variable shouldCloseModal es true
+// Only close the modal if the variable shouldCloseModal is true
 modalBackground.addEventListener('click', event => {
   const clickedModalBackground = event.target.closest('.modal-background');
-  if (clickedModalBackground && !event.target.closest('.modal-box') && shouldCloseModal) {
+  if (
+    clickedModalBackground &&
+    !event.target.closest('.modal-box') &&
+    shouldCloseModal
+  ) {
     closeModal();
   }
 });

@@ -1,7 +1,6 @@
 from django import forms
-from django.contrib.auth.password_validation import validate_password
 from apps.core.models import User
-import re
+from apps.core.utils import validate_username, validate_password
 
 
 class RegisterForm(forms.ModelForm):
@@ -13,16 +12,12 @@ class RegisterForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+        validated_username = validate_username(username)
 
-        if not re.match("^[a-zA-Z0-9_-]+$", username):
-            raise forms.ValidationError(
-                "Username can only contain letters, numbers, underscores and hyphens"
-            )
-
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=validated_username).exists():
             raise forms.ValidationError("Username already exists")
 
-        return username.lower()
+        return validated_username
 
     def clean(self):
         cleaned_data = super().clean()

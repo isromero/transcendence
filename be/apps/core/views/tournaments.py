@@ -23,25 +23,18 @@ class TournamentsView(View):
         try:
             if join_code:
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
-                if tournament.status != "pending":
-                    return JsonResponse(
-                        {"error": "Tournament is not accepting players"}, status=400
-                    )
 
-                return JsonResponse(
-                    {
-                        "id": tournament.id,
-                        "tournament_name": tournament.tournament_name,
-                        "current_players": tournament.players.count(),
-                        "max_players": tournament.max_players,
-                        "status": tournament.status,
-                        "players": [
-                            {"id": player.id, "username": player.username}
-                            for player in tournament.players.all()
-                        ],
-                        "join_code": tournament.join_code,
-                        "start_date": tournament.start_date,
-                    }
+                # if tournament.status != "pending":
+                #     return JsonResponse(
+                #         print("DEBUGGGGGGGGGGGGGGGGGGGGGGGGGGG22222222222222222222"),
+                #         {"error": "Tournament is not accepting players"}, status=400
+                #     )
+                # TODO ISMA ESTA COMPROBACION DEBERIA ESTAR EN PUT , ERES UN INUTIL (SOY SAMU)
+
+                return create_response(
+                    data=serialize_tournament(tournament),
+                    message="Tournament retrieved successfully",
+                    status=200,
                 )
         except Exception as e:
             return create_response(error=str(e), status=400)
@@ -72,40 +65,47 @@ class TournamentsView(View):
         except Exception as e:
             return create_response(error=str(e), status=400)
 
-    def put(self, request, tournament_id=None):
+    def put(self, request):
         """Handles joining the tournament and starting the tournament"""
         try:
             data = json.loads(request.body)
             action = data.get("action")
+            tournament_id = data.get("tournament_id")
+
+            if not tournament_id:
+                return create_response(error="Tournament ID is required", status=400)
+
+            tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
                 join_code = data.get("join_code")
-                tournament = get_object_or_404(Tournaments, join_code=join_code)
+
+                if tournament.join_code != join_code:
+                    return create_response(error="Invalid join code", status=400)
 
                 if tournament.status != "pending":
-                    return JsonResponse(
-                        {"error": "Tournament is not accepting players"}, status=400
+                    return create_response(
+                        error="Tournament is not accepting players", status=400
                     )
 
                 if tournament.players.count() >= tournament.max_players:
-                    return JsonResponse({"error": "Tournament is full"}, status=400)
+                    return create_response(error="Tournament is full", status=400)
 
                 tournament.players.add(request.user)
 
                 # If we reach the necessary number of players, change the status
-                if tournament.players.count() >= 4:
+                if tournament.players.count() == tournament.max_players:
                     tournament.status = "ready"
 
                 tournament.save()
-                return JsonResponse(
-                    {"message": "Joined tournament successfully"}, status=200
+                return create_response(
+                    message="Joined tournament successfully", status=200
                 )
 
             elif action == "start":
-                tournament = get_object_or_404(Tournaments, id=tournament_id)
                 if tournament.status != "ready":
-                    return JsonResponse(
-                        {"error": "Tournament is not ready to start"}, status=400
+                    return create_response(
+                        error="Tournament is not ready to start", status=400
                     )
 
                 players = list(tournament.players.all())
@@ -128,7 +128,7 @@ class TournamentsView(View):
                             user_id=quarter_players[i],
                             opponent_id=quarter_players[i + 1],
                             type_match="tournament_quarter",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -139,7 +139,7 @@ class TournamentsView(View):
                             user_id=quarter_players[i + 1],
                             opponent_id=quarter_players[i],
                             type_match="tournament_quarter",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -155,7 +155,7 @@ class TournamentsView(View):
                             user_id=direct_to_semis[i],
                             opponent_id=direct_to_semis[i + 1],
                             type_match="tournament_semi",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -166,7 +166,7 @@ class TournamentsView(View):
                             user_id=direct_to_semis[i + 1],
                             opponent_id=direct_to_semis[i],
                             type_match="tournament_semi",
-                            match_number=(i // 2) + 1,
+                            tournament_match_number=(i // 2) + 1,
                             result_user=0,
                             result_opponent=0,
                             local_match=False,
@@ -178,15 +178,15 @@ class TournamentsView(View):
                 )  # If there are no quarters, we start in semifinals
                 tournament.save()
 
-                return JsonResponse(
-                    {
+                return create_response(
+                    data={
                         "message": "Tournament started successfully",
                         "matches": {
                             "quarter_finals": (
                                 [
                                     {
                                         "match_id": str(match.match_id),
-                                        "match_number": match.tournament_match_number,
+                                        "tournament_match_number": match.tournament_match_number,
                                         "player1": {
                                             "id": match.user_id.id,
                                             "username": match.user_id.username,
@@ -208,7 +208,7 @@ class TournamentsView(View):
                                 [
                                     {
                                         "match_id": str(match.match_id),
-                                        "match_number": match.tournament_match_number,
+                                        "tournament_match_number": match.tournament_match_number,
                                         "player1": {
                                             "id": match.user_id.id,
                                             "username": match.user_id.username,
@@ -251,7 +251,7 @@ class TournamentsView(View):
                 user_id=winners[i],
                 opponent_id=winners[i + 1],
                 type_match=next_type,
-                match_number=(i // 2) + 1,
+                tournament_match_number=(i // 2) + 1,
                 result_user=0,
                 result_opponent=0,
                 local_match=False,
@@ -262,7 +262,7 @@ class TournamentsView(View):
                 user_id=winners[i + 1],
                 opponent_id=winners[i],
                 type_match=next_type,
-                match_number=(i // 2) + 1,
+                tournament_match_number=(i // 2) + 1,
                 result_user=0,
                 result_opponent=0,
                 local_match=False,
