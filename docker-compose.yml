@@ -34,6 +34,8 @@ services:
       - 3001:3001
     volumes:
       - ./fe:/app
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     networks:
       - transcendence_network
 

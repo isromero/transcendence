@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponseRedirect
 from django.views import View
 from django.shortcuts import redirect
 from django.conf import settings
@@ -53,9 +53,15 @@ class OAuthCallback(View):
         user_info = self.get_user_info(token_data.get("access_token"))
         if "error" in user_info:
             return JsonResponse(user_info, status=400)
-        response = self.authenticate_and_login(request, user_info)
-        return response
+        self.response = self.authenticate_and_login(request, user_info)
+        self.redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        self.transfer_data()
+        return self.redirect_response
     
+    def transfer_data(self):
+        for key, value in self.response.items():
+            self.redirect_response.set_cookie(key, value)
+
     def exchange_code_for_token(self, code: str) -> dict:
         data = {
             "grant_type": "authorization_code",
@@ -85,7 +91,8 @@ class OAuthCallback(View):
         user, created = User.objects.get_or_create(username=username)
         if created:
             user.set_unusable_password()
-            user.save()
+        user.is_online = True
+        user.save()
         login(request, user)
         response = JsonResponse({"message": f"{username}: Login successful"})
         response.set_cookie(
@@ -100,6 +107,7 @@ class OAuthCallback(View):
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def post(self, request:HttpRequest):
+        print("\n\n ->->->->->-<>_>_>_>_>_>        LOGOUT        <-<-<-<-<-<-<-<-<-\n\n")
         user = request.user
         user.is_online = False
         user.save(update_fields=["is_online"])
@@ -107,6 +115,9 @@ class LogoutView(View):
         response = JsonResponse({"message": "Logout successful"})
         response.delete_cookie("sessionid")
         return response
+        # redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        # redirect_response.delete_cookie("sessionid")
+        # return redirect_response
 
 
 # TODO (jose): eliminar para producción, solo sirve para pruebas con postman

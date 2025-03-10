@@ -23,6 +23,5 @@ class AuthenticationMiddleware:
             and not request.user.is_authenticated
         ):
             return JsonResponse({"error": "Authentication required"}, status=401)
-
         response = self.get_response(request)
         return response

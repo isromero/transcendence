@@ -32,4 +32,9 @@ urlpatterns = [
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
     path("game", GameView.as_view(), name="game"),
+    path("check-auth", CheckAuthView.as_view()),
+    path("auth/login", OAuthLogin.as_view(), name="auth_login"),
+    # path("auth/callback/", auth_callback, name="auth_callback"),
+    path("auth/logout/", LogoutView.as_view(), name="auth_logout"),
+	path("auth/token-login", LoginWithToken.as_view(), name="token_login"),
 ]
