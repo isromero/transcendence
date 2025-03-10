@@ -17,6 +17,7 @@ class RegisterView(View):
             form = RegisterForm(data)
 
             if not form.is_valid():
+                print("\n\n--- Form Errors ---\n", form.errors, "\n\n")
                 return handle_form_errors(form)
 
             user = form.save(commit=False)
