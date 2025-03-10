@@ -23,6 +23,7 @@ class UserForm(forms.ModelForm):
         password = cleaned_data.get("password")
         old_password = cleaned_data.get("oldPassword")
         new_password = cleaned_data.get("newPassword")
+        avatar = cleaned_data.get("avatar")
 
         # If there are no changes
         if not username and not old_password and not new_password:

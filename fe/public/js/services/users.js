@@ -63,6 +63,34 @@ export const usersService = {
       showErrorToast(`Error updating account: ${e}`);
     }
   },
+  updateUserAvatar: async file => {
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch(`${API_URL}/users/avatar`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: formData,
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      if (!response.ok | !result?.success) {
+        showErrorToast(result?.message);
+        return null;
+      }
+
+      return result.data;
+    } catch (e) {
+      showErrorToast(`Error updating avatar ${e}`);
+      return null;
+    }
+  },
   deleteUser: async () => {
     try {
       const response = await fetch(`${API_URL}/users`, {

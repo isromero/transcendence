@@ -28,13 +28,44 @@ class UserView(View):
                 data=[serialize_user(user) for user in users],
             )
 
-    def put(self, request):
-        if not request.user.is_authenticated:
-            return create_response(
-                error="Authentication required",
-                message="Please log in to update your profile",
-                status=401,
-            )
+    def put(self, request, action=None):
+        if action == "avatar":
+            try:
+                avatar = request.FILES.get("avatar")
+                if not avatar:
+                    return create_response(
+                        error="No file provided",
+                        message="Please provide an avatar image",
+                        status=400,
+                    )
+
+                # Validar tipo de archivo
+                if not avatar.content_type.startswith("image/"):
+                    return create_response(
+                        error="Invalid file type",
+                        message="Please provide an image file",
+                        status=400,
+                    )
+
+                if avatar.size > 5 * 1024 * 1024:  # 5MB
+                    return create_response(
+                        error="File too large",
+                        message="Avatar size should be less than 5MB",
+                        status=400,
+                    )
+
+                user = request.user
+                user.avatar = avatar
+                user.save()
+
+                return create_response(
+                    data=serialize_user(user), message="Avatar updated successfully"
+                )
+
+            except Exception as e:
+                return create_response(
+                    error=str(e), message="Error updating avatar", status=500
+                )
 
         try:
             data = json.loads(request.body)

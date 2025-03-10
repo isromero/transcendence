@@ -15,6 +15,7 @@ urlpatterns = [
     # Users routes
     path("users", UserView.as_view()),
     path("users/<int:user_id>", UserView.as_view()),
+    path("users/<str:action>", UserView.as_view()),
     # Friends routes
     path("friends", FriendsView.as_view()),
     path("friends/<int:user_id>/<int:friend_id>", FriendsView.as_view()),
