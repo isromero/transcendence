@@ -285,7 +285,7 @@ class GameState:
             "right_paddle": self.right_paddle,
             "ball": self.ball,
             "scores": self.scores,
-            "countdown": max(0, self.countdown)
+            "countdown": max(0, self.countdown),
         }
 
     @database_sync_to_async
@@ -299,16 +299,11 @@ class GameState:
 
             match = matches.first()
 
-            if match.local_match:
-                if is_player1:
-                    match.result_user += 1
-                else:
-                    match.result_opponent += 1
-
-                match.save()
+            if is_player1:
+                match.result_user += 1
             else:
-                # TODO: Implement NOT local match update HERE AND NOT IN OTHER CONSUMER?
-                # print("⚠️ Local match update not implemented")
-                pass
+                match.result_opponent += 1
+
+            match.save()
         except Exception as e:
             print(f"Error updating score in database: {e}")

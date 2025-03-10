@@ -57,6 +57,21 @@ const intervalId = setInterval(async () => {
   if (tournament.status === 'ready') {
     startTournamentBtn.disabled = false;
   } else if (tournament.status === 'in_progress') {
+    const roundMap = {
+      1: 'quarter_finals',
+      2: 'semi_finals',
+      3: 'finals',
+    };
+
+    const currentRoundKey = roundMap[tournament.current_round];
+
+    const matches = tournament.matches[currentRoundKey];
+
+    const match = matches.find(match => match.game_finished);
+    if (match) {
+      return;
+    }
+
     clearInterval(intervalId);
 
     const profile = await profileService.getProfile();
@@ -66,17 +81,13 @@ const intervalId = setInterval(async () => {
 
     const currentUserId = profile.data.id;
 
-    console.log(currentUserId);
-    console.log(tournament);
-    console.log(getUserMatch(tournament, currentUserId));
-
     const userMatchId = getUserMatch(tournament, currentUserId);
     if (!userMatchId) {
       showErrorToast('No match found for your user.');
       return;
     }
 
-    await loadPage(`/game/${userMatchId}`);
+    await loadPage(`/game/${userMatchId}/tournament/${tournament.join_code}`);
     await initGame();
   }
 }, 1000);
