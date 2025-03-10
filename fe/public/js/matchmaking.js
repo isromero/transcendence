@@ -41,7 +41,8 @@ function handleQueue() {
 
   sessionStorage.setItem('matchmaking_active', 'true');
 
-  ws = new WebSocket((`ws://${window.location.hostname}:8000/ws/game/matchmaking`));
+  ws = new WebSocket((`ws://${window.location.hostname}:8000/ws/matchmaking`));
+  console.log(ws);
 
   ws.onmessage = async event => {
     const data = JSON.parse(event.data);
