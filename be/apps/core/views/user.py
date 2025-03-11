@@ -29,6 +29,22 @@ class UserView(View):
             )
 
     def put(self, request, action=None):
+        if action == "status":
+            try:
+                data = json.loads(request.body)
+                is_online = data.get("is_online", False)
+                user = request.user
+                user.is_online = is_online
+                user.save()
+
+                return create_response(
+                    data=serialize_user(user), message="Status updated successfully"
+                )
+            except Exception as e:
+                return create_response(
+                    error=str(e), message="Error updating status", status=500
+                )
+
         if action == "avatar":
             try:
                 avatar = request.FILES.get("avatar")

@@ -1,6 +1,7 @@
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 import { loadPage } from '../router/router.js';
+import { usersService } from './users.js';
 
 export const authService = {
   login: async user => {
@@ -21,6 +22,7 @@ export const authService = {
       return null;
     }
 
+    await usersService.updateOnlineStatus(true);
     showSuccessToast(result.message);
     return result.data || result;
   },
@@ -62,6 +64,7 @@ export const authService = {
       return false;
     }
 
+    await usersService.updateOnlineStatus(false);
     showSuccessToast(result.message);
     await loadPage('/auth');
     return true;

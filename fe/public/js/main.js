@@ -1,11 +1,13 @@
 import { loadPage } from './router/router.js';
 import { getCleanPageKey } from './utils/helpers.js';
 import { checkAuth } from './utils/auth-middleware.js';
+import { usersService } from './services/users.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const initialPath = window.location.pathname;
   if (checkAuth(initialPath)) {
     await loadPage(initialPath);
+    await usersService.updateOnlineStatus(true);
   }
 });
 
@@ -33,5 +35,19 @@ document.body.addEventListener('click', async event => {
     if (checkAuth(page)) {
       await loadPage(page);
     }
+  }
+});
+
+// TODO: THIS IS NOT WORKING. When user are closing the tab, user have to be offline
+window.addEventListener('beforeunload', async () => {
+  await usersService.updateOnlineStatus(false);
+});
+
+// When user comeback to the tab, ser have to be online
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible') {
+    await usersService.updateOnlineStatus(true);
+  } else {
+    await usersService.updateOnlineStatus(false);
   }
 });
