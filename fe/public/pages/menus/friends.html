@@ -14,27 +14,57 @@
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form>
-              <div
-                class="d-flex justify-content-center position-fixed"
-                style="bottom: 8rem; left: 0; right: 0; padding: 1rem"
-              >
-                <a class="spa-link" href="/" style="width: 70%">
-                  <button
-                    aria-label="New Friend"
-                    class="btn cancel-button bs-primary border-primary-color justify-content-center"
-                    data-translationKey="new-friend"
-                    style="border-radius: 10px; height: 2.8rem; width: 100%"
-                    type="button"
-                  >
-                    New Friend
-                  </button>
-                </a>
+            <!-- TODO: FRIEND  -->
+            <article class="d-flex border-primary-color p-3">
+              <div class="col-12">
+                <p
+                  id="friend-name"
+                  class="text-principal-color button-text-size"
+                >
+                  username
+                </p>
+                <img
+                  alt="Friend avatar"
+                  src="/be/apps/static/images/default_avatar.webp"
+                />
+                <p>Is online:</p>
               </div>
-            </form>
+              <div class="col-12">
+                <p class="text-principal-color button-text-size mb-0">
+                  <span data-translationKey="wins">Wins</span>:
+                  <span id="wins"></span>
+                </p>
+                <p class="text-principal-color button-text-size mb-0">
+                  <span data-translationKey="loses">Loses</span>:
+                  <span id="loses"></span>
+                </p>
+                <p class="text-principal-color button-text-size mb-0">
+                  <span data-translationKey="total">Total</span>:
+                  <span id="total"></span>
+                </p>
+              </div>
+            </article>
+
+            <div
+              class="d-flex justify-content-center position-fixed"
+              style="bottom: 8rem; left: 0; right: 0; padding: 1rem"
+            >
+              <button
+                id="newFriendButton"
+                aria-label="New Friend"
+                class="btn btn-success bs-primary text-success-color"
+                data-translationKey="new-friend"
+                style="border-radius: 10px; height: 2.8rem; width: 70%"
+                type="button"
+                data-modal="add-friend"
+              >
+                New Friend
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script defer type="module" src="/js/pages/friends.js"></script>

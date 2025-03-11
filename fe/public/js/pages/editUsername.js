@@ -17,7 +17,7 @@ export function editUsername() {
 
     const result = await usersService.updateUser(user);
     if (result) {
-      loadPage('/edit-profile');
+      await loadPage('/edit-profile');
     }
   });
 

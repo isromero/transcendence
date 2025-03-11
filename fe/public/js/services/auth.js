@@ -63,7 +63,7 @@ export const authService = {
     }
 
     showSuccessToast(result.message);
-    loadPage('/auth');
+    await loadPage('/auth');
     return true;
   },
 };
