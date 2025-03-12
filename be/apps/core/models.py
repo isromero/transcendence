@@ -3,6 +3,7 @@ import random
 from django.contrib.auth.models import AbstractUser
 from django.templatetags.static import static
 import uuid
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -12,11 +13,18 @@ class User(AbstractUser):
     avatar = models.URLField(
         null=True, blank=True, default=static("default_avatar.webp")
     )
-    is_online = models.BooleanField(default=False)
+    last_activity = models.DateTimeField(default=timezone.now)
+    deleted_user = models.BooleanField(default=False)
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []  # Required fields for create superuser
     deleted_user = models.BooleanField(default=False)
+
+    @property
+    def is_online(self):
+        if not self.last_activity:
+            return False
+        return (timezone.now() - self.last_activity).seconds < 45
 
     def __str__(self):
         return self.username

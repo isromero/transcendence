@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.utils import timezone
 
 
 class AuthenticationMiddleware:
@@ -19,6 +20,10 @@ class AuthenticationMiddleware:
             and not request.user.is_authenticated
         ):
             return JsonResponse({"error": "Authentication required"}, status=401)
+
+        if request.user.is_authenticated:
+            request.user.last_activity = timezone.now()
+            request.user.save(update_fields=["last_activity"])
 
         response = self.get_response(request)
         return response

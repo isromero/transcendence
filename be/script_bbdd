@@ -1,14 +1,21 @@
 #!/bin/bash
 
 echo "Starting script"
+
 until pg_isready -h db -p 5432 -q; do
+  echo "Waiting for postgres..."
   sleep 1
 done
 
-python manage.py makemigrations
-python manage.py migrate
-#python manage.py loaddata initial_data.json
+echo "PostgreSQL started"
 
+echo "Running migrations..."
+python manage.py makemigrations
+#python manage.py loaddata initial_data.json
+python manage.py migrate
+
+
+echo "Creating superuser if needed..."
 python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -16,5 +23,5 @@ if not User.objects.filter(username='root').exists():
     User.objects.create_superuser('root', 'root@example.com', 'password123')
 EOF
 
-# Execute in background
+echo "Starting Uvicorn..."
 exec uvicorn config.asgi:application --reload --host 0.0.0.0 --port 8000

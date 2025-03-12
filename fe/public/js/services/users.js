@@ -118,22 +118,4 @@ export const usersService = {
       return false;
     }
   },
-  updateOnlineStatus: async isOnline => {
-    try {
-      const response = await fetch(`${API_URL}/users/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({ is_online: isOnline }),
-        credentials: 'include',
-      });
-
-      return response.ok;
-    } catch (e) {
-      console.error('Error updating online status:', e);
-      return false;
-    }
-  },
 };
