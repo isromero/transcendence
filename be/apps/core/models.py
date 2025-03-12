@@ -95,3 +95,7 @@ class History(models.Model):
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )
     tournament_match_number = models.IntegerField(null=True, blank=True)
+
+# TODO: (jose) borrar código comentado si no se usan los logins de 42 como filtro en el registro
+# class UsedLogin(models.Model):
+#     login = models.CharField(max_length=16, null=True, blank=True)
