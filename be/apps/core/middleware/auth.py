@@ -6,11 +6,15 @@ class AuthenticationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+
         public_paths = [
             "/api/login",
             "/api/register",
             "/api/logout",
             "/api/check-auth",
+            "/api/auth/login",
+            "/auth/callback",
+            "/api/auth/token-login",
         ]
 
         if (
@@ -19,6 +23,5 @@ class AuthenticationMiddleware:
             and not request.user.is_authenticated
         ):
             return JsonResponse({"error": "Authentication required"}, status=401)
-
         response = self.get_response(request)
         return response

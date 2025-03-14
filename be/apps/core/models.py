@@ -18,6 +18,15 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []  # Required fields for create superuser
     deleted_user = models.BooleanField(default=False)
 
+    """ avatar = models.URLField(
+        null=True, blank=True
+    )  # cambiar a una url para avatar por defecto
+    email = models.EmailField(max_length=50, unique=True)
+    status = models.BooleanField(default=False)
+    # esto lo he añadido xq al heredar del modelo User de django, 
+    # no me dejaba crear el usuario en la base de datos y hacer el login
+    last_login = models.DateTimeField(null=True, blank=True) """
+
     def __str__(self):
         return self.username
 
@@ -86,3 +95,7 @@ class History(models.Model):
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )
     tournament_match_number = models.IntegerField(null=True, blank=True)
+
+# TODO: (jose) borrar código comentado si no se usan los logins de 42 como filtro en el registro
+# class UsedLogin(models.Model):
+#     login = models.CharField(max_length=16, null=True, blank=True)

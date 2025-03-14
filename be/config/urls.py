@@ -18,8 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from apps.core.views.game import GameView
+from apps.core.views.auth import OAuthCallback
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),
+    path("auth/callback/", OAuthCallback.as_view()),
 ]
+

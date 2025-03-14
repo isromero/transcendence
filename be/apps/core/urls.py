@@ -6,6 +6,9 @@ from apps.core.views.tournaments import TournamentsView
 from apps.core.views.login import LoginView
 from apps.core.views.register import RegisterView
 from apps.core.views.game import GameView
+from apps.core.views.auth import OAuthLogin, LogoutView, LoginWithToken
+# from apps.core.views.auth import OAuthLogin, auth_login, auth_callback, auth_logout
+
 from apps.core.views.check_auth import CheckAuthView
 from apps.core.views.profile import ProfileView
 
@@ -30,4 +33,8 @@ urlpatterns = [
     path("register", RegisterView.as_view()),
     path("game", GameView.as_view(), name="game"),
     path("check-auth", CheckAuthView.as_view()),
+    path("auth/login", OAuthLogin.as_view(), name="auth_login"),
+    # path("auth/callback/", auth_callback, name="auth_callback"),
+    path("auth/logout/", LogoutView.as_view(), name="auth_logout"),
+	path("auth/token-login", LoginWithToken.as_view(), name="token_login"),
 ]
