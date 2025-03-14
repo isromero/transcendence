@@ -58,6 +58,7 @@
   border: 2px solid #f6d6bd;
   border-radius: 10px;
   box-shadow: inset 0px 0px 200px black;
+  transform: rotate(0);
 }
 
 canvas {

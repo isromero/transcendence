@@ -55,7 +55,11 @@ export const tournamentService = {
       return null;
     }
   },
-  updateTournamentWhenJoining: async (joinCode, tournamentData, username) => {
+  updateTournamentWhenJoining: async (
+    joinCode,
+    tournamentData,
+    displayName
+  ) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
@@ -67,7 +71,7 @@ export const tournamentService = {
           action: 'join',
           tournament_id: tournamentData.id,
           join_code: joinCode,
-          username,
+          displayName, // TODO: Currently not doing nothing in backend
         }),
         credentials: 'include',
       });
@@ -108,6 +112,36 @@ export const tournamentService = {
       }
 
       showSuccessToast('Tournament started!');
+      return result.data || result;
+    } catch (error) {
+      showErrorToast(`Error updating tournament: ${error.message}`);
+      return null;
+    }
+  },
+  leaveTournament: async (joinCode, tournamentData) => {
+    try {
+      const response = await fetch(`${API_URL}/tournaments`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'leave',
+          tournament_id: tournamentData.id,
+          join_code: joinCode,
+        }),
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result?.success) {
+        showErrorToast(result?.message || result?.error);
+        return null;
+      }
+
+      showSuccessToast('You leaved the tournament sucessfully');
       return result.data || result;
     } catch (error) {
       showErrorToast(`Error updating tournament: ${error.message}`);

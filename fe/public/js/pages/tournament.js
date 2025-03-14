@@ -55,7 +55,15 @@ const intervalId = setInterval(async () => {
   const tournament = await tournamentService.getTournament(joinCode);
   updateTournamentUI(tournament);
   if (tournament.status === 'ready') {
-    startTournamentBtn.disabled = false;
+    const profile = profileService.getProfile();
+    if (!profile) {
+      return;
+    }
+
+    // Only leaders can have the start button not disabled (First player always)
+    if (tournament.players[0].id === profile.id) {
+      startTournamentBtn.disabled = false;
+    }
   } else if (tournament.status === 'in_progress') {
     const roundMap = {
       1: 'quarter_finals',
@@ -92,8 +100,34 @@ const intervalId = setInterval(async () => {
   }
 }, 1000);
 
-window.addEventListener('beforeunload', () => {
+async function leaveTournament() {
   clearInterval(intervalId);
+
+  const tournament = await tournamentService.getTournament(joinCode);
+  if (!tournament) {
+    throw Error('Get Tournament failed');
+  }
+
+  await tournamentService.leaveTournament(joinCode, tournament);
+}
+
+// TODO: See if we have to introduce more events for leaving the tournament in ALL situations
+// ! If you leave the tournament clicking in Transcendence '/'
+// ! and then you press back button you will leave the tournament
+// ! when you are inside
+// ! + Also the interval doesn't clean when you do that
+// TODO: FIX THAT
+window.addEventListener('popstate', async () => {
+  await leaveTournament();
+});
+window.addEventListener('beforeunload', async () => {
+  await leaveTournament();
+});
+
+const leaveTournamentButton = document.getElementById('leaveTournamentButton');
+leaveTournamentButton.addEventListener('click', async () => {
+  await leaveTournament();
+  loadPage('/join-tournament');
 });
 
 if (
@@ -102,8 +136,20 @@ if (
 ) {
   try {
     const tournament = await tournamentService.getTournament(joinCode);
+    if (!tournament) {
+      throw Error('Get Tournament failed');
+    }
 
     updateTournamentUI(tournament);
+
+    const profile = await profileService.getProfile();
+    if (profile) {
+      await tournamentService.updateTournamentWhenJoining(
+        joinCode,
+        tournament,
+        profile.username
+      );
+    }
   } catch (error) {
     showErrorToast(`Error initializing the game: ${error}`);
   }

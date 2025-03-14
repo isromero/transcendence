@@ -33,8 +33,34 @@ function resetGameState() {
   hasNavigatedAway = false;
 }
 
+function isHorizontal() {
+    if (window.innerWidth > window.innerHeight)
+	{
+		return true;
+	}
+	return false;
+}
+
+async function updateGameRotation() {
+	let divider = await document.getElementById("rotator").style;
+	let angle = 0;
+	
+	if (isHorizontal())
+	{
+		angle = 0;
+	}
+	else
+	{
+		angle = 90;
+	}
+		divider.transform = `rotate(${angle}deg)`;
+}
+
+
 async function updateGameState(gameState) {
   try {
+	
+	updateGameRotation();
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -212,7 +238,7 @@ export async function initGame() {
 
     // Start WebSocket if the game is still ongoing
     try {
-      ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
+      ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${matchId}`);
 
       ws.onopen = () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
