@@ -90,6 +90,8 @@ export async function loadPage(page) {
       await loadMenu(url);
       window.history.pushState({ page: cleanPage, params }, '', cleanPage);
     }
+
+    document.dispatchEvent(new CustomEvent('spaContentLoaded'));
   } catch (error) {
     loadErrorPage(error.message);
   }
