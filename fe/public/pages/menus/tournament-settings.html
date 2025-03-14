@@ -1,0 +1,81 @@
+<div
+  class="d-flex justify-content-center align-items-center"
+  style="min-height: 100vh"
+>
+  <div class="container mt-5" style="width: 80vw">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="card border-0">
+          <div class="card-body bs-primary">
+            <div class="text-center mb-3">
+              <form
+                id="tournamentSettingsForm"
+                class="needs-validation"
+                novalidate
+              >
+                <div class="form-group mb-3">
+                  <label
+                    class="form-secondary-title-color text-center w-100 fs-3"
+                    for="tournament-name"
+                    >Tournament Name:</label
+                  >
+                  <input
+                    class="form-control form-control-lg bs-secondary"
+                    style="border-radius: 20px"
+                    id="tournament-name"
+                    type="text"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Tournament name is required
+                  </div>
+                </div>
+
+                <label
+                  class="form-secondary-title-color fs-3"
+                  data-translationKey="num-players"
+                  >Nº of players</label
+                >
+
+                <div class="d-flex justify-content-center gap-3">
+                  <button
+                    class="btn login-button w-100 bs-primary border-primary-color"
+                    style="border-radius: 10px; height: 2.8rem"
+                    id="4-players-btn"
+                    type="submit"
+                  >
+                    4 Players
+                  </button>
+                  <button
+                    class="btn login-button w-100 bs-primary border-primary-color"
+                    style="border-radius: 10px; height: 2.8rem"
+                    id="8-players-btn"
+                    type="submit"
+                  >
+                    8 Players
+                  </button>
+                </div>
+              </form>
+
+              <div class="d-flex justify-content-center gap-2 mt-3">
+                <a class="spa-link" href="/create-match" style="flex: 1">
+                  <button
+                    aria-label="Cancel"
+                    class="btn cancel-button w-100 bs-primary border-primary-color"
+                    data-translationKey="cancel"
+                    style="border-radius: 10px; height: 2.8rem"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script defer type="module" src="/js/pages/tournamentSettings.js"></script>

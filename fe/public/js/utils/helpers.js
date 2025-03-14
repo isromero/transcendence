@@ -105,3 +105,21 @@ export function showErrorToast(response) {
   const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
   toast.show();
 }
+
+export function updateTournamentUI(tournamentData) {
+  const tournamentName = document.getElementById('tournament-name');
+  const joinCode = document.getElementById('join-code');
+
+  tournamentName.textContent = tournamentData.tournament_name;
+  joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
+
+  // TODO: Fix this, because when we exit the tournament we want to restore all players and then added again or something
+  const playerSlots = document.querySelectorAll('.player-info span');
+  tournamentData.players.forEach((player, index) => {
+    if (playerSlots[index]) {
+      playerSlots[index].textContent = player.username;
+      playerSlots[index].previousElementSibling.src =
+        player.avatar || '/public/assets/images/default-avatar.webp';
+    }
+  });
+}
