@@ -111,15 +111,19 @@ async function leaveTournament() {
   await tournamentService.leaveTournament(joinCode, tournament);
 }
 
-// TODO: See if we have to introduce more events for leaving the tournament in ALL situations
-// ! If you leave the tournament clicking in Transcendence '/'
-// ! and then you press back button you will leave the tournament
-// ! when you are inside
-// ! + Also the interval doesn't clean when you do that
-// TODO: FIX THAT
 window.addEventListener('popstate', async () => {
+  const profile = await profileService.getProfile();
+  if (!profile) return;
+
+  const tournament = await tournamentService.getTournament(joinCode);
+  if (!tournament || !tournament.players.some(p => p.id === profile.id)) {
+    loadPage('/'); // Redirige si el usuario no está en el torneo
+    return;
+  }
+
   await leaveTournament();
 });
+
 window.addEventListener('beforeunload', async () => {
   await leaveTournament();
 });
