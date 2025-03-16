@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpRequest, HttpResponseRedirect
+from django.http import JsonResponse, HttpRequest, HttpResponseRedirect, HttpResponse
 from django.views import View
 from django.shortcuts import redirect
 from django.conf import settings
@@ -32,7 +32,8 @@ class OAuthLogin(View):
                 f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
                 f"&response_type=code"
                  )
-            return redirect(auth_url)
+            print("\n\n¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡Vamos por aquí!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n")
+            return HttpResponse(auth_url)
             # return HttpResponse(auth_url) #  pendiente de probar después de integrar en el frontend
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
@@ -150,3 +151,33 @@ class LoginWithToken(View):
             secure=False,
             samesite="Lax",)
         return response
+
+
+# @method_decorator(csrf_exempt, name="dispatch")
+# class OAuthLogin(View):
+#     def post(self, request: HttpRequest):
+#         # if user is authenticated, return error
+#         if request.user.is_authenticated:
+#             return create_response(error="User is already authenticated", status=400)
+#         try:
+#             ip = request.META.get("REMOTE_ADDR")
+#             attempts_key = f"login_attempts_{ip}"
+#             attempts = cache.get(attempts_key, 0)
+#             if attempts >= 5:
+#                 return create_response(
+#                     error="Too many attempts. Please try again later", status=429
+#                 )
+#             auth_url = (
+#                 f"https://api.intra.42.fr/oauth/authorize?"
+#                 f"client_id={settings.OAUTH42_CLIENT_ID}"
+#                 f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
+#                 f"&response_type=code"
+#                  )
+#             print("\n\n¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡Vamos por aquí!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n")
+#             return redirect(auth_url)
+#             # return HttpResponse(auth_url) #  pendiente de probar después de integrar en el frontend
+#         except json.JSONDecodeError:
+#             return create_response(error="Invalid JSON", status=400)
+#         except Exception as e:
+#             # se peude devolver un error 500???
+#             return create_response(error="An unexpected error occurred", status=500)

@@ -24,9 +24,25 @@ togglePassword.addEventListener('click', () => {
 });
 
 const login42Button = document.querySelector('[data-translationKey="login42"]');
-if (login42Button) {
-  login42Button.addEventListener("click", function () {
-    window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+if (login42Button) 
+{
+  login42Button.addEventListener("click", async function () {
+    try {
+      const response = await fetch ("http://localhost:8000/auth/login", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!response.ok){
+        throw new Error("Login error");
+      }
+      const redirect_url = await response.text();
+      console.log("Redirect URL:", redirect_url);
+      window.location.href = redirect_url;
+    } 
+    catch (error) {
+      console.error("Login error:", error);
+    }
+      // window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   });
 }
 
