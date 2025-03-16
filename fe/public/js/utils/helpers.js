@@ -113,6 +113,7 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
+  // TODO: Fix this, because when we exit the tournament we want to restore all players and then added again or something
   const playerSlots = document.querySelectorAll('.player-info span');
   tournamentData.players.forEach((player, index) => {
     if (playerSlots[index]) {

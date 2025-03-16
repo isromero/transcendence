@@ -10,7 +10,7 @@ up:
 	$(COMPOSE) up --build
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) down -t 1
 
 stop:
 	if [ -n "$$(docker ps -aq)" ]; then \

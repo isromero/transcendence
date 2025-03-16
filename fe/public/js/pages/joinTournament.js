@@ -2,7 +2,7 @@ import { tournamentService } from '../services/tournaments.js';
 import { showErrorToast, updateTournamentUI } from '../utils/helpers.js';
 import { loadPage } from '../router/router.js';
 
-async function joinTournament(username, joinCode) {
+export async function joinTournament(displayName, joinCode) {
   try {
     const tournamentData = await tournamentService.getTournament(joinCode);
 
@@ -13,7 +13,7 @@ async function joinTournament(username, joinCode) {
     const putResult = await tournamentService.updateTournamentWhenJoining(
       joinCode,
       tournamentData,
-      username
+      displayName
     );
 
     if (!putResult) {
@@ -36,13 +36,13 @@ const joinTournamentForm = document.getElementById('joinTournamentForm');
 joinTournamentForm.addEventListener('submit', async function (event) {
   event.preventDefault();
 
-  const username = document.getElementById('username').value.trim();
+  const displayName = document.getElementById('displayName').value.trim();
   const joinCode = document.getElementById('joinCode').value.trim();
 
-  if (!username || !joinCode) {
+  if (!displayName || !joinCode) {
     showErrorToast('Please fill in all fields.');
     return;
   }
 
-  await joinTournament(username, joinCode);
+  await joinTournament(displayName, joinCode);
 });
