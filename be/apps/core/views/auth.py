@@ -14,7 +14,7 @@ import json
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
-    def post(self, request: HttpRequest):
+    def get(self, request: HttpRequest):
         # if user is authenticated, return error
         if request.user.is_authenticated:
             return create_response(error="User is already authenticated", status=400)
@@ -31,13 +31,11 @@ class OAuthLogin(View):
                 f"client_id={settings.OAUTH42_CLIENT_ID}"
                 f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
                 f"&response_type=code"
-                 )
+            )
             return redirect(auth_url)
-            # return HttpResponse(auth_url) #  pendiente de probar después de integrar en el frontend
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
         except Exception as e:
-            # se peude devolver un error 500???
             return create_response(error="An unexpected error occurred", status=500)
 
 

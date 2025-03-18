@@ -1,6 +1,5 @@
 import { authService } from '../services/auth.js';
 import { loadPage } from '../router/router.js';
-import { CLIENT_ID, REDIRECT_URI } from '../utils/constants.js';
 const form = document.getElementById('loginForm');
 
 form.addEventListener('formValid', async () => {
@@ -26,7 +25,7 @@ togglePassword.addEventListener('click', () => {
 const login42Button = document.querySelector('[data-translationKey="login42"]');
 if (login42Button) {
   login42Button.addEventListener("click", function () {
-    window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    window.location.href = `http://localhost:8000/api/auth/login`;
   });
 }
 
