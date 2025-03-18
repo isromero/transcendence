@@ -431,3 +431,50 @@ canvas {
   position: absolute;
   z-index: 100;
 }
+
+
+/* Estilos base para los botones */
+.game-button {
+  width: 2.8rem;  /* Más ancho */
+  height: 6rem; /* Más bajito */
+  font-size: 1.4rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 1rem;
+  background-color: var(--bs-text-color-secondary); /* Color personalizado */
+  color: white;
+}
+
+/* Efectos de hover y click */
+.game-button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.game-button:active {
+  transform: scale(0.97);
+}
+
+/* Ajustes para cuando la pantalla está en vertical */
+@media (orientation: portrait) {
+  .game-button {
+    width: 2.8rem;  /* Más ancho */
+    height: 6rem; /* Más bajito */
+    font-size: 1.3rem;
+  }
+}
+
+/* Ajustes para cuando la pantalla está en horizontal */
+@media (orientation: landscape) {
+  .game-button {
+    width: 2.8rem;  /* Más ancho */
+    height: 6.3rem; /* Más bajito */
+    font-size: 1.4rem;
+  }
+}

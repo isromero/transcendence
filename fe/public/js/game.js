@@ -197,6 +197,35 @@ async function startCountdown() {
   });
 }
 
+// Función para manejar eventos de botones táctiles
+function setupMobileControls() {
+  const buttonMapping = {
+    "left-up": "w",
+    "left-down": "s",
+    "right-up": "ArrowUp",
+    "right-down": "ArrowDown",
+  };
+
+  Object.keys(buttonMapping).forEach((buttonId) => {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+
+    button.addEventListener("mousedown", () => sendKeyEvent(buttonMapping[buttonId], true));
+    button.addEventListener("mouseup", () => sendKeyEvent(buttonMapping[buttonId], false));
+
+    button.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      sendKeyEvent(buttonMapping[buttonId], true);
+    });
+
+    button.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      sendKeyEvent(buttonMapping[buttonId], false);
+    });
+  });
+}
+
+
 export async function initGame() {
   // Prevent multiple simultaneous initializations
   if (isInitializing) {
@@ -287,6 +316,9 @@ export async function initGame() {
     // When the user goes back to the previous page, the game is closed
     window.removeEventListener('popstate', handlePopState);
     window.addEventListener('popstate', handlePopState);
+
+    setupMobileControls(); // Habilitar controles táctiles
+
   } catch (error) {
     console.error('Error in general in initGame:', error);
   } finally {
