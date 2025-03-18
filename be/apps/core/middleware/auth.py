@@ -13,14 +13,10 @@ class AuthenticationMiddleware:
             "/api/logout",
             "/api/check-auth",
             "/api/auth/login",
-            "/api/auth/token-login",
             "/auth/callback",
-            "/auth/login",
-            "/auth/login/",
+            "/api/auth/token-login",
         ]
-        print("\n\n REQUEST-->>>", request.path, "\n\n")
-        if request.path in public_paths:
-            return self.get_response(request)
+
         if (
             request.path.startswith("/api/")
             and not any(request.path.startswith(path) for path in public_paths)
