@@ -18,3 +18,4 @@ ENV PYTHONDONTWRITEBYTECODE=1
 EXPOSE 8000
 RUN chmod +x /app/script_bbdd
 CMD ["sh" , "/app/script_bbdd"]
+# CMD ["uvicorn", "config.asgi:application", "--reload", "--host", "0.0.0.0", "--port", "8000"]

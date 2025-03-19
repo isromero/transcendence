@@ -1,13 +1,7 @@
 <header class="text-white text-center py-1 mt-0"></header>
 <h1
-  class="title-principal-styles position-absolute top-0 start-50 translate-middle-x mt-5"
-  data-i18n="transcendence"
->
-  Transcendence
-</h1>
-<h1
   class="secondary-title-color position-absolute top-0 start-50 translate-middle-x mt-8"
-  data-i18n="register"
+  data-translationKey="register"
 >
   Register
 </h1>
@@ -20,50 +14,83 @@
       <div class="col-12">
         <div class="card border-0">
           <div class="card-body bs-primary">
-            <form>
+            <form id="registerForm" class="needs-validation" novalidate>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color fs-3"
-                  data-i18n="email-address"
-                  for="email"
-                  >Email address</label
-                >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  id="email"
-                  type="email"
-                />
-              </div>
-              <div class="form-group mb-3">
-                <label
-                  class="form-secondary-title-color fs-3"
-                  data-i18n="edit-username"
-                  for="email"
+                  data-translationKey="username"
+                  for="username"
                   >Username</label
                 >
-                <input class="form-control form-control-lg bs-secondary" />
+                <input
+                  class="form-control form-control-lg bs-secondary"
+                  id="username"
+                  type="text"
+                  required
+                />
+                <div class="invalid-feedback">Username is required</div>
               </div>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color fs-3"
-                  data-i18n="password"
+                  data-translationKey="password"
                   for="password"
-                  >Password</label
                 >
-                <input
-                  class="form-control form-control-lg bs-secondary"
-                  data-i18n="password"
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                />
+                  Password
+                </label>
+
+                <div class="input-group">
+                  <input
+                    class="form-control form-control-lg bs-secondary"
+                    id="password"
+                    type="password"
+                    required
+                  />
+                  <button
+                    class="btn text-white bg-transparent border-0 position-absolute end-0 top-50 translate-middle-y"
+                    type="button"
+                    id="togglePassword"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <div class="invalid-feedback">Password is required</div>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label
+                  class="form-secondary-title-color fs-3"
+                  data-translationKey="confirm-password"
+                  for="password-confirmation"
+                  >Confirm password</label
+                >
+                <div class="input-group">
+                  <input
+                    class="form-control form-control-lg bs-secondary"
+                    id="password-confirmation"
+                    type="password"
+                    required
+                  />
+                  <button
+                    class="btn text-white bg-transparent border-0 position-absolute end-0 top-50 translate-middle-y"
+                    type="button"
+                    id="togglePasswordConfirmation"
+                    aria-label="Toggle password confirmation visibility"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <div class="invalid-feedback">
+                    Password confirmation is required
+                  </div>
+                </div>
               </div>
               <div class="d-flex justify-content-center gap-2">
-                <a class="spa-link" href="/" style="flex: 1">
+                <a class="spa-link flex-grow-1" href="/">
                   <button
                     aria-label="Cancel"
                     class="btn cancel-button w-100 bs-primary border-primary-color"
-                    data-i18n="cancel"
+                    data-translationKey="cancel"
                     style="border-radius: 10px; height: 2.8rem"
                     type="button"
                   >
@@ -71,15 +98,14 @@
                   </button>
                 </a>
                 <button
+                  id="register-button"
                   aria-label="Register"
-                  class="btn accept-button w-100 bs-primary"
-                  data-i18n="finish-login"
-                  data-modal="verify-email"
-                  id="finish-login"
+                  class="btn login-button flex-grow-1"
+                  data-translationKey="register"
                   style="border-radius: 10px; height: 2.8rem"
                   type="submit"
                 >
-                  Account Deletion
+                  Register
                 </button>
               </div>
             </form>
@@ -89,3 +115,59 @@
     </div>
   </div>
 </div>
+
+<!-- Banner de privacidad -->
+<div 
+    data-translationKey="privacy_policy"
+    id="privacy-banner" style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+">
+    <span>
+      <span data-translationKey="privacy-info">
+          Usamos tus datos según nuestra 
+      </span>
+      <a class="spa-link" href="/auth/privacy" style="color: #ffd700; text-decoration: underline;" data-translationKey="privacy-policy-link">
+          Política de Privacidad
+      </a>
+    </span>
+    <button
+        data-translationKey="accept"
+        id="accept-privacy" style="
+        background-color: #ffd700;
+        color: black;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 15px;
+    ">Aceptar</button>
+</div>
+
+<script defer type="module" src="/js/pages/register.js"></script>
+
+<script>
+  // Mostrar el banner siempre que el usuario visite la página
+  if (!localStorage.getItem('privacyAccepted')) {
+    document.getElementById('privacy-banner').style.display = 'flex';
+  }
+
+  // Event listener para aceptar el banner
+  document.getElementById('accept-privacy').addEventListener('click', function () {
+    // Guardar que el usuario aceptó el banner
+    localStorage.setItem('privacyAccepted', 'true');
+    // Ocultar el banner
+    document.getElementById('privacy-banner').style.display = 'none';
+  });
+</script>

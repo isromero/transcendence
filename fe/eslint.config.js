@@ -13,6 +13,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.es2022,
+        bootstrap: 'readonly',
       },
     },
     plugins: {
@@ -45,7 +46,6 @@ export default [
       // Array and object best practices
       'array-callback-return': 'error', // Enforces return statements in array method callbacks
       'object-shorthand': 'warn', // Suggests using shorthand syntax for object properties
-      'prefer-destructuring': 'warn', // Suggests using destructuring assignment when possible
       'prefer-spread': 'warn', // Suggests using spread operator instead of .apply()
 
       // Async/Await rules

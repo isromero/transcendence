@@ -1,13 +1,17 @@
+import { parseAndSetContent } from '../utils/helpers.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadGame(page) {
   try {
     const response = await fetch(page);
     if (!response.ok) {
-      throw new Error('Error loading game');
+      throw new Error('Error loading template or page content');
     }
-    appContainer.innerHTML = await response.text();
+
+    const responseContent = await response.text();
+    parseAndSetContent(appContainer, responseContent);
   } catch (error) {
-    console.error('Game error:', error);
+    console.error('Error loading game:', error.message);
   }
 }

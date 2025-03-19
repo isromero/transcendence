@@ -1,15 +1,16 @@
 # Backend
 be/.env
+be/venv/
 be/config/__pycache__/
 be/venv/
 be/.cache/
+./my_script
 
 # Frontend
 fe/.env
 fe/node_modules/
 fe/package-lock.json
-fe/.ash_history
 fe/.npm/
+fe/.ash*
 
-# Monitoring
 monitoring/.env

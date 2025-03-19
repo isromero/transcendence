@@ -1,13 +1,13 @@
 #!/bin/bash
-echo "Starting script"
 
+echo "Starting script"
 until pg_isready -h db -p 5432 -q; do
   sleep 1
 done
 
 python manage.py makemigrations
 python manage.py migrate
-python manage.py loaddata initial_data.json
+# python manage.py loaddata initial_data.json
 
 python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
@@ -15,6 +15,6 @@ User = get_user_model()
 if not User.objects.filter(username='root').exists():
     User.objects.create_superuser('root', 'root@example.com', 'password123')
 EOF
-python manage.py runserver 0.0.0.0:8000
 
-# python manage.py dumpdata --indent 2 > initial_data.json
+# Execute in background
+exec uvicorn config.asgi:application --reload --host 0.0.0.0 --port 8000

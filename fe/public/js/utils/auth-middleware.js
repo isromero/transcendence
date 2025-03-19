@@ -1,0 +1,46 @@
+import { loadPage } from '../router/router.js';
+import { API_URL } from '../utils/constants.js';
+
+// List of public routes that don't require authentication in the frontend
+const publicRoutes = ['/auth', '/auth/login', '/auth/register'];
+
+// Check if the user is authenticated by making a request to the backend
+export async function isAuthenticated() {
+  try {
+    const response = await fetch(`${API_URL}/check-auth`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Auth check failed:', error);
+    return false;
+  }
+}
+
+// Middleware function to check authentication before loading a page
+export async function checkAuth(path) {
+  const authenticated = await isAuthenticated();
+  const isPublicRoute = publicRoutes.some(
+    route => path === route || path.startsWith('/modal-')
+  );
+
+  // If authenticated and trying to access public routes (auth)
+  if (authenticated && isPublicRoute) {
+    loadPage('/');
+    return false;
+  }
+
+  // If not authenticated and trying to access protected routes
+  if (!authenticated && !isPublicRoute) {
+    loadPage('/auth');
+    return false;
+  }
+
+  return true;
+}

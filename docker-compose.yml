@@ -92,6 +92,8 @@ services:
     ports:
       - 9115:9115
     restart: always
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     networks:
       - transcendence_network
 

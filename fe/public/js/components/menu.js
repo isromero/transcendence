@@ -1,4 +1,7 @@
-import { setLanguage } from '../utils/test.js';
+import { changeLanguage } from '../utils/languages.js';
+import { parseAndSetContent } from '../utils/helpers.js';
+import { initGlobalValidation } from '../utils/helpers.js';
+
 const appContainer = document.getElementById('app-container');
 
 export async function loadMenu(page) {
@@ -9,7 +12,7 @@ export async function loadMenu(page) {
     }
 
     const templateContent = await templateResponse.text();
-    appContainer.innerHTML = templateContent;
+    parseAndSetContent(appContainer, templateContent);
 
     const pageContainer = document.getElementById('page-container');
     const contentResponse = await fetch(page);
@@ -18,9 +21,13 @@ export async function loadMenu(page) {
     }
 
     const pageContent = await contentResponse.text();
-    pageContainer.innerHTML = pageContent;
+    parseAndSetContent(pageContainer, pageContent);
+
     updateIcons(page);
-    setLanguage();
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+    await changeLanguage(savedLanguage);
+
+    initGlobalValidation(pageContainer);
   } catch (error) {
     console.error('Menu error:', error);
   }
@@ -35,7 +42,6 @@ function updateIcons(page) {
   );
 
   if (!leftButton || !rightButton) {
-    console.warn('Navigation buttons not found in the DOM');
     return;
   }
 
@@ -59,14 +65,14 @@ function updateIcons(page) {
     rightHref = '/modal-pause';
   } else if (pageType === 'social') {
     leftIcon = 'bi bi-joystick';
-    leftHref = '/home';
+    leftHref = '/';
     rightIcon = 'bi bi-list';
     rightHref = '/settings';
   } else if (pageType === 'settings') {
     leftIcon = 'bi bi-person-circle';
-    leftHref = '/profile';
+    leftHref = '/social';
     rightIcon = 'bi bi-joystick';
-    rightHref = '/home';
+    rightHref = '/';
   }
 
   leftButton.className = leftIcon;

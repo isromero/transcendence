@@ -1,0 +1,212 @@
+{
+  "sign-up": {
+    "english": "Sign Up",
+    "spanish": "Registrarse",
+    "ukrainian": "Зареєструватися"
+  },
+  "login": {
+    "english": "Login",
+    "spanish": "Iniciar sesión",
+    "ukrainian": "Увійти"
+  },
+  "password": {
+    "english": "Password",
+    "spanish": "Contraseña",
+    "ukrainian": "Пароль"
+  },
+  "local": {
+    "english": "Local",
+    "spanish": "Local",
+    "ukrainian": "Локальний"
+  },
+  "num-players": {
+    "english": "Number of players",
+    "spanish": "Número de jugadores",
+    "ukrainian": "Кількість гравців"
+  },
+  "points-win": {
+    "english": "Points to win",
+    "spanish": "Puntos a ganar",
+    "ukrainian": "Бали для виграшу"
+  },
+  "multiplayer": {
+    "english": "Multiplayer",
+    "spanish": "Multijugador",
+    "ukrainian": "Мультиплеєр"
+  },
+  "register": {
+    "english": "Register",
+    "spanish": "Registrarse",
+    "ukrainian": "Зареєструватися"
+  },
+  "login42": {
+    "english": "Login with 42 Intra",
+    "spanish": "Iniciar sesión con 42 Intra",
+    "ukrainian": "Увійти з 42 Intra"
+  },
+  "friends": {
+    "english": "Friends",
+    "spanish": "Amigos",
+    "ukrainian": "Друзі"
+  },
+  "new-friend": {
+    "english": "New Friend",
+    "spanish": "Nuevo Amigo",
+    "ukrainian": "Новий Друг"
+  },
+  "my-profile": {
+    "english": "My profile",
+    "spanish": "Mi perfil",
+    "ukrainian": "Мій профіль"
+  },
+  "i-forgot-my-password": {
+    "english": "I forgot my password",
+    "spanish": "Olvidé mi contraseña",
+    "ukrainian": "Я забув свій пароль"
+  },
+  "username": {
+    "english": "Username",
+    "spanish": "Nombre de usuario",
+    "ukrainian": "Ім'я користувача"
+  },
+  "password-confirmation": {
+    "english": "Password confirmation",
+    "spanish": "Confirmación de contraseña",
+    "ukrainian": "Підтвердження пароля"
+  },
+  "new-username": {
+    "english": "New username",
+    "spanish": "Nuevo nombre de usuario",
+    "ukrainian": "Нове ім'я користувача"
+  },
+  "new-password": {
+    "english": "New password",
+    "spanish": "Nueva contraseña",
+    "ukrainian": "Нова пароль"
+  },
+  "repeat-password": {
+    "english": "Repeat password",
+    "spanish": "Repetir contraseña",
+    "ukrainian": "Повторити пароль"
+  },
+  "edit-username": {
+    "english": "Change Username",
+    "spanish": "Cambiar nombre de usuario",
+    "ukrainian": "Змінити ім'я користувача"
+  },
+  "edit-password": {
+    "english": "Change Password",
+    "spanish": "Cambiar contraseña",
+    "ukrainian": "Змінити пароль"
+  },
+  "type-password": {
+    "english": "Type password",
+    "spanish": "Escribe la contraseña",
+    "ukrainian": "Введіть пароль"
+  },
+  "cancel": {
+    "english": "Cancel",
+    "spanish": "Cancelar",
+    "ukrainian": "Скасувати"
+  },
+  "accept": {
+    "english": "Accept",
+    "spanish": "Aceptar",
+    "ukrainian": "Прийняти"
+  },
+  "enter-code-to": {
+    "english": "Enter the code sent to:",
+    "spanish": "Ingresa el código enviado a:",
+    "ukrainian": "Введіть код, відправлений на:"
+  },
+  "enter-code-field": {
+    "english": "Enter code:",
+    "spanish": "Ingresa el código:",
+    "ukrainian": "Введіть код:"
+  },
+  "create-match": {
+    "english": "Create match",
+    "spanish": "Crear partida",
+    "ukrainian": "Створити гру"
+  },
+  "edit-profile": {
+    "english": "Edit profile",
+    "spanish": "Editar perfil",
+    "ukrainian": "Редагувати профіль"
+  },
+  "join-tournament": {
+    "english": "Join tournament",
+    "spanish": "Unirse al torneo",
+    "ukrainian": "Приєднатися до турніру"
+  },
+  "wins": {
+    "english": "Wins",
+    "spanish": "Victorias",
+    "ukrainian": "Перемоги"
+  },
+  "loses": {
+    "english": "Loses",
+    "spanish": "Derrotas",
+    "ukrainian": "Поразки"
+  },
+  "total": {
+    "english": "Total",
+    "spanish": "Total",
+    "ukrainian": "Загальний"
+  },
+  "account-deletion": {
+    "english": "Account Deletion",
+    "spanish": "Eliminación de cuenta",
+    "ukrainian": "Видалення облікового запису"
+  },
+  "data-deletion": {
+    "english": "Data Deletion",
+    "spanish": "Eliminación de datos",
+    "ukrainian": "Видалення даних"
+  },
+  "tournament-name": {
+    "english": "Tournament name",
+    "spanish": "Nombre del torneo",
+    "ukrainian": "Назва турніру"
+  },
+  "max-players": {
+    "english": "Max players",
+    "spanish": "Limite de jugadores",
+    "ukrainian": "Максимум гравців"
+  },
+  "create-tournaments": {
+    "english": "Create tournaments",
+    "spanish": "Crear torneo",
+    "ukrainian": "Створити турнір"
+  },
+  "tournament": {
+    "english": "Tournament",
+    "spanish": "Torneo",
+    "ukrainian": "Турнір"
+  },
+  "your-name": {
+    "english": "Your name",
+    "spanish": "Tu nombre",
+    "ukrainian": "Твоє ім'я"
+  },
+  "language": {
+    "english": "Language",
+    "spanish": "Idioma",
+    "ukrainian": "Мова"
+  },
+  "spanish": {
+    "english": "Spanish",
+    "spanish": "Español",
+    "ukrainian": "Іспанська"
+  },
+  "english": {
+    "english": "English",
+    "spanish": "Inglés",
+    "ukrainian": "Англійська"
+  },
+  "ukrainian": {
+    "english": "Ukrainian",
+    "spanish": "Ucraniano",
+    "ukrainian": "Українська"
+  }
+}
