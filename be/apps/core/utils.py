@@ -24,6 +24,8 @@ def handle_form_errors(form):
     """
     errors = {}
     for field, error_list in form.errors.items():
+        if (field == "__all__"):
+            field = "password"
         errors[field] = error_list[0]
 
     return create_response(
