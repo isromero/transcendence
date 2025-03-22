@@ -9,7 +9,11 @@ RUN apt update && apt install -y \
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
-RUN chown -R django:django /app
+RUN mkdir -p /app/apps/core/migrations && \
+	touch /app/apps/core/migrations/__init__.py && \
+	chown -R django:django /app && \
+	chmod -R u+w /app/apps/core/migrations
+
 USER django
 # Avoid buffering stdout and stderr (immediately print to console)
 ENV PYTHONUNBUFFERED 1

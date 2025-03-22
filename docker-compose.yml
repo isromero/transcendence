@@ -57,12 +57,12 @@ services:
 
   grafana:
     container_name: grf
-    image: grafana/grafana
+    build: ./monitoring/grafana-config
     user: grafana
     ports:
       - 3333:3333
-    volumes:
-      - grafana_data:/var/lib/grafana
+    # volumes:
+    #   - grafana_data:/var/lib/grafana
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
     restart: always
@@ -99,7 +99,7 @@ services:
 
 volumes:
   db_data:
-  grafana_data:
+  # grafana_data:
   prometheus_data:
   be_data:
   fe_data:
