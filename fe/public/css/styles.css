@@ -233,6 +233,11 @@ canvas {
   color: var(--bs-text-color-secondary);
 }
 
+.gdpr-principal-styles {
+  color: white;
+  font-size: 0.8rem;
+}
+
 .title-principal-styles {
   color: white;
   font-size: 2.8rem;
