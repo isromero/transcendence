@@ -18,8 +18,7 @@ urlpatterns = [
     path("users/<str:action>", UserView.as_view()),
     # Friends routes
     path("friends", FriendsView.as_view()),
-    path("friends/<int:user_id>/<int:friend_id>", FriendsView.as_view()),
-    path("friends/<int:user_id>/<int:friend_id>/<str:action>", FriendsView.as_view()),
+    path("friends/<int:user_id>/<str:action>", FriendsView.as_view()),
     # Tournaments routes
     path("tournaments", TournamentsView.as_view()),
     path("tournaments/<str:join_code>", TournamentsView.as_view()),

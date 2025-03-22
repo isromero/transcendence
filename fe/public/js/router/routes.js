@@ -11,6 +11,7 @@ export const pageMappings = {
   '/edit-profile': '/pages/menus/edit-profile.html',
   '/social': '/pages/menus/social.html',
   '/friends': '/pages/menus/friends.html',
+  '/requests': '/pages/menus/requests.html',
   '/settings': '/pages/menus/settings.html',
   '/game/:id': '/pages/game/game.html',
   '/game/:id/tournament/:id': '/pages/game/game.html', // :id -> join_code

@@ -11,13 +11,15 @@ class FriendForm(forms.ModelForm):
         model = Friends
         fields = []
 
-    # TODO: This is not working bcs we need to get the user from request...
-    # TODO: I don't have internet know so don't know how to get it
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get("username")
 
-        user = User.objects.filter(username=username)
+        user = User.objects.filter(username=username).first()
         if not user:
             raise ValidationError("Username doesn't exist")
 
@@ -28,7 +30,20 @@ class FriendForm(forms.ModelForm):
 
         if user == self.user:
             raise ValidationError("You cannot send a friend request to yourself")
-        elif friend.exists():
+        elif friend.filter(status=Friends.Status.ACCEPTED).exists():
             raise ValidationError("You are already friends")
+        elif friend.filter(status=Friends.Status.DECLINED).exists():
+            raise ValidationError("This user has already declined your friend request")
+        elif friend.filter(status=Friends.Status.SENT).exists():
+            raise ValidationError("You already sent a friend request to this user")
 
+        self.friend = user
         return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.user_id = self.user
+        instance.friend_id = self.friend
+        if commit:
+            instance.save()
+        return instance

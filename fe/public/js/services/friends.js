@@ -15,9 +15,29 @@ export const friendsService = {
       if (!response.ok) {
         throw new Error('Failed to fetch friends');
       }
-      return await response.json();
+      const result = await response.json();
+      return result.data;
     } catch (e) {
       console.error('Error fetching friends:', e);
+    }
+  },
+  getRequests: async () => {
+    try {
+      const response = await fetch(`${API_URL}/friends?action=requests`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch friend requests');
+      }
+      const result = await response.json();
+      return result.data;
+    } catch (e) {
+      console.error('Error fetching friend requests:', e);
     }
   },
   addFriend: async friend => {
@@ -45,29 +65,28 @@ export const friendsService = {
       showErrorToast(`Error creating friend: ${e}`);
     }
   },
-  updateFriend: async friend => {
+  respondToRequest: async (userId, action) => {
     try {
-      const response = await fetch(`${API_URL}/friends`, {
+      const response = await fetch(`${API_URL}/friends/${userId}/${action}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify(friend),
         credentials: 'include',
       });
 
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result?.message);
+        showErrorToast(result?.message || result?.error);
         return null;
       }
 
       showSuccessToast(result.message);
       return result.data || result;
     } catch (e) {
-      showErrorToast(`Error updating friend: ${e}`);
+      showErrorToast(`Error responding to friend request: ${e}`);
     }
   },
   deleteUser: async () => {

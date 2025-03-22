@@ -82,10 +82,17 @@ def serialize_user(user):
 
 
 def serialize_friend(friend_relation):
+    # For received requests, we need to show who sent the request
+    user_to_show = (
+        friend_relation.user_id
+        if friend_relation.status == "sent"
+        else friend_relation.friend_id
+    )
+
     return {
-        "id": friend_relation.friend_id.id,
-        "username": friend_relation.friend_id.username,
-        "avatar": friend_relation.friend_id.avatar,
+        "id": user_to_show.id,
+        "username": user_to_show.username,
+        "avatar": user_to_show.avatar,
         "created_at": friend_relation.created_at,
         "status": friend_relation.status,
     }

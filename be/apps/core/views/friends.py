@@ -12,21 +12,35 @@ from apps.core.utils import create_response, handle_form_errors
 
 @method_decorator(csrf_exempt, name="dispatch")
 class FriendsView(View):
-    def get(self, _, user_id):
+    def get(self, request):
         try:
-            user = get_object_or_404(User, id=user_id)
-            friends_relations = Friends.objects.filter(user_id=user)
-            return create_response(
-                data=[serialize_friend(relation) for relation in friends_relations],
-                message="Friends retrieved successfully",
-            )
+            user = request.user
+            action = request.GET.get("action")
+            if action == "requests":
+                # Get pending friend requests
+                friend_requests = Friends.objects.filter(
+                    friend_id=user, status=Friends.Status.SENT
+                )
+                return create_response(
+                    data=[serialize_friend(relation) for relation in friend_requests],
+                    message="Friend requests retrieved successfully",
+                )
+            else:
+                # Get accepted friends
+                friends = Friends.objects.filter(
+                    user_id=user, status=Friends.Status.ACCEPTED
+                )
+                return create_response(
+                    data=[serialize_friend(relation) for relation in friends],
+                    message="Friends retrieved successfully",
+                )
         except Exception as e:
             return create_response(error=str(e), status=400)
 
     def post(self, request):
         try:
             data = json.loads(request.body)
-            form = FriendForm(data)
+            form = FriendForm(data, user=request.user)
 
             if not form.is_valid():
                 return handle_form_errors(form)
@@ -34,42 +48,45 @@ class FriendsView(View):
             friend = form.save()
             return create_response(
                 data=serialize_friend(friend),
-                message="Friend created successfully",
+                message="Friend request sent successfully",
                 status=201,
             )
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
 
-    def put(self, _, user_id, friend_id, action):
+    def put(self, request, user_id, action):
         try:
-            if action not in ["accept", "reject"]:
-                return create_response(error="Invalid action", status=400)
+            friend_id = request.user.id
 
-            friend_request = get_object_or_404(
-                Friends, user_id=friend_id, friend_id=user_id, status="sent"
-            )
+            # Search for the friend request
+            friend_request = Friends.objects.filter(
+                user_id=user_id, friend_id=friend_id, status=Friends.Status.SENT
+            ).first()
+
+            if not friend_request:
+                return create_response(error="Friend request not found", status=404)
 
             if action == "accept":
+                # Update the original request
                 friend_request.status = Friends.Status.ACCEPTED
                 friend_request.save()
 
-                # Create a reciprocal friendship record
-                Friends.objects.get_or_create(
-                    user_id=user_id,
-                    friend_id=friend_id,
-                    defaults={"status": Friends.Status.ACCEPTED},
+                # Create the reciprocal relationship
+                Friends.objects.create(
+                    user_id_id=friend_id,  # Current user
+                    friend_id_id=user_id,  # User who sent the request
+                    status=Friends.Status.ACCEPTED,
                 )
-
                 return create_response(
                     data=serialize_friend(friend_request),
-                    message="Friend request accepted",
+                    message="Friend request accepted successfully",
                 )
-
             elif action == "reject":
                 friend_request.status = Friends.Status.DECLINED
                 friend_request.save()
-
-                return create_response(message="Friend request declined")
+                return create_response(message="Friend request rejected successfully")
+            else:
+                return create_response(error="Invalid action", status=400)
 
         except Exception as e:
             return create_response(error=str(e), status=400)
