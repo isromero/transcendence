@@ -6,5 +6,6 @@ RUN addgroup --system prometheus && \
 RUN chown -R prometheus:prometheus /etc/prometheus /prometheus
 USER prometheus
 COPY prometheus.yml /etc/prometheus/prometheus.yml
+COPY alert.rules.yml /etc/prometheus/alert.rules.yml
 # COPY prometheus-data /prometheus
 EXPOSE 9090

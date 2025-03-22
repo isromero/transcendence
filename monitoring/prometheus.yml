@@ -35,3 +35,6 @@ scrape_configs:
       - target_label: __address__
         replacement: blackbox:9115
 
+rule_files:
+  - "alert.rules.yml"
+
