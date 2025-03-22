@@ -6,7 +6,7 @@ const createFriendCard = friend => `
       <img 
         class="rounded-circle mb-2" 
         alt="${friend.username}'s avatar" 
-        src="${friend.avatar || '/be/apps/static/images/default_avatar.webp'}"
+        src="${friend.avatar || '/images/default_avatar.webp'}"
         style="width: 80px; height: 80px; object-fit: cover"
       />
       <p class="text-principal-color button-text-size mb-0">

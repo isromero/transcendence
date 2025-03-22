@@ -6,7 +6,7 @@ const createRequestCard = request => `
       <img 
         class="rounded-circle mb-2" 
         alt="${request.username}'s avatar" 
-        src="${request.avatar || '/be/apps/static/images/default_avatar.webp'}"
+        src="${request.avatar || '/images/default_avatar.webp'}"
         style="width: 80px; height: 80px; object-fit: cover"
       />
       <p class="text-principal-color button-text-size mb-0">

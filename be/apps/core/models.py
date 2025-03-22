@@ -10,8 +10,11 @@ class User(AbstractUser):
     # id, username, password are inherited from AbstractUser
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    avatar = models.URLField(
-        null=True, blank=True, default=static("default_avatar.webp")
+    avatar = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="/images/default_avatar.webp",
     )
     last_activity = models.DateTimeField(default=timezone.now)
     deleted_user = models.BooleanField(default=False)

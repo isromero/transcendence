@@ -32,4 +32,5 @@ export const pageMappings = {
   '/modal-login': '/pages/components/modals/login.html',
   '/modal-spectate-menu': '/pages/components/modals/spectate-menu.html',
   '/modal-waiting-screen': '/pages/components/modals/waiting-screen.html',
+  '/modal-logout': '/pages/components/modals/logout.html',
 };

@@ -22,7 +22,6 @@ export const authService = {
       return null;
     }
 
-    await usersService.updateOnlineStatus(true);
     showSuccessToast(result.message);
     return result.data || result;
   },
@@ -47,7 +46,6 @@ export const authService = {
     return result.data || result;
   },
   logout: async () => {
-    // TODO: Implement in backend
     const response = await fetch(`${API_URL}/logout`, {
       method: 'POST',
       headers: {
@@ -64,9 +62,7 @@ export const authService = {
       return false;
     }
 
-    await usersService.updateOnlineStatus(false);
     showSuccessToast(result.message);
-    await loadPage('/auth');
     return true;
   },
 };

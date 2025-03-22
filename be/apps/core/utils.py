@@ -95,6 +95,7 @@ def serialize_friend(friend_relation):
         "avatar": user_to_show.avatar,
         "created_at": friend_relation.created_at,
         "status": friend_relation.status,
+        "is_online": user_to_show.is_online,
     }
 
 
@@ -106,6 +107,7 @@ def serialize_stats(user, user_history):
 
     return {
         "id": user.id,
+        "avatar": user.avatar,
         "username": user.username,
         "victories": user_history.filter(
             result_user__gt=models.F("result_opponent")

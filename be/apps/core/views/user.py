@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.templatetags.static import static
 from django.contrib.auth import login, logout
+import os
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
@@ -39,7 +40,7 @@ class UserView(View):
                         status=400,
                     )
 
-                # Validar tipo de archivo
+                # Validate the file type
                 if not avatar.content_type.startswith("image/"):
                     return create_response(
                         error="Invalid file type",
@@ -54,8 +55,20 @@ class UserView(View):
                         status=400,
                     )
 
+                # Generate a unique name for the file
+                filename = f"avatar_{request.user.id}_{int(time.time())}{os.path.splitext(avatar.name)[1]}"
+                filepath = os.path.join("fe", "public", "images", filename)
+
+                # Create the directory if it doesn't exist
+                os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+                # Save the file
+                with open(filepath, "wb+") as destination:
+                    for chunk in avatar.chunks():
+                        destination.write(chunk)
+
                 user = request.user
-                user.avatar = avatar
+                user.avatar = f"/images/{filename}"
                 user.save()
 
                 return create_response(

@@ -8,6 +8,7 @@ from apps.core.views.register import RegisterView
 from apps.core.views.game import GameView
 from apps.core.views.check_auth import CheckAuthView
 from apps.core.views.profile import ProfileView
+from apps.core.views.logout import LogoutView
 
 urlpatterns = [
     # Profile route
@@ -28,6 +29,7 @@ urlpatterns = [
     # Auth routes
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
+    path("logout", LogoutView.as_view()),
     path("game", GameView.as_view(), name="game"),
     path("check-auth", CheckAuthView.as_view()),
 ]

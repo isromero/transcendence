@@ -118,7 +118,7 @@ export function updateTournamentUI(tournamentData) {
     if (playerSlots[index]) {
       playerSlots[index].textContent = player.username;
       playerSlots[index].previousElementSibling.src =
-        player.avatar || '/public/assets/images/default-avatar.webp';
+        player.avatar || '/images/default_avatar.webp';
     }
   });
 }

@@ -7,21 +7,22 @@ import { showErrorToast } from '../utils/helpers.js';
 const avatarInput = document.getElementById('avatarInput');
 
 document.addEventListener('click', async event => {
-  event.preventDefault();
-
   const target = event.target;
 
   if (target.matches('#changeUsernameButton')) {
+    event.preventDefault();
     document.addEventListener('spaContentLoaded', () => editUsername(), {
       once: true,
     });
   } else if (target.matches('#changePasswordButton')) {
+    event.preventDefault();
     document.addEventListener('spaContentLoaded', () => editPassword(), {
       once: true,
     });
   } else if (target.matches('#changeAvatarButton')) {
     avatarInput.click();
   } else if (target.matches('#accountDeletionButton')) {
+    event.preventDefault();
     const ok = await usersService.deleteUser();
     if (ok) {
       loadPage('/auth');
@@ -44,5 +45,5 @@ avatarInput.addEventListener('change', async event => {
     return;
   }
 
-  await usersService.updateUser(file);
+  await usersService.updateUserAvatar(file);
 });

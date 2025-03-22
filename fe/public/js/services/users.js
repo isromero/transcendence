@@ -71,7 +71,6 @@ export const usersService = {
       const response = await fetch(`${API_URL}/users/avatar`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'application/json',
         },
         body: formData,
@@ -80,7 +79,7 @@ export const usersService = {
 
       const result = await response.json();
 
-      if (!response.ok | !result?.success) {
+      if (!response.ok || !result?.success) {
         showErrorToast(result?.message);
         return null;
       }
