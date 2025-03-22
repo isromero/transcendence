@@ -50,8 +50,8 @@ services:
     restart: always
     depends_on:
       - be
-    # volumes:
-    #   - prometheus_data:/prometheus
+    volumes:
+      - prometheus_data:/prometheus
     networks:
       - transcendence_network
 
