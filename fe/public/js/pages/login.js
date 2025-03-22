@@ -11,7 +11,7 @@ form.addEventListener('formValid', async () => {
 
   const result = await authService.login(user);
   if (result) {
-    loadPage('/');
+    await loadPage('/');
   }
 });
 

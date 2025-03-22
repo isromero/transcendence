@@ -1,10 +1,10 @@
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 
-export const usersService = {
-  getUsers: async () => {
+export const friendsService = {
+  getFriends: async () => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
+      const response = await fetch(`${API_URL}/friends`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -13,16 +13,17 @@ export const usersService = {
         credentials: 'include',
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch users');
+        throw new Error('Failed to fetch friends');
       }
-      return await response.json();
+      const result = await response.json();
+      return result.data;
     } catch (e) {
-      console.error('Error fetching users:', e);
+      console.error('Error fetching friends:', e);
     }
   },
-  getUser: async id => {
+  getRequests: async () => {
     try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
+      const response = await fetch(`${API_URL}/friends?action=requests`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -31,22 +32,23 @@ export const usersService = {
         credentials: 'include',
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch user');
+        throw new Error('Failed to fetch friend requests');
       }
-      return await response.json();
+      const result = await response.json();
+      return result.data;
     } catch (e) {
-      console.error('Error fetching user:', e);
+      console.error('Error fetching friend requests:', e);
     }
   },
-  updateUser: async user => {
+  addFriend: async friend => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
-        method: 'PUT',
+      const response = await fetch(`${API_URL}/friends`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(friend),
         credentials: 'include',
       });
 
@@ -60,39 +62,36 @@ export const usersService = {
       showSuccessToast(result.message);
       return result.data || result;
     } catch (e) {
-      showErrorToast(`Error updating account: ${e}`);
+      showErrorToast(`Error creating friend: ${e}`);
     }
   },
-  updateUserAvatar: async file => {
+  respondToRequest: async (userId, action) => {
     try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-
-      const response = await fetch(`${API_URL}/users/avatar`, {
+      const response = await fetch(`${API_URL}/friends/${userId}/${action}`, {
         method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: formData,
         credentials: 'include',
       });
 
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result?.message);
+        showErrorToast(result?.message || result?.error);
         return null;
       }
 
-      return result.data;
+      showSuccessToast(result.message);
+      return result.data || result;
     } catch (e) {
-      showErrorToast(`Error updating avatar ${e}`);
-      return null;
+      showErrorToast(`Error responding to friend request: ${e}`);
     }
   },
   deleteUser: async () => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
+      const response = await fetch(`${API_URL}/friends`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -102,18 +101,18 @@ export const usersService = {
       });
 
       if (response.status === 204) {
-        showSuccessToast('Account successfully deleted');
+        showSuccessToast('Friend succesfully deleted');
         return true;
       }
 
       if (!response.ok) {
-        showErrorToast('Error deleting account');
+        showErrorToast('Error deleting friend');
         return false;
       }
 
       return false;
     } catch (e) {
-      showErrorToast(`Error deleting account: ${e}`);
+      showErrorToast(`Error deleting friend: ${e}`);
       return false;
     }
   },

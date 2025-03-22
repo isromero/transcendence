@@ -32,13 +32,13 @@ export async function checkAuth(path) {
 
   // If authenticated and trying to access public routes (auth)
   if (authenticated && isPublicRoute) {
-    loadPage('/');
+    await loadPage('/');
     return false;
   }
 
   // If not authenticated and trying to access protected routes
   if (!authenticated && !isPublicRoute) {
-    loadPage('/auth');
+    await loadPage('/auth');
     return false;
   }
 

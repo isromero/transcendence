@@ -113,20 +113,12 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
-  // Limpiar los slots de jugadores antes de actualizarlos
   const playerSlots = document.querySelectorAll('.player-info span');
-  playerSlots.forEach(slot => {
-    slot.textContent = 'Waiting for player...';
-    slot.previousElementSibling.src = '/public/assets/images/default-avatar.webp';
-  });
-
-  // Ahora, rellenamos con los jugadores actuales
   tournamentData.players.forEach((player, index) => {
     if (playerSlots[index]) {
       playerSlots[index].textContent = player.username;
       playerSlots[index].previousElementSibling.src =
-        player.avatar || '/public/assets/images/default-avatar.webp';
+        player.avatar || '/images/default_avatar.webp';
     }
   });
 }
-

@@ -3,11 +3,13 @@ import { profileService } from './services/profile.js';
 export async function getProfile() {
   const { data } = await profileService.getProfile();
 
+  const avatar = document.getElementById('avatar');
   const username = document.getElementById('username');
   const wins = document.getElementById('wins');
   const loses = document.getElementById('loses');
   const total = document.getElementById('total');
 
+  avatar.src = data.avatar;
   username.textContent = data.username;
 
   const victories = Number(data.victories || 0);
