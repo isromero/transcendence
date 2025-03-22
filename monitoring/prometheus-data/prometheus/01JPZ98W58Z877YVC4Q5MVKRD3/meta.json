@@ -1,0 +1,17 @@
+{
+	"ulid": "01JPZ98W58Z877YVC4Q5MVKRD3",
+	"minTime": 1742637600000,
+	"maxTime": 1742644800000,
+	"stats": {
+		"numSamples": 2048945,
+		"numSeries": 1552,
+		"numChunks": 16823
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01JPZ98W58Z877YVC4Q5MVKRD3"
+		]
+	},
+	"version": 1
+}
