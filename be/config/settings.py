@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -59,9 +59,8 @@ MIDDLEWARE = [
     "apps.core.middleware.auth.AuthenticationMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "config.urls"
@@ -133,6 +132,12 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+OAUTH42_CLIENT_ID = os.getenv("OAUTH42_CLIENT_ID")
+OAUTH42_CLIENT_SECRET = os.getenv("OAUTH42_CLIENT_SECRET")
+OAUTH42_REDIRECT_URI = os.getenv("OAUTH42_REDIRECT_URI")
+OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
+OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
+OAUTH42_USER_INFO_URL = "https://api.intra.42.fr/v2/me"
 AUTH_USER_MODEL = "core.User"
 
 MEDIA_URL = "/images/"

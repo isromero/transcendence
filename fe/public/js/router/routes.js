@@ -4,6 +4,7 @@ export const pageMappings = {
   '/auth': '/pages/menus/auth.html',
   '/auth/login': '/pages/menus/login.html',
   '/auth/register': '/pages/menus/register.html',
+  '/auth/privacy': '/pages/menus/privacy_policy.html',
   '/create-match': '/pages/menus/create-match.html',
   '/join-tournament': '/pages/menus/join-tournament.html',
   '/tournament-settings': '/pages/menus/tournament-settings.html',
@@ -15,6 +16,7 @@ export const pageMappings = {
   '/requests': '/pages/menus/requests.html',
   '/settings': '/pages/menus/settings.html',
   '/game/:id': '/pages/game/game.html',
+  '/auth/privacy': '/pages/menus/privacy_policy.html',
   '/game/:id/tournament/:id': '/pages/game/game.html', // :id -> join_code
 
   '/tournament/:id': '/pages/menus/tournament.html', // :id -> join_code

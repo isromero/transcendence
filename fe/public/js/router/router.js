@@ -76,19 +76,17 @@ export async function loadPage(page) {
       throw new Error(`Page ${cleanPage} not found`);
     }
 
-    // TODO: Params are not being used, is it needed for future use?
-    // TODO: BTW, matchRoute is totally necessary because of dynamic routing
-    // TODO: But the params returned are not being used
-    const { url, params } = matchedRoute;
+    // matchRoute es necesario para el enrutamiento dinámico, pero actualmente no usamos params.
+    const { url } = matchedRoute; // Eliminamos `params` ya que no se usa.
 
     if (url.includes('/components/')) {
       await loadModal(url);
     } else if (url.includes('/game/')) {
       await loadGame(url);
-      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
+      window.history.pushState({ page: cleanPage }, '', cleanPage); // Eliminamos `params` de `pushState`.
     } else {
       await loadMenu(url);
-      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
+      window.history.pushState({ page: cleanPage }, '', cleanPage);
     }
 
     document.dispatchEvent(new CustomEvent('spaContentLoaded'));
@@ -96,3 +94,4 @@ export async function loadPage(page) {
     loadErrorPage(error.message);
   }
 }
+

@@ -18,6 +18,7 @@ from django.conf import settings
 # TODO: We should use a proper authentication system in the future.
 
 
+# @method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(csrf_exempt, name="dispatch")
 class UserView(View):
     def get(self, _, user_id=None):

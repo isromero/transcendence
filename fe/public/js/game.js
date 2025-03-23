@@ -33,8 +33,34 @@ function resetGameState() {
   hasNavigatedAway = false;
 }
 
+function isHorizontal() {
+    if (window.innerWidth > window.innerHeight)
+	{
+		return true;
+	}
+	return false;
+}
+
+async function updateGameRotation() {
+	let divider = await document.getElementById("rotator").style;
+	let angle = 0;
+	
+	if (isHorizontal())
+	{
+		angle = 0;
+	}
+	else
+	{
+		angle = 90;
+	}
+		divider.transform = `rotate(${angle}deg)`;
+}
+
+
 async function updateGameState(gameState) {
   try {
+	
+	updateGameRotation();
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -201,6 +227,35 @@ async function startCountdown() {
   });
 }
 
+// Función para manejar eventos de botones táctiles
+function setupMobileControls() {
+  const buttonMapping = {
+    "left-up": "w",
+    "left-down": "s",
+    "right-up": "ArrowUp",
+    "right-down": "ArrowDown",
+  };
+
+  Object.keys(buttonMapping).forEach((buttonId) => {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+
+    button.addEventListener("mousedown", () => sendKeyEvent(buttonMapping[buttonId], true));
+    button.addEventListener("mouseup", () => sendKeyEvent(buttonMapping[buttonId], false));
+
+    button.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      sendKeyEvent(buttonMapping[buttonId], true);
+    });
+
+    button.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      sendKeyEvent(buttonMapping[buttonId], false);
+    });
+  });
+}
+
+
 export async function initGame() {
   // Prevent multiple simultaneous initializations
   if (isInitializing) {
@@ -242,7 +297,7 @@ export async function initGame() {
 
     // Start WebSocket if the game is still ongoing
     try {
-      ws = new WebSocket(`ws://localhost:8000/ws/game/${matchId}`);
+      ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${matchId}`);
 
       ws.onopen = () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -291,6 +346,9 @@ export async function initGame() {
     // When the user goes back to the previous page, the game is closed
     window.removeEventListener('popstate', handlePopState);
     window.addEventListener('popstate', handlePopState);
+
+    setupMobileControls(); // Habilitar controles táctiles
+
   } catch (error) {
     console.error('Error in general in initGame:', error);
   } finally {

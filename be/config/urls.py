@@ -19,8 +19,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.core.views.game import GameView
+from apps.core.views.auth import OAuthCallback
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),
+    path("auth/callback/", OAuthCallback.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

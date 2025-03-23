@@ -55,7 +55,15 @@ const intervalId = setInterval(async () => {
   const tournament = await tournamentService.getTournament(joinCode);
   updateTournamentUI(tournament);
   if (tournament.status === 'ready') {
-    startTournamentBtn.disabled = false;
+    const profile = profileService.getProfile();
+    if (!profile) {
+      return;
+    }
+
+    // Only leaders can have the start button not disabled (First player always)
+    if (tournament.players[0].id === profile.id) {
+      startTournamentBtn.disabled = false;
+    }
   } else if (tournament.status === 'in_progress') {
     const roundMap = {
       1: 'quarter_finals',
@@ -92,8 +100,38 @@ const intervalId = setInterval(async () => {
   }
 }, 1000);
 
-window.addEventListener('beforeunload', () => {
+async function leaveTournament() {
   clearInterval(intervalId);
+
+  const tournament = await tournamentService.getTournament(joinCode);
+  if (!tournament) {
+    throw Error('Get Tournament failed');
+  }
+
+  await tournamentService.leaveTournament(joinCode, tournament);
+}
+
+window.addEventListener('popstate', async () => {
+  const profile = await profileService.getProfile();
+  if (!profile) return;
+
+  const tournament = await tournamentService.getTournament(joinCode);
+  if (!tournament || !tournament.players.some(p => p.id === profile.id)) {
+    loadPage('/'); // Redirige si el usuario no está en el torneo
+    return;
+  }
+
+  await leaveTournament();
+});
+
+window.addEventListener('beforeunload', async () => {
+  await leaveTournament();
+});
+
+const leaveTournamentButton = document.getElementById('leaveTournamentButton');
+leaveTournamentButton.addEventListener('click', async () => {
+  await leaveTournament();
+  loadPage('/join-tournament');
 });
 
 if (
@@ -102,8 +140,20 @@ if (
 ) {
   try {
     const tournament = await tournamentService.getTournament(joinCode);
+    if (!tournament) {
+      throw Error('Get Tournament failed');
+    }
 
     updateTournamentUI(tournament);
+
+    const profile = await profileService.getProfile();
+    if (profile) {
+      await tournamentService.updateTournamentWhenJoining(
+        joinCode,
+        tournament,
+        profile.username
+      );
+    }
   } catch (error) {
     showErrorToast(`Error initializing the game: ${error}`);
   }

@@ -113,12 +113,19 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
+  // Clean player slots before updating
   const playerSlots = document.querySelectorAll('.player-info span');
+  playerSlots.forEach(slot => {
+    slot.textContent = 'Waiting for player...';
+    slot.previousElementSibling.src = '/public/assets/images/default-avatar.webp';
+  });
+
+  // Now, fill with the players
   tournamentData.players.forEach((player, index) => {
     if (playerSlots[index]) {
       playerSlots[index].textContent = player.username;
       playerSlots[index].previousElementSibling.src =
-        player.avatar || '/images/default_avatar.webp';
+        player.avatar || '/public/assets/images/default-avatar.webp';
     }
   });
 }
