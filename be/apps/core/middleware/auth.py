@@ -29,5 +29,6 @@ class AuthenticationMiddleware:
             request.user.last_activity = timezone.now()
             request.user.save(update_fields=["last_activity"])
 
+
         response = self.get_response(request)
         return response

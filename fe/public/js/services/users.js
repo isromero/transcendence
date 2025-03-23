@@ -68,8 +68,8 @@ export const usersService = {
       const formData = new FormData();
       formData.append('avatar', file);
 
-      const response = await fetch(`${API_URL}/users/avatar`, {
-        method: 'PUT',
+      const response = await fetch(`${API_URL}/users`, {
+        method: 'POST',
         headers: {
           Accept: 'application/json',
         },
@@ -84,13 +84,14 @@ export const usersService = {
         return null;
       }
 
+      showSuccessToast(result.message);
       return result.data;
     } catch (e) {
       showErrorToast(`Error updating avatar ${e}`);
       return null;
     }
   },
-  deleteUser: async () => {
+  deleteUser: async password => {
     try {
       const response = await fetch(`${API_URL}/users`, {
         method: 'DELETE',
@@ -98,6 +99,7 @@ export const usersService = {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
+        body: JSON.stringify({ password }),
         credentials: 'include',
       });
 

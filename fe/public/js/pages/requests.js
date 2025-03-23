@@ -1,4 +1,5 @@
 import { friendsService } from '../services/friends.js';
+import { IMAGES_URL } from '../utils/constants.js';
 
 const createRequestCard = request => `
   <article class="d-flex justify-content-between align-items-center border border-2 border-primary-color rounded p-3 mb-3">
@@ -6,7 +7,7 @@ const createRequestCard = request => `
       <img 
         class="rounded-circle mb-2" 
         alt="${request.username}'s avatar" 
-        src="${request.avatar || '/images/default_avatar.webp'}"
+        src="${request.avatar ? `${IMAGES_URL}${request.avatar.replace('/images/', '/')}` : `${IMAGES_URL}/default_avatar.webp`}"
         style="width: 80px; height: 80px; object-fit: cover"
       />
       <p class="text-principal-color button-text-size mb-0">

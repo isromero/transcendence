@@ -7,14 +7,11 @@ until pg_isready -h db -p 5432 -q; do
   sleep 1
 done
 
-python manage.py makemigrations
-python manage.py migrate
-# python manage.py loaddata initial_data.json
 echo "PostgreSQL started"
 
 echo "Running migrations..."
 python manage.py makemigrations
-python manage.py loaddata initial_data.json
+# python manage.py loaddata initial_data.json
 python manage.py migrate
 
 

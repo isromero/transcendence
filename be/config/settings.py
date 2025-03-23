@@ -139,3 +139,6 @@ OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
 OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
 OAUTH42_USER_INFO_URL = "https://api.intra.42.fr/v2/me"
 AUTH_USER_MODEL = "core.User"
+
+MEDIA_URL = "/images/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

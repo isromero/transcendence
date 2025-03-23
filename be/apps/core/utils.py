@@ -161,7 +161,7 @@ def serialize_tournament(tournament):
         "current_round": tournament.current_round,
         "join_code": tournament.join_code,
         "players": [
-            {"id": player.id, "username": player.username}
+            {"id": player.id, "username": player.username, "avatar": player.avatar}
             for player in tournament.players.all()
         ],
         "matches": {
@@ -199,11 +199,13 @@ def serialize_history(user_history):
                 "id": user_history.user_id.id,
                 "username": user_history.user_id.username,
                 "score": user_history.result_user,
+                "avatar": user_history.user_id.avatar,
             },
             "player2": {
                 "id": user_history.opponent_id.id,
                 "username": user_history.opponent_id.username,
                 "score": user_history.result_opponent,
+                "avatar": user_history.opponent_id.avatar,
             },
         },
         "tournament_info": (
