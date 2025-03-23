@@ -8,6 +8,7 @@ export const pageMappings = {
   '/join-tournament': '/pages/menus/join-tournament.html',
   '/tournament-settings': '/pages/menus/tournament-settings.html',
   '/profile': '/pages/menus/profile.html',
+  '/profile/:id': '/pages/menus/profile.html',
   '/edit-profile': '/pages/menus/edit-profile.html',
   '/social': '/pages/menus/social.html',
   '/friends': '/pages/menus/friends.html',

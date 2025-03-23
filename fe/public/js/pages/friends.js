@@ -1,6 +1,7 @@
 import { friendsService } from '../services/friends.js';
 import { IMAGES_URL } from '../utils/constants.js';
 const createFriendCard = friend => `
+<a class="spa-link" href="/profile/${friend.id}">
   <article class="d-flex justify-content-between align-items-center border border-2 border-primary-color rounded p-3 mb-3">
     <div class="d-flex flex-column align-items-center" style="width: 40%">
       <img 
@@ -29,6 +30,7 @@ const createFriendCard = friend => `
       </p>
     </div>
   </article>
+</a>
 `;
 
 export const loadFriends = async () => {
