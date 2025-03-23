@@ -55,7 +55,13 @@ export const friendsService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result?.message);
+        if (result.error?.fields) {
+          Object.entries(result.error.fields).forEach(([field, message]) => {
+            showErrorToast(`${field}: ${message}`);
+          });
+        } else {
+          showErrorToast("An unknown error occurred.");
+        }
         return null;
       }
 
@@ -78,8 +84,14 @@ export const friendsService = {
 
       const result = await response.json();
 
-      if (!response.ok || !result?.success) {
-        showErrorToast(result?.message || result?.error);
+      if (!response.ok || !result?.success || result.error) {
+        if (result.error?.fields) {
+          Object.entries(result.error.fields).forEach(([field, message]) => {
+            showErrorToast(`${field}: ${message}`);
+          });
+        } else {
+          showErrorToast("An unknown error occurred.");
+        }
         return null;
       }
 

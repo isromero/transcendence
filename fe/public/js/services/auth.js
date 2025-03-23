@@ -15,8 +15,14 @@ export const authService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+    if (!response.ok || !result?.success || result.error) {
+      if (result.error?.fields) {
+        Object.entries(result.error.fields).forEach(([field, message]) => {
+          showErrorToast(`${field}: ${message}`);
+        });
+      } else {
+        showErrorToast("An unknown error occurred.");
+      }
       return null;
     }
 
@@ -34,24 +40,14 @@ export const authService = {
     });
 
     const result = await response.json();
-
-    if (result.error)
-    {
-      console.log(result.error.fields.username); // "Username can only contain letters, numbers, underscores and hyphens"
-      console.log(result.error.fields["__all__"]); // "Password must contain at least one number"
-    }
-    
+   
     if (!response.ok || !result?.success || result.error) {
-      if (result.error.fields.username)
-        showErrorToast(`username: ${result?.error.fields.username}`);
-      else
-      {
-        console.log(result.error);
-        if (result.error.password === 'undefined')
-        {
-          showErrorToast(`password: tonto`);
-        }
-        showErrorToast(`password: ${result?.error.fields.password}`);
+      if (result.error?.fields) {
+        Object.entries(result.error.fields).forEach(([field, message]) => {
+          showErrorToast(`${field}: ${message}`);
+        });
+      } else {
+        showErrorToast("An unknown error occurred.");
       }
       return null;
     }
@@ -70,9 +66,14 @@ export const authService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
-      return false;
+    if (!response.ok || !result?.success || result.error) {
+      if (result.error?.fields) {
+        Object.entries(result.error.fields).forEach(([field, message]) => {
+          showErrorToast(`${field}: ${message}`);
+        });
+      } else {
+        showErrorToast("An unknown error occurred.");
+      }
     }
 
     showSuccessToast(result.message);
