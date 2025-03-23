@@ -1,4 +1,5 @@
 import { profileService } from './services/profile.js';
+import { IMAGES_URL } from './utils/constants.js';
 
 export async function getProfile() {
   const { data } = await profileService.getProfile();
@@ -9,7 +10,9 @@ export async function getProfile() {
   const loses = document.getElementById('loses');
   const total = document.getElementById('total');
 
-  avatar.src = data.avatar;
+  avatar.src = data.avatar
+    ? `${IMAGES_URL}${data.avatar.replace('/images/', '/')}`
+    : `${IMAGES_URL}/default_avatar.webp`;
   username.textContent = data.username;
 
   const victories = Number(data.victories || 0);

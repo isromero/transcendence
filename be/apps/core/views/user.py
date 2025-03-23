@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.templatetags.static import static
 from django.contrib.auth import login, logout
 import os
+from django.conf import settings
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
@@ -29,57 +30,7 @@ class UserView(View):
                 data=[serialize_user(user) for user in users],
             )
 
-    def put(self, request, action=None):
-        if action == "avatar":
-            try:
-                avatar = request.FILES.get("avatar")
-                if not avatar:
-                    return create_response(
-                        error="No file provided",
-                        message="Please provide an avatar image",
-                        status=400,
-                    )
-
-                # Validate the file type
-                if not avatar.content_type.startswith("image/"):
-                    return create_response(
-                        error="Invalid file type",
-                        message="Please provide an image file",
-                        status=400,
-                    )
-
-                if avatar.size > 5 * 1024 * 1024:  # 5MB
-                    return create_response(
-                        error="File too large",
-                        message="Avatar size should be less than 5MB",
-                        status=400,
-                    )
-
-                # Generate a unique name for the file
-                filename = f"avatar_{request.user.id}_{int(time.time())}{os.path.splitext(avatar.name)[1]}"
-                filepath = os.path.join("fe", "public", "images", filename)
-
-                # Create the directory if it doesn't exist
-                os.makedirs(os.path.dirname(filepath), exist_ok=True)
-
-                # Save the file
-                with open(filepath, "wb+") as destination:
-                    for chunk in avatar.chunks():
-                        destination.write(chunk)
-
-                user = request.user
-                user.avatar = f"/images/{filename}"
-                user.save()
-
-                return create_response(
-                    data=serialize_user(user), message="Avatar updated successfully"
-                )
-
-            except Exception as e:
-                return create_response(
-                    error=str(e), message="Error updating avatar", status=500
-                )
-
+    def put(self, request):
         try:
             data = json.loads(request.body)
 
@@ -106,8 +57,7 @@ class UserView(View):
 
             # Anonymize user data
             user.password = ""
-            user.avatar = static("default_avatar.webp")
-            user.is_online = False
+            user.avatar = "/images/default_avatar.webp"
             user.deleted_user = True
             user.username = f"anonymized_user_{user.id}"
 
@@ -131,4 +81,51 @@ class UserView(View):
         except Exception as e:
             return create_response(
                 error=str(e), message="Error deleting account", status=500
+            )
+
+    # For uploading an avatar
+    def post(self, request):
+        try:
+            avatar = request.FILES.get("avatar")
+            if not avatar:
+                return create_response(
+                    error="No file provided",
+                    message="Please provide an avatar image",
+                    status=400,
+                )
+
+            if not avatar.content_type.startswith("image/"):
+                return create_response(
+                    error="Invalid file type",
+                    message="Please provide an image file",
+                    status=400,
+                )
+
+            if avatar.size > 5 * 1024 * 1024:  # 5MB
+                return create_response(
+                    error="File too large",
+                    message="Avatar size should be less than 5MB",
+                    status=400,
+                )
+
+            filename = f"avatar_{request.user.id}_{int(time.time())}{os.path.splitext(avatar.name)[1]}"
+            filepath = os.path.join(settings.MEDIA_ROOT, filename)
+
+            os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+            with open(filepath, "wb+") as destination:
+                for chunk in avatar.chunks():
+                    destination.write(chunk)
+
+            user = request.user
+            user.avatar = f"/images/{filename}"
+            user.save()
+
+            return create_response(
+                data=serialize_user(user), message="Avatar updated successfully"
+            )
+
+        except Exception as e:
+            return create_response(
+                error=str(e), message="Error updating avatar", status=500
             )
