@@ -38,6 +38,7 @@ class HistoryView(View):
                             "score": match.result_user,
                             "is_winner": match.result_user >= 5,
                             "is_player1": True,
+                            "avatar": match.user_id.avatar,
                         },
                         {
                             "id": match.opponent_id.id,
@@ -45,6 +46,7 @@ class HistoryView(View):
                             "score": match.result_opponent,
                             "is_winner": match.result_opponent >= 5,
                             "is_player1": False,
+                            "avatar": match.opponent_id.avatar,
                         },
                     ]
                     if match.local_match
@@ -57,6 +59,7 @@ class HistoryView(View):
                             "score": history.result_user,
                             "is_winner": history.result_user >= 5,
                             "is_player1": history.user_id == match.user_id,
+                            "avatar": history.user_id.avatar,
                         }
                         for history in matches
                     ]

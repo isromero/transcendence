@@ -1,7 +1,7 @@
 import { loadPage } from './router/router.js';
 import { showErrorToast, updateTournamentUI } from './utils/helpers.js';
 import { historyService } from './services/history.js';
-
+import { IMAGES_URL } from './utils/constants.js';
 let canvas;
 let ctx;
 let ws;
@@ -105,6 +105,11 @@ async function updateGameState(gameState) {
       } else {
         // If it's a multiplayer or local game, show the modal
         await loadPage('/modal-end-game');
+
+        const matchId = path.split('/game/')[1]?.split('/')[0];
+        const data = await historyService.getMatchHistory(matchId);
+
+        setWinner(data);
       }
     } else {
       // If the game is not ended, continue animating
@@ -135,12 +140,32 @@ function stopGame() {
   }
 }
 
+const setWinner = data => {
+  const winnerImage = document.getElementById('winner-image');
+  const winnerUsername = document.getElementById('winner-username');
+
+  if (!winnerImage || !data?.players) {
+    return;
+  }
+
+  const winner = data.players.find(player => player.is_winner);
+
+  if (winner) {
+    winnerImage.src = winner.avatar
+      ? `${IMAGES_URL}${winner.avatar.replace('/images/', '/')}`
+      : `${IMAGES_URL}/default_avatar.webp`;
+
+    winnerUsername.textContent = winner.username || 'Unknown Player';
+  }
+};
+
 async function checkIfGameFinished(matchId) {
   try {
     const data = await historyService.getMatchHistory(matchId);
 
     if (data && data.status === 'finished') {
       await loadPage('/modal-end-game');
+      setWinner(data);
       return true;
     }
 
