@@ -148,6 +148,7 @@ const setWinner = data => {
     return;
   }
 
+  const isLocalMatch = data.is_local;
   const winner = data.players.find(player => player.is_winner);
 
   if (winner) {
@@ -155,7 +156,11 @@ const setWinner = data => {
       ? `${IMAGES_URL}${winner.avatar.replace('/images/', '/')}`
       : `${IMAGES_URL}/default_avatar.webp`;
 
-    winnerUsername.textContent = winner.username || 'Unknown Player';
+    if (isLocalMatch) {
+      winnerUsername.textContent = winner.is_player1 ? 'Player 1' : 'Player 2';
+    } else {
+      winnerUsername.textContent = winner.username || 'Unknown Player';
+    }
   }
 };
 
