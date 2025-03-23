@@ -11,6 +11,7 @@ from apps.core.views.auth import OAuthLogin, LogoutView, LoginWithToken
 
 from apps.core.views.check_auth import CheckAuthView
 from apps.core.views.profile import ProfileView
+from apps.core.views.logout import LogoutView
 
 urlpatterns = [
     # Profile route
@@ -18,10 +19,10 @@ urlpatterns = [
     # Users routes
     path("users", UserView.as_view()),
     path("users/<int:user_id>", UserView.as_view()),
+    path("users/<str:action>", UserView.as_view()),
     # Friends routes
     path("friends", FriendsView.as_view()),
-    path("friends/<int:user_id>/<int:friend_id>", FriendsView.as_view()),
-    path("friends/<int:user_id>/<int:friend_id>/<str:action>", FriendsView.as_view()),
+    path("friends/<int:user_id>/<str:action>", FriendsView.as_view()),
     # Tournaments routes
     path("tournaments", TournamentsView.as_view()),
     path("tournaments/<str:join_code>", TournamentsView.as_view()),
@@ -31,6 +32,7 @@ urlpatterns = [
     # Auth routes
     path("login", LoginView.as_view()),
     path("register", RegisterView.as_view()),
+    path("logout", LogoutView.as_view()),
     path("game", GameView.as_view(), name="game"),
     path("check-auth", CheckAuthView.as_view()),
     path("auth/login", OAuthLogin.as_view(), name="auth_login"),

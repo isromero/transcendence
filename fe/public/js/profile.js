@@ -1,13 +1,25 @@
 import { profileService } from './services/profile.js';
+import { usersService } from './services/users.js';
+import { IMAGES_URL } from './utils/constants.js';
 
 export async function getProfile() {
-  const { data } = await profileService.getProfile();
+  // Get the ID of the URL if it exists
+  const pathParts = window.location.pathname.split('/');
+  const userId = pathParts[2]; // /profile/123 -> 123
 
+  const { data } = userId
+    ? await usersService.getUser(userId)
+    : await profileService.getProfile();
+
+  const avatar = document.getElementById('avatar');
   const username = document.getElementById('username');
   const wins = document.getElementById('wins');
   const loses = document.getElementById('loses');
   const total = document.getElementById('total');
 
+  avatar.src = data.avatar
+    ? `${IMAGES_URL}${data.avatar.replace('/images/', '/')}`
+    : `${IMAGES_URL}/default_avatar.webp`;
   username.textContent = data.username;
 
   const victories = Number(data.victories || 0);

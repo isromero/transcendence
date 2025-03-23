@@ -1,6 +1,5 @@
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
-import { loadPage } from '../router/router.js';
 
 export const authService = {
   login: async user => {
@@ -45,7 +44,6 @@ export const authService = {
     return result.data || result;
   },
   logout: async () => {
-    // TODO: Implement in backend
     const response = await fetch(`${API_URL}/logout`, {
       method: 'POST',
       headers: {
@@ -63,7 +61,6 @@ export const authService = {
     }
 
     showSuccessToast(result.message);
-    loadPage('/auth');
     return true;
   },
 };

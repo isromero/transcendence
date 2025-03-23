@@ -82,12 +82,20 @@ def serialize_user(user):
 
 
 def serialize_friend(friend_relation):
+    # For received requests, we need to show who sent the request
+    user_to_show = (
+        friend_relation.user_id
+        if friend_relation.status == "sent"
+        else friend_relation.friend_id
+    )
+
     return {
-        "id": friend_relation.friend_id.id,
-        "username": friend_relation.friend_id.username,
-        "avatar": friend_relation.friend_id.avatar,
+        "id": user_to_show.id,
+        "username": user_to_show.username,
+        "avatar": user_to_show.avatar,
         "created_at": friend_relation.created_at,
         "status": friend_relation.status,
+        "is_online": user_to_show.is_online,
     }
 
 
@@ -99,6 +107,7 @@ def serialize_stats(user, user_history):
 
     return {
         "id": user.id,
+        "avatar": user.avatar,
         "username": user.username,
         "victories": user_history.filter(
             result_user__gt=models.F("result_opponent")
@@ -150,7 +159,7 @@ def serialize_tournament(tournament):
         "current_round": tournament.current_round,
         "join_code": tournament.join_code,
         "players": [
-            {"id": player.id, "username": player.username}
+            {"id": player.id, "username": player.username, "avatar": player.avatar}
             for player in tournament.players.all()
         ],
         "matches": {
@@ -188,11 +197,13 @@ def serialize_history(user_history):
                 "id": user_history.user_id.id,
                 "username": user_history.user_id.username,
                 "score": user_history.result_user,
+                "avatar": user_history.user_id.avatar,
             },
             "player2": {
                 "id": user_history.opponent_id.id,
                 "username": user_history.opponent_id.username,
                 "score": user_history.result_opponent,
+                "avatar": user_history.opponent_id.avatar,
             },
         },
         "tournament_info": (

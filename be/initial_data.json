@@ -8,7 +8,8 @@
       "username": "filogonio",
       "password": "1234",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-25T16:42:57.268Z",
+      "deleted_user": false
     }
   },
   {
@@ -17,10 +18,11 @@
     "fields": {
       "created_at": "2025-01-25T16:42:57.268Z",
       "updated_at": "2025-01-25T16:42:57.268Z",
-      "username": "filogonio",
+      "username": "filogonios",
       "password": "1234",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-25T16:42:57.268Z",
+      "deleted_user": false
     }
   },
   {
@@ -32,7 +34,8 @@
       "username": "onesiforo",
       "password": "asdfgh",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-25T16:43:19.564Z",
+      "deleted_user": false
     }
   },
   {
@@ -44,7 +47,8 @@
       "username": "Sofía",
       "password": "sf_1*2*3*",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:40:16.237Z",
+      "deleted_user": false
     }
   },
   {
@@ -56,7 +60,8 @@
       "username": "Javier",
       "password": "Jvr_1-2-3* *",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:41:19.765Z",
+      "deleted_user": false
     }
   },
   {
@@ -68,7 +73,8 @@
       "username": "Antonio",
       "password": "NtN-@#@#~½¬~{",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -80,7 +86,8 @@
       "username": "Laura",
       "password": "sjadh fhh sbdbgd",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -92,7 +99,8 @@
       "username": "Elena",
       "password": " hoprguhgdhdf dfjnvdjbdf",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -104,7 +112,8 @@
       "username": "Roberto",
       "password": "**********",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -116,7 +125,8 @@
       "username": "Alejandro",
       "password": "            ",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -128,7 +138,8 @@
       "username": "Manuel",
       "password": "ASDFGHJERTYUIXCVBNM",
       "avatar": null,
-      "is_online": false
+      "last_activity": "2025-01-31T17:45:30.219Z",
+      "deleted_user": false
     }
   },
   {
@@ -172,19 +183,6 @@
     }
   },
   {
-    "model": "core.tournaments",
-    "pk": 1,
-    "fields": {
-      "tournament_name": "Torneo de Prueba",
-      "max_players": 8,
-      "status": "completed",
-      "current_round": 3,
-      "join_code": "ABC123",
-      "start_date": "2025-01-25T16:42:19.447Z",
-      "players": [1, 2]
-    }
-  },
-  {
     "model": "core.history",
     "pk": 1,
     "fields": {
@@ -198,38 +196,6 @@
       "local_match": true,
       "tournament_id": null,
       "tournament_match_number": null
-    }
-  },
-  {
-    "model": "core.history",
-    "pk": 2,
-    "fields": {
-      "match_id": "550e8400-e29b-41d4-a716-446655440001",
-      "date": "2025-01-26T16:42:19.447Z",
-      "user_id": 1,
-      "result_user": 5,
-      "opponent_id": 2,
-      "result_opponent": 2,
-      "type_match": "tournament_quarter",
-      "local_match": false,
-      "tournament_id": 1,
-      "tournament_match_number": 1
-    }
-  },
-  {
-    "model": "core.history",
-    "pk": 3,
-    "fields": {
-      "match_id": "550e8400-e29b-41d4-a716-446655440001",
-      "date": "2025-01-26T16:42:19.447Z",
-      "user_id": 2,
-      "result_user": 2,
-      "opponent_id": 1,
-      "result_opponent": 5,
-      "type_match": "tournament_quarter",
-      "local_match": false,
-      "tournament_id": 1,
-      "tournament_match_number": 1
     }
   }
 ]

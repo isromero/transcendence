@@ -10,7 +10,9 @@ import random
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.templatetags.static import static
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+import os
+from django.conf import settings
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
@@ -30,13 +32,6 @@ class UserView(View):
             )
 
     def put(self, request):
-        if not request.user.is_authenticated:
-            return create_response(
-                error="Authentication required",
-                message="Please log in to update your profile",
-                status=401,
-            )
-
         try:
             data = json.loads(request.body)
 
@@ -59,25 +54,40 @@ class UserView(View):
 
     def delete(self, request):
         try:
-            user = request.user
+            data = json.loads(request.body)
+            password = data.get("password")
+
+            if not password:
+                return create_response(
+                    error="Password is required",
+                    message="Please provide your password to confirm deletion",
+                    status=400,
+                )
+
+            # Verify password received from the request before deleting the user
+            user = authenticate(username=request.user.username, password=password)
+            if not user:
+                return create_response(
+                    error="Invalid password",
+                    message="The password is incorrect",
+                    status=400,
+                )
 
             # Anonymize user data
+            user = request.user
             user.password = ""
-            user.avatar = static("default_avatar.webp")
-            user.is_online = False
+            user.avatar = "/images/default_avatar.webp"
             user.deleted_user = True
             user.username = f"anonymized_user_{user.id}"
 
             # Delete user friends
             Friends.objects.filter(user_id=user.id).delete()
-            # Update user from friend lists
             Friends.objects.filter(friend_id=user.id).update(friend_id=user)
 
             # Delete user history
             History.objects.filter(user_id=user.id).delete()
 
             user.save()
-
             logout(request)
 
             return create_response(
@@ -85,7 +95,60 @@ class UserView(View):
                 status=204,
             )
 
+        except json.JSONDecodeError:
+            return create_response(
+                error="Invalid JSON",
+                message="The request body must be valid JSON",
+                status=400,
+            )
         except Exception as e:
             return create_response(
                 error=str(e), message="Error deleting account", status=500
+            )
+
+    # For uploading an avatar
+    def post(self, request):
+        try:
+            avatar = request.FILES.get("avatar")
+            if not avatar:
+                return create_response(
+                    error="No file provided",
+                    message="Please provide an avatar image",
+                    status=400,
+                )
+
+            if not avatar.content_type.startswith("image/"):
+                return create_response(
+                    error="Invalid file type",
+                    message="Please provide an image file",
+                    status=400,
+                )
+
+            if avatar.size > 5 * 1024 * 1024:  # 5MB
+                return create_response(
+                    error="File too large",
+                    message="Avatar size should be less than 5MB",
+                    status=400,
+                )
+
+            filename = f"avatar_{request.user.id}_{int(time.time())}{os.path.splitext(avatar.name)[1]}"
+            filepath = os.path.join(settings.MEDIA_ROOT, filename)
+
+            os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+            with open(filepath, "wb+") as destination:
+                for chunk in avatar.chunks():
+                    destination.write(chunk)
+
+            user = request.user
+            user.avatar = f"/images/{filename}"
+            user.save()
+
+            return create_response(
+                data=serialize_user(user), message="Avatar updated successfully"
+            )
+
+        except Exception as e:
+            return create_response(
+                error=str(e), message="Error updating avatar", status=500
             )

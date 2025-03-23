@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "channels",
 ]
 
-# TODO(uncomment): auth
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -121,25 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# TODO (ismael): delete?
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Europe/Madrid"
 
-USE_I18N = True
-
 USE_TZ = True
-
-
-# TODO (ismael): delete?
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -153,3 +139,6 @@ OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
 OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
 OAUTH42_USER_INFO_URL = "https://api.intra.42.fr/v2/me"
 AUTH_USER_MODEL = "core.User"
+
+MEDIA_URL = "/images/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
