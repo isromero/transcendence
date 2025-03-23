@@ -91,7 +91,7 @@ export const usersService = {
       return null;
     }
   },
-  deleteUser: async () => {
+  deleteUser: async password => {
     try {
       const response = await fetch(`${API_URL}/users`, {
         method: 'DELETE',
@@ -99,6 +99,7 @@ export const usersService = {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
+        body: JSON.stringify({ password }),
         credentials: 'include',
       });
 

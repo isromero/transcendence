@@ -1,12 +1,12 @@
 import { editUsername } from './editUsername.js';
 import { editPassword } from './editPassword.js';
 import { usersService } from '../services/users.js';
-import { loadPage } from '../router/router.js';
 import { showErrorToast } from '../utils/helpers.js';
+import { accountDeletion } from './accountDeletion.js';
 
 const avatarInput = document.getElementById('avatarInput');
 
-document.addEventListener('click', async event => {
+document.addEventListener('click', event => {
   const target = event.target;
 
   if (target.matches('#changeUsernameButton')) {
@@ -23,10 +23,9 @@ document.addEventListener('click', async event => {
     avatarInput.click();
   } else if (target.matches('#accountDeletionButton')) {
     event.preventDefault();
-    const ok = await usersService.deleteUser();
-    if (ok) {
-      loadPage('/auth');
-    }
+    document.addEventListener('spaContentLoaded', () => accountDeletion(), {
+      once: true,
+    });
   }
 });
 

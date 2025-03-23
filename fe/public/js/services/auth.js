@@ -1,7 +1,5 @@
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
-import { loadPage } from '../router/router.js';
-import { usersService } from './users.js';
 
 export const authService = {
   login: async user => {
