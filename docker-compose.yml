@@ -1,12 +1,12 @@
+
 services:
   be:
     container_name: be
     build: ./be
-    user: django
     ports:
       - 8000:8000
     volumes:
-      - be_data:/app
+      - ./be:/app
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
@@ -18,7 +18,6 @@ services:
   db:
     container_name: db
     image: postgres
-    user: postgres
     ports:
       - 5432:5432
     env_file:
@@ -32,12 +31,12 @@ services:
   fe:
     container_name: fe
     build: ./fe
-    user: fe
     ports:
       - 3001:3001
-      - 3002:3002
     volumes:
-      - fe_data:/app
+      - ./fe:/app
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     networks:
       - transcendence_network
 
@@ -101,9 +100,120 @@ volumes:
   db_data:
   # grafana_data:
   prometheus_data:
-  be_data:
-  fe_data:
+  # be_data:
+  # fe_data:
 
 networks:
   transcendence_network:
     driver: bridge
+
+
+# services:
+#   be:
+#     container_name: be
+#     build: ./be
+#     user: django
+#     ports:
+#       - 8000:8000
+#     volumes:
+#       - be_data:/app
+#     env_file:
+#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#     restart: always
+#     depends_on:
+#       - db
+#     networks:
+#       - transcendence_network
+
+#   db:
+#     container_name: db
+#     image: postgres
+#     user: postgres
+#     ports:
+#       - 5432:5432
+#     env_file:
+#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#     restart: always
+#     volumes:
+#       - db_data:/var/lib/postgresql/data
+#     networks:
+#       - transcendence_network
+
+#   fe:
+#     container_name: fe
+#     build: ./fe
+#     user: fe
+#     ports:
+#       - 3001:3001
+#       - 3002:3002
+#     volumes:
+#       - fe_data:/app
+#     networks:
+#       - transcendence_network
+
+  # prometheus:
+  #   container_name: prom
+  #   build: ./monitoring
+  #   user: prometheus
+  #   ports:
+  #     - 9090:9090
+  #   restart: always
+  #   depends_on:
+  #     - be
+  #   volumes:
+  #     - prometheus_data:/prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # grafana:
+  #   container_name: grf
+  #   build: ./monitoring/grafana-config
+  #   user: grafana
+  #   ports:
+  #     - 3333:3333
+  #   # volumes:
+  #   #   - grafana_data:/var/lib/grafana
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   restart: always
+  #   depends_on:
+  #     - prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # postgres_exporter:
+  #   container_name: pg_exporter
+  #   image: prometheuscommunity/postgres-exporter
+  #   ports:
+  #     - 9187:9187
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   command: '--no-collector.stat_bgwriter'
+  #   restart: always
+  #   depends_on:
+  #     prometheus:
+  #       condition: service_started
+  #   networks:
+  #     - transcendence_network
+
+  # blackbox_exporter:
+  #   container_name: blackbox
+  #   build: ./monitoring/blackbox
+  #   ports:
+  #     - 9115:9115
+  #   restart: always
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+  #   networks:
+  #     - transcendence_network
+
+# volumes:
+  # db_data:
+  # grafana_data:
+  # prometheus_data:
+  # be_data:
+  # fe_data:
+
+# networks:
+#   transcendence_network:
+#     driver: bridge

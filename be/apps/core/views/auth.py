@@ -52,7 +52,7 @@ class OAuthCallback(View):
         if "error" in user_info:
             return JsonResponse(user_info, status=400)
         self.response = self.authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        self.redirect_response = HttpResponseRedirect(f"http://{request.get_host().split(':')[0]}:3001/")
         self.transfer_data()
         return self.redirect_response
     
@@ -113,7 +113,8 @@ class LogoutView(View):
         response = JsonResponse({"message": "Logout successful"})
         response.delete_cookie("sessionid")
         return response
-        # redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        # redirect_response = HttpResponseRedirect(f"http://{request.get_host().split(':')[0]}:3001/")
+        # # redirect_response = HttpResponseRedirect("http://localhost:3001/")
         # redirect_response.delete_cookie("sessionid")
         # return redirect_response
 

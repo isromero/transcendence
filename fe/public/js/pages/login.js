@@ -25,13 +25,13 @@ togglePassword.addEventListener('click', () => {
 const login42Button = document.querySelector('[data-translationKey="login42"]');
 if (login42Button) {
   login42Button.addEventListener("click", function () {
-    window.location.href = `http://localhost:8000/api/auth/login`;
+    window.location.href = `http://${window.location.hostname}:8000/api/auth/login`;
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname === "/logout") {
-      fetch("http://localhost:8000/api/auth/logout", {
+      fetch(`http://${window.location.hostname}:8000/api/auth/logout`, {
           method: "POST",
           credentials: "include",
       })
