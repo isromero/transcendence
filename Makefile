@@ -4,6 +4,7 @@ COMPOSE := $(shell command -v docker-compose || echo "docker compose")
 all: build up
 
 build:
+	python3 be/wololo.py
 	$(COMPOSE) build
 
 up:

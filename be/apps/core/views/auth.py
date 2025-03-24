@@ -11,6 +11,7 @@ from apps.core.utils import create_response
 from apps.core.models import User
 import requests
 import json
+import os
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
@@ -52,7 +53,7 @@ class OAuthCallback(View):
         if "error" in user_info:
             return JsonResponse(user_info, status=400)
         self.response = self.authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        self.redirect_response = HttpResponseRedirect(f"http://c2r17s3:3001/")
         self.transfer_data()
         return self.redirect_response
     
