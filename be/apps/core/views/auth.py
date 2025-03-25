@@ -53,7 +53,8 @@ class OAuthCallback(View):
         if "error" in user_info:
             return JsonResponse(user_info, status=400)
         self.response = self.authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect(f"http://c2r17s3:3001/")
+        self.redirect_response = HttpResponseRedirect(f"http://localhost:3001/")
+        # self.redirect_response = HttpResponseRedirect(f"http://{os.uname().nodename.split('.')[0]}:3001/")
         self.transfer_data()
         return self.redirect_response
     

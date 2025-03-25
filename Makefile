@@ -4,7 +4,7 @@ COMPOSE := $(shell command -v docker-compose || echo "docker compose")
 all: build up
 
 build:
-	python3 be/wololo.py
+	python3 be/set_redirect_env.py
 	$(COMPOSE) build
 
 up:
