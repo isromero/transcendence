@@ -2,28 +2,28 @@ import { friendsService } from '../services/friends.js';
 import { IMAGES_URL } from '../utils/constants.js';
 
 const createRequestCard = request => `
-  <article class="d-flex justify-content-between align-items-center border border-2 border-primary-color rounded p-3 mb-3">
-    <div class="d-flex flex-column align-items-center" style="width: 40%">
+  <article class="d-flex flex-column flex-md-row justify-content-between align-items-center border border-2 border-primary-color rounded p-3 mb-3">
+    <div class="d-flex flex-column align-items-center col-12 col-md-4">
       <img 
         class="rounded-circle mb-2" 
         alt="${request.username}'s avatar" 
         src="${request.avatar ? `${IMAGES_URL}${request.avatar.replace('/images/', '/')}` : `${IMAGES_URL}/default_avatar.webp`}"
         style="width: 80px; height: 80px; object-fit: cover"
       />
-      <p class="text-principal-color button-text-size mb-0">
+      <p class="text-principal-color button-text-size mb-0 text-center text-md-start">
         ${request.username}
       </p>
     </div>
-    <div class="d-flex flex-column align-items-end gap-2" style="width: 60%">
+    <div class="d-flex flex-column align-items-center align-items-md-end gap-2 col-12 col-md-6 mt-2 mt-md-0">
       <button 
-        class="btn btn-success bs-primary text-success-color w-100"
+        class="btn btn-success bs-primary text-success-color w-100 w-md-auto"
         data-user-id="${request.id}"
         id="accept-request-btn"
       >
         Accept
       </button>
       <button 
-        class="btn btn-danger bs-primary text-danger-color w-100"
+        class="btn btn-danger bs-primary text-danger-color w-100 w-md-auto"
         data-user-id="${request.id}"
         id="reject-request-btn"
       >
