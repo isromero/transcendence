@@ -17,7 +17,7 @@ from .models import History, User
 logger = logging.getLogger(__name__)
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
-    queue = []  # Cambiado a lista para almacenar tuplas (consumer, user_id)
+    queue = []
     executor = ThreadPoolExecutor()
 
     async def connect(self):
@@ -52,7 +52,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         
     async def check_matchmaking(self):
         if len(self.queue) >= 2:
-            player1_tuple = self.queue.pop(0)  # Obtenemos la tupla (consumer, user_id)
+            player1_tuple = self.queue.pop(0)
             player2_tuple = self.queue.pop(0)
             
             player1_consumer, player1_id = player1_tuple
@@ -86,25 +86,24 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 logger.error(f"❌ No se encontraron los usuarios con IDs: {player1_id}, {player2_id}")
                 return None
 
-            # Crear dos registros, uno desde la perspectiva de cada jugador
-            # Registro para player1
+            
             History.objects.create(
                 match_id=match_id,
                 user_id=player1,
                 opponent_id=player2,
                 type_match="match",
-                local_match=True,  # Mantenido en True como solicitaste
+                local_match=True, 
                 result_user=0,
                 result_opponent=0,
             )
             
-            # Registro para player2
+            
             History.objects.create(
                 match_id=match_id,
                 user_id=player2,
                 opponent_id=player1,
                 type_match="match",
-                local_match=True,  # Mantenido en True como solicitaste
+                local_match=True, 
                 result_user=0,
                 result_opponent=0,
             )
