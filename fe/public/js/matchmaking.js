@@ -30,14 +30,11 @@ export function initMatchmaking() {
 
 function handleQueue() {
   if (ws) {
-    // If there is a WebSocket, close it
     ws.close();
     ws = null;
   }
 
-  // Display the queue status
   queueStatus.style.display = 'block';
-  // Hide the buttons
   localMatchBtn.style.display = 'none';
   multiplayerBtn.style.display = 'none';
   tournamentBtn.style.display = 'none';
@@ -77,7 +74,6 @@ function cleanupMatchmaking() {
   window.removeEventListener('beforeunload', cleanupMatchmaking);
 
   if (ws) {
-    // If there is a WebSocket, close it
     ws.close();
     ws = null;
   }

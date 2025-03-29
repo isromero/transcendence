@@ -21,7 +21,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     executor = ThreadPoolExecutor()
 
     async def connect(self):
-        # Obtener el usuario del scope
         user_id = self.scope["user"].id if self.scope.get("user") and self.scope["user"].is_authenticated else None
         
         if not user_id:
@@ -30,7 +29,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         
         await self.accept()
         
-        # Verificar si el usuario ya está en cola
         user_in_queue = any(player[1] == user_id for player in self.queue)
         
         if not user_in_queue:
@@ -42,7 +40,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         await self.check_matchmaking()
 
     async def disconnect(self, close_code):
-        # Buscar y eliminar el jugador de la cola
         for i, player in enumerate(self.queue):
             if player[0] == self:
                 user_id = player[1]
