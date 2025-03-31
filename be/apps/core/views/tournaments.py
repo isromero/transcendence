@@ -24,11 +24,11 @@ class TournamentsView(View):
             if join_code:
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
 
-                if tournament.status != "pending" and tournament.status != "ready":
-                    return create_response(
-                        {"error": "Tournament is not accepting players"},
-                        status=400,
-                    )
+                # if tournament.status != "pending" and tournament.status != "ready":
+                #     return create_response(
+                #         {"error": "Tournament is not accepting players"},
+                #         status=400,
+                #     )
 
                 return create_response(
                     data=serialize_tournament(tournament),
@@ -82,10 +82,10 @@ class TournamentsView(View):
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
 
-                if tournament.status != "pending":
-                    return create_response(
-                        error="Tournament is not accepting players", status=400
-                    )
+                # if tournament.status != "pending":
+                #     return create_response(
+                #         error="Tournament is not accepting players", status=400
+                #     )
 
                 if tournament.players.count() >= tournament.max_players:
                     return create_response(error="Tournament is full", status=400)
@@ -125,12 +125,12 @@ class TournamentsView(View):
                         error="Tournament is not ready to start", status=400
                     )
 
-                # TODO: Check if this is working well
-                if tournament.players[0].id != request.user.id:
-                    return create_response(
-                        error="You can't start the tournament. You are not the leader",
-                        status=400,
-                    )
+                # # TODO: Check if this is working well
+                # if tournament.players[0].id != request.user.id:
+                #     return create_response(
+                #         error="You can't start the tournament. You are not the leader",
+                #         status=400,
+                #     )
 
                 players = list(tournament.players.all())
                 random.shuffle(players)  # Shuffle players randomly
