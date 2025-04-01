@@ -34,27 +34,44 @@ function resetGameState() {
 }
 
 function isHorizontal() {
-    if (window.innerWidth > window.innerHeight)
-	{
-		return true;
-	}
-	return false;
+  return window.innerWidth > window.innerHeight;
 }
 
 async function updateGameRotation() {
-	let divider = await document.getElementById("rotator").style;
-	let angle = 0;
-	
-	if (isHorizontal())
-	{
-		angle = 0;
-	}
-	else
-	{
-		angle = 90;
-	}
-		divider.transform = `rotate(${angle}deg)`;
+  let gameContainer = document.getElementById("game-container");
+  let countdownElement = document.getElementById("countdown");
+  let canvas = document.getElementById("pong");
+  let angle = isHorizontal() ? 0 : 90;
+
+  if (gameContainer) {
+      gameContainer.style.transform = `rotate(${angle}deg)`;
+      gameContainer.style.transformOrigin = "center";
+  }
+
+  if (countdownElement) {
+      countdownElement.style.transform = `rotate(${angle}deg)`;
+      countdownElement.style.transformOrigin = "center";
+      countdownElement.style.position = "absolute";
+
+      // Ajustamos el centrado dependiendo de la orientación
+      if (isHorizontal()) {
+          countdownElement.style.top = "50%";
+          countdownElement.style.left = "50%";
+          countdownElement.style.transform = "translate(-50%, -50%)";
+      } else {
+          countdownElement.style.top = "50%";
+          countdownElement.style.left = "50%";
+          countdownElement.style.transform = "translate(-50%, -50%) rotate(90deg)";
+      }
+  }
+
+  if (canvas) {
+      canvas.style.transform = `rotate(${angle}deg)`;
+      canvas.style.transformOrigin = "center";
+  }
 }
+
+
 
 
 async function updateGameState(gameState) {
@@ -208,22 +225,21 @@ async function checkIfGameFinished(matchId) {
 }
 
 async function startCountdown() {
+
   const countdownElement = document.getElementById('countdown');
   let count = 5;
 
   return new Promise(resolve => {
-    const interval = setInterval(() => {
-      console.log('Countdown:', count); // Debugging
+      const interval = setInterval(() => {
+          countdownElement.textContent = count;
+          count--;
 
-      countdownElement.textContent = count;
-      count--;
-
-      if (count < 0) {
-        clearInterval(interval);
-        countdownElement.style.display = 'none'; // Ocultar el contador
-        resolve();
-      }
-    }, 1000);
+          if (count < 0) {
+              clearInterval(interval);
+              countdownElement.style.display = 'none';
+              resolve();
+          }
+      }, 1000);
   });
 }
 
@@ -263,6 +279,7 @@ export async function initGame() {
   }
 
   isInitializing = true;
+  await updateGameRotation();
   await startCountdown();
 
   try {
