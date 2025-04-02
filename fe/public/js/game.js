@@ -105,12 +105,12 @@ async function updateGameState(gameState) {
     ctx.setLineDash([]);
 
     ctx.fillStyle = 'white';
-    ctx.font = '40px Arial';
+    ctx.font = '40px Pixelify Sans';
     ctx.textAlign = 'center';
     ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
     if (countdown && countdown > 0) {
       ctx.fillStyle = 'white';
-      ctx.font = '80px Arial';
+      ctx.font = '80px Pixelify Sans';
       ctx.textAlign = 'center';
       ctx.fillText(Math.ceil(countdown), canvas.width / 2, canvas.height / 2);
     }
@@ -316,10 +316,11 @@ export async function initGame() {
       isInitializing = false;
       return;
     }
-    
-    // Apply rotation before countdown starts
-    await updateGameRotation();
-    await startCountdown();
+
+    if (!gameFinished) {
+      await updateGameRotation();
+      await startCountdown();
+    }
 
     // Start WebSocket if the game is still ongoing
     try {
@@ -439,7 +440,7 @@ function cleanupGameResources() {
   window.removeEventListener('popstate', handlePopState);
 }
 
-function handlePopState() {
+async function handlePopState() {
   try {
     hasNavigatedAway = true;
 
@@ -449,10 +450,23 @@ function handlePopState() {
     }
 
     cleanupGameResources();
+
+    const path = window.location.pathname;
+    const matchId = path.split('/game/')[1]?.split('/')[0];
+
+    if (matchId) {
+      const gameFinished = await checkIfGameFinished(matchId);
+      
+      if (gameFinished) {
+        await loadPage('/');
+        return;
+      }
+    }
   } catch (error) {
-    console.error('Error in handlePopState:', error);
+    console.error('Error en handlePopState:', error);
   }
 }
+
 
 function sendKeyEvent(key, isPressed) {
   try {
