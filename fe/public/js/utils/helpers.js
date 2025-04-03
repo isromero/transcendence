@@ -84,7 +84,9 @@ export function showErrorToast(result) {
   if (typeof result === 'string') {
     message = result;
   } else if (result.error) {
-    if (result.error.type === 'validation_error') {
+    if (typeof result.error === 'string') {
+      message = result.error;
+    } else if (result.error.type === 'validation_error') {
       // Handle form validation errors
       const errors = result.error.fields;
 
