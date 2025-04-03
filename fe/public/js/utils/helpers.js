@@ -77,27 +77,32 @@ export function showSuccessToast(message) {
   toast.show();
 }
 
-export function showErrorToast(response) {
+export function showErrorToast(result) {
   const toastEl = document.getElementById('errorToast');
-  let message = '';
+  let message;
 
-  if (typeof response === 'string') {
-    message = response;
-  } else if (response.error) {
-    if (response.error.type === 'validation_error') {
+  if (typeof result === 'string') {
+    message = result;
+  } else if (result.error) {
+    if (result.error.type === 'validation_error') {
       // Handle form validation errors
-      const errors = response.error.fields;
-      message = Object.entries(errors)
-        .map(
-          ([field, msg]) => `${field === '__all__' ? 'Error' : field}: ${msg}`
-        )
-        .join('\n');
+      const errors = result.error.fields;
+
+      // If there is a general error (__all__), use that message directly
+      if (errors.__all__) {
+        message = errors.__all__;
+      } else {
+        // If there are specific field errors, show them with their fields
+        message = Object.entries(errors)
+          .map(([field, msg]) => `${field}: ${msg}`)
+          .join('\n');
+      }
     } else {
       // Handle simple error messages
-      message = response.error;
+      message = result.error.message || 'An error occurred';
     }
   } else {
-    message = 'An unexpected error occurred';
+    message = 'An error occurred';
   }
 
   const messageEl = toastEl.querySelector('.toast-body');
@@ -117,7 +122,8 @@ export function updateTournamentUI(tournamentData) {
   const playerSlots = document.querySelectorAll('.player-info span');
   playerSlots.forEach(slot => {
     slot.textContent = 'Waiting for player...';
-    slot.previousElementSibling.src = '/public/assets/images/default-avatar.webp';
+    slot.previousElementSibling.src =
+      '/public/assets/images/default-avatar.webp';
   });
 
   // Now, fill with the players
