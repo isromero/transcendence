@@ -2,7 +2,7 @@ import { loadPage } from '../router/router.js';
 import { API_URL } from '../utils/constants.js';
 
 // List of public routes that don't require authentication in the frontend
-const publicRoutes = ['/auth', '/auth/login', '/auth/register', '/auth/privacy'];
+const publicRoutes = ['/auth', '/auth/login', '/auth/register', '/auth/privacy', '/auth/help'];
 
 // Check if the user is authenticated by making a request to the backend
 export async function isAuthenticated() {

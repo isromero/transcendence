@@ -5,6 +5,7 @@ export const pageMappings = {
   '/auth/login': '/pages/menus/login.html',
   '/auth/register': '/pages/menus/register.html',
   '/auth/privacy': '/pages/menus/privacy_policy.html',
+  '/auth/help': '/pages/menus/rickroll.html',
   '/create-match': '/pages/menus/create-match.html',
   '/join-tournament': '/pages/menus/join-tournament.html',
   '/tournament-settings': '/pages/menus/tournament-settings.html',
