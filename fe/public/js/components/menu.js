@@ -55,7 +55,7 @@ function updateIcons(page) {
 
   if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
     leftIcon = 'bi bi-question-circle';
-    leftHref = '/modal-help';
+    leftHref = '/faq';
     rightIcon = 'bi bi-globe';
     rightHref = '/modal-languages';
   } else if (isGamePage) {
