@@ -9,15 +9,15 @@ class GameState:
         self.WIDTH, self.HEIGHT = 800, 400
         self.PADDLE_WIDTH, self.PADDLE_HEIGHT = 20, 100
         self.BALL_SIZE = 35
-        self.PADDLE_SPEED = 8
-        self.BALL_SPEED = 8
+        self.PADDLE_SPEED = 7
+        self.BALL_SPEED = 4
         self.MAX_BALL_SPEED = 16
         self.BALL_ACCELERATION = 1.05
         self.MIN_BOUNCE_ANGLE = math.pi / 12  # Minimum bounce angle (15 degrees)
         self.MAX_BOUNCE_ANGLE = math.pi / 3  # Maximum bounce angle (60 degrees)
         self.running = False
         self.last_update = time.time()
-        self.fps_cap = 60
+        self.fps_cap = 90
         self.countdown = 0  # Countdown timer in seconds
 
         self.left_paddle = {

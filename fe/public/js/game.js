@@ -42,25 +42,42 @@ function isHorizontal() {
 }
 
 async function updateGameRotation() {
-	let divider = await document.getElementById("rotator").style;
-	let angle = 0;
-	
-	if (isHorizontal())
-	{
-		angle = 0;
-	}
-	else
-	{
-		angle = 90;
-	}
-		divider.transform = `rotate(${angle}deg)`;
+  let rotatorElement = document.getElementById("rotator");
+  let countdownElement = document.getElementById("countdown");
+  
+  if (!rotatorElement || !countdownElement) {
+    return;
+  }
+  
+  let angle = isHorizontal() ? 0 : 90;
+  
+  rotatorElement.style.transform = `rotate(${angle}deg)`;
+  
+  // For vertical orientation, handle countdown positioning and rotation
+  if (!isHorizontal()) {
+    // Position the countdown in the center of the screen
+    countdownElement.style.transform = `rotate(-90deg)`;
+    countdownElement.style.position = 'absolute';
+    countdownElement.style.zIndex = '100';
+    countdownElement.style.top = '50%';
+    countdownElement.style.left = '50%';
+    countdownElement.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
+  } else {
+    // Reset all styles for horizontal orientation
+    countdownElement.style.transform = '';
+    countdownElement.style.position = '';
+    countdownElement.style.zIndex = '';
+    countdownElement.style.top = '';
+    countdownElement.style.left = '';
+  }
 }
 
 
 async function updateGameState(gameState) {
   try {
-	
-	updateGameRotation();
+    // No need to call updateGameRotation here since it's already called during initialization
+    // and will be handled by window resize event
+    
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -87,12 +104,12 @@ async function updateGameState(gameState) {
     ctx.setLineDash([]);
 
     ctx.fillStyle = 'white';
-    ctx.font = '40px Arial';
+    ctx.font = '40px Pixelify Sans';
     ctx.textAlign = 'center';
     ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
     if (countdown && countdown > 0) {
       ctx.fillStyle = 'white';
-      ctx.font = '80px Arial';
+      ctx.font = '80px Pixelify Sans';
       ctx.textAlign = 'center';
       ctx.fillText(Math.ceil(countdown), canvas.width / 2, canvas.height / 2);
     }
@@ -148,6 +165,8 @@ async function updateGameState(gameState) {
   }
 }
 
+// Add window resize event to handle orientation changes
+window.addEventListener('resize', updateGameRotation);
 function stopGame() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
@@ -208,6 +227,9 @@ async function checkIfGameFinished(matchId) {
 }
 
 async function startCountdown() {
+  // Apply rotation before starting countdown
+  await updateGameRotation();
+  
   const countdownElement = document.getElementById('countdown');
   let count = 5;
 
@@ -220,7 +242,7 @@ async function startCountdown() {
 
       if (count < 0) {
         clearInterval(interval);
-        countdownElement.style.display = 'none'; // Ocultar el contador
+        countdownElement.style.display = 'none'; // Hide the counter
         resolve();
       }
     }, 1000);
@@ -263,8 +285,7 @@ export async function initGame() {
   }
 
   isInitializing = true;
-  await startCountdown();
-
+  
   try {
     resetGameState();
 
@@ -293,6 +314,11 @@ export async function initGame() {
     if (gameFinished) {
       isInitializing = false;
       return;
+    }
+
+    if (!gameFinished) {
+      await updateGameRotation();
+      await startCountdown();
     }
 
     // Start WebSocket if the game is still ongoing
@@ -347,7 +373,7 @@ export async function initGame() {
     window.removeEventListener('popstate', handlePopState);
     window.addEventListener('popstate', handlePopState);
 
-    setupMobileControls(); // Habilitar controles táctiles
+    setupMobileControls(); // Enable touch controls
 
   } catch (error) {
     console.error('Error in general in initGame:', error);
@@ -355,6 +381,7 @@ export async function initGame() {
     isInitializing = false;
   }
 }
+
 
 function handleKeyDown(event) {
   try {
@@ -412,7 +439,7 @@ function cleanupGameResources() {
   window.removeEventListener('popstate', handlePopState);
 }
 
-function handlePopState() {
+async function handlePopState() {
   try {
     hasNavigatedAway = true;
 
@@ -422,10 +449,23 @@ function handlePopState() {
     }
 
     cleanupGameResources();
+
+    const path = window.location.pathname;
+    const matchId = path.split('/game/')[1]?.split('/')[0];
+
+    if (matchId) {
+      const gameFinished = await checkIfGameFinished(matchId);
+      
+      if (gameFinished) {
+        await loadPage('/');
+        return;
+      }
+    }
   } catch (error) {
-    console.error('Error in handlePopState:', error);
+    console.error('Error en handlePopState:', error);
   }
 }
+
 
 function sendKeyEvent(key, isPressed) {
   try {

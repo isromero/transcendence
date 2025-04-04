@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
 from apps.core.models import Tournaments, History, User
@@ -23,13 +23,6 @@ class TournamentsView(View):
         try:
             if join_code:
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
-
-                if tournament.status != "pending" and tournament.status != "ready":
-                    return create_response(
-                        {"error": "Tournament is not accepting players"},
-                        status=400,
-                    )
-
                 return create_response(
                     data=serialize_tournament(tournament),
                     message="Tournament retrieved successfully",
@@ -65,257 +58,164 @@ class TournamentsView(View):
             return create_response(error=str(e), status=400)
 
     def put(self, request):
-        """Handles joining the tournament and starting the tournament"""
+        """Handles join, leave, start and next_round actions"""
         try:
             data = json.loads(request.body)
             action = data.get("action")
             tournament_id = data.get("tournament_id")
 
-            if not tournament_id:
-                return create_response(error="Tournament ID is required", status=400)
+            if not tournament_id or not action:
+                return create_response(error="Tournament ID and action are required", status=400)
 
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
                 join_code = data.get("join_code")
-
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
-
-                if tournament.status != "pending":
-                    return create_response(
-                        error="Tournament is not accepting players", status=400
-                    )
-
                 if tournament.players.count() >= tournament.max_players:
                     return create_response(error="Tournament is full", status=400)
-
                 tournament.players.add(request.user)
-
-                # If we reach the necessary number of players, change the status
                 if tournament.players.count() == tournament.max_players:
                     tournament.status = "ready"
-
                 tournament.save()
-                return create_response(
-                    message="Joined tournament successfully", status=200
-                )
+                return create_response(message="Joined tournament successfully", status=200)
 
             elif action == "leave":
                 join_code = data.get("join_code")
-
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
-
-                if tournament.status != "pending" and tournament.status != "ready":
-                    return create_response(
-                        error="You can't leave started tournaments", status=400
-                    )
-
+                if tournament.status not in ["pending", "ready"]:
+                    return create_response(error="You can't leave started tournaments", status=400)
                 tournament.players.remove(request.user)
-
                 tournament.save()
-                return create_response(
-                    message="Leaved the tournament successfully", status=200
-                )
+                return create_response(message="Leaved the tournament successfully", status=200)
 
             elif action == "start":
                 if tournament.status != "ready":
-                    return create_response(
-                        error="Tournament is not ready to start", status=400
-                    )
-
-                # TODO: Check if this is working well
-                if tournament.players[0].id != request.user.id:
-                    return create_response(
-                        error="You can't start the tournament. You are not the leader",
-                        status=400,
-                    )
+                    return create_response(error="Tournament is not ready to start", status=400)
 
                 players = list(tournament.players.all())
-                random.shuffle(players)  # Shuffle players randomly
+                random.shuffle(players)
                 num_players = len(players)
-
-                # Calculate players for quarters and semis
                 num_quarter_matches = (num_players - 4) // 2
                 players_in_quarters = num_quarter_matches * 2
                 direct_to_semis = players[players_in_quarters:]
                 quarter_players = players[:players_in_quarters]
 
-                # Create quarter-final matches if there
                 if quarter_players:
                     for i in range(0, len(quarter_players), 2):
                         match_id = uuid.uuid4()
-                        History.objects.create(
-                            match_id=match_id,
-                            tournament_id=tournament,
-                            user_id=quarter_players[i],
-                            opponent_id=quarter_players[i + 1],
-                            type_match="tournament_quarter",
-                            tournament_match_number=(i // 2) + 1,
-                            result_user=0,
-                            result_opponent=0,
-                            local_match=False,
-                        )
-                        History.objects.create(
-                            match_id=match_id,
-                            tournament_id=tournament,
-                            user_id=quarter_players[i + 1],
-                            opponent_id=quarter_players[i],
-                            type_match="tournament_quarter",
-                            tournament_match_number=(i // 2) + 1,
-                            result_user=0,
-                            result_opponent=0,
-                            local_match=False,
-                        )
+                        self._create_match(tournament, quarter_players[i], quarter_players[i + 1], "tournament_quarter", match_id, (i // 2) + 1)
 
-                # Create semifinals matches for those who pass directly
                 if direct_to_semis:
                     for i in range(0, len(direct_to_semis), 2):
                         match_id = uuid.uuid4()
-                        History.objects.create(
-                            match_id=match_id,
-                            tournament_id=tournament,
-                            user_id=direct_to_semis[i],
-                            opponent_id=direct_to_semis[i + 1],
-                            type_match="tournament_semi",
-                            tournament_match_number=(i // 2) + 1,
-                            result_user=0,
-                            result_opponent=0,
-                            local_match=False,
-                        )
-                        History.objects.create(
-                            match_id=match_id,
-                            tournament_id=tournament,
-                            user_id=direct_to_semis[i + 1],
-                            opponent_id=direct_to_semis[i],
-                            type_match="tournament_semi",
-                            tournament_match_number=(i // 2) + 1,
-                            result_user=0,
-                            result_opponent=0,
-                            local_match=False,
-                        )
+                        self._create_match(tournament, direct_to_semis[i], direct_to_semis[i + 1], "tournament_semi", match_id, (i // 2) + 1)
 
                 tournament.status = "in_progress"
-                tournament.current_round = (
-                    1 if quarter_players else 2
-                )  # If there are no quarters, we start in semifinals
+                tournament.current_round = 1 if quarter_players else 2
                 tournament.save()
 
                 return create_response(
-                    data={
-                        "message": "Tournament started successfully",
-                        "matches": {
-                            "quarter_finals": (
-                                [
-                                    {
-                                        "match_id": str(match.match_id),
-                                        "tournament_match_number": match.tournament_match_number,
-                                        "player1": {
-                                            "id": match.user_id.id,
-                                            "username": match.user_id.username,
-                                        },
-                                        "player2": {
-                                            "id": match.opponent_id.id,
-                                            "username": match.opponent_id.username,
-                                        },
-                                    }
-                                    for match in History.objects.filter(
-                                        tournament_id=tournament,
-                                        type_match="tournament_quarter",
-                                    ).distinct("match_id")
-                                ]
-                                if quarter_players
-                                else []
-                            ),
-                            "semi_finals": (
-                                [
-                                    {
-                                        "match_id": str(match.match_id),
-                                        "tournament_match_number": match.tournament_match_number,
-                                        "player1": {
-                                            "id": match.user_id.id,
-                                            "username": match.user_id.username,
-                                        },
-                                        "player2": {
-                                            "id": match.opponent_id.id,
-                                            "username": match.opponent_id.username,
-                                        },
-                                    }
-                                    for match in History.objects.filter(
-                                        tournament_id=tournament,
-                                        type_match="tournament_semi",
-                                    ).distinct("match_id")
-                                ]
-                                if direct_to_semis
-                                else []
-                            ),
-                        },
-                    },
+                    data=serialize_tournament(tournament),
+                    message="Tournament started successfully",
                     status=200,
                 )
+
+            elif action == "next_round":
+                if tournament.status != "in_progress":
+                    return create_response(error="Tournament is not in progress", status=400)
+
+                round_type_map = {
+                    1: "tournament_quarter",
+                    2: "tournament_semi",
+                    3: "tournament_final",
+                }
+
+                next_round_map = {
+                    1: (2, "tournament_semi"),
+                    2: (3, "tournament_final"),
+                }
+
+                current_type = round_type_map.get(tournament.current_round)
+                if not current_type:
+                    return create_response(error="Invalid current round", status=400)
+
+                # Obtener los ganadores sin duplicados
+                winners = []
+                matches = History.objects.filter(
+                    tournament_id=tournament, type_match=current_type
+                ).distinct("match_id")  # Usamos distinct() para evitar duplicados
+
+                for match in matches:
+                    if match.result_user >= 5:
+                        winners.append(match.user_id)
+                    else:
+                        winners.append(match.opponent_id)
+
+                if tournament.current_round in next_round_map:
+                    next_round, next_type = next_round_map[tournament.current_round]
+                    self._create_next_round_matches(tournament, winners, next_type)
+                    tournament.current_round = next_round
+                    tournament.save()
+                else:
+                    # Si estamos en la final, no marcamos "completed" hasta que se juegue
+                    if tournament.current_round == 3:  # Final
+                        tournament.status = "in_progress"
+                        tournament.save()
+                        return create_response(
+                            data=serialize_tournament(tournament),
+                            message="Final match scheduled",
+                            status=200,
+                        )
+                    else:
+                        tournament.status = "completed"
+                        tournament.save()
+
+                return create_response(
+                    data=serialize_tournament(tournament),
+                    message="Next round generated successfully",
+                    status=200,
+                )
+
+            else:
+                return create_response(error="Unknown action", status=400)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def delete(
-        self, _, tournament_id
-    ):  # TODO: IMPLEMENT A DELETE TOURNAMENT FROM FRONTEND WHEN CANCEL TOURNAMENT IN THE JOINING WITH CODE PAGE???
+    def delete(self, _, tournament_id):
+        """Deletes a tournament"""
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
         return HttpResponse(status=204)
 
+    def _create_match(self, tournament, user1, user2, type_match, match_id, match_number):
+        History.objects.create(
+            match_id=match_id,
+            tournament_id=tournament,
+            user_id=user1,
+            opponent_id=user2,
+            type_match=type_match,
+            tournament_match_number=match_number,
+            result_user=0,
+            result_opponent=0,
+            local_match=False,
+        )
+        History.objects.create(
+            match_id=match_id,
+            tournament_id=tournament,
+            user_id=user2,
+            opponent_id=user1,
+            type_match=type_match,
+            tournament_match_number=match_number,
+            result_user=0,
+            result_opponent=0,
+            local_match=False,
+        )
+
     def _create_next_round_matches(self, tournament, winners, next_type):
-        """Create matches for the next round of a tournament"""
         for i in range(0, len(winners), 2):
             match_id = uuid.uuid4()
-            History.objects.create(
-                match_id=match_id,
-                tournament_id=tournament,
-                user_id=winners[i],
-                opponent_id=winners[i + 1],
-                type_match=next_type,
-                tournament_match_number=(i // 2) + 1,
-                result_user=0,
-                result_opponent=0,
-                local_match=False,
-            )
-            History.objects.create(
-                match_id=match_id,
-                tournament_id=tournament,
-                user_id=winners[i + 1],
-                opponent_id=winners[i],
-                type_match=next_type,
-                tournament_match_number=(i // 2) + 1,
-                result_user=0,
-                result_opponent=0,
-                local_match=False,
-            )
-
-    def process_tournament_match(self, match):
-        """Process tournament progression after a match is completed"""
-        tournament = match.tournament_id
-
-        # Check if all matches in current round are completed
-        current_round_matches = History.objects.filter(
-            tournament_id=tournament, type_match=match.type_match
-        ).distinct("match_id")
-
-        if all(
-            m.result_user >= 5 or m.result_opponent >= 5 for m in current_round_matches
-        ):
-            winners = [
-                m.user_id if m.result_user >= 5 else m.opponent_id
-                for m in current_round_matches
-            ]
-
-            if match.type_match == "tournament_quarter":
-                tournament.current_round = 2
-                self._create_next_round_matches(tournament, winners, "tournament_semi")
-            elif match.type_match == "tournament_semi":
-                tournament.current_round = 3
-                self._create_next_round_matches(tournament, winners, "tournament_final")
-            else:  # Final
-                tournament.status = "completed"
-
-            tournament.save()
+            self._create_match(tournament, winners[i], winners[i + 1], next_type, match_id, (i // 2) + 1)

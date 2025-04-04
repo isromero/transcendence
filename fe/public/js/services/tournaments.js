@@ -20,13 +20,7 @@ export const tournamentService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
@@ -37,7 +31,8 @@ export const tournamentService = {
       return null;
     }
   },
-  getTournament: async joinCode => {
+
+  getTournament: async (joinCode) => {
     try {
       const response = await fetch(`${API_URL}/tournaments/${joinCode}`, {
         method: 'GET',
@@ -51,13 +46,7 @@ export const tournamentService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
@@ -67,11 +56,8 @@ export const tournamentService = {
       return null;
     }
   },
-  updateTournamentWhenJoining: async (
-    joinCode,
-    tournamentData,
-    displayName
-  ) => {
+
+  updateTournamentWhenJoining: async (joinCode, tournamentData, displayName) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
@@ -91,13 +77,7 @@ export const tournamentService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
@@ -107,7 +87,8 @@ export const tournamentService = {
       return null;
     }
   },
-  updateTournamentWhenStarting: async tournamentId => {
+
+  updateTournamentWhenStarting: async (tournamentId) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
@@ -125,13 +106,7 @@ export const tournamentService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
@@ -142,7 +117,8 @@ export const tournamentService = {
       return null;
     }
   },
-  leaveTournament: async (joinCode, tournamentData) => {
+
+  leaveTournament: async (joinCode, tournamentId) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
@@ -152,7 +128,7 @@ export const tournamentService = {
         },
         body: JSON.stringify({
           action: 'leave',
-          tournament_id: tournamentData.id,
+          tournament_id: tournamentId,
           join_code: joinCode,
         }),
         credentials: 'include',
@@ -161,21 +137,46 @@ export const tournamentService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
-      showSuccessToast('You leaved the tournament sucessfully');
+      showSuccessToast('You left the tournament successfully');
       return result.data || result;
     } catch (error) {
-      showErrorToast(`Error updating tournament: ${error.message}`);
+      showErrorToast(`Error leaving tournament: ${error.message}`);
       return null;
     }
   },
+
+  goToNextRound: async (tournamentId) => {
+    try {
+      const response = await fetch(`${API_URL}/tournaments`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'next_round',
+          tournament_id: tournamentId,
+        }),
+        credentials: 'include',
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok || !result?.success) {
+        showErrorToast(result);
+        return null;
+      }
+  
+      showSuccessToast('Next round started successfully!');
+      return result.data || result;
+    } catch (error) {
+      showErrorToast(`Error starting next round: ${error.message}`);
+      return null;
+    }
+  },
+  
 };

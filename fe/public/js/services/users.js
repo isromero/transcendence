@@ -53,13 +53,7 @@ export const usersService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
@@ -86,13 +80,7 @@ export const usersService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        if (result.error?.fields) {
-          Object.entries(result.error.fields).forEach(([field, message]) => {
-            showErrorToast(`${field}: ${message}`);
-          });
-        } else {
-          showErrorToast("An unknown error occurred.");
-        }
+        showErrorToast(result);
         return null;
       }
 
