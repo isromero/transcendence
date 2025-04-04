@@ -78,6 +78,15 @@ const intervalId = setInterval(async () => {
   console.log("📊 Estado del torneo actualizado:", tournament);
 
   updateTournamentUI(tournament);
+  const leaveBtn = document.getElementById('leaveTournamentButton');
+  const startBtn = document.getElementById('start-tournament-btn');
+  
+  
+  if (tournament.status === 'in_progress') {
+    leaveBtn?.classList.add('hidden');
+    startBtn?.classList.add('hidden');
+  }
+  
 
   if (tournament.status === 'ready') {
     console.log("✅ Torneo está en estado 'ready'. Verificando permisos para habilitar el botón...");
@@ -212,6 +221,15 @@ if (
     }
 
     updateTournamentUI(tournament);
+    const leaveBtn = document.getElementById('leaveTournamentButton');
+    const startBtn = document.getElementById('start-tournament-btn');
+    
+    
+    if (tournament.status === 'in_progress') {
+      leaveBtn?.classList.add('hidden');
+      startBtn?.classList.add('hidden');
+    }
+    
 
     const profile = await profileService.getProfile();
     console.log("🧑 Perfil obtenido al cargar la página:", profile);

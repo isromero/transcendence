@@ -46,7 +46,6 @@ async function updateGameRotation() {
   let countdownElement = document.getElementById("countdown");
   
   if (!rotatorElement || !countdownElement) {
-    console.error('Rotator or countdown element not found');
     return;
   }
   

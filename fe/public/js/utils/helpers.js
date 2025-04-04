@@ -1,5 +1,6 @@
 import { pageMappings } from '../router/routes.js';
 
+
 export function getCleanPageKey(requestedPath) {
   if (pageMappings[requestedPath]) {
     return requestedPath;
@@ -122,6 +123,7 @@ export function updateTournamentUI(tournamentData) {
 
   // Clean player slots before updating
   const playerSlots = document.querySelectorAll('.player-info span');
+
   playerSlots.forEach(slot => {
     slot.textContent = 'Waiting for player...';
     slot.previousElementSibling.src =
