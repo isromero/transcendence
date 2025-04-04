@@ -73,49 +73,42 @@ startTournamentBtn?.addEventListener('click', async function () {
 
 const intervalId = setInterval(async () => {
   console.log("⏳ Verificando estado del torneo...");
-  
+
   const tournament = await tournamentService.getTournament(joinCode);
   console.log("📊 Estado del torneo actualizado:", tournament);
 
   updateTournamentUI(tournament);
   const leaveBtn = document.getElementById('leaveTournamentButton');
   const startBtn = document.getElementById('start-tournament-btn');
-  
-  
+
   if (tournament.status === 'in_progress') {
     leaveBtn?.classList.add('hidden');
     startBtn?.classList.add('hidden');
   }
-  
 
   if (tournament.status === 'ready') {
     console.log("✅ Torneo está en estado 'ready'. Verificando permisos para habilitar el botón...");
-    
+
     const profile = await profileService.getProfile();
     console.log("🧑 Perfil del usuario obtenido:", profile);
-    
+
     if (!profile) {
       console.warn("⚠️ No se pudo obtener el perfil del usuario.");
       return;
     }
-    console.log("👀 Verificando liderazgo...");
-    console.log("👤 ID del primer jugador en el torneo:", tournament.players[0]?.id);
-    console.log("🧑 ID del usuario actual (desde profile):", profile);
-    console.log("🆔 ID extraído de profile.data:", profile?.data?.id);
-    
 
-    const playerId = Number(profile.data.id); // Convertir ID del usuario a número
-const leaderId = Number(tournament.players[0].id); // Convertir ID del líder a número
+    const playerId = Number(profile.data.id);
+    const leaderId = Number(tournament.players[0].id);
 
-if (playerId === leaderId) {
-    console.log("🎉 El usuario es el líder. Habilitando botón de inicio...");
-    document.getElementById("start-tournament-btn").removeAttribute("disabled");
-} else {
-    console.log("🔒 El usuario NO es el líder. Botón sigue deshabilitado.");
-}
+    if (playerId === leaderId) {
+      console.log("🎉 El usuario es el líder. Habilitando botón de inicio...");
+      document.getElementById("start-tournament-btn").removeAttribute("disabled");
+    } else {
+      console.log("🔒 El usuario NO es el líder. Botón sigue deshabilitado.");
+    }
   } else if (tournament.status === 'in_progress') {
-    console.log("🕹️ Torneo en progreso. Buscando partido del usuario...");
-    
+    console.log("🕹️ Torneo en progreso. Verificando si la ronda actual ha terminado...");
+
     const roundMap = {
       1: 'quarter_finals',
       2: 'semi_finals',
@@ -125,9 +118,53 @@ if (playerId === leaderId) {
     const currentRoundKey = roundMap[tournament.current_round];
     console.log("📍 Ronda actual:", tournament.current_round, "->", currentRoundKey);
 
+    const currentRoundFinished = tournament.matches.round_finished?.[currentRoundKey];
+
+    if (currentRoundFinished) {
+      console.log(`📢 La ronda '${currentRoundKey}' ha finalizado. Enviando señal para avanzar a la siguiente ronda...`);
+    
+      const result = await tournamentService.goToNextRound(tournament.id);
+    
+      if (!result) {
+        console.error("❌ Error al avanzar a la siguiente ronda.");
+        return;
+      }
+    
+      console.log("✅ Siguiente ronda iniciada con éxito:", result);
+    
+      const nextRoundKey = {
+        1: 'semi_finals',
+        2: 'finals',
+      }[tournament.current_round];
+    
+      if (nextRoundKey) {
+        const profile = await profileService.getProfile();
+        const currentUserId = profile?.data?.id;
+    
+        const newMatch = result.matches[nextRoundKey]?.find(
+          match =>
+            match?.player1?.id === currentUserId ||
+            match?.player2?.id === currentUserId
+        );
+    
+        if (newMatch?.match_id) {
+          console.log(`🎮 Match encontrado para la nueva ronda (${nextRoundKey}):`, newMatch);
+          await loadPage(`/game/${newMatch.match_id}/tournament/${result.join_code}`);
+          await initGame();
+        } else {
+          console.log(`🧘 El usuario no juega en esta ronda (${nextRoundKey}). Esperando a que termine...`);
+        }
+      }
+    
+      return;
+    }
+    
+    
+
+    console.log("🔍 Verificando partidos finalizados del usuario...");
     const matches = tournament.matches[currentRoundKey];
     const match = matches.find(match => match.game_finished);
-    
+
     if (match) {
       console.log("✅ Se encontró un partido ya finalizado.");
       return;
@@ -159,6 +196,7 @@ if (playerId === leaderId) {
     await initGame();
   }
 }, 1000);
+
 
 async function leaveTournament() {
   console.log("🚪 Saliendo del torneo...");

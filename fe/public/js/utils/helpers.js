@@ -135,11 +135,16 @@ export function updateTournamentUI(tournamentData) {
   });
 
   // Now, fill with the players
-  tournamentData.players.forEach((player, index) => {
-    if (playerSlots[index]) {
-      playerSlots[index].textContent = player.username;
-      playerSlots[index].previousElementSibling.src =
-        player.avatar || '/public/assets/images/default-avatar.webp';
-    }
-  });
+  if (Array.isArray(tournamentData.players)) {
+    tournamentData.players.forEach((player, index) => {
+      if (playerSlots[index]) {
+        playerSlots[index].textContent = player.username;
+        playerSlots[index].previousElementSibling.src =
+          player.avatar || '/public/assets/images/default-avatar.webp';
+      }
+    });
+  } else {
+    console.warn("⚠️ No se pudieron cargar los jugadores del torneo:", tournamentData.players);
+  }
+  
 }
