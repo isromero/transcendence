@@ -1,5 +1,5 @@
 import { pageMappings } from '../router/routes.js';
-
+import { tournamentService } from '../services/tournaments.js';
 
 export function getCleanPageKey(requestedPath) {
   if (pageMappings[requestedPath]) {
@@ -125,7 +125,11 @@ export function updateTournamentUI(tournamentData) {
   const playerSlots = document.querySelectorAll('.player-info span');
 
   playerSlots.forEach(slot => {
-    slot.textContent = 'Waiting for player...';
+    if (tournamentData.status === 'in_progress') {
+      slot.textContent = 'Waiting for matches to end...';
+    }
+    else
+      slot.textContent = 'Waiting for player...';
     slot.previousElementSibling.src =
       '/public/assets/images/default-avatar.webp';
   });
