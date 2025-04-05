@@ -1,25 +1,22 @@
 import { usersService } from '../services/users.js';
 import { showErrorToast } from '../utils/helpers.js';
-
-export function init() {
-
-  // TODO: wtf is this
-  export function hideByUsernameLength() {
+import { profileService } from '../services/profile.js';
+export async function init() {
+  async function hackToDontShowEditableFieldsFor42Users() {
     const { data } = await profileService.getProfile();
 
-    const username = document.getElementById("changeUsernameButton");
-    const password = document.getElementById("changePasswordButton");
+    const username = document.getElementById('changeUsernameButton');
+    const password = document.getElementById('changePasswordButton');
 
-    console.log(data.username);
-    if (data.username.length > 8) {
-        username.hidden = !username.hidden;
-        password.hidden = !password.hidden;
+    // 42 users have a username with less than 9 characters
+    if (data.username.length < 9) {
+      username.hidden = true;
+      password.hidden = true;
     }
   }
-  
-  hideByUsernameLength();
 
-  
+  await hackToDontShowEditableFieldsFor42Users();
+
   const avatarInput = document.getElementById('avatarInput');
   const changeAvatarButton = document.getElementById('changeAvatarButton');
   const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -44,7 +41,7 @@ export function init() {
   function handleChangeAvatarClick() {
     avatarInput?.click();
   }
-  
+
   avatarInput?.addEventListener('change', handleAvatarChange);
   changeAvatarButton?.addEventListener('click', handleChangeAvatarClick);
 

@@ -30,6 +30,14 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
+# OAUTH42
+OAUTH42_CLIENT_ID = os.getenv("OAUTH42_CLIENT_ID")
+OAUTH42_CLIENT_SECRET = os.getenv("OAUTH42_CLIENT_SECRET")
+OAUTH42_REDIRECT_URI = os.getenv("OAUTH42_REDIRECT_URI")
+OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
+OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
+OAUTH42_USER_INFO_URL = os.getenv("OAUTH42_USER_INFO_URL")
+
 ALLOWED_HOSTS = ["*"]
 
 
@@ -42,14 +50,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-	"django_prometheus",
+    "django_prometheus",
     "apps.core",
     "channels",
 ]
 
 
 MIDDLEWARE = [
-	"django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -59,7 +67,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.auth.AuthenticationMiddleware",
-	"django_prometheus.middleware.PrometheusAfterMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -135,12 +143,6 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-OAUTH42_CLIENT_ID = os.getenv("OAUTH42_CLIENT_ID")
-OAUTH42_CLIENT_SECRET = os.getenv("OAUTH42_CLIENT_SECRET")
-OAUTH42_REDIRECT_URI = os.getenv("OAUTH42_REDIRECT_URI")
-OAUTH42_TOKEN_URL = os.getenv("OAUTH42_TOKEN_URL")
-OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
-OAUTH42_USER_INFO_URL = "https://api.intra.42.fr/v2/me"
 AUTH_USER_MODEL = "core.User"
 
 MEDIA_URL = "/images/"

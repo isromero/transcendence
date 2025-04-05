@@ -448,7 +448,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "pg_database_connection_limit{datname=\"trascendence\"}",
+          "expr": "pg_database_connection_limit{datname=\"transcendence\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
