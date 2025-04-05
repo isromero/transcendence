@@ -11,7 +11,7 @@ export function init() {
 
     const tournamentName = document.getElementById('tournament-name').value;
 
-    if (lastClickedButton?.id === '4-players-btn') {
+    if (lastClickedButton?.id === 'create-tournament-btn') {
       const result = await tournamentService.createTournament(
         tournamentName,
         4
@@ -20,7 +20,9 @@ export function init() {
         await loadPage(`/tournament/${result.join_code}`);
         await updateTournamentUI(result);
       }
-    } else if (lastClickedButton?.id === '8-players-btn') {
+    }
+    // ! UNCOMMENT THIS IF WE WANT TO USE THE 8 PLAYERS TOURNAMENT
+    /* else if (lastClickedButton?.id === '8-players-btn') {
       const result = await tournamentService.createTournament(
         tournamentName,
         8
@@ -29,7 +31,7 @@ export function init() {
         await loadPage(`/tournament-big/${result.join_code}`);
         await updateTournamentUI(result);
       }
-    }
+    } */
   }
 
   function handleButtonClick(event) {

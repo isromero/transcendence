@@ -13,7 +13,7 @@
         Leave Tournament
       </button>
       <button id="start-tournament-btn" class="btn btn-success" disabled>
-        Iniciar Torneo
+        Start Tournament
       </button>
     </div>
 
@@ -24,14 +24,14 @@
           <li class="list-group-item">
             <div class="match-result">
               <div class="player-info">
-                <img src="" class="player-img rounded-circle"/>
+                <img src="" class="player-img rounded-circle" />
                 <span>Player 1</span>
               </div>
-              <span class="text-warning semis-player1">3</span>
+              <span class="text-warning semis-player1">0</span>
               <span>VS</span>
-              <span class="text-warning semis-player2">1</span>
+              <span class="text-warning semis-player2">0</span>
               <div class="player-info">
-                <img src="" class="player-img rounded-circle"/>
+                <img src="" class="player-img rounded-circle" />
                 <span>Player 2</span>
               </div>
             </div>
@@ -39,14 +39,14 @@
           <li class="list-group-item">
             <div class="match-result">
               <div class="player-info">
-                <img src="" class="player-img rounded-circle"  />
+                <img src="" class="player-img rounded-circle" />
                 <span>Player 3</span>
               </div>
-              <span class="text-warning semis-player3">2</span>
+              <span class="text-warning semis-player3">0</span>
               <span>VS</span>
-              <span class="text-warning semis-player4">4</span>
+              <span class="text-warning semis-player4">0</span>
               <div class="player-info">
-                <img src="" class="player-img rounded-circle"  />
+                <img src="" class="player-img rounded-circle" />
                 <span>Player 4</span>
               </div>
             </div>
@@ -62,12 +62,12 @@
           <li class="list-group-item">
             <div class="match-result">
               <div class="player-info-final">
-                <img src="" class="player-img rounded-circle"  />
+                <img src="" class="player-img rounded-circle" />
                 <span></span>
               </div>
-              <span class="text-warning">5</span>
+              <span class="text-warning">0</span>
               <span>VS</span>
-              <span class="text-warning">2</span>
+              <span class="text-warning">0</span>
               <div class="player-info-final">
                 <img src="" class="player-img rounded-circle" />
                 <span></span>
@@ -79,23 +79,22 @@
     </div>
 
     <div class="col-12 mb-5">
-      <h5 class="mb-4 tournament-title">Ganador</h5>
+      <h5 class="mb-4 tournament-title">Winner</h5>
       <div class="scroll-container">
         <div class="final-winner">
           <div
-            class="card bg-dark text-white border border-white border-1"
-            style="width: 200px"
+            class="card bg-dark text-white border border-white border-1 winner-container"
           >
             <div class="card-body text-center">
-              <p class="fw-bold text-warning">👑</p>
+              <p class="fw-bold text-warning fs-3">👑</p>
               <img
+                id="winner-avatar"
                 src=""
-                class="player-img rounded-circle mb-3"
-                
-                width="40"
-                height="40"
+                class="player-img-winner rounded-circle mb-3"
               />
-              <span class="fw-bold text-warning">Winner</span>
+              <p id="winner-name" class="fw-bold text-warning fs-3"
+                >Waiting for winner...</span
+              >
             </div>
           </div>
         </div>
@@ -103,4 +102,3 @@
     </div>
   </div>
 </div>
-

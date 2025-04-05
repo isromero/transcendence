@@ -86,9 +86,6 @@ export const pageControllers = {
   '/tournament/:id': {
     init: initTournament,
   },
-  '/tournament-big/:id': {
-    init: initTournament,
-  },
   /* 
     JOIN TOURNAMENT
   */

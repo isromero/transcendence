@@ -6,64 +6,35 @@ import { loadPage } from '../router/router.js';
 function getJoinCodeFromURL() {
   const urlParts = window.location.pathname.split('/');
   const joinCode = urlParts[urlParts.length - 1];
-  console.log('🔍 Código del torneo extraído de la URL:', joinCode);
   return joinCode;
-}
-
-function getUserMatch(tournament, currentUserId) {
-  console.log('🔎 Buscando el match del usuario en el torneo...', {
-    tournament,
-    currentUserId,
-  });
-
-  const match = Object.values(tournament.matches)
-    .flat()
-    .find(
-      match =>
-        match?.player1?.id === currentUserId ||
-        match?.player2?.id === currentUserId
-    );
-
-  console.log('🎯 Match encontrado para el usuario:', match);
-  return match?.match_id;
 }
 
 export function init() {
   const joinCode = getJoinCodeFromURL();
   const startBtn = document.getElementById('start-tournament-btn');
   const leaveBtn = document.getElementById('leaveTournamentButton');
-  let intervalId;
-
-  if (!startBtn) {
-    console.error('❌ Botón de inicio no encontrado.');
-  }
+  let intervalId = null;
 
   async function leaveTournament() {
-    console.log('🚪 Saliendo del torneo...');
     clearInterval(intervalId);
 
     const tournament = await tournamentService.getTournament(joinCode);
     if (!tournament) {
-      console.error('❌ Error obteniendo el torneo al salir.');
       return;
     }
 
     await tournamentService.leaveTournament(joinCode, tournament.id);
 
-    // Notificar en localStorage para otros tabs
     localStorage.setItem(
       'tournament_left',
       JSON.stringify({ joinCode, timestamp: Date.now() })
     );
-
-    console.log('👋 Salida completada.');
   }
 
   function handleStorageChange(event) {
     if (event.key === 'tournament_left') {
       const data = JSON.parse(event.newValue);
       if (data.joinCode === joinCode) {
-        console.log('🔄 Otro tab salió del torneo. Redirigiendo...');
         loadPage('/join-tournament');
       }
     }
@@ -72,7 +43,9 @@ export function init() {
   async function handleStartTournament() {
     try {
       const tournament = await tournamentService.getTournament(joinCode);
-      if (!tournament) return;
+      if (!tournament) {
+        return;
+      }
 
       if (tournament.current_players < tournament.max_players) {
         showErrorToast(
@@ -83,7 +56,6 @@ export function init() {
 
       await tournamentService.updateTournamentWhenStarting(tournament.id);
     } catch (err) {
-      console.error('❌ Error al iniciar torneo:', err);
       showErrorToast(`Error starting tournament: ${err.message}`);
     }
   }
@@ -102,7 +74,9 @@ export function init() {
   async function initializeTournament() {
     try {
       const tournament = await tournamentService.getTournament(joinCode);
-      if (!tournament) throw Error('No tournament found.');
+      if (!tournament) {
+        throw Error('No tournament found.');
+      }
 
       updateTournamentUI(tournament);
 
@@ -125,7 +99,6 @@ export function init() {
         startBtn?.classList.add('hidden');
       }
     } catch (error) {
-      console.error('🔥 Error al inicializar:', error);
       showErrorToast(`Initialization error: ${error}`);
     }
   }
@@ -139,7 +112,9 @@ export function init() {
     const currentRoundKey = roundMap[tournament.current_round];
     const profile = await profileService.getProfile();
 
-    if (!profile || !currentRoundKey) return;
+    if (!profile || !currentRoundKey) {
+      return;
+    }
 
     const userId = profile.data.id;
 
@@ -150,19 +125,19 @@ export function init() {
     );
 
     if (userMatch?.match_id) {
-      console.log(`🎮 Redirigiendo a tu match (${currentRoundKey})`);
-      await loadPage(`/game/${userMatch.match_id}/tournament/${tournament.join_code}`);
+      await loadPage(
+        `/game/${userMatch.match_id}/tournament/${tournament.join_code}`
+      );
     } else {
-      console.log(`🧘 No hay match activo para ti en ${currentRoundKey}`);
+      console.error('No match found for user in current round');
     }
   }
 
   async function handleTournamentProgress() {
     const tournament = await tournamentService.getTournament(joinCode);
-    if (!tournament) return;
-
-    const tournamentpolita = await tournamentService.getTournament(joinCode);
-    console.log('📊 Estado del torneo actualizado:', tournamentpolita);
+    if (!tournament) {
+      return;
+    }
 
     updateTournamentUI(tournament);
 
@@ -173,14 +148,13 @@ export function init() {
         3: 'finals',
       };
       const currentRoundKey = roundMap[tournament.current_round];
-      const currentRoundFinished = tournament.matches.round_finished?.[currentRoundKey];
+      const currentRoundFinished =
+        tournament.matches.round_finished?.[currentRoundKey];
 
       if (currentRoundFinished) {
-        console.log(`📢 Ronda ${currentRoundKey} finalizada. Avanzando...`);
         const result = await tournamentService.goToNextRound(tournament.id);
 
         if (!result) {
-          console.error('❌ No se pudo avanzar ronda.');
           return;
         }
 
@@ -200,10 +174,8 @@ export function init() {
     }
   }
 
-  // Interval para monitorear el estado del torneo
   intervalId = setInterval(handleTournamentProgress, 1000);
 
-  // Listeners
   startBtn?.addEventListener('click', handleStartTournament);
   leaveBtn?.addEventListener('click', handleLeaveTournament);
   window.addEventListener('beforeunload', handleBeforeUnload);
@@ -211,7 +183,6 @@ export function init() {
 
   initializeTournament();
 
-  // Cleanup
   return () => {
     clearInterval(intervalId);
     startBtn?.removeEventListener('click', handleStartTournament);
@@ -221,4 +192,3 @@ export function init() {
     leaveTournament();
   };
 }
-

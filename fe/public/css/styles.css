@@ -476,11 +476,9 @@ canvas {
   }
 }
 
-
 .hidden {
   display: none !important;
 }
-
 
 .match-result {
   display: flex;
@@ -489,15 +487,24 @@ canvas {
   width: 100%;
 }
 
-.player-info, .player-info-final {
+.player-info,
+.player-info-final {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 120px;
+  width: 12rem;
   overflow: hidden;
 }
 
-.player-info span, .player-info-final span {
+@media (max-width: 768px) {
+  .player-info,
+  .player-info-final {
+    width: 7rem;
+  }
+}
+
+.player-info span,
+.player-info-final span {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -505,12 +512,10 @@ canvas {
   text-align: center;
 }
 
-
 .match-result span:not(.player-info span):not(.player-info-final span) {
   flex: 0 0 auto;
   padding: 0 10px;
 }
-
 
 .player-img {
   width: 40px;
@@ -519,6 +524,22 @@ canvas {
   margin-bottom: 5px;
 }
 
+.winner-container {
+  width: 25rem;
+}
+
+@media (max-width: 400px) {
+  .winner-container {
+    width: 18rem;
+  }
+}
+
+.player-img-winner {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 10px;
+}
 
 .scroll-container {
   overflow-x: auto;
