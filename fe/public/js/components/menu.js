@@ -1,4 +1,4 @@
-import { changeLanguage } from '../utils/languages.js';
+import { changeLanguage } from '../pages/languages.js';
 import { parseAndSetContent } from '../utils/helpers.js';
 import { initGlobalValidation } from '../utils/helpers.js';
 

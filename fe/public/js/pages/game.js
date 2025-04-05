@@ -1,7 +1,8 @@
-import { loadPage } from './router/router.js';
-import { showErrorToast, updateTournamentUI } from './utils/helpers.js';
-import { historyService } from './services/history.js';
-import { IMAGES_URL } from './utils/constants.js';
+import { loadPage } from '../router/router.js';
+import { showErrorToast, updateTournamentUI } from '../utils/helpers.js';
+import { historyService } from '../services/history.js';
+import { IMAGES_URL } from '../utils/constants.js';
+
 let canvas;
 let ctx;
 let ws;
@@ -34,25 +35,24 @@ function resetGameState() {
 }
 
 function isHorizontal() {
-    if (window.innerWidth > window.innerHeight)
-	{
-		return true;
-	}
-	return false;
+  if (window.innerWidth > window.innerHeight) {
+    return true;
+  }
+  return false;
 }
 
-async function updateGameRotation() {
-  let rotatorElement = document.getElementById("rotator");
-  let countdownElement = document.getElementById("countdown");
-  
+function updateGameRotation() {
+  const rotatorElement = document.getElementById('rotator');
+  const countdownElement = document.getElementById('countdown');
+
   if (!rotatorElement || !countdownElement) {
     return;
   }
-  
-  let angle = isHorizontal() ? 0 : 90;
-  
+
+  const angle = isHorizontal() ? 0 : 90;
+
   rotatorElement.style.transform = `rotate(${angle}deg)`;
-  
+
   // For vertical orientation, handle countdown positioning and rotation
   if (!isHorizontal()) {
     // Position the countdown in the center of the screen
@@ -72,12 +72,10 @@ async function updateGameRotation() {
   }
 }
 
-
 async function updateGameState(gameState) {
   try {
     // No need to call updateGameRotation here since it's already called during initialization
     // and will be handled by window resize event
-    
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -229,7 +227,7 @@ async function checkIfGameFinished(matchId) {
 async function startCountdown() {
   // Apply rotation before starting countdown
   await updateGameRotation();
-  
+
   const countdownElement = document.getElementById('countdown');
   let count = 5;
 
@@ -249,84 +247,175 @@ async function startCountdown() {
   });
 }
 
-// Función para manejar eventos de botones táctiles
 function setupMobileControls() {
   const buttonMapping = {
-    "left-up": "w",
-    "left-down": "s",
-    "right-up": "ArrowUp",
-    "right-down": "ArrowDown",
+    'left-up': 'w',
+    'left-down': 's',
+    'right-up': 'ArrowUp',
+    'right-down': 'ArrowDown',
   };
 
-  Object.keys(buttonMapping).forEach((buttonId) => {
+  Object.keys(buttonMapping).forEach(buttonId => {
     const button = document.getElementById(buttonId);
-    if (!button) return;
+    if (!button) {
+      return;
+    }
 
-    button.addEventListener("mousedown", () => sendKeyEvent(buttonMapping[buttonId], true));
-    button.addEventListener("mouseup", () => sendKeyEvent(buttonMapping[buttonId], false));
+    button.addEventListener('mousedown', () =>
+      sendKeyEvent(buttonMapping[buttonId], true)
+    );
+    button.addEventListener('mouseup', () =>
+      sendKeyEvent(buttonMapping[buttonId], false)
+    );
 
-    button.addEventListener("touchstart", (e) => {
+    button.addEventListener('touchstart', e => {
       e.preventDefault();
       sendKeyEvent(buttonMapping[buttonId], true);
     });
 
-    button.addEventListener("touchend", (e) => {
+    button.addEventListener('touchend', e => {
       e.preventDefault();
       sendKeyEvent(buttonMapping[buttonId], false);
     });
   });
 }
 
+function sendKeyEvent(key, isPressed) {
+  try {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({ type: 'key_event', key, is_pressed: isPressed })
+      );
+    }
+  } catch (error) {
+    console.error('Error in sendKeyEvent:', error);
+  }
+}
 
-export async function initGame() {
+export function init() {
   // Prevent multiple simultaneous initializations
   if (isInitializing) {
     return;
   }
 
   isInitializing = true;
-  
-  try {
-    resetGameState();
 
+  function handleKeyDown(event) {
     try {
+      const playerRole = sessionStorage.getItem('player_role');
+      const isLocalMatch = true;
+
+      if (
+        isLocalMatch ||
+        (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
+        (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
+      ) {
+        sendKeyEvent(event.key, true);
+      }
+    } catch (error) {
+      console.error('Error in handleKeyDown:', error);
+    }
+  }
+
+  function handleKeyUp(event) {
+    try {
+      const playerRole = sessionStorage.getItem('player_role');
+      const isLocalMatch = true;
+
+      if (
+        isLocalMatch ||
+        (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
+        (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
+      ) {
+        sendKeyEvent(event.key, false);
+      }
+    } catch (error) {
+      console.error('Error in handleKeyUp:', error);
+    }
+  }
+
+  function handleBeforeUnload() {
+    try {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'disconnect' }));
+        ws.close();
+        stopGame();
+      }
+    } catch (error) {
+      console.error('Error in handleBeforeUnload:', error);
+    }
+  }
+
+  async function handlePopState() {
+    try {
+      hasNavigatedAway = true;
+
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'disconnect' }));
+        ws.close();
+      }
+
+      cleanupGameResources();
+
+      const path = window.location.pathname;
+      const matchId = path.split('/game/')[1]?.split('/')[0];
+
+      if (matchId) {
+        const gameFinished = await checkIfGameFinished(matchId);
+        if (gameFinished) {
+          await loadPage('/');
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error en handlePopState:', error);
+    }
+  }
+
+  function cleanupGameResources() {
+    stopGame();
+    document.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keyup', handleKeyUp);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.removeEventListener('popstate', handlePopState);
+  }
+
+  async function initializeGame() {
+    try {
+      resetGameState();
+
+      // Initialize canvas
       canvas = document.getElementById('pong');
       ctx = canvas.getContext('2d');
       canvas.width = 800;
       canvas.height = 400;
-    } catch (error) {
-      console.error('Error waiting for canvas:', error);
-      isInitializing = false;
-      return;
-    }
 
-    const path = window.location.pathname;
-    const matchId = path.split('/game/')[1]?.split('/')[0];
+      const path = window.location.pathname;
+      const matchId = path.split('/game/')[1]?.split('/')[0];
 
-    if (!matchId) {
-      console.error('No valid match ID found');
-      isInitializing = false;
-      return;
-    }
+      if (!matchId) {
+        console.error('No valid match ID found');
+        return;
+      }
 
-    // Check if the game already finished before opening WebSocket
-    const gameFinished = await checkIfGameFinished(matchId);
-    if (gameFinished) {
-      isInitializing = false;
-      return;
-    }
+      // Check if game is already finished
+      const gameFinished = await checkIfGameFinished(matchId);
+      if (gameFinished) {
+        return;
+      }
 
-    if (!gameFinished) {
-      await updateGameRotation();
-      await startCountdown();
-    }
+      if (!gameFinished) {
+        await updateGameRotation();
+        await startCountdown();
+      }
 
-    // Start WebSocket if the game is still ongoing
-    try {
-      ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${matchId}`);
+      // Initialize WebSocket
+      ws = new WebSocket(
+        `ws://${window.location.hostname}:8000/ws/game/${matchId}`
+      );
 
       ws.onopen = () => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
+        if (ws?.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ type: 'init_game', match_id: matchId }));
         }
       };
@@ -342,150 +431,35 @@ export async function initGame() {
 
       ws.onclose = () => {
         if (!gameEnded && !hasNavigatedAway) {
-          // If the game is not ended and the user has not navigated away,
-          // wait 1 second and try to initialize the game again
-          setTimeout(initGame, 1000);
+          setTimeout(initializeGame, 1000);
         }
       };
 
       ws.onerror = error => {
         showErrorToast(`Error connecting to the game: ${error}`);
       };
+
+      setupMobileControls();
     } catch (error) {
-      console.error('Error creating WebSocket:', error);
-      isInitializing = false;
-      return;
+      console.error('Error in initializeGame:', error);
     }
-
-    // Eliminate previous listeners to avoid duplicates
-    document.removeEventListener('keydown', handleKeyDown);
-    document.removeEventListener('keyup', handleKeyUp);
-
-    // Add new listeners
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-
-    // When the user closes the tab, the game is closed
-    window.removeEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    // When the user goes back to the previous page, the game is closed
-    window.removeEventListener('popstate', handlePopState);
-    window.addEventListener('popstate', handlePopState);
-
-    setupMobileControls(); // Enable touch controls
-
-  } catch (error) {
-    console.error('Error in general in initGame:', error);
-  } finally {
-    isInitializing = false;
   }
-}
 
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
+  window.addEventListener('beforeunload', handleBeforeUnload);
+  window.addEventListener('popstate', handlePopState);
+  window.addEventListener('resize', updateGameRotation);
 
-function handleKeyDown(event) {
-  try {
-    const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = true;
+  initializeGame();
 
-    if (
-      isLocalMatch ||
-      (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
-      (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
-    ) {
-      sendKeyEvent(event.key, true);
-    }
-  } catch (error) {
-    console.error('Error in handleKeyDown:', error);
-  }
-}
-
-function handleKeyUp(event) {
-  try {
-    const playerRole = sessionStorage.getItem('player_role');
-    const isLocalMatch = true;
-
-    if (
-      isLocalMatch ||
-      (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
-      (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
-    ) {
-      sendKeyEvent(event.key, false);
-    }
-  } catch (error) {
-    console.error('Error in handleKeyUp:', error);
-  }
-}
-
-function handleBeforeUnload() {
-  try {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: 'disconnect' }));
-      ws.close();
-      stopGame();
-    }
-  } catch (error) {
-    console.error('Error in handleBeforeUnload:', error);
-  }
-}
-
-// Function to clean all game resources when navigating away from the page
-function cleanupGameResources() {
-  stopGame();
-
-  document.removeEventListener('keydown', handleKeyDown);
-  document.removeEventListener('keyup', handleKeyUp);
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-  window.removeEventListener('popstate', handlePopState);
-}
-
-async function handlePopState() {
-  try {
-    hasNavigatedAway = true;
-
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: 'disconnect' }));
-      ws.close();
-    }
-
+  return () => {
     cleanupGameResources();
-
-    const path = window.location.pathname;
-    const matchId = path.split('/game/')[1]?.split('/')[0];
-
-    if (matchId) {
-      const gameFinished = await checkIfGameFinished(matchId);
-      
-      if (gameFinished) {
-        await loadPage('/');
-        return;
-      }
+    window.removeEventListener('resize', updateGameRotation);
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'disconnect' }));
+      ws.close();
     }
-  } catch (error) {
-    console.error('Error en handlePopState:', error);
-  }
-}
-
-
-function sendKeyEvent(key, isPressed) {
-  try {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({ type: 'key_event', key, is_pressed: isPressed })
-      );
-    }
-  } catch (error) {
-    console.error('Error in sendKeyEvent:', error);
-  }
-}
-
-if (
-  document.readyState !== 'loading' &&
-  window.location.pathname.includes('/game/')
-) {
-  try {
-    await initGame();
-  } catch (error) {
-    showErrorToast(`Error initializing the game: ${error}`);
-  }
+    isInitializing = false;
+  };
 }
