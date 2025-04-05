@@ -9,6 +9,12 @@ import { init as initEditPassword } from './pages/editPassword.js';
 import { init as initAccountDeletion } from './pages/accountDeletion.js';
 import { init as initLanguages } from './pages/languages.js';
 import { init as initLogout } from './pages/logout.js';
+import { init as initCreateMatch } from './pages/createMatch.js';
+import { init as initTournamentSettings } from './pages/tournamentSettings.js';
+import { init as initTournament } from './pages/tournament.js';
+import { init as initJoinTournament } from './pages/joinTournament.js';
+import { init as initGame } from './pages/game.js';
+import { init as initAddFriend } from './pages/addFriend.js';
 
 export const pageControllers = {
   /* 
@@ -28,6 +34,9 @@ export const pageControllers = {
   },
   '/friends': {
     init: initFriends,
+  },
+  '/modal-add-friend': {
+    init: initAddFriend,
   },
   '/requests': {
     init: initRequests,
@@ -58,5 +67,38 @@ export const pageControllers = {
   */
   '/modal-logout': {
     init: initLogout,
+  },
+  /* 
+    CREATE MATCH
+  */
+  '/create-match': {
+    init: initCreateMatch,
+  },
+  /*
+    CREATE MATCH -> TOURNAMENT SETTINGS
+  */
+  '/tournament-settings': {
+    init: initTournamentSettings,
+  },
+  /*
+    TOURNAMENT
+  */
+  '/tournament/:id': {
+    init: initTournament,
+  },
+  /* 
+    JOIN TOURNAMENT
+  */
+  '/join-tournament': {
+    init: initJoinTournament,
+  },
+  /*
+    GAME
+  */
+  '/game/:id': {
+    init: initGame,
+  },
+  '/game/:id/tournament/:id': {
+    init: initGame,
   },
 };

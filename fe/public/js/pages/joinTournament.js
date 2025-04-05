@@ -2,7 +2,7 @@ import { tournamentService } from '../services/tournaments.js';
 import { showErrorToast, updateTournamentUI } from '../utils/helpers.js';
 import { loadPage } from '../router/router.js';
 
-export async function joinTournament(displayName, joinCode) {
+async function joinTournament(displayName, joinCode) {
   try {
     const tournamentData = await tournamentService.getTournament(joinCode);
 
@@ -21,7 +21,6 @@ export async function joinTournament(displayName, joinCode) {
     }
 
     await loadPage(`/tournament/${joinCode}`);
-
     updateTournamentUI(tournamentData);
   } catch (error) {
     showErrorToast(
@@ -31,18 +30,26 @@ export async function joinTournament(displayName, joinCode) {
   }
 }
 
-const joinTournamentForm = document.getElementById('joinTournamentForm');
+export function init() {
+  const form = document.getElementById('joinTournamentForm');
 
-joinTournamentForm.addEventListener('submit', async function (event) {
-  event.preventDefault();
+  async function handleFormSubmit(event) {
+    event.preventDefault();
 
-  const displayName = document.getElementById('displayName').value.trim();
-  const joinCode = document.getElementById('joinCode').value.trim();
+    const displayName = document.getElementById('displayName').value.trim();
+    const joinCode = document.getElementById('joinCode').value.trim();
 
-  if (!displayName || !joinCode) {
-    showErrorToast('Please fill in all fields.');
-    return;
+    if (!displayName || !joinCode) {
+      showErrorToast('Please fill in all fields.');
+      return;
+    }
+
+    await joinTournament(displayName, joinCode);
   }
 
-  await joinTournament(displayName, joinCode);
-});
+  form?.addEventListener('submit', handleFormSubmit);
+
+  return () => {
+    form?.removeEventListener('submit', handleFormSubmit);
+  };
+}
