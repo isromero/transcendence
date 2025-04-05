@@ -1,0 +1,40 @@
+global:
+  # scrape_interval: 15s
+  scrape_interval: 3s
+
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['be:8000']
+
+  - job_name: 'front-node'
+    static_configs:
+      - targets: ['fe:3002']
+
+  - job_name: "live-server"
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://fe:3001
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
+
+rule_files:
+  - "alert.rules.yml"
+

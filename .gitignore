@@ -13,4 +13,5 @@ fe/package-lock.json
 fe/.npm/
 fe/.ash*
 
+# Monitoring
 monitoring/.env

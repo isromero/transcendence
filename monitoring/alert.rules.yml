@@ -1,0 +1,11 @@
+groups:
+  - name: backend_alerts
+    rules:
+      - alert: "BackendDown"
+        expr: up{job="backend", instance="be:8000"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El backend no responde"
+          description: "El servicio backend en be:8000 ha estado inactivo por más de 1 minuto."

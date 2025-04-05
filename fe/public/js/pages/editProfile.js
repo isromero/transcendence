@@ -1,7 +1,22 @@
 import { usersService } from '../services/users.js';
 import { showErrorToast } from '../utils/helpers.js';
+import { profileService } from '../services/profile.js';
+export async function init() {
+  async function hackToDontShowEditableFieldsFor42Users() {
+    const { data } = await profileService.getProfile();
 
-export function init() {
+    const username = document.getElementById('changeUsernameButton');
+    const password = document.getElementById('changePasswordButton');
+
+    // 42 users have a username with less than 9 characters
+    if (data.username.length < 9) {
+      username.hidden = true;
+      password.hidden = true;
+    }
+  }
+
+  await hackToDontShowEditableFieldsFor42Users();
+
   const avatarInput = document.getElementById('avatarInput');
   const changeAvatarButton = document.getElementById('changeAvatarButton');
   const MAX_SIZE = 5 * 1024 * 1024; // 5MB

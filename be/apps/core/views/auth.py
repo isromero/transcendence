@@ -11,10 +11,12 @@ from apps.core.utils import create_response
 from apps.core.models import User
 import requests
 import json
+import os
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class OAuthLogin(View):
-    def post(self, request: HttpRequest):
+    def get(self, request: HttpRequest):
         # if user is authenticated, return error
         if request.user.is_authenticated:
             return create_response(error="User is already authenticated", status=400)
@@ -31,13 +33,11 @@ class OAuthLogin(View):
                 f"client_id={settings.OAUTH42_CLIENT_ID}"
                 f"&redirect_uri={settings.OAUTH42_REDIRECT_URI}"
                 f"&response_type=code"
-                 )
+            )
             return redirect(auth_url)
-            # return HttpResponse(auth_url) #  pendiente de probar después de integrar en el frontend
         except json.JSONDecodeError:
             return create_response(error="Invalid JSON", status=400)
         except Exception as e:
-            # se peude devolver un error 500???
             return create_response(error="An unexpected error occurred", status=500)
 
 
@@ -54,10 +54,11 @@ class OAuthCallback(View):
         if "error" in user_info:
             return JsonResponse(user_info, status=400)
         self.response = self.authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect("http://localhost:3001/")
+        self.redirect_response = HttpResponseRedirect(f"http://localhost:3001/")
+        # self.redirect_response = HttpResponseRedirect(f"http://{os.uname().nodename.split('.')[0]}:3001/")
         self.transfer_data()
         return self.redirect_response
-    
+
     def transfer_data(self):
         for key, value in self.response.items():
             self.redirect_response.set_cookie(key, value)
@@ -74,7 +75,7 @@ class OAuthCallback(View):
         if api_response.status_code != 200:
             return {"error": "Failed to obtain access token"}
         return api_response.json()
-    
+
     def get_user_info(self, access_token: str) -> dict:
         if not access_token:
             return {"error": "Invalid access token"}
@@ -84,40 +85,34 @@ class OAuthCallback(View):
             return {"error": "Failed to obtain user information"}
         return api_response.json()
 
-    def authenticate_and_login(self, request: HttpRequest, user_info: dict) -> JsonResponse:
+    def authenticate_and_login(
+        self, request: HttpRequest, user_info: dict
+    ) -> JsonResponse:
         username = user_info.get("login")
         if not username:
             return JsonResponse({"error": "Invalid user information"}, status=400)
         user, created = User.objects.get_or_create(username=username)
         if created:
             user.set_unusable_password()
-        user.is_online = True
         user.save()
         login(request, user)
-        response = JsonResponse({"message": f"{username}: Login successful"})
+        response = create_response(message=f"{username}: Login successful")
         response.set_cookie(
-            "sessionid", 
-            request.session.session_key, 
-            httponly=True, 
+            "sessionid",
+            request.session.session_key,
+            httponly=True,
             secure=False,
-            samesite="Lax",)
+            samesite="Lax",
+        )
         return response
-    
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
-    def post(self, request:HttpRequest):
-        print("\n\n ->->->->->-<>_>_>_>_>_>        LOGOUT        <-<-<-<-<-<-<-<-<-\n\n")
-        user = request.user
-        user.is_online = False
-        user.save(update_fields=["is_online"])
+    def post(self, request: HttpRequest):
         logout(request)
-        response = JsonResponse({"message": "Logout successful"})
-        response.delete_cookie("sessionid")
+        response = create_response(message="Logout successful")
         return response
-        # redirect_response = HttpResponseRedirect("http://localhost:3001/")
-        # redirect_response.delete_cookie("sessionid")
-        # return redirect_response
 
 
 # TODO (jose): eliminar para producción, solo sirve para pruebas con postman
@@ -139,14 +134,14 @@ class LoginWithToken(View):
         user, created = User.objects.get_or_create(username=username)
         if created:
             user.set_unusable_password()
-        user.is_online = True
         user.save()
         login(request, user)
         response = create_response(message=f"{username}: Login successful")
         response.set_cookie(
-            "sessionid", 
-            request.session.session_key, 
-            httponly=True, 
+            "sessionid",
+            request.session.session_key,
+            httponly=True,
             secure=False,
-            samesite="Lax",)
+            samesite="Lax",
+        )
         return response

@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "lint": "^0.8.19",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "express": "^4.21.2",
+    "prom-client": "^11.5.3"
   }
 }
