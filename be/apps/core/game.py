@@ -2,6 +2,7 @@ import requests
 import time
 import math
 from channels.db import database_sync_to_async
+from django.db import transaction
 
 
 class GameState:
@@ -293,17 +294,17 @@ class GameState:
         from apps.core.models import History
 
         try:
-            matches = History.objects.filter(match_id=self.match_id)
-            if not matches.exists():
-                return
+            with transaction.atomic():
+                matches = History.objects.filter(match_id=self.match_id)
+                if not matches.exists():
+                    return
 
-            match = matches.first()
+                for match in matches:
+                    if is_player1:
+                        match.result_user += 1
+                    else:
+                        match.result_opponent += 1
+                    match.save()
 
-            if is_player1:
-                match.result_user += 1
-            else:
-                match.result_opponent += 1
-
-            match.save()
         except Exception as e:
             print(f"Error updating score in database: {e}")
