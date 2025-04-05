@@ -1,5 +1,5 @@
-import { loadPage } from './router/router.js';
-import { showErrorToast } from './utils/helpers.js';
+import { loadPage } from '../router/router.js';
+import { showErrorToast } from './helpers.js';
 
 let ws;
 let multiplayerBtn;

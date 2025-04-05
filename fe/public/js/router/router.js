@@ -5,7 +5,7 @@ import { loadMenu } from '../components/menu.js';
 import { getCleanPageKey } from '../utils/helpers.js';
 import { loadErrorPage } from '../components/error.js';
 import { checkAuth } from '../utils/auth-middleware.js';
-import { pageControllers } from '../pageControllers.js';
+import { pageControllers } from '../utils/pageControllers.js';
 
 function matchRoute(path) {
   const normalizedPath = path === '' ? '/' : path;

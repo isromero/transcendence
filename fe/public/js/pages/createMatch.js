@@ -1,7 +1,7 @@
 import { loadPage } from '../router/router.js';
 import { showErrorToast } from '../utils/helpers.js';
 import { historyService } from '../services/history.js';
-import { initMatchmaking } from '../matchmaking.js';
+import { initMatchmaking } from '../utils/matchmaking.js';
 
 export function init() {
   async function handleLocalMatch() {
