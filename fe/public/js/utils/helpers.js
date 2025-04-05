@@ -1,5 +1,4 @@
 import { pageMappings } from '../router/routes.js';
-import { tournamentService } from '../services/tournaments.js';
 
 export function getCleanPageKey(requestedPath) {
   if (pageMappings[requestedPath]) {
@@ -132,9 +131,9 @@ export function updateTournamentUI(tournamentData) {
   playerSlots.forEach(slot => {
     if (tournamentData.status === 'in_progress') {
       slot.textContent = 'Waiting for matches to end...';
-    }
-    else
+    } else {
       slot.textContent = 'Waiting for player...';
+    }
     slot.previousElementSibling.src =
       '/public/assets/images/default-avatar.webp';
   });
@@ -149,7 +148,6 @@ export function updateTournamentUI(tournamentData) {
       }
     });
   } else {
-    console.warn("⚠️ No se pudieron cargar los jugadores del torneo:", tournamentData.players);
+    console.error('Could not update tournament UI');
   }
-  
 }

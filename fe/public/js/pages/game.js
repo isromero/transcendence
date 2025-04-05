@@ -2,7 +2,7 @@ import { loadPage } from '../router/router.js';
 import { showErrorToast, updateTournamentUI } from '../utils/helpers.js';
 import { historyService } from '../services/history.js';
 import { IMAGES_URL } from '../utils/constants.js';
-
+import { tournamentService } from '../services/tournaments.js';
 let canvas;
 let ctx;
 let ws;
@@ -141,8 +141,10 @@ async function updateGameState(gameState) {
       if (path.includes('/tournament/')) {
         const joinCode = path.split('/tournament/')[1]?.split('/')[0];
         await loadPage(`/tournament/${joinCode}`);
-        // TODO: THIS IS NOT WORKING WELL
-        updateTournamentUI(joinCode);
+
+        const tournamentData = await tournamentService.getTournament(joinCode);
+
+        updateTournamentUI(tournamentData);
       } else {
         // If it's a multiplayer or local game, show the modal
         await loadPage('/modal-end-game');
