@@ -26,7 +26,7 @@ export function init() {
         8
       );
       if (result) {
-        await loadPage(`/tournament/${result.join_code}`);
+        await loadPage(`/tournament-big/${result.join_code}`);
         await updateTournamentUI(result);
       }
     }

@@ -161,17 +161,23 @@ class TournamentsView(View):
                     tournament.save()
                 else:
                     # Si estamos en la final, no marcamos "completed" hasta que se juegue
-                    if tournament.current_round == 3:  # Final
-                        tournament.status = "in_progress"
-                        tournament.save()
-                        return create_response(
-                            data=serialize_tournament(tournament),
-                            message="Final match scheduled",
-                            status=200,
+                    # En tu lógica que actualiza los resultados de un match:
+
+                    if match.type_match == "tournament_final":
+                        all_final_matches = History.objects.filter(
+                            tournament_id=tournament.id,
+                            type_match="tournament_final"
+                        ).distinct("match_id")
+
+                        # Verificamos si todos los partidos de la final ya tienen resultado
+                        final_matches_finished = all(
+                            m.result_user is not None for m in all_final_matches
                         )
-                    else:
-                        tournament.status = "completed"
-                        tournament.save()
+
+                        if final_matches_finished:
+                            tournament.status = "completed"
+                            tournament.save()
+
 
                 return create_response(
                     data=serialize_tournament(tournament),

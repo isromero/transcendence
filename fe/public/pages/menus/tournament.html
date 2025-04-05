@@ -24,14 +24,14 @@
           <li class="list-group-item">
             <div class="match-result">
               <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 1" />
+                <img src="" class="player-img rounded-circle"/>
                 <span>Player 1</span>
               </div>
-              <span class="text-warning">3</span>
+              <span class="text-warning semis-player1">3</span>
               <span>VS</span>
-              <span class="text-warning">1</span>
+              <span class="text-warning semis-player2">1</span>
               <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 2" />
+                <img src="" class="player-img rounded-circle"/>
                 <span>Player 2</span>
               </div>
             </div>
@@ -39,14 +39,14 @@
           <li class="list-group-item">
             <div class="match-result">
               <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 3" />
+                <img src="" class="player-img rounded-circle"  />
                 <span>Player 3</span>
               </div>
-              <span class="text-warning">2</span>
+              <span class="text-warning semis-player3">2</span>
               <span>VS</span>
-              <span class="text-warning">4</span>
+              <span class="text-warning semis-player4">4</span>
               <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 4" />
+                <img src="" class="player-img rounded-circle"  />
                 <span>Player 4</span>
               </div>
             </div>
@@ -61,16 +61,16 @@
         <ul class="list-group">
           <li class="list-group-item">
             <div class="match-result">
-              <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 5" />
-                <span>Player 5</span>
+              <div class="player-info-final">
+                <img src="" class="player-img rounded-circle"  />
+                <span></span>
               </div>
               <span class="text-warning">5</span>
               <span>VS</span>
               <span class="text-warning">2</span>
-              <div class="player-info">
-                <img src="" class="player-img rounded-circle" alt="Player 8" />
-                <span>Player 8</span>
+              <div class="player-info-final">
+                <img src="" class="player-img rounded-circle" />
+                <span></span>
               </div>
             </div>
           </li>
@@ -87,14 +87,15 @@
             style="width: 200px"
           >
             <div class="card-body text-center">
+              <p class="fw-bold text-warning">👑</p>
               <img
                 src=""
                 class="player-img rounded-circle mb-3"
-                alt="Champion"
+                
                 width="40"
                 height="40"
               />
-              <span class="fw-bold text-warning">Player 5</span>
+              <span class="fw-bold text-warning">Winner</span>
             </div>
           </div>
         </div>
@@ -102,3 +103,56 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* Estilos para mantener alineación de puntuaciones independiente del largo de nombres */
+.match-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Contenedor para información del jugador con ancho fijo */
+.player-info, .player-info-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px; /* Ancho fijo para todos los nombres */
+  overflow: hidden; /* Evita que nombres largos rompan el diseño */
+}
+
+/* Estilo para nombres de jugadores */
+.player-info span, .player-info-final span {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%; /* Asegura que el texto no sobrepase el contenedor */
+  text-align: center;
+}
+
+/* Area central con las puntuaciones */
+.match-result span:not(.player-info span):not(.player-info-final span) {
+  flex: 0 0 auto; /* Evita que las puntuaciones se expandan */
+  padding: 0 10px; /* Espacio consistente alrededor de puntuaciones */
+}
+
+/* Estilo para la imagen del jugador */
+.player-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+/* Mejora para scroll container */
+.scroll-container {
+  overflow-x: auto; /* Permite scroll horizontal si es necesario */
+  width: 100%;
+}
+
+/* Asegurar que la lista ocupe todo el ancho disponible */
+.list-group {
+  width: 100%;
+}
+</style>

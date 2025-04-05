@@ -120,6 +120,10 @@ export function init() {
         startBtn?.classList.add('hidden');
         await maybeRedirectToMatch(tournament);
       }
+      if (tournament.status === 'completed') {
+        leaveBtn?.classList.remove('hidden');
+        startBtn?.classList.add('hidden');
+      }
     } catch (error) {
       console.error('🔥 Error al inicializar:', error);
       showErrorToast(`Initialization error: ${error}`);

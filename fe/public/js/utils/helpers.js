@@ -125,20 +125,21 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
-  // Clean player slots before updating
+  // Limpiar los slots de los jugadores antes de actualizar
   const playerSlots = document.querySelectorAll('.player-info span');
-
   playerSlots.forEach(slot => {
-    if (tournamentData.status === 'in_progress') {
-      slot.textContent = 'Waiting for matches to end...';
-    } else {
-      slot.textContent = 'Waiting for player...';
-    }
+    slot.textContent = 'Waiting for player...';
+    slot.previousElementSibling.src =
+      '/public/assets/images/default-avatar.webp';
+  });
+  const playerSlots2 = document.querySelectorAll('.player-info-final span');
+  playerSlots2.forEach(slot => {
+    slot.textContent = 'Waiting for player...';
     slot.previousElementSibling.src =
       '/public/assets/images/default-avatar.webp';
   });
 
-  // Now, fill with the players
+  // Rellenar los jugadores
   if (Array.isArray(tournamentData.players)) {
     tournamentData.players.forEach((player, index) => {
       if (playerSlots[index]) {
@@ -147,7 +148,70 @@ export function updateTournamentUI(tournamentData) {
           player.avatar || '/public/assets/images/default-avatar.webp';
       }
     });
-  } else {
-    console.error('Could not update tournament UI');
+  }
+
+  // Función para actualizar partidos (cuartos, semifinales, final)
+  const updateMatchResults = (roundMatches, roundPrefix, matchClassPrefix) => {
+    roundMatches.forEach((match, index) => {
+      const player1 = match.player1;
+      const player2 = match.player2;
+      const matchElements = document.querySelectorAll(`.${roundPrefix}-player${index * 2 + 1}, .${roundPrefix}-player${index * 2 + 2}`);
+      const matchImages = document.querySelectorAll(`.${matchClassPrefix} .player-info img`);
+
+      if (matchElements.length > 0 && matchImages.length > 0) {
+        matchElements[0].textContent = player1.score;
+        matchElements[1].textContent = player2.score;
+        matchImages[0].src = player1.avatar || '/public/assets/images/default-avatar.webp';
+        matchImages[1].src = player2.avatar || '/public/assets/images/default-avatar.webp';
+      }
+    });
+  };
+
+  // Actualizar partidos de Cuartos de Final
+  if (tournamentData.matches.quarters) {
+    updateMatchResults(tournamentData.matches.quarters, 'cuarter', 'match-result');
+  }
+
+  // Actualizar partidos de Semifinal
+  if (tournamentData.matches.semi_finals) {
+    updateMatchResults(tournamentData.matches.semi_finals, 'semis', 'match-result');
+  }
+
+  // Actualizar partidos de la Final
+  if (tournamentData.matches.finals) {
+    const finalMatch = tournamentData.matches.finals[0];
+    const finalElements = document.querySelectorAll('.player-info-final span');
+    const finalImages = document.querySelectorAll('.player-info-final img');
+
+    if (finalMatch) {
+      const finalPlayer1 = finalMatch.player1;
+      const finalPlayer2 = finalMatch.player2;
+
+      if (finalElements.length > 0 && finalImages.length > 0) {
+        finalElements[0].textContent = finalPlayer1.username;
+        finalElements[1].textContent = finalPlayer2.username;
+        finalImages[0].src = finalPlayer1.avatar || '/public/assets/images/default-avatar.webp';
+        finalImages[1].src = finalPlayer2.avatar || '/public/assets/images/default-avatar.webp';
+      }
+
+      // Actualizar puntajes de la final
+      const finalScores = document.querySelectorAll('.match-result span.text-warning');
+      if (finalScores.length === 2) {
+        finalScores[0].textContent = finalPlayer1.score;
+        finalScores[1].textContent = finalPlayer2.score;
+      }
+
+      // Determinar al ganador
+      const winner = finalPlayer1.score > finalPlayer2.score ? finalPlayer1 : finalPlayer2;
+      const winnerElement = document.querySelector('.final-winner .card-body');
+      if (winnerElement) {
+        const winnerImage = winnerElement.querySelector('img');
+        const winnerName = winnerElement.querySelector('span');
+
+        winnerImage.src = winner.avatar || '/public/assets/images/default-avatar.webp';
+        winnerName.textContent = winner.username;
+      }
+    }
   }
 }
+
