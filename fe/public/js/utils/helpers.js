@@ -125,7 +125,7 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
-  // Limpiar los slots de los jugadores antes de actualizar
+
   const playerSlots = document.querySelectorAll('.player-info span');
   playerSlots.forEach(slot => {
     slot.textContent = 'Waiting for player...';
@@ -139,7 +139,7 @@ export function updateTournamentUI(tournamentData) {
       '/public/assets/images/default-avatar.webp';
   });
 
-  // Rellenar los jugadores
+
   if (Array.isArray(tournamentData.players)) {
     tournamentData.players.forEach((player, index) => {
       if (playerSlots[index]) {
@@ -150,7 +150,7 @@ export function updateTournamentUI(tournamentData) {
     });
   }
 
-  // Función para actualizar partidos (cuartos, semifinales, final)
+
   const updateMatchResults = (roundMatches, roundPrefix, matchClassPrefix) => {
     roundMatches.forEach((match, index) => {
       const player1 = match.player1;
@@ -167,17 +167,17 @@ export function updateTournamentUI(tournamentData) {
     });
   };
 
-  // Actualizar partidos de Cuartos de Final
+
   if (tournamentData.matches.quarters) {
     updateMatchResults(tournamentData.matches.quarters, 'cuarter', 'match-result');
   }
 
-  // Actualizar partidos de Semifinal
+
   if (tournamentData.matches.semi_finals) {
     updateMatchResults(tournamentData.matches.semi_finals, 'semis', 'match-result');
   }
 
-  // Actualizar partidos de la Final
+
   if (tournamentData.matches.finals) {
     const finalMatch = tournamentData.matches.finals[0];
     const finalElements = document.querySelectorAll('.player-info-final span');
@@ -194,14 +194,12 @@ export function updateTournamentUI(tournamentData) {
         finalImages[1].src = finalPlayer2.avatar || '/public/assets/images/default-avatar.webp';
       }
 
-      // Actualizar puntajes de la final
       const finalScores = document.querySelectorAll('.match-result span.text-warning');
       if (finalScores.length === 2) {
         finalScores[0].textContent = finalPlayer1.score;
         finalScores[1].textContent = finalPlayer2.score;
       }
 
-      // Determinar al ganador
       const winner = finalPlayer1.score > finalPlayer2.score ? finalPlayer1 : finalPlayer2;
       const winnerElement = document.querySelector('.final-winner .card-body');
       if (winnerElement) {
