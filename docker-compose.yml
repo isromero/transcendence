@@ -32,6 +32,7 @@ services:
     build: ./fe
     ports:
       - 3001:3001
+      - 3002:3002
     volumes:
       - ./fe:/app
     env_file:
