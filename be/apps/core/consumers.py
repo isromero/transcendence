@@ -14,6 +14,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         """Maneja la conexión de un nuevo cliente"""
         self.match_id = self.scope["url_route"]["kwargs"]["match_id"]
         self.group_name = f"game_{self.match_id}"  # Cada partida tiene su grupo único
+        self.user = self.scope["user"]  # Obtener el usuario actual
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
@@ -26,17 +27,29 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "state": GameState(self.match_id),
                 "players": set(),
                 "loop_task": None,
+                "left_player": None,  # Añadimos tracking de jugadores
+                "right_player": None,
             }
 
+        game = self.__class__.games[self.match_id]
+
+        # Asignar posición al jugador si no está asignada
+        if game["left_player"] is None:
+            game["left_player"] = self.user.id
+            game["state"].set_left_player(self.user.id)
+        elif game["right_player"] is None and game["left_player"] != self.user.id:
+            game["right_player"] = self.user.id
+            game["state"].set_right_player(self.user.id)
+
         # Añadir jugador a la partida
-        self.__class__.games[self.match_id]["players"].add(self)
+        game["players"].add(self)
 
         # Iniciar loop si es la primera conexión de la partida
-        if self.__class__.games[self.match_id]["loop_task"] is None:
+        if game["loop_task"] is None:
             await self.start_game_loop()
 
         # Enviar estado inicial al cliente
-        initial_state = self.__class__.games[self.match_id]["state"].get_state()
+        initial_state = game["state"].get_state()
         await self.send(json.dumps({"type": "init", "state": initial_state}))
 
     async def disconnect(self, close_code):

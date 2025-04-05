@@ -1,8 +1,6 @@
-import requests
 import time
 import math
 from channels.db import database_sync_to_async
-from django.db import transaction
 
 
 class GameState:
@@ -49,6 +47,8 @@ class GameState:
         self.scores = {"left": 0, "right": 0}
         self.match_id = match_id
         self.game_over = False
+        self.left_player_id = None
+        self.right_player_id = None
 
     def start_game(self, match_id):
         """Init game with a match id"""
@@ -289,9 +289,16 @@ class GameState:
             "countdown": max(0, self.countdown),
         }
 
+    def set_left_player(self, user_id):
+        self.left_player_id = user_id
+
+    def set_right_player(self, user_id):
+        self.right_player_id = user_id
+
     @database_sync_to_async
     def _send_score_update(self, is_player1):
         from apps.core.models import History
+        from django.db import transaction
 
         try:
             with transaction.atomic():
@@ -300,11 +307,17 @@ class GameState:
                     return
 
                 for match in matches:
-                    if is_player1:
-                        match.result_user += 1
+                    if match.user_id.id == self.left_player_id:
+                        if is_player1:
+                            match.result_user += 1
+                        else:
+                            match.result_opponent += 1
                     else:
-                        match.result_opponent += 1
+                        if is_player1:
+                            match.result_opponent += 1
+                        else:
+                            match.result_user += 1
                     match.save()
 
         except Exception as e:
-            print(f"Error updating score in database: {e}")
+            print(f"Error updating scores in database: {e}")
