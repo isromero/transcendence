@@ -1,7 +1,5 @@
-from django.http import JsonResponse
 from django.views import View
 from django.core.cache import cache
-from django.db.models import Q
 import json
 from apps.core.forms.login import LoginForm
 from django.contrib.auth import authenticate, login

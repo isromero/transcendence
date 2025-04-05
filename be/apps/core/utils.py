@@ -145,7 +145,8 @@ def serialize_tournament(tournament):
                 "username": player2_record.user_id.username,
                 "score": player2_record.result_user,
             },
-            "game_finished": max(player1_record.result_user, player2_record.result_user) >= 5,
+            "game_finished": max(player1_record.result_user, player2_record.result_user)
+            >= 5,
         }
 
     def is_round_finished(round_matches):
@@ -154,10 +155,11 @@ def serialize_tournament(tournament):
             for match in round_matches
         )
 
-
     quarter_matches = [
         get_match_data(match)
-        for match in matches.filter(type_match="tournament_quarter").distinct("match_id")
+        for match in matches.filter(type_match="tournament_quarter").distinct(
+            "match_id"
+        )
     ]
     semi_matches = [
         get_match_data(match)
@@ -192,7 +194,6 @@ def serialize_tournament(tournament):
             },
         },
     }
-
 
 
 def serialize_history(user_history):

@@ -1,7 +1,5 @@
-from django.http import JsonResponse
 from django.views import View
-from django.shortcuts import get_object_or_404
-from apps.core.models import Friends, User
+from apps.core.models import Friends
 from apps.core.utils import serialize_friend
 from apps.core.forms.friends import FriendForm
 import json
