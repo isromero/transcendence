@@ -30,14 +30,12 @@ function getUserMatch(tournament, currentUserId) {
 
 export function init() {
   const joinCode = getJoinCodeFromURL();
-  const startTournamentBtn = document.getElementById('start-tournament-btn');
-  const leaveTournamentButton = document.getElementById(
-    'leaveTournamentButton'
-  );
+  const startBtn = document.getElementById('start-tournament-btn');
+  const leaveBtn = document.getElementById('leaveTournamentButton');
   let intervalId;
 
-  if (!startTournamentBtn) {
-    console.error('❌ Error: No se encontró el botón de inicio en el DOM.');
+  if (!startBtn) {
+    console.error('❌ Botón de inicio no encontrado.');
   }
 
   async function leaveTournament() {
@@ -45,298 +43,178 @@ export function init() {
     clearInterval(intervalId);
 
     const tournament = await tournamentService.getTournament(joinCode);
-    console.log('📌 Datos del torneo al salir:', tournament);
-
     if (!tournament) {
-      console.error(
-        '❌ Error: No se pudo obtener el torneo al intentar salir.'
-      );
-      throw Error('Get Tournament failed');
+      console.error('❌ Error obteniendo el torneo al salir.');
+      return;
     }
 
     await tournamentService.leaveTournament(joinCode, tournament.id);
-    // Notify other tabs
+
+    // Notificar en localStorage para otros tabs
     localStorage.setItem(
       'tournament_left',
-      JSON.stringify({
-        joinCode,
-        timestamp: Date.now(),
-      })
+      JSON.stringify({ joinCode, timestamp: Date.now() })
     );
-    console.log('👋 Salida del torneo completada.');
+
+    console.log('👋 Salida completada.');
   }
 
-  async function handleStartTournament() {
-    try {
-      console.log('🚀 Intentando iniciar el torneo...');
-
-      const tournament = await tournamentService.getTournament(joinCode);
-      console.log('📌 Datos del torneo al intentar iniciar:', tournament);
-
-      if (!tournament) {
-        console.error('❌ No se pudo obtener el torneo.');
-        return;
-      }
-
-      if (tournament.current_players < tournament.max_players) {
-        console.warn(
-          `⚠️ No hay suficientes jugadores: ${tournament.current_players}/${tournament.max_players}`
-        );
-        showErrorToast(
-          `Cannot start tournament. Waiting for more players. Current: ${tournament.current_players}/${tournament.max_players}`
-        );
-        return;
-      }
-
-      console.log('✅ Suficientes jugadores, iniciando torneo...');
-      const tournamentId = tournament.id;
-      const tournamentAfterStarting =
-        await tournamentService.updateTournamentWhenStarting(tournamentId);
-
-      console.log('🏁 Torneo después de iniciar:', tournamentAfterStarting);
-
-      if (!tournamentAfterStarting) {
-        console.error('❌ Error al actualizar el torneo después de iniciar.');
-        return;
-      }
-    } catch (error) {
-      console.error('🔥 Error inesperado al iniciar el torneo:', error);
-      showErrorToast(
-        `An error occurred while starting the tournament. ${error.message}`
-      );
-    }
-  }
-
-  async function handleLeaveTournament() {
-    console.log('🛑 Botón de salir presionado. Saliendo del torneo...');
-    await leaveTournament();
-    loadPage('/join-tournament');
-  }
-
-  async function handlePopState() {
-    console.log('🔄 Popstate event triggered.');
-    await leaveTournament();
-    loadPage('/');
-  }
-
-  async function handleBeforeUnload(event) {
-    console.log('⚠️ Evento beforeunload detectado. Saliendo del torneo...');
-    event.preventDefault();
-    event.returnValue = ''; // Necessary for some browsers
-    await leaveTournament();
-  }
-
-  // Handle storage events to detect changes in other tabs
   function handleStorageChange(event) {
     if (event.key === 'tournament_left') {
       const data = JSON.parse(event.newValue);
       if (data.joinCode === joinCode) {
-        console.log('🔄 User has left the tournament in another tab');
+        console.log('🔄 Otro tab salió del torneo. Redirigiendo...');
         loadPage('/join-tournament');
       }
     }
   }
 
+  async function handleStartTournament() {
+    try {
+      const tournament = await tournamentService.getTournament(joinCode);
+      if (!tournament) return;
+
+      if (tournament.current_players < tournament.max_players) {
+        showErrorToast(
+          `Waiting for more players: ${tournament.current_players}/${tournament.max_players}`
+        );
+        return;
+      }
+
+      await tournamentService.updateTournamentWhenStarting(tournament.id);
+    } catch (err) {
+      console.error('❌ Error al iniciar torneo:', err);
+      showErrorToast(`Error starting tournament: ${err.message}`);
+    }
+  }
+
+  async function handleLeaveTournament() {
+    await leaveTournament();
+    loadPage('/join-tournament');
+  }
+
+  async function handleBeforeUnload(event) {
+    event.preventDefault();
+    event.returnValue = '';
+    await leaveTournament();
+  }
+
   async function initializeTournament() {
     try {
-      console.log('📥 Página cargada. Inicializando torneo...');
-
       const tournament = await tournamentService.getTournament(joinCode);
-      console.log('📌 Estado inicial del torneo:', tournament);
-
-      if (!tournament) {
-        throw Error('Get Tournament failed');
-      }
+      if (!tournament) throw Error('No tournament found.');
 
       updateTournamentUI(tournament);
-      const leaveBtn = document.getElementById('leaveTournamentButton');
-      const startBtn = document.getElementById('start-tournament-btn');
-
-      if (tournament.status === 'in_progress') {
-        leaveBtn?.classList.add('hidden');
-        startBtn?.classList.add('hidden');
-      }
 
       const profile = await profileService.getProfile();
-      console.log('🧑 Perfil obtenido al cargar la página:', profile);
-
       if (profile) {
-        console.log(
-          '🔄 Actualizando torneo con el usuario que acaba de entrar...'
-        );
         await tournamentService.updateTournamentWhenJoining(
           joinCode,
           tournament,
           profile.username
         );
       }
+
+      if (tournament.status === 'in_progress') {
+        leaveBtn?.classList.add('hidden');
+        startBtn?.classList.add('hidden');
+        await maybeRedirectToMatch(tournament);
+      }
     } catch (error) {
-      console.error('🔥 Error al inicializar el torneo:', error);
-      showErrorToast(`Error initializing the game: ${error}`);
+      console.error('🔥 Error al inicializar:', error);
+      showErrorToast(`Initialization error: ${error}`);
     }
   }
 
-  // Setup interval for tournament status check
-  intervalId = setInterval(async () => {
-    console.log('⏳ Verificando estado del torneo...');
+  async function maybeRedirectToMatch(tournament) {
+    const roundMap = {
+      1: 'quarter_finals',
+      2: 'semi_finals',
+      3: 'finals',
+    };
+    const currentRoundKey = roundMap[tournament.current_round];
+    const profile = await profileService.getProfile();
 
+    if (!profile || !currentRoundKey) return;
+
+    const userId = profile.data.id;
+
+    const userMatch = tournament.matches[currentRoundKey]?.find(
+      match =>
+        !match.game_finished &&
+        (match.player1?.id === userId || match.player2?.id === userId)
+    );
+
+    if (userMatch?.match_id) {
+      console.log(`🎮 Redirigiendo a tu match (${currentRoundKey})`);
+      await loadPage(`/game/${userMatch.match_id}/tournament/${tournament.join_code}`);
+    } else {
+      console.log(`🧘 No hay match activo para ti en ${currentRoundKey}`);
+    }
+  }
+
+  async function handleTournamentProgress() {
     const tournament = await tournamentService.getTournament(joinCode);
-    console.log('📊 Estado del torneo actualizado:', tournament);
+    if (!tournament) return;
+
+    const tournamentpolita = await tournamentService.getTournament(joinCode);
+    console.log('📊 Estado del torneo actualizado:', tournamentpolita);
 
     updateTournamentUI(tournament);
-    const leaveBtn = document.getElementById('leaveTournamentButton');
-    const startBtn = document.getElementById('start-tournament-btn');
 
     if (tournament.status === 'in_progress') {
-      leaveBtn?.classList.add('hidden');
-      startBtn?.classList.add('hidden');
-    }
-
-    if (tournament.status === 'ready') {
-      console.log(
-        "✅ Torneo está en estado 'ready'. Verificando permisos para habilitar el botón..."
-      );
-
-      const profile = await profileService.getProfile();
-      console.log('🧑 Perfil del usuario obtenido:', profile);
-
-      if (!profile) {
-        console.warn('⚠️ No se pudo obtener el perfil del usuario.');
-        return;
-      }
-
-      const playerId = Number(profile.data.id);
-      const leaderId = Number(tournament.players[0].id);
-
-      if (playerId === leaderId) {
-        console.log(
-          '🎉 El usuario es el líder. Habilitando botón de inicio...'
-        );
-        document
-          .getElementById('start-tournament-btn')
-          .removeAttribute('disabled');
-      } else {
-        console.log('🔒 El usuario NO es el líder. Botón sigue deshabilitado.');
-      }
-    } else if (tournament.status === 'in_progress') {
-      console.log(
-        '🕹️ Torneo en progreso. Verificando si la ronda actual ha terminado...'
-      );
-
       const roundMap = {
         1: 'quarter_finals',
         2: 'semi_finals',
         3: 'finals',
       };
-
       const currentRoundKey = roundMap[tournament.current_round];
-      console.log(
-        '📍 Ronda actual:',
-        tournament.current_round,
-        '->',
-        currentRoundKey
-      );
-
-      const currentRoundFinished =
-        tournament.matches.round_finished?.[currentRoundKey];
+      const currentRoundFinished = tournament.matches.round_finished?.[currentRoundKey];
 
       if (currentRoundFinished) {
-        console.log(
-          `📢 La ronda '${currentRoundKey}' ha finalizado. Enviando señal para avanzar a la siguiente ronda...`
-        );
-
+        console.log(`📢 Ronda ${currentRoundKey} finalizada. Avanzando...`);
         const result = await tournamentService.goToNextRound(tournament.id);
 
         if (!result) {
-          console.error('❌ Error al avanzar a la siguiente ronda.');
+          console.error('❌ No se pudo avanzar ronda.');
           return;
         }
 
-        console.log('✅ Siguiente ronda iniciada con éxito:', result);
-
-        const nextRoundKey = {
-          1: 'semi_finals',
-          2: 'finals',
-        }[tournament.current_round];
-
-        if (nextRoundKey) {
-          const profile = await profileService.getProfile();
-          const currentUserId = profile?.data?.id;
-
-          const newMatch = result.matches[nextRoundKey]?.find(
-            match =>
-              match?.player1?.id === currentUserId ||
-              match?.player2?.id === currentUserId
-          );
-
-          if (newMatch?.match_id) {
-            console.log(
-              `🎮 Match encontrado para la nueva ronda (${nextRoundKey}):`,
-              newMatch
-            );
-            await loadPage(
-              `/game/${newMatch.match_id}/tournament/${result.join_code}`
-            );
-          } else {
-            console.log(
-              `🧘 El usuario no juega en esta ronda (${nextRoundKey}). Esperando a que termine...`
-            );
-          }
-        }
-
+        await maybeRedirectToMatch(result);
         return;
       }
 
-      console.log('🔍 Verificando partidos finalizados del usuario...');
-      const matches = tournament.matches[currentRoundKey];
-      const match = matches.find(match => match.game_finished);
-
-      if (match) {
-        console.log('✅ Se encontró un partido ya finalizado.');
-        return;
-      }
-
-      clearInterval(intervalId);
-      console.log('🛑 Intervalo de actualización detenido.');
-
+      await maybeRedirectToMatch(tournament);
+    } else if (tournament.status === 'ready') {
       const profile = await profileService.getProfile();
-      console.log('🧑 Perfil del usuario obtenido:', profile);
+      const playerId = Number(profile?.data?.id);
+      const leaderId = Number(tournament.players?.[0]?.id);
 
-      if (!profile) {
-        console.error('❌ No se pudo obtener el perfil del usuario.');
-        return;
+      if (playerId === leaderId) {
+        startBtn?.removeAttribute('disabled');
       }
-
-      const currentUserId = profile.data.id;
-      console.log('🔎 Buscando el match del usuario con ID:', currentUserId);
-
-      const userMatchId = getUserMatch(tournament, currentUserId);
-      if (!userMatchId) {
-        console.error('❌ No se encontró un match para el usuario.');
-        showErrorToast('No match found for your user.');
-        return;
-      }
-
-      console.log('🎮 Redirigiendo al juego con match ID:', userMatchId);
-      await loadPage(`/game/${userMatchId}/tournament/${tournament.join_code}`);
     }
-  }, 1000);
+  }
 
-  startTournamentBtn?.addEventListener('click', handleStartTournament);
-  leaveTournamentButton?.addEventListener('click', handleLeaveTournament);
-  window.addEventListener('popstate', handlePopState);
+  // Interval para monitorear el estado del torneo
+  intervalId = setInterval(handleTournamentProgress, 1000);
+
+  // Listeners
+  startBtn?.addEventListener('click', handleStartTournament);
+  leaveBtn?.addEventListener('click', handleLeaveTournament);
   window.addEventListener('beforeunload', handleBeforeUnload);
   window.addEventListener('storage', handleStorageChange);
 
   initializeTournament();
 
+  // Cleanup
   return () => {
     clearInterval(intervalId);
-    startTournamentBtn?.removeEventListener('click', handleStartTournament);
-    leaveTournamentButton?.removeEventListener('click', handleLeaveTournament);
-    window.removeEventListener('popstate', handlePopState);
+    startBtn?.removeEventListener('click', handleStartTournament);
+    leaveBtn?.removeEventListener('click', handleLeaveTournament);
     window.removeEventListener('beforeunload', handleBeforeUnload);
     window.removeEventListener('storage', handleStorageChange);
     leaveTournament();
   };
 }
+
