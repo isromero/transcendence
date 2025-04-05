@@ -1,6 +1,5 @@
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
-import { loadPage } from '../router/router.js';
 
 export const authService = {
   login: async user => {
@@ -16,8 +15,8 @@ export const authService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+    if (!response.ok || !result?.success || result.error) {
+      showErrorToast(result);
       return null;
     }
 
@@ -36,16 +35,14 @@ export const authService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+    if (!response.ok || !result?.success || result.error) {
+      showErrorToast(result);
       return null;
     }
-
     showSuccessToast(result.message);
     return result.data || result;
   },
   logout: async () => {
-    // TODO: Implement in backend
     const response = await fetch(`${API_URL}/logout`, {
       method: 'POST',
       headers: {
@@ -57,13 +54,12 @@ export const authService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+    if (!response.ok || !result?.success || result.error) {
+      showErrorToast(result);
       return false;
     }
 
     showSuccessToast(result.message);
-    loadPage('/auth');
     return true;
   },
 };

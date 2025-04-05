@@ -115,11 +115,10 @@
     </div>
   </div>
 </div>
-
-<!-- Banner de privacidad -->
-<div 
-    data-translationKey="privacy_policy"
-    id="privacy-banner" style="
+<div
+  data-translationKey="privacy_policy"
+  id="privacy-banner"
+  style="
     position: fixed;
     bottom: 0;
     left: 0;
@@ -133,41 +132,34 @@
     justify-content: space-between;
     align-items: center;
     z-index: 9999;
-">
-    <span>
-      <span data-translationKey="privacy-info">
-          Usamos tus datos según nuestra 
-      </span>
-      <a class="spa-link" href="/auth/privacy" style="color: #ffd700; text-decoration: underline;" data-translationKey="privacy-policy-link">
-          Política de Privacidad
-      </a>
+  "
+>
+  <span>
+    <span data-translationKey="privacy-info">
+      Usamos tus datos según nuestra
     </span>
-    <button
-        data-translationKey="accept"
-        id="accept-privacy" style="
-        background-color: #ffd700;
-        color: black;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        font-weight: bold;
-        margin-left: 15px;
-    ">Aceptar</button>
+    <a
+      class="spa-link"
+      href="/auth/privacy"
+      style="color: #ffd700; text-decoration: underline"
+      data-translationKey="privacy-policy-link"
+    >
+      Política de Privacidad
+    </a>
+  </span>
+  <button
+    data-translationKey="accept"
+    id="accept-privacy"
+    style="
+      background-color: #ffd700;
+      color: black;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 15px;
+    "
+  >
+    x
+  </button>
 </div>
-
-<script defer type="module" src="/js/pages/register.js"></script>
-
-<script>
-  // Mostrar el banner siempre que el usuario visite la página
-  if (!localStorage.getItem('privacyAccepted')) {
-    document.getElementById('privacy-banner').style.display = 'flex';
-  }
-
-  // Event listener para aceptar el banner
-  document.getElementById('accept-privacy').addEventListener('click', function () {
-    // Guardar que el usuario aceptó el banner
-    localStorage.setItem('privacyAccepted', 'true');
-    // Ocultar el banner
-    document.getElementById('privacy-banner').style.display = 'none';
-  });
-</script>

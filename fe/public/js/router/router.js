@@ -5,18 +5,27 @@ import { loadMenu } from '../components/menu.js';
 import { getCleanPageKey } from '../utils/helpers.js';
 import { loadErrorPage } from '../components/error.js';
 import { checkAuth } from '../utils/auth-middleware.js';
+import { pageControllers } from '../utils/pageControllers.js';
 
 function matchRoute(path) {
   const normalizedPath = path === '' ? '/' : path;
 
   // Special case for root path
   if (normalizedPath === '/' && pageMappings[''] !== undefined) {
-    return { url: pageMappings[''], params: {} };
+    return {
+      pattern: '/',
+      url: pageMappings[''],
+      params: {},
+    };
   }
 
   // Exact match
   if (pageMappings[normalizedPath]) {
-    return { url: pageMappings[normalizedPath], params: {} };
+    return {
+      pattern: normalizedPath,
+      url: pageMappings[normalizedPath],
+      params: {},
+    };
   }
 
   // If not exact match, try dynamic routes
@@ -44,15 +53,26 @@ function matchRoute(path) {
         params[name.substring(1)] = match[index + 1];
       });
 
-      return { url: pageMappings[pattern], params };
+      return {
+        pattern,
+        url: pageMappings[pattern],
+        params,
+      };
     }
   }
 
   return null;
 }
 
+let currentCleanup = null;
+
 export async function loadPage(page) {
   try {
+    if (currentCleanup) {
+      currentCleanup();
+      currentCleanup = null;
+    }
+
     closeModal();
 
     let cleanPage = getCleanPageKey(page).replace(/\/$/, '');
@@ -76,19 +96,21 @@ export async function loadPage(page) {
       throw new Error(`Page ${cleanPage} not found`);
     }
 
-    // TODO: Params are not being used, is it needed for future use?
-    // TODO: BTW, matchRoute is totally necessary because of dynamic routing
-    // TODO: But the params returned are not being used
     const { url, params } = matchedRoute;
 
     if (url.includes('/components/')) {
       await loadModal(url);
     } else if (url.includes('/game/')) {
       await loadGame(url);
-      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
+      window.history.pushState({ page: cleanPage }, '', cleanPage);
     } else {
       await loadMenu(url);
-      window.history.pushState({ page: cleanPage, params }, '', cleanPage);
+      window.history.pushState({ page: cleanPage }, '', cleanPage);
+    }
+
+    const controller = pageControllers[matchedRoute.pattern];
+    if (controller?.init) {
+      currentCleanup = await controller.init(params);
     }
 
     document.dispatchEvent(new CustomEvent('spaContentLoaded'));

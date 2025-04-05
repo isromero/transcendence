@@ -2,25 +2,37 @@
   <div class="container">
     <div class="row">
       <div class="col-12 text-center">
-        <button
-          id="my-profile-btn"
-          aria-label="My profile"
-          class="btn button-text-styles button-text-size mb-3 w-100"
-          data-translationKey="my-profile"
-        >
-          My profile
-        </button>
-        <a class="spa-link" href="/friends"
-          ><button
+        <a href="/profile" class="spa-link">
+          <button
+            id="my-profile-btn"
+            aria-label="My profile"
+            class="btn button-text-styles button-text-size w-100"
+            data-translationKey="my-profile"
+          >
+            My profile
+          </button>
+        </a>
+        <a href="/friends" class="spa-link">
+          <button
+            id="friends-btn"
             aria-label="Friends"
             class="btn button-text-styles button-text-size w-100"
             data-translationKey="friends"
           >
             Friends
-          </button></a
-        >
+          </button>
+        </a>
+        <a href="/requests" class="spa-link">
+          <button
+            id="requests-btn"
+            aria-label="Requests"
+            class="btn button-text-styles button-text-size w-100"
+            data-translationKey="requests"
+          >
+            Requests
+          </button>
+        </a>
       </div>
     </div>
   </div>
 </div>
-<script src="/js/pages/social.js"></script>

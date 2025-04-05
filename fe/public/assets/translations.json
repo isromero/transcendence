@@ -110,9 +110,9 @@
     "ukrainian": "Скасувати"
   },
   "accept": {
-    "english": "Accept",
-    "spanish": "Aceptar",
-    "ukrainian": "Прийняти"
+    "english": "x",
+    "spanish": "x",
+    "ukrainian": "x"
   },
   "enter-code-to": {
     "english": "Enter the code sent to:",

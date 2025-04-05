@@ -1,4 +1,4 @@
-import { changeLanguage } from '../utils/languages.js';
+import { changeLanguage } from '../pages/languages.js';
 import { parseAndSetContent } from '../utils/helpers.js';
 import { initGlobalValidation } from '../utils/helpers.js';
 
@@ -55,7 +55,7 @@ function updateIcons(page) {
 
   if (pageType === 'auth' || pageType === 'login' || pageType === 'register') {
     leftIcon = 'bi bi-question-circle';
-    leftHref = '/modal-help';
+    leftHref = '/auth/help';
     rightIcon = 'bi bi-globe';
     rightHref = '/modal-languages';
   } else if (isGamePage) {

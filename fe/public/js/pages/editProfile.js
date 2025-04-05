@@ -1,50 +1,55 @@
-import { editUsername } from './editUsername.js';
-import { editPassword } from './editPassword.js';
 import { usersService } from '../services/users.js';
-import { loadPage } from '../router/router.js';
-import { profileService } from '../services/profile.js';
+import { showErrorToast } from '../utils/helpers.js';
 
+export function init() {
 
-document.addEventListener('click', async event => {
-  event.preventDefault();
-  
-  const target = event.target;
-  
-  if (target.matches('#changeUsernameButton')) {
-    document.addEventListener('spaContentLoaded', () => editUsername(), {
-      once: true,
-    });
-  } else if (target.matches('#changePasswordButton')) {
-    document.addEventListener('spaContentLoaded', () => editPassword(), {
-      once: true,
-    });
-  } else if (target.matches('#accountDeletionButton')) {
-    const ok = await usersService.deleteUser();
-    if (ok) {
-      loadPage('/auth');
+  // TODO: wtf is this
+  export function hideByUsernameLength() {
+    const { data } = await profileService.getProfile();
+
+    const username = document.getElementById("changeUsernameButton");
+    const password = document.getElementById("changePasswordButton");
+
+    console.log(data.username);
+    if (data.username.length > 8) {
+        username.hidden = !username.hidden;
+        password.hidden = !password.hidden;
     }
   }
-});
-
-
-
-export async function hiddeByUsernameLength() {
-  const { data } = await profileService.getProfile();
   
-  const username = document.getElementById("changeUsernameButton");
-  const password = document.getElementById("changePasswordButton");
+  hideByUsernameLength();
 
-  console.log(data.username);
-  if (data.username.length > 8) {
-      username.hidden = !username.hidden;
-      password.hidden = !password.hidden;
+  
+  const avatarInput = document.getElementById('avatarInput');
+  const changeAvatarButton = document.getElementById('changeAvatarButton');
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+  async function handleAvatarChange(event) {
+    const file = event.target.files[0];
+
+    // Can upload only images
+    if (!file.type.startsWith('image/')) {
+      showErrorToast('Only images supported');
+      return;
+    }
+
+    if (file.size > MAX_SIZE) {
+      showErrorToast('Image size should be less than 5MB');
+      return;
+    }
+
+    await usersService.updateUserAvatar(file);
   }
-}
-// if (
-//   document.readyState !== 'loading' &&
-//   window.location.pathname.includes('/profile')
-// ) {
-//   await hiddeByUsernameLength();
-// }
-await hiddeByUsernameLength();
 
+  function handleChangeAvatarClick() {
+    avatarInput?.click();
+  }
+  
+  avatarInput?.addEventListener('change', handleAvatarChange);
+  changeAvatarButton?.addEventListener('click', handleChangeAvatarClick);
+
+  return () => {
+    avatarInput?.removeEventListener('change', handleAvatarChange);
+    changeAvatarButton?.removeEventListener('click', handleChangeAvatarClick);
+  };
+}

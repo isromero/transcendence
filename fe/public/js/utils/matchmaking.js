@@ -1,57 +1,66 @@
 import { loadPage } from '../router/router.js';
-import { initGame } from '../game.js';
-import { showErrorToast } from '../utils/helpers.js';
+import { showErrorToast } from './helpers.js';
 
 let ws;
 let multiplayerBtn;
 let queueStatus;
 let localMatchBtn;
 let cancelQueueBtn;
+let tournamentBtn;
 
 export function initMatchmaking() {
   multiplayerBtn = document.getElementById('multiplayer-btn');
   queueStatus = document.getElementById('queue-status');
   localMatchBtn = document.getElementById('local-match-btn');
   cancelQueueBtn = document.getElementById('cancel-queue-btn');
+  tournamentBtn = document.getElementById('tournament-btn');
 
-  if (sessionStorage.getItem('matchmaking_active')) {
-    showErrorToast('You are already in a matchmaking.');
+  // Check if there is a queue active in any tab
+  const isInQueue = localStorage.getItem('matchmaking_active');
+  if (isInQueue) {
+    showErrorToast('You are already in a matchmaking queue in another tab.');
     return;
   }
 
   handleQueue();
 
+  window.addEventListener('storage', handleStorageChange);
   cancelQueueBtn.addEventListener('click', cleanupMatchmaking);
   window.addEventListener('popstate', cleanupMatchmaking);
   window.addEventListener('beforeunload', cleanupMatchmaking);
 }
 
+function handleStorageChange(event) {
+  if (event.key === 'matchmaking_active') {
+    if (event.newValue === null && ws) {
+      // If the queue was cancelled in another tab, clean this one also
+      cleanupMatchmaking();
+    }
+  }
+}
+
 function handleQueue() {
   if (ws) {
-    // If there is a WebSocket, close it
     ws.close();
     ws = null;
   }
 
-  // Display the queue status
   queueStatus.style.display = 'block';
-  // Hide the buttons
   localMatchBtn.style.display = 'none';
   multiplayerBtn.style.display = 'none';
+  tournamentBtn.style.display = 'none';
 
-  sessionStorage.setItem('matchmaking_active', 'true');
+  localStorage.setItem('matchmaking_active', 'true');
 
-  ws = new WebSocket('ws://localhost:8000/ws/matchmaking');
+  ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking`);
 
   ws.onmessage = async event => {
     const data = JSON.parse(event.data);
 
     if (data.type === 'start_match') {
-      sessionStorage.removeItem('matchmaking_active');
+      localStorage.removeItem('matchmaking_active');
       sessionStorage.setItem('player_role', data.player);
-
       await loadPage(`/game/${data.match_id}`);
-      await initGame();
     } else if (data.type === 'error') {
       showErrorToast('Error starting matchmaking.');
       cleanupMatchmaking();
@@ -71,15 +80,16 @@ function cleanupMatchmaking() {
   cancelQueueBtn.removeEventListener('click', cleanupMatchmaking);
   window.removeEventListener('popstate', cleanupMatchmaking);
   window.removeEventListener('beforeunload', cleanupMatchmaking);
+  window.removeEventListener('storage', handleStorageChange);
 
   if (ws) {
-    // If there is a WebSocket, close it
     ws.close();
     ws = null;
   }
-  sessionStorage.removeItem('matchmaking_active');
+  localStorage.removeItem('matchmaking_active');
 
   queueStatus.style.display = 'none';
   localMatchBtn.style.display = 'block';
   multiplayerBtn.style.display = 'block';
+  tournamentBtn.style.display = 'block';
 }

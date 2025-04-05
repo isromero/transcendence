@@ -15,11 +15,10 @@ export const historyService = {
 
     const result = await response.json();
 
-    if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+    if (!response.ok || !result?.success || result.error) {
+      showErrorToast(result);
       return null;
     }
-
     return result.data || result;
   },
   getMatch: async matchId => {
@@ -35,7 +34,7 @@ export const historyService = {
     const result = await response.json();
 
     if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+      showErrorToast(result);
       return null;
     }
 
@@ -54,7 +53,7 @@ export const historyService = {
     const result = await response.json();
 
     if (!response.ok || !result?.success) {
-      showErrorToast(result?.message || result?.error);
+      showErrorToast(result);
       return null;
     }
 
