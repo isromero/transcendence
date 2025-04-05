@@ -145,9 +145,28 @@ def serialize_tournament(tournament):
                 "username": player2_record.user_id.username,
                 "score": player2_record.result_user,
             },
-            "game_finished": max(player1_record.result_user, player2_record.result_user)
-            >= 5,
+            "game_finished": max(player1_record.result_user, player2_record.result_user) >= 5,
         }
+
+    def is_round_finished(round_matches):
+        return bool(round_matches) and all(
+            max(match["player1"]["score"], match["player2"]["score"]) >= 5
+            for match in round_matches
+        )
+
+
+    quarter_matches = [
+        get_match_data(match)
+        for match in matches.filter(type_match="tournament_quarter").distinct("match_id")
+    ]
+    semi_matches = [
+        get_match_data(match)
+        for match in matches.filter(type_match="tournament_semi").distinct("match_id")
+    ]
+    final_matches = [
+        get_match_data(match)
+        for match in matches.filter(type_match="tournament_final").distinct("match_id")
+    ]
 
     return {
         "id": tournament.id,
@@ -163,26 +182,17 @@ def serialize_tournament(tournament):
             for player in tournament.players.all()
         ],
         "matches": {
-            "quarter_finals": [
-                get_match_data(match)
-                for match in matches.filter(type_match="tournament_quarter").distinct(
-                    "match_id"
-                )
-            ],
-            "semi_finals": [
-                get_match_data(match)
-                for match in matches.filter(type_match="tournament_semi").distinct(
-                    "match_id"
-                )
-            ],
-            "finals": [
-                get_match_data(match)
-                for match in matches.filter(type_match="tournament_final").distinct(
-                    "match_id"
-                )
-            ],
+            "quarter_finals": quarter_matches,
+            "semi_finals": semi_matches,
+            "finals": final_matches,
+            "round_finished": {
+                "quarter_finals": is_round_finished(quarter_matches),
+                "semi_finals": is_round_finished(semi_matches),
+                "finals": is_round_finished(final_matches),
+            },
         },
     }
+
 
 
 def serialize_history(user_history):

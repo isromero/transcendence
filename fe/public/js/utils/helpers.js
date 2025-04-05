@@ -1,4 +1,5 @@
 import { pageMappings } from '../router/routes.js';
+import { tournamentService } from '../services/tournaments.js';
 
 export function getCleanPageKey(requestedPath) {
   if (pageMappings[requestedPath]) {
@@ -127,18 +128,28 @@ export function updateTournamentUI(tournamentData) {
 
   // Clean player slots before updating
   const playerSlots = document.querySelectorAll('.player-info span');
+
   playerSlots.forEach(slot => {
-    slot.textContent = 'Waiting for player...';
+    if (tournamentData.status === 'in_progress') {
+      slot.textContent = 'Waiting for matches to end...';
+    }
+    else
+      slot.textContent = 'Waiting for player...';
     slot.previousElementSibling.src =
       '/public/assets/images/default-avatar.webp';
   });
 
   // Now, fill with the players
-  tournamentData.players.forEach((player, index) => {
-    if (playerSlots[index]) {
-      playerSlots[index].textContent = player.username;
-      playerSlots[index].previousElementSibling.src =
-        player.avatar || '/public/assets/images/default-avatar.webp';
-    }
-  });
+  if (Array.isArray(tournamentData.players)) {
+    tournamentData.players.forEach((player, index) => {
+      if (playerSlots[index]) {
+        playerSlots[index].textContent = player.username;
+        playerSlots[index].previousElementSibling.src =
+          player.avatar || '/public/assets/images/default-avatar.webp';
+      }
+    });
+  } else {
+    console.warn("⚠️ No se pudieron cargar los jugadores del torneo:", tournamentData.players);
+  }
+  
 }
