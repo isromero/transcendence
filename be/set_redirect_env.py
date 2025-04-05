@@ -1,13 +1,13 @@
 import os
 
-archivo = "./be/.env"
-host = f"OAUTH42_REDIRECT_URI=http://{os.uname().nodename.split('.')[0]}:8000/auth/callback/"
+env = "./be/.env"
+host = f"OAUTH42_REDIRECT_URI=http://{os.uname().nodename.split('.')[0]}:8000/api/oauth/callback"
 
-with open(archivo, "r") as f:
-    lineas = f.readlines()
-if lineas:
-    lineas[-1] = host
+with open(env, "r") as f:
+    lines = f.readlines()
+if lines:
+    lines[-1] = host
 else:
-    lineas.append(host)
-with open(archivo, "w") as f:
-    f.writelines(lineas)
+    lines.append(host)
+with open(env, "w") as f:
+    f.writelines(lines)

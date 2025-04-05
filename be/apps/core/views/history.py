@@ -1,8 +1,6 @@
-from django.http import JsonResponse
 from django.views import View
-from django.shortcuts import get_object_or_404
 from apps.core.models import History, User
-from apps.core.utils import serialize_history, create_response
+from apps.core.utils import create_response
 import json
 import uuid
 from django.views.decorators.csrf import csrf_exempt
@@ -181,7 +179,7 @@ class HistoryView(View):
             # Get both history records for this match
             matches = History.objects.filter(match_id=match_id)
             if not matches.exists():
-                return JsonResponse({"error": "Match not found"}, status=404)
+                return create_response(error="Match not found", status=404)
 
             # Find the records for scoring user and opponent
             scoring_record = matches.get(user_id=request.user.id)
@@ -207,8 +205,8 @@ class HistoryView(View):
                 tournaments_view = TournamentsView()
                 tournaments_view.process_tournament_match(scoring_record)
 
-            return JsonResponse(
-                {
+            return create_response(
+                data={
                     "match_id": str(match_id),
                     "players": [
                         {
@@ -229,4 +227,4 @@ class HistoryView(View):
             )
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            return create_response(error=str(e), status=400)

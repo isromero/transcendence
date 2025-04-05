@@ -1,7 +1,6 @@
-from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
-from apps.core.models import User, Friends, History, Tournaments
+from apps.core.models import User, Friends, History
 from apps.core.utils import serialize_user, create_response
 from apps.core.forms.user import UserForm
 import json
