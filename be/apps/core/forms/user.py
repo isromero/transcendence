@@ -28,10 +28,8 @@ class UserForm(forms.ModelForm):
         if not username and not old_password and not new_password:
             raise ValidationError("No changes provided")
 
-        # Validate username change
-        if "username" in self.data:
-            if not old_username:
-                raise ValidationError("Old username is required")
+        # Validate username change - only if oldUsername is provided
+        if old_username:
             if old_username != self.instance.username:
                 raise ValidationError("Username is incorrect")
             if not password:
@@ -51,6 +49,10 @@ class UserForm(forms.ModelForm):
 
         # Verify password change
         if new_password or old_password:
+            if not username:
+                raise ValidationError("Username is required to change password")
+            if username != self.instance.username:
+                raise ValidationError("Username is incorrect")
             if not old_password:
                 raise ValidationError("Old password is required to set a new password")
             if not new_password:

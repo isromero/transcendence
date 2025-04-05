@@ -1,4 +1,4 @@
-import { changeLanguage } from '../utils/languages.js';
+import { changeLanguage } from '../pages/languages.js';
 import { initGlobalValidation, parseAndSetContent } from '../utils/helpers.js';
 
 const modalContainer = document.getElementById('modal-container');
@@ -35,7 +35,29 @@ export async function loadModal(page) {
   }
 }
 
-// Only close the modal if the variable shouldCloseModal is true
+// Event delegation for language changes and modal closing
+modalContainer.addEventListener('click', async event => {
+  const button = event.target.closest('button');
+  if (!button) {
+    return;
+  }
+
+  // Handle language changes
+  const lang = button.dataset.language;
+  if (lang) {
+    await changeLanguage(lang);
+    if (shouldCloseModal) {
+      closeModal();
+    }
+  }
+
+  // Handle modal closing
+  if (button.hasAttribute('data-close-modal') && shouldCloseModal) {
+    closeModal();
+  }
+});
+
+// Close modal when clicking outside
 modalBackground.addEventListener('click', event => {
   const clickedModalBackground = event.target.closest('.modal-background');
   if (
@@ -43,12 +65,6 @@ modalBackground.addEventListener('click', event => {
     !event.target.closest('.modal-box') &&
     shouldCloseModal
   ) {
-    closeModal();
-  }
-});
-
-document.addEventListener('click', event => {
-  if (event.target.closest('[data-close-modal]') && shouldCloseModal) {
     closeModal();
   }
 });

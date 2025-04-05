@@ -99,6 +99,11 @@ export function showErrorToast(result) {
           .map(([field, msg]) => `${field}: ${msg}`)
           .join('\n');
       }
+    } else if (result.error.__all__) {
+      // Handle case where error is an object with __all__ directly
+      message = Array.isArray(result.error.__all__)
+        ? result.error.__all__[0]
+        : result.error.__all__;
     } else {
       // Handle simple error messages
       message = result.error.message || 'An error occurred';

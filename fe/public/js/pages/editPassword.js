@@ -1,7 +1,7 @@
 import { usersService } from '../services/users.js';
 import { loadPage } from '../router/router.js';
 
-export function editPassword() {
+export function init() {
   const form = document.getElementById('editPasswordForm');
   const usernameInput = document.getElementById('username');
   const oldPasswordInput = document.getElementById('oldPassword');
@@ -9,7 +9,7 @@ export function editPassword() {
   const toggleOldPassword = document.getElementById('toggleOldPassword');
   const toggleNewPassword = document.getElementById('toggleNewPassword');
 
-  form.addEventListener('formValid', async () => {
+  async function handleFormSubmit() {
     const user = {
       username: usernameInput.value,
       oldPassword: oldPasswordInput.value,
@@ -20,15 +20,25 @@ export function editPassword() {
     if (result) {
       await loadPage('/edit-profile');
     }
-  });
+  }
 
-  toggleOldPassword?.addEventListener('click', () => {
+  function handleToggleOldPassword() {
     oldPasswordInput.type =
       oldPasswordInput.type === 'password' ? 'text' : 'password';
-  });
+  }
 
-  toggleNewPassword?.addEventListener('click', () => {
+  function handleToggleNewPassword() {
     newPasswordInput.type =
       newPasswordInput.type === 'password' ? 'text' : 'password';
-  });
+  }
+
+  form?.addEventListener('formValid', handleFormSubmit);
+  toggleOldPassword?.addEventListener('click', handleToggleOldPassword);
+  toggleNewPassword?.addEventListener('click', handleToggleNewPassword);
+
+  return () => {
+    form?.removeEventListener('formValid', handleFormSubmit);
+    toggleOldPassword?.removeEventListener('click', handleToggleOldPassword);
+    toggleNewPassword?.removeEventListener('click', handleToggleNewPassword);
+  };
 }
