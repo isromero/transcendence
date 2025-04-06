@@ -73,9 +73,9 @@ function updateGameRotation() {
 }
 
 async function updateGameState(gameState) {
+  // No need to call updateGameRotation here since it's already called during initialization
+  // and will be handled by window resize event
   try {
-    // No need to call updateGameRotation here since it's already called during initialization
-    // and will be handled by window resize event
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -84,9 +84,19 @@ async function updateGameState(gameState) {
       return;
     }
 
+    const countdownElement = document.getElementById('countdown');
+    if (countdownElement) {
+      if (gameState.countdown !== null && gameState.countdown > 0) {
+        countdownElement.style.display = 'block';
+        countdownElement.textContent = Math.ceil(gameState.countdown);
+      } else {
+        countdownElement.style.display = 'none';
+      }
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const { left_paddle, right_paddle, ball, scores, countdown } = gameState;
+    const { left_paddle, right_paddle, ball, scores } = gameState;
 
     if (!left_paddle || !right_paddle || !ball || !scores) {
       console.error('Invalid game state:', gameState);
@@ -105,12 +115,6 @@ async function updateGameState(gameState) {
     ctx.font = '40px Pixelify Sans';
     ctx.textAlign = 'center';
     ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
-    if (countdown && countdown > 0) {
-      ctx.fillStyle = 'white';
-      ctx.font = '80px Pixelify Sans';
-      ctx.textAlign = 'center';
-      ctx.fillText(Math.ceil(countdown), canvas.width / 2, canvas.height / 2);
-    }
 
     ctx.fillStyle = '#ff4d6d';
     ctx.fillRect(
