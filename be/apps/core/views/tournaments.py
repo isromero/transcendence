@@ -83,7 +83,10 @@ class TournamentsView(View):
                     return create_response(error="Tournament is full", status=400)
 
                 tournament.players.add(request.user)
-                if tournament.players.count() == tournament.max_players:
+                if (
+                    tournament.players.count() == tournament.max_players
+                    and tournament.status == "pending"
+                ):
                     tournament.status = "ready"
                 tournament.save()
                 return create_response(
@@ -122,8 +125,14 @@ class TournamentsView(View):
                         error="Tournament is not ready to start", status=400
                     )
 
-                players = list(tournament.players.all())
-                random.shuffle(players)
+                # Get players in order of joining this specific tournament
+                players = list(
+                    tournament.players.through.objects.filter(tournaments=tournament)
+                    .order_by("id")
+                    .values_list("user", flat=True)
+                )
+                players = [User.objects.get(id=player_id) for player_id in players]
+
                 num_players = len(players)
                 num_quarter_matches = (num_players - 4) // 2
                 players_in_quarters = num_quarter_matches * 2
@@ -156,6 +165,7 @@ class TournamentsView(View):
 
                 tournament.status = "in_progress"
                 tournament.current_round = 1 if quarter_players else 2
+
                 tournament.save()
 
                 return create_response(

@@ -170,6 +170,17 @@ def serialize_tournament(tournament):
         for match in matches.filter(type_match="tournament_final").distinct("match_id")
     ]
 
+    # Get players in order of joining this specific tournament
+    ordered_players = (
+        tournament.players.through.objects.filter(tournaments=tournament)
+        .order_by("id")
+        .values_list("user", flat=True)
+    )
+
+    players_dict = {player.id: player for player in tournament.players.all()}
+
+    ordered_player_objects = [players_dict[player_id] for player_id in ordered_players]
+
     return {
         "id": tournament.id,
         "start_date": tournament.start_date,
@@ -181,7 +192,7 @@ def serialize_tournament(tournament):
         "join_code": tournament.join_code,
         "players": [
             {"id": player.id, "username": player.username, "avatar": player.avatar}
-            for player in tournament.players.all()
+            for player in ordered_player_objects
         ],
         "matches": {
             "quarter_finals": quarter_matches,
