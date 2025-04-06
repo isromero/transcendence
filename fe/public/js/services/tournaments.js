@@ -194,7 +194,6 @@ export const tournamentService = {
         return null;
       }
 
-      showSuccessToast('Next round started successfully!');
       return result.data || result;
     } catch (error) {
       showErrorToast(`Error starting next round: ${error.message}`);

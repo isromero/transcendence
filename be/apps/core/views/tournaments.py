@@ -23,12 +23,54 @@ class TournamentsView(View):
         try:
             if join_code:
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
+
+                if tournament.status == "in_progress":
+                    matches = History.objects.filter(tournament_id=tournament)
+
+                    if tournament.max_players == 4:
+                        semi_matches = matches.filter(
+                            type_match="tournament_semi"
+                        ).distinct("tournament_match_number")
+
+                        final_matches = matches.filter(
+                            type_match="tournament_final"
+                        ).distinct("tournament_match_number")
+
+                        semis_finished = all(
+                            max(
+                                matches.filter(match_id=m.match_id).values_list(
+                                    "result_user", flat=True
+                                )
+                            )
+                            >= 5
+                            for m in semi_matches
+                        )
+
+                        finals_finished = (
+                            all(
+                                max(
+                                    matches.filter(match_id=m.match_id).values_list(
+                                        "result_user", flat=True
+                                    )
+                                )
+                                >= 5
+                                for m in final_matches
+                            )
+                            if final_matches.exists()
+                            else False
+                        )
+
+                        if semis_finished and finals_finished:
+                            tournament.status = "completed"
+                            tournament.save()
+
                 return create_response(
                     data=serialize_tournament(tournament),
                     message="Tournament retrieved successfully",
                     status=200,
                 )
         except Exception as e:
+            print(f"Error in tournament GET: {str(e)}")
             return create_response(error=str(e), status=400)
 
     def post(self, request):
@@ -62,6 +104,7 @@ class TournamentsView(View):
         try:
             data = json.loads(request.body)
             action = data.get("action")
+            join_code = data.get("join_code")
             tournament_id = data.get("tournament_id")
 
             if not tournament_id or not action:
@@ -72,7 +115,6 @@ class TournamentsView(View):
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
-                join_code = data.get("join_code")
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
 
@@ -94,7 +136,6 @@ class TournamentsView(View):
                 )
 
             elif action == "leave":
-                join_code = data.get("join_code")
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
 
@@ -211,21 +252,6 @@ class TournamentsView(View):
                     self._create_next_round_matches(tournament, winners, next_type)
                     tournament.current_round = next_round
                     tournament.save()
-                else:
-                    # If we are in the final, we don't mark "completed" until the match is played
-
-                    if match.type_match == "tournament_final":
-                        all_final_matches = History.objects.filter(
-                            tournament_id=tournament.id, type_match="tournament_final"
-                        ).distinct("match_id")
-
-                        final_matches_finished = all(
-                            m.result_user is not None for m in all_final_matches
-                        )
-
-                        if final_matches_finished:
-                            tournament.status = "completed"
-                            tournament.save()
 
                 return create_response(
                     data=serialize_tournament(tournament),
@@ -248,6 +274,15 @@ class TournamentsView(View):
     def _create_match(
         self, tournament, user1, user2, type_match, match_id, match_number
     ):
+        existing_match = History.objects.filter(
+            tournament_id=tournament,
+            type_match=type_match,
+            tournament_match_number=match_number,
+        ).first()
+
+        if existing_match:
+            return
+
         History.objects.create(
             match_id=match_id,
             tournament_id=tournament,
@@ -272,13 +307,38 @@ class TournamentsView(View):
         )
 
     def _create_next_round_matches(self, tournament, winners, next_type):
-        for i in range(0, len(winners), 2):
+        # Check if there are already matches for this round
+        existing_matches = (
+            History.objects.filter(tournament_id=tournament, type_match=next_type)
+            .values("tournament_match_number")
+            .distinct()
+        )
+
+        if existing_matches.exists():
+            return
+
+        # For finals, we need to ensure that only one match is created
+        if next_type == "tournament_final":
             match_id = uuid.uuid4()
+
             self._create_match(
                 tournament,
-                winners[i],
-                winners[i + 1],
+                winners[0],
+                winners[1],
                 next_type,
                 match_id,
-                (i // 2) + 1,
+                1,
             )
+        else:
+            for i in range(0, len(winners), 2):
+                match_id = uuid.uuid4()
+                match_number = (i // 2) + 1
+
+                self._create_match(
+                    tournament,
+                    winners[i],
+                    winners[i + 1],
+                    next_type,
+                    match_id,
+                    match_number,
+                )
