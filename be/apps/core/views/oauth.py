@@ -70,40 +70,42 @@ class OAuthCallback(View):
                     filename = f"avatar_{uuid.uuid4()}{file_extension}"
                     file_path = os.path.join(settings.MEDIA_ROOT, filename)
 
-                    # Guardar imagen directamente en media
+                    # Save image directly in media
                     with open(file_path, "wb") as f:
                         f.write(response.content)
 
-                    # Devolver solo el nombre del archivo
-                    return filename  # Django añadirá MEDIA_URL automáticamente
+                    return filename
 
-            return avatar_url
+            return f"/{avatar_url}"
         except Exception as e:
             print(f"Error downloading avatar: {e}")
             return "default_avatar.webp"
 
-    def _transfer_data(self, user_data, token_data):
+    def _transfer_data(self, user_info, token_data):
         """Transfer user data from 42 API to our database"""
         try:
-            # Descargar y guardar el avatar localmente
-            avatar_url = user_data["image"]["link"]
-            local_avatar_path = self._download_and_save_avatar(avatar_url)
-
-            user = User.objects.get(username=user_data["login"])
-            user.email = user_data["email"]
-            user.avatar = f"/{local_avatar_path}"
-            user.access_token = token_data["access_token"]
-            user.refresh_token = token_data["refresh_token"]
-            user.save()
-            return user
-        except User.DoesNotExist:
-            return User.objects.create(
-                username=user_data["login"],
-                email=user_data["email"],
-                avatar=self._download_and_save_avatar(user_data["image"]["link"]),
-                access_token=token_data["access_token"],
-                refresh_token=token_data["refresh_token"],
-            )
+            try:
+                # If the user exists, only update tokens
+                user = User.objects.get(username=user_info["login"])
+                user.email = user_info["email"]
+                user.access_token = token_data["access_token"]
+                user.refresh_token = token_data["refresh_token"]
+                user.save()
+                return user
+            except User.DoesNotExist:
+                # If it's a new user, download the avatar
+                avatar_url = user_info["image"]["link"]
+                local_avatar_path = self._download_and_save_avatar(avatar_url)
+                return User.objects.create(
+                    username=user_info["login"],
+                    email=user_info["email"],
+                    avatar=local_avatar_path,
+                    access_token=token_data["access_token"],
+                    refresh_token=token_data["refresh_token"],
+                )
+        except Exception as e:
+            print(f"Error in _transfer_data: {e}")
+            return None
 
     def _exchange_code_for_token(self, code: str) -> dict:
         data = {
