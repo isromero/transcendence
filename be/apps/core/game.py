@@ -87,12 +87,14 @@ class GameState:
         if self.countdown is not None:
             self.countdown = max(0, self.countdown - dt)
             if self.countdown == 0:
-                self.countdown = None  # Disable countdown
+                self.countdown = None
+
+        # Only allow paddle movement when the countdown is over
+        if self.countdown is None:
+            self._update_paddles(dt * self.fps_cap)
 
         if self.running and self.countdown is None and not self.game_over:
             await self._update_ball(dt * self.fps_cap)
-
-        self._update_paddles(dt * self.fps_cap)
 
     def _update_paddles(self, time_factor):
         """Move paddles within the limits"""

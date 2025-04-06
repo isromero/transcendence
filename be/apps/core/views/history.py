@@ -23,7 +23,7 @@ class HistoryView(View):
             match_data = {
                 "match_id": str(match.match_id),
                 "is_tournament": match.tournament_id is not None,
-                "type": match.type_match,
+                "type_match": match.type_match,
                 "status": "finished" if game_finished else "in_progress",
                 "can_play": not game_finished,
                 "players": (
@@ -100,7 +100,7 @@ class HistoryView(View):
 
             match_data = {
                 "match_id": str(match_id),
-                "type": "local",
+                "type_match": "local",
                 "status": "in_progress",
                 "players": [
                     {
