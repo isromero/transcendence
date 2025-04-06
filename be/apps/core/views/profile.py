@@ -1,5 +1,5 @@
 from django.views import View
-from apps.core.models import History, User
+from apps.core.models import History
 from apps.core.utils import serialize_stats
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator

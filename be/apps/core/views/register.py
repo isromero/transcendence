@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from django.views import View
 import json
 from apps.core.forms.register import RegisterForm
@@ -19,6 +18,7 @@ class RegisterView(View):
                     error="Username too short. It must be  9 characters long",
                     status=400,
                 )
+
             form = RegisterForm(data)
 
             if not form.is_valid():
