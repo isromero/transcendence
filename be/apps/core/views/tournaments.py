@@ -64,6 +64,11 @@ class TournamentsView(View):
                             tournament.status = "completed"
                             tournament.save()
 
+                            # Restore all display names of the players
+                            for player in tournament.players.all():
+                                player.tournament_display_name = player.username
+                                player.save(update_fields=["tournament_display_name"])
+
                 return create_response(
                     data=serialize_tournament(tournament),
                     message="Tournament retrieved successfully",
@@ -115,12 +120,15 @@ class TournamentsView(View):
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
-                
+
                 display_name = data.get("display_name")
-                
-                User.objects.filter(id=request.user.id).update(
-                    display_name=display_name
-                )
+
+                user = User.objects.get(id=request.user.id)
+                user.tournament_display_name = display_name
+                user.save()
+
+                print(user.tournament_display_name)
+
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
 

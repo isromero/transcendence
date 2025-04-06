@@ -9,7 +9,7 @@ function getJoinCodeFromURL() {
   return joinCode;
 }
 
-export function init() {
+export async function init() {
   const joinCode = getJoinCodeFromURL();
   const startBtn = document.getElementById('start-tournament-btn');
   const leaveBtn = document.getElementById('leaveTournamentButton');
@@ -93,11 +93,17 @@ export function init() {
 
       const profile = await profileService.getProfile();
       if (profile && tournament.status === 'pending') {
-        await tournamentService.updateTournamentWhenJoining(
-          joinCode,
-          tournament,
-          profile.username
+        const playerAlreadyInTournament = tournament.players.some(
+          player => player.id === profile.data.id
         );
+
+        if (!playerAlreadyInTournament) {
+          await tournamentService.updateTournamentWhenJoining(
+            joinCode,
+            tournament,
+            profile.data
+          );
+        }
       }
 
       if (tournament.status === 'in_progress') {

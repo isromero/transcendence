@@ -37,7 +37,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         await self.check_matchmaking()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self):
         for i, player in enumerate(self.queue):
             if player[0] == self:
                 self.queue.pop(i)

@@ -19,8 +19,7 @@ class User(AbstractUser):
     last_activity = models.DateTimeField(default=timezone.now)
     deleted_user = models.BooleanField(default=False)
 
-    # Nuevo campo
-    display_name = models.CharField(
+    tournament_display_name = models.CharField(
         max_length=150,
         null=True,
         blank=True,
@@ -35,16 +34,14 @@ class User(AbstractUser):
         if not self.last_activity:
             return False
         return (timezone.now() - self.last_activity).seconds < 45
-    
-    def save(self, *args, **kwargs):
-        if self._state.adding and not self.display_name:
-            self.display_name = self.username
-        super().save(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if self._state.adding and not self.tournament_display_name:
+            self.tournament_display_name = self.username
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
-
 
 
 class Friends(models.Model):
@@ -111,6 +108,7 @@ class History(models.Model):
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )
     tournament_match_number = models.IntegerField(null=True, blank=True)
+
 
 # TODO: (jose) borrar código comentado si no se usan los logins de 42 como filtro en el registro
 # class UsedLogin(models.Model):
