@@ -195,7 +195,7 @@ const setWinner = data => {
     return;
   }
 
-  const isLocalMatch = data.is_local;
+  const isLocalMatch = data.type_match === 'local';
   const winner = data.players.find(player => player.is_winner);
 
   if (winner) {

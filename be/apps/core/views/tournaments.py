@@ -305,7 +305,6 @@ class TournamentsView(View):
             tournament_match_number=match_number,
             result_user=0,
             result_opponent=0,
-            local_match=False,
         )
         History.objects.create(
             match_id=match_id,
@@ -316,7 +315,6 @@ class TournamentsView(View):
             tournament_match_number=match_number,
             result_user=0,
             result_opponent=0,
-            local_match=False,
         )
 
     def _create_next_round_matches(self, tournament, winners, next_type):

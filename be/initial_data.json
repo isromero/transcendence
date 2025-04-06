@@ -192,8 +192,7 @@
       "result_user": 5,
       "opponent_id": 2,
       "result_opponent": 3,
-      "type_match": "match",
-      "local_match": true,
+      "type_match": "local",
       "tournament_id": null,
       "tournament_match_number": null
     }

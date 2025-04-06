@@ -97,10 +97,10 @@ class History(models.Model):
             ("tournament_quarter", "Tournament Quarter Finals"),
             ("tournament_semi", "Tournament Semi Finals"),
             ("tournament_final", "Tournament Finals"),
-            ("match", "Local Match"),
+            ("local", "Local Match"),
+            ("multiplayer", "Multiplayer Match"),
         ],
     )
-    local_match = models.BooleanField(default=True)
     tournament_id = models.ForeignKey(
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )

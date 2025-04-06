@@ -31,7 +31,6 @@ class HistoryAdmin(admin.ModelAdmin):
         "opponent_id",
         "result_opponent",
         "type_match",
-        "local_match",
         "tournament_id",
         "tournament_match_number",
     )

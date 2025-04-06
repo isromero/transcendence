@@ -97,8 +97,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 match_id=match_id,
                 user_id=player1,
                 opponent_id=player2,
-                type_match="match",
-                local_match=True,
+                type_match="multiplayer",
                 result_user=0,
                 result_opponent=0,
             )
@@ -107,8 +106,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 match_id=match_id,
                 user_id=player2,
                 opponent_id=player1,
-                type_match="match",
-                local_match=True,
+                type_match="multiplayer",
                 result_user=0,
                 result_opponent=0,
             )

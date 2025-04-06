@@ -9,7 +9,7 @@ export const historyService = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({ local_match: true }),
+      body: JSON.stringify({ type_match: 'local' }),
       credentials: 'include',
     });
 

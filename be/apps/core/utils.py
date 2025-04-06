@@ -101,7 +101,7 @@ def serialize_friend(friend_relation):
 
 
 def serialize_stats(user, user_history):
-    tournament_matches = user_history.exclude(type_match="match")
+    tournament_matches = user_history.exclude(type_match__in=["local", "multiplayer"])
     tournament_wins = tournament_matches.filter(
         result_user__gt=models.F("result_opponent")
     )
@@ -223,7 +223,6 @@ def serialize_history(user_history):
     return {
         "match_id": str(user_history.match_id),
         "type_match": user_history.type_match,
-        "is_local": user_history.local_match,
         "is_tournament": user_history.tournament_id is not None,
         "date": user_history.date,
         "players": {
