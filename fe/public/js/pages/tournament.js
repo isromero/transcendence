@@ -15,6 +15,12 @@ export function init() {
   const leaveBtn = document.getElementById('leaveTournamentButton');
   let intervalId = null;
 
+  const roundMap = {
+    1: 'quarter_finals',
+    2: 'semi_finals',
+    3: 'finals',
+  };
+
   async function leaveTournament() {
     clearInterval(intervalId);
 
@@ -65,12 +71,6 @@ export function init() {
     loadPage('/join-tournament');
   }
 
-  async function handleBeforeUnload(event) {
-    event.preventDefault();
-    event.returnValue = '';
-    await leaveTournament();
-  }
-
   async function initializeTournament() {
     try {
       const tournament = await tournamentService.getTournament(joinCode);
@@ -104,11 +104,6 @@ export function init() {
   }
 
   async function maybeRedirectToMatch(tournament) {
-    const roundMap = {
-      1: 'quarter_finals',
-      2: 'semi_finals',
-      3: 'finals',
-    };
     const currentRoundKey = roundMap[tournament.current_round];
     const profile = await profileService.getProfile();
 
@@ -119,12 +114,10 @@ export function init() {
     const userId = profile.data.id;
 
     const userMatch = tournament.matches[currentRoundKey]?.find(
-      match =>
-        !match.game_finished &&
-        (match.player1?.id === userId || match.player2?.id === userId)
+      match => match.player1?.id === userId || match.player2?.id === userId
     );
 
-    if (userMatch?.match_id) {
+    if (userMatch?.match_id && !userMatch.game_finished) {
       await loadPage(
         `/game/${userMatch.match_id}/tournament/${tournament.join_code}`
       );
@@ -142,11 +135,6 @@ export function init() {
     updateTournamentUI(tournament);
 
     if (tournament.status === 'in_progress') {
-      const roundMap = {
-        1: 'quarter_finals',
-        2: 'semi_finals',
-        3: 'finals',
-      };
       const currentRoundKey = roundMap[tournament.current_round];
       const currentRoundFinished =
         tournament.matches.round_finished?.[currentRoundKey];
@@ -171,6 +159,10 @@ export function init() {
       if (playerId === leaderId) {
         startBtn?.removeAttribute('disabled');
       }
+    } else if (tournament.status === 'pending') {
+      startBtn?.setAttribute('disabled', 'true');
+    } else if (tournament.status === 'completed') {
+      leaveBtn?.classList.remove('hidden');
     }
   }
 
@@ -178,17 +170,19 @@ export function init() {
 
   startBtn?.addEventListener('click', handleStartTournament);
   leaveBtn?.addEventListener('click', handleLeaveTournament);
-  window.addEventListener('beforeunload', handleBeforeUnload);
   window.addEventListener('storage', handleStorageChange);
 
   initializeTournament();
+
+  // If you leave thr tournament with popstate and beforeunload / others
+  // We don't care, we won't do anything
+  // We only care if you leave the tournament with the leave button
+  // This is because it's a little buggy if we handle that way
 
   return () => {
     clearInterval(intervalId);
     startBtn?.removeEventListener('click', handleStartTournament);
     leaveBtn?.removeEventListener('click', handleLeaveTournament);
-    window.removeEventListener('beforeunload', handleBeforeUnload);
     window.removeEventListener('storage', handleStorageChange);
-    leaveTournament();
   };
 }

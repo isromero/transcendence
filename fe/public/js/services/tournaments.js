@@ -75,11 +75,6 @@ export const tournamentService = {
       const userId = profile.data.id;
       const tournamentKey = `tournament_${joinCode}_player_${userId}`;
 
-      if (localStorage.getItem(tournamentKey)) {
-        showErrorToast('You are already in this tournament');
-        return null;
-      }
-
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
         headers: {

@@ -4,47 +4,22 @@ import { updateTournamentUI } from '../utils/helpers.js';
 
 export function init() {
   const form = document.getElementById('tournamentSettingsForm');
-  let lastClickedButton = null;
 
   async function handleFormSubmit(event) {
     event.preventDefault();
 
     const tournamentName = document.getElementById('tournament-name').value;
 
-    if (lastClickedButton?.id === 'create-tournament-btn') {
-      const result = await tournamentService.createTournament(
-        tournamentName,
-        4
-      );
-      if (result) {
-        await loadPage(`/tournament/${result.join_code}`);
-        await updateTournamentUI(result);
-      }
-    }
-    // ! UNCOMMENT THIS IF WE WANT TO USE THE 8 PLAYERS TOURNAMENT
-    /* else if (lastClickedButton?.id === '8-players-btn') {
-      const result = await tournamentService.createTournament(
-        tournamentName,
-        8
-      );
-      if (result) {
-        await loadPage(`/tournament-big/${result.join_code}`);
-        await updateTournamentUI(result);
-      }
-    } */
-  }
-
-  function handleButtonClick(event) {
-    if (event.target.type === 'submit') {
-      lastClickedButton = event.target;
+    const result = await tournamentService.createTournament(tournamentName, 4);
+    if (result) {
+      await loadPage(`/tournament/${result.join_code}`);
+      await updateTournamentUI(result);
     }
   }
 
-  form?.addEventListener('click', handleButtonClick);
   form?.addEventListener('formValid', handleFormSubmit);
 
   return () => {
-    form?.removeEventListener('click', handleButtonClick);
     form?.removeEventListener('formValid', handleFormSubmit);
   };
 }

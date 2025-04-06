@@ -40,11 +40,6 @@ function handleStorageChange(event) {
 }
 
 function handleQueue() {
-  if (ws) {
-    ws.close();
-    ws = null;
-  }
-
   queueStatus.style.display = 'block';
   localMatchBtn.style.display = 'none';
   multiplayerBtn.style.display = 'none';

@@ -146,13 +146,15 @@ async function updateGameState(gameState) {
 
         updateTournamentUI(tournamentData);
       } else {
-        // If it's a multiplayer or local game, show the modal
-        await loadPage('/modal-end-game');
+        if (window.location.pathname.includes('game/')) {
+          // If it's a multiplayer or local game, show the modal
+          await loadPage('/modal-end-game');
 
-        const matchId = path.split('/game/')[1]?.split('/')[0];
-        const data = await historyService.getMatchHistory(matchId);
+          const matchId = path.split('/game/')[1]?.split('/')[0];
+          const data = await historyService.getMatchHistory(matchId);
 
-        setWinner(data);
+          setWinner(data);
+        }
       }
     } else {
       // If the game is not ended, continue animating
@@ -213,7 +215,11 @@ async function checkIfGameFinished(matchId) {
   try {
     const data = await historyService.getMatchHistory(matchId);
 
-    if (data && data.status === 'finished') {
+    if (
+      data &&
+      data.status === 'finished' &&
+      window.location.pathname.includes('game/')
+    ) {
       await loadPage('/modal-end-game');
       setWinner(data);
       return true;

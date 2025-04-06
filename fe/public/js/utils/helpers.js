@@ -119,6 +119,59 @@ export function showErrorToast(result) {
   toast.show();
 }
 
+const updateMatchResults = (roundMatches, roundPrefix) => {
+  roundMatches.forEach(match => {
+    const matchNumber = match.tournament_match_number;
+    const player1 = match.player1;
+    const player2 = match.player2;
+
+    // Actualizar scores
+    const player1Score = document.querySelector(
+      `.${roundPrefix}-player${matchNumber * 2 - 1}`
+    );
+    const player2Score = document.querySelector(
+      `.${roundPrefix}-player${matchNumber * 2}`
+    );
+
+    if (player1Score && player2Score) {
+      player1Score.textContent = player1.score || '0';
+      player2Score.textContent = player2.score || '0';
+    }
+
+    // Actualizar información de jugadores usando IDs
+    const p1Name = document.getElementById(
+      `${roundPrefix}${matchNumber}-p1-name`
+    );
+    const p1Img = document.getElementById(
+      `${roundPrefix}${matchNumber}-p1-img`
+    );
+    const p2Name = document.getElementById(
+      `${roundPrefix}${matchNumber}-p2-name`
+    );
+    const p2Img = document.getElementById(
+      `${roundPrefix}${matchNumber}-p2-img`
+    );
+
+    if (p1Name) {
+      p1Name.textContent = player1.username;
+    }
+    if (p2Name) {
+      p2Name.textContent = player2.username;
+    }
+
+    if (p1Img) {
+      p1Img.src = player1.avatar
+        ? `${IMAGES_URL}${player1.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+    if (p2Img) {
+      p2Img.src = player2.avatar
+        ? `${IMAGES_URL}${player2.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+  });
+};
+
 export function updateTournamentUI(tournamentData) {
   const tournamentName = document.getElementById('tournament-name');
   const joinCode = document.getElementById('join-code');
@@ -152,84 +205,63 @@ export function updateTournamentUI(tournamentData) {
     });
   }
 
-  const updateMatchResults = (roundMatches, roundPrefix, matchClassPrefix) => {
-    roundMatches.forEach((match, index) => {
-      const player1 = match.player1;
-      const player2 = match.player2;
-      const matchElements = document.querySelectorAll(
-        `.${roundPrefix}-player${index * 2 + 1}, .${roundPrefix}-player${index * 2 + 2}`
-      );
-      const matchImages = document.querySelectorAll(
-        `.${matchClassPrefix} .player-info img`
-      );
-
-      if (matchElements.length > 0 && matchImages.length > 0) {
-        matchElements[0].textContent = player1.score;
-        matchElements[1].textContent = player2.score;
-        matchImages[0].src =
-          `${IMAGES_URL}${player1.avatar.replace('/images/', '/')}` ||
-          `${IMAGES_URL}/default_avatar.webp`;
-        matchImages[1].src =
-          `${IMAGES_URL}${player2.avatar.replace('/images/', '/')}` ||
-          `${IMAGES_URL}/default_avatar.webp`;
-      }
-    });
-  };
-
-  if (tournamentData.matches.quarters) {
-    updateMatchResults(
-      tournamentData.matches.quarter_finals,
-      'quarter',
-      'match-result'
-    );
+  if (tournamentData.matches.quarter_finals?.length > 0) {
+    updateMatchResults(tournamentData.matches.quarter_finals, 'quarter');
   }
 
-  if (tournamentData.matches.semi_finals) {
-    updateMatchResults(
-      tournamentData.matches.semi_finals,
-      'semis',
-      'match-result'
-    );
+  if (tournamentData.matches.semi_finals?.length > 0) {
+    updateMatchResults(tournamentData.matches.semi_finals, 'semi');
   }
 
-  if (tournamentData.matches.finals) {
+  if (tournamentData.matches.finals?.length > 0) {
     const finalMatch = tournamentData.matches.finals[0];
-    const finalElements = document.querySelectorAll('.player-info-final span');
-    const finalImages = document.querySelectorAll('.player-info-final img');
+    const player1 = finalMatch.player1;
+    const player2 = finalMatch.player2;
 
-    if (finalMatch) {
-      const finalPlayer1 = finalMatch.player1;
-      const finalPlayer2 = finalMatch.player2;
+    // Actualizar información de la final usando IDs
+    const p1Name = document.getElementById('final-p1-name');
+    const p1Img = document.getElementById('final-p1-img');
+    const p2Name = document.getElementById('final-p2-name');
+    const p2Img = document.getElementById('final-p2-img');
+    const p1Score = document.querySelector('.final-player1');
+    const p2Score = document.querySelector('.final-player2');
 
-      if (finalElements.length > 0 && finalImages.length > 0) {
-        finalElements[0].textContent = finalPlayer1.username;
-        finalElements[1].textContent = finalPlayer2.username;
-        finalImages[0].src =
-          `${IMAGES_URL}${finalPlayer1.avatar.replace('/images/', '/')}` ||
-          `${IMAGES_URL}/default_avatar.webp`;
-        finalImages[1].src =
-          `${IMAGES_URL}${finalPlayer2.avatar.replace('/images/', '/')}` ||
-          `${IMAGES_URL}/default_avatar.webp`;
-      }
+    if (p1Name) {
+      p1Name.textContent = player1.username;
+    }
+    if (p2Name) {
+      p2Name.textContent = player2.username;
+    }
+    if (p1Score) {
+      p1Score.textContent = player1.score || '0';
+    }
+    if (p2Score) {
+      p2Score.textContent = player2.score || '0';
+    }
 
-      const finalScores = document.querySelectorAll(
-        '.match-result span.text-warning'
-      );
-      if (finalScores.length === 2) {
-        finalScores[0].textContent = finalPlayer1.score;
-        finalScores[1].textContent = finalPlayer2.score;
-      }
+    if (p1Img) {
+      p1Img.src = player1.avatar
+        ? `${IMAGES_URL}${player1.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+    if (p2Img) {
+      p2Img.src = player2.avatar
+        ? `${IMAGES_URL}${player2.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
 
-      const winner =
-        finalPlayer1.score > finalPlayer2.score ? finalPlayer1 : finalPlayer2;
-
+    // Actualizar ganador si el juego está terminado
+    if (Math.max(player1.score, player2.score) >= 5) {
+      const winner = player1.score > player2.score ? player1 : player2;
       const winnerImage = document.getElementById('winner-avatar');
       const winnerName = document.getElementById('winner-name');
 
-      winnerImage.src =
-        `${IMAGES_URL}${winner.avatar.replace('/images/', '/')}` ||
-        `${IMAGES_URL}/default_avatar.webp`;
-      winnerName.textContent = winner.username;
+      if (winnerImage && winnerName) {
+        winnerImage.src = winner.avatar
+          ? `${IMAGES_URL}${winner.avatar.replace('/images/', '/')}`
+          : `${IMAGES_URL}/default_avatar.webp`;
+        winnerName.textContent = winner.username;
+      }
     }
   }
 }
