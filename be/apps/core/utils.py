@@ -78,6 +78,7 @@ def serialize_user(user):
         "avatar": user.avatar,
         "is_online": user.is_online,
         "deleted_user": user.deleted_user,
+        "display_name": user.tournament_display_name,
     }
 
 
@@ -100,7 +101,7 @@ def serialize_friend(friend_relation):
 
 
 def serialize_stats(user, user_history):
-    tournament_matches = user_history.exclude(type_match="match")
+    tournament_matches = user_history.exclude(type_match__in=["local", "multiplayer"])
     tournament_wins = tournament_matches.filter(
         result_user__gt=models.F("result_opponent")
     )
@@ -109,6 +110,7 @@ def serialize_stats(user, user_history):
         "id": user.id,
         "avatar": user.avatar,
         "username": user.username,
+        "display_name": user.tournament_display_name,
         "victories": user_history.filter(
             result_user__gt=models.F("result_opponent")
         ).count(),
@@ -128,21 +130,24 @@ def serialize_tournament(tournament):
     matches = History.objects.filter(tournament_id=tournament.id)
 
     def get_match_data(match):
-        match_records = matches.filter(match_id=match.match_id)
-        player1_record = match_records.get(user_id=match.user_id)
-        player2_record = match_records.get(user_id=match.opponent_id)
+        match_records = matches.filter(match_id=match.match_id).order_by("-date")
+        player1_record = match_records.filter(user_id=match.user_id).first()
+        player2_record = match_records.filter(user_id=match.opponent_id).first()
+
+        if not player1_record or not player2_record:
+            return None
 
         return {
             "match_id": str(match.match_id),
             "tournament_match_number": match.tournament_match_number,
             "player1": {
                 "id": player1_record.user_id.id,
-                "username": player1_record.user_id.username,
+                "username": player1_record.user_id.tournament_display_name,
                 "score": player1_record.result_user,
             },
             "player2": {
                 "id": player2_record.user_id.id,
-                "username": player2_record.user_id.username,
+                "username": player2_record.user_id.tournament_display_name,
                 "score": player2_record.result_user,
             },
             "game_finished": max(player1_record.result_user, player2_record.result_user)
@@ -166,9 +171,23 @@ def serialize_tournament(tournament):
         for match in matches.filter(type_match="tournament_semi").distinct("match_id")
     ]
     final_matches = [
-        get_match_data(match)
-        for match in matches.filter(type_match="tournament_final").distinct("match_id")
+        match_data
+        for match in matches.filter(type_match="tournament_final")
+        .order_by("tournament_match_number", "-date")
+        .distinct("tournament_match_number")
+        if (match_data := get_match_data(match)) is not None
     ]
+
+    # Get players in order of joining this specific tournament
+    ordered_players = (
+        tournament.players.through.objects.filter(tournaments=tournament)
+        .order_by("id")
+        .values_list("user", flat=True)
+    )
+
+    players_dict = {player.id: player for player in tournament.players.all()}
+
+    ordered_player_objects = [players_dict[player_id] for player_id in ordered_players]
 
     return {
         "id": tournament.id,
@@ -180,8 +199,12 @@ def serialize_tournament(tournament):
         "current_round": tournament.current_round,
         "join_code": tournament.join_code,
         "players": [
-            {"id": player.id, "username": player.username, "avatar": player.avatar}
-            for player in tournament.players.all()
+            {
+                "id": player.id,
+                "username": player.tournament_display_name,
+                "avatar": player.avatar,
+            }
+            for player in ordered_player_objects
         ],
         "matches": {
             "quarter_finals": quarter_matches,
@@ -200,7 +223,6 @@ def serialize_history(user_history):
     return {
         "match_id": str(user_history.match_id),
         "type_match": user_history.type_match,
-        "is_local": user_history.local_match,
         "is_tournament": user_history.tournament_id is not None,
         "date": user_history.date,
         "players": {

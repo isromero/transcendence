@@ -1,273 +1,175 @@
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Diagrama de Torneo Vertical</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container mt-5 tournament-container">
-      <div class="row text-center">
-        <!-- Cuartos de Final -->
-        <div class="col-12 mb-2">
-          <h5 class="mb-2 tournament-title">Cuartos de Final</h5>
-          <div class="scroll-container">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 1"
-                    />
-                    <span>Player 1</span>
-                  </div>
-                  <span class="text-warning">3</span>
-                  <span>VS</span>
-                  <span class="text-warning">1</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 2"
-                    />
-                    <span>Player 2</span>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 3"
-                    />
-                    <span>Player 3</span>
-                  </div>
-                  <span class="text-warning">2</span>
-                  <span>VS</span>
-                  <span class="text-warning">4</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 4"
-                    />
-                    <span>Player 4</span>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 5"
-                    />
-                    <span>Player 5</span>
-                  </div>
-                  <span class="text-warning">5</span>
-                  <span>VS</span>
-                  <span class="text-warning">3</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 6"
-                    />
-                    <span>Player 6</span>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 7"
-                    />
-                    <span>Player 7</span>
-                  </div>
-                  <span class="text-warning">6</span>
-                  <span>VS</span>
-                  <span class="text-warning">2</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 8"
-                    />
-                    <span>Player 8</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+<!-- ! THIS IS A PAGE FOR 8 PLAYERS, BUT WE ARE NOT USING IT FOR NOW -->
+<!-- ! IF WE WANT TO DO THE 8 PLAYERS TOURNAMENT IN THE FUTURE, WE CAN USE THIS PAGE OR USE TOURNAMENT.HTML DINAMICALLY -->
 
-        <!-- Semifinal -->
-        <div class="col-12 mb-2">
-          <h5 class="mb-2 tournament-title">Semifinal</h5>
-          <div class="scroll-container">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 1"
-                    />
-                    <span>Player 1</span>
-                  </div>
-                  <span class="text-warning">3</span>
-                  <span>VS</span>
-                  <span class="text-warning">4</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 4"
-                    />
-                    <span>Player 4</span>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 5"
-                    />
-                    <span>Player 5</span>
-                  </div>
-                  <span class="text-warning">5</span>
-                  <span>VS</span>
-                  <span class="text-warning">2</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 8"
-                    />
-                    <span>Player 8</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+<div class="text-center mb-4">
+  <h2 id="tournament-name" class="tournament-title">Tournament Name</h2>
+  <h5 id="join-code" class="text-muted tournament-title">Join Code: XXXX</h5>
+</div>
 
-        <!-- Final -->
-        <div class="col-12 mb-2">
-          <h5 class="mb-2 tournament-title">Final</h5>
-          <div class="scroll-container">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="match-result">
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 5"
-                    />
-                    <span>Player 5</span>
-                  </div>
-                  <span class="text-warning">5</span>
-                  <span>VS</span>
-                  <span class="text-warning">2</span>
-                  <div class="player-info">
-                    <img
-                      src=""
-                      class="player-img rounded-circle"
-                      alt="Player 8"
-                    />
-                    <span>Player 8</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+<div class="container mt-5 tournament-container">
+  <div class="row text-center">
+    <div class="col-12 mb-4">
+      <button
+        id="leaveTournamentButton"
+        class="btn cancel-button bs-primary border-primary-color"
+      >
+        Leave Tournament
+      </button>
+      <button id="start-tournament-btn" class="btn btn-success" disabled>
+        Start Tournament
+      </button>
+    </div>
 
-        <!-- Ganador -->
-        <div class="col-12 mb-5">
-          <h5 class="mb-4 tournament-title">Ganador</h5>
-          <div class="scroll-container">
-            <div class="final-winner">
-              <div
-                class="card bg-dark text-white border border-white border-1"
-                style="width: 200px"
-              >
-                <div class="card-body text-center">
-                  <img
-                    src=""
-                    class="player-img rounded-circle mb-3"
-                    alt="Champion"
-                    width="40"
-                    height="40"
-                  />
-                  <span class="fw-bold text-warning">Player 5</span>
-                </div>
+    <div class="col-12 mb-2">
+      <h5 class="mb-2 tournament-title">Cuartos de Final</h5>
+      <div class="scroll-container">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 1" />
+                <span>Player 1</span>
               </div>
+              <span class="text-warning quarter-player1">0</span>
+              <span>VS</span>
+              <span class="text-warning quarter-player2">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 2" />
+                <span>Player 2</span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 3" />
+                <span>Player 3</span>
+              </div>
+              <span class="text-warning quarter-player3">0</span>
+              <span>VS</span>
+              <span class="text-warning quarter-player4">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 4" />
+                <span>Player 4</span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 5" />
+                <span>Player 5</span>
+              </div>
+              <span class="text-warning quarter-player5">0</span>
+              <span>VS</span>
+              <span class="text-warning quarter-player6">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 6" />
+                <span>Player 6</span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 7" />
+                <span>Player 7</span>
+              </div>
+              <span class="text-warning quarter-player7">0</span>
+              <span>VS</span>
+              <span class="text-warning quarter-player8">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" alt="Player 8" />
+                <span>Player 8</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-12 mb-2">
+      <h5 class="mb-2 tournament-title">Semifinal</h5>
+      <div class="scroll-container">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" />
+                <span>Player 1</span>
+              </div>
+              <span class="text-warning semis-player1">0</span>
+              <span>VS</span>
+              <span class="text-warning semis-player2">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" />
+                <span>Player 2</span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" />
+                <span>Player 3</span>
+              </div>
+              <span class="text-warning semis-player3">0</span>
+              <span>VS</span>
+              <span class="text-warning semis-player4">0</span>
+              <div class="player-info">
+                <img src="" class="player-img rounded-circle" />
+                <span>Player 4</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 mb-2">
+      <h5 class="mb-2 tournament-title">Final</h5>
+      <div class="scroll-container">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="match-result">
+              <div class="player-info-final">
+                <img src="" class="player-img rounded-circle" />
+                <span>player name</span>
+              </div>
+              <span class="text-warning">0</span>
+              <span>VS</span>
+              <span class="text-warning">0</span>
+              <div class="player-info-final">
+                <img src="" class="player-img rounded-circle" />
+                <span>player name</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 mb-5">
+      <h5 class="mb-4 tournament-title">Ganador</h5>
+      <div class="scroll-container">
+        <div class="final-winner">
+          <div
+            class="card bg-dark text-white border border-white border-1"
+            style="width: 200px"
+          >
+            <div class="card-body text-center">
+              <p class="fw-bold text-warning">👑</p>
+              <img
+                src=""
+                class="player-img rounded-circle mb-3"
+                alt="Champion"
+                width="40"
+                height="40"
+              />
+              <span class="fw-bold text-warning">Winner</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <style>
-      .scroll-container {
-        max-height: 400px;
-        overflow-y: auto;
-      }
-
-      .player-info {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* Nueva clase para controlar el tamaño de las imágenes */
-      .player-img {
-        width: 20px; /* Tamaño reducido */
-        height: 20px; /* Tamaño reducido */
-        object-fit: cover;
-        margin-right: 10px;
-      }
-
-      .final-winner {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .final-winner span {
-        font-size: 1.5rem;
-        font-weight: bold;
-      }
-
-      .match-result {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      /* Asegura que el contenido no ocupe toda la pantalla */
-      .tournament-container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+  </div>
+</div>

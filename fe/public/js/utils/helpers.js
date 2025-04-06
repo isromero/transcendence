@@ -1,4 +1,5 @@
 import { pageMappings } from '../router/routes.js';
+import { IMAGES_URL } from './constants.js';
 
 export function getCleanPageKey(requestedPath) {
   if (pageMappings[requestedPath]) {
@@ -118,6 +119,59 @@ export function showErrorToast(result) {
   toast.show();
 }
 
+const updateMatchResults = (roundMatches, roundPrefix) => {
+  roundMatches.forEach(match => {
+    const matchNumber = match.tournament_match_number;
+    const player1 = match.player1;
+    const player2 = match.player2;
+
+    // Actualizar scores
+    const player1Score = document.querySelector(
+      `.${roundPrefix}-player${matchNumber * 2 - 1}`
+    );
+    const player2Score = document.querySelector(
+      `.${roundPrefix}-player${matchNumber * 2}`
+    );
+
+    if (player1Score && player2Score) {
+      player1Score.textContent = player1.score || '0';
+      player2Score.textContent = player2.score || '0';
+    }
+
+    // Actualizar información de jugadores usando IDs
+    const p1Name = document.getElementById(
+      `${roundPrefix}${matchNumber}-p1-name`
+    );
+    const p1Img = document.getElementById(
+      `${roundPrefix}${matchNumber}-p1-img`
+    );
+    const p2Name = document.getElementById(
+      `${roundPrefix}${matchNumber}-p2-name`
+    );
+    const p2Img = document.getElementById(
+      `${roundPrefix}${matchNumber}-p2-img`
+    );
+
+    if (p1Name) {
+      p1Name.textContent = player1.username;
+    }
+    if (p2Name) {
+      p2Name.textContent = player2.username;
+    }
+
+    if (p1Img) {
+      p1Img.src = player1.avatar
+        ? `${IMAGES_URL}${player1.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+    if (p2Img) {
+      p2Img.src = player2.avatar
+        ? `${IMAGES_URL}${player2.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+  });
+};
+
 export function updateTournamentUI(tournamentData) {
   const tournamentName = document.getElementById('tournament-name');
   const joinCode = document.getElementById('join-code');
@@ -125,29 +179,89 @@ export function updateTournamentUI(tournamentData) {
   tournamentName.textContent = tournamentData.tournament_name;
   joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
 
-  // Clean player slots before updating
   const playerSlots = document.querySelectorAll('.player-info span');
-
   playerSlots.forEach(slot => {
-    if (tournamentData.status === 'in_progress') {
-      slot.textContent = 'Waiting for matches to end...';
-    } else {
-      slot.textContent = 'Waiting for player...';
-    }
-    slot.previousElementSibling.src =
-      '/public/assets/images/default-avatar.webp';
+    slot.textContent = 'Waiting for player...';
+    slot.previousElementSibling.src = `${IMAGES_URL}/default_avatar.webp`;
+  });
+  const playerSlots2 = document.querySelectorAll('.player-info-final span');
+  playerSlots2.forEach(slot => {
+    slot.textContent = 'Waiting for player...';
+    slot.previousElementSibling.src = `${IMAGES_URL}/default_avatar.webp`;
   });
 
-  // Now, fill with the players
+  const winnerImage = document.getElementById('winner-avatar');
+
+  winnerImage.src = `${IMAGES_URL}/default_avatar.webp`;
+
   if (Array.isArray(tournamentData.players)) {
     tournamentData.players.forEach((player, index) => {
       if (playerSlots[index]) {
         playerSlots[index].textContent = player.username;
         playerSlots[index].previousElementSibling.src =
-          player.avatar || '/public/assets/images/default-avatar.webp';
+          `${IMAGES_URL}${player.avatar.replace('/images/', '/')}` ||
+          `${IMAGES_URL}/default_avatar.webp`;
       }
     });
-  } else {
-    console.error('Could not update tournament UI');
+  }
+
+  if (tournamentData.matches.quarter_finals?.length > 0) {
+    updateMatchResults(tournamentData.matches.quarter_finals, 'quarter');
+  }
+
+  if (tournamentData.matches.semi_finals?.length > 0) {
+    updateMatchResults(tournamentData.matches.semi_finals, 'semi');
+  }
+
+  if (tournamentData.matches.finals?.length > 0) {
+    const finalMatch = tournamentData.matches.finals[0];
+    const player1 = finalMatch.player1;
+    const player2 = finalMatch.player2;
+
+    // Actualizar información de la final usando IDs
+    const p1Name = document.getElementById('final-p1-name');
+    const p1Img = document.getElementById('final-p1-img');
+    const p2Name = document.getElementById('final-p2-name');
+    const p2Img = document.getElementById('final-p2-img');
+    const p1Score = document.querySelector('.final-player1');
+    const p2Score = document.querySelector('.final-player2');
+
+    if (p1Name) {
+      p1Name.textContent = player1.username;
+    }
+    if (p2Name) {
+      p2Name.textContent = player2.username;
+    }
+    if (p1Score) {
+      p1Score.textContent = player1.score || '0';
+    }
+    if (p2Score) {
+      p2Score.textContent = player2.score || '0';
+    }
+
+    if (p1Img) {
+      p1Img.src = player1.avatar
+        ? `${IMAGES_URL}${player1.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+    if (p2Img) {
+      p2Img.src = player2.avatar
+        ? `${IMAGES_URL}${player2.avatar.replace('/images/', '/')}`
+        : `${IMAGES_URL}/default_avatar.webp`;
+    }
+
+    // Actualizar ganador si el juego está terminado
+    if (Math.max(player1.score, player2.score) >= 5) {
+      const winner = player1.score > player2.score ? player1 : player2;
+      const winnerImage = document.getElementById('winner-avatar');
+      const winnerName = document.getElementById('winner-name');
+
+      if (winnerImage && winnerName) {
+        winnerImage.src = winner.avatar
+          ? `${IMAGES_URL}${winner.avatar.replace('/images/', '/')}`
+          : `${IMAGES_URL}/default_avatar.webp`;
+        winnerName.textContent = winner.username;
+      }
+    }
   }
 }

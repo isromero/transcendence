@@ -21,7 +21,7 @@ export const pageMappings = {
   '/game/:id/tournament/:id': '/pages/game/game.html', // :id -> join_code
 
   '/tournament/:id': '/pages/menus/tournament.html', // :id -> join_code
-  '/tournament-big': '/pages/menus/tournament-big.html',
+  // '/tournament-big/:id': '/pages/menus/tournament-big.html', // -> NOT USED FOR NOW
 
   // Modals (no user routes)
   '/modal-account-deletion': '/pages/components/modals/account-deletion.html',

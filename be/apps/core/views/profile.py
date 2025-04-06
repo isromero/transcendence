@@ -1,7 +1,6 @@
 from django.views import View
 from apps.core.models import History
 from apps.core.utils import serialize_stats
-import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from apps.core.utils import create_response

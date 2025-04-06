@@ -1,8 +1,5 @@
 from django.db import models
-import random
 from django.contrib.auth.models import AbstractUser
-from django.templatetags.static import static
-import uuid
 from django.utils import timezone
 
 
@@ -19,6 +16,12 @@ class User(AbstractUser):
     last_activity = models.DateTimeField(default=timezone.now)
     deleted_user = models.BooleanField(default=False)
 
+    tournament_display_name = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True,
+    )
+
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []  # Required fields for create superuser
     deleted_user = models.BooleanField(default=False)
@@ -28,6 +31,11 @@ class User(AbstractUser):
         if not self.last_activity:
             return False
         return (timezone.now() - self.last_activity).seconds < 45
+
+    def save(self, *args, **kwargs):
+        if self._state.adding and not self.tournament_display_name:
+            self.tournament_display_name = self.username
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
@@ -89,15 +97,11 @@ class History(models.Model):
             ("tournament_quarter", "Tournament Quarter Finals"),
             ("tournament_semi", "Tournament Semi Finals"),
             ("tournament_final", "Tournament Finals"),
-            ("match", "Local Match"),
+            ("local", "Local Match"),
+            ("multiplayer", "Multiplayer Match"),
         ],
     )
-    local_match = models.BooleanField(default=True)
     tournament_id = models.ForeignKey(
         Tournaments, on_delete=models.CASCADE, null=True, blank=True
     )
     tournament_match_number = models.IntegerField(null=True, blank=True)
-
-# TODO: (jose) borrar código comentado si no se usan los logins de 42 como filtro en el registro
-# class UsedLogin(models.Model):
-#     login = models.CharField(max_length=16, null=True, blank=True)

@@ -16,8 +16,8 @@ class GameState:
         self.MAX_BOUNCE_ANGLE = math.pi / 3  # Maximum bounce angle (60 degrees)
         self.running = False
         self.last_update = time.time()
-        self.fps_cap = 90
-        self.countdown = 0  # Countdown timer in seconds
+        self.fps_cap = 60
+        self.countdown = None  # Initially None until the game starts
 
         self.left_paddle = {
             "x": 30,
@@ -50,18 +50,13 @@ class GameState:
         self.left_player_id = None
         self.right_player_id = None
 
-    def start_game(self, match_id):
-        """Init game with a match id"""
+    def start_game(self, match_id=None):
+        """Init game with countdown"""
         if match_id:
             self.match_id = match_id
-        else:
-            raise ValueError("Match ID is required")
-
+        self.countdown = 5.0  # Ensure it's a float
         self.running = True
-        self.game_over = False
-        self.scores = {"left": 0, "right": 0}
         self.reset_ball()
-        self.countdown = 5  # Set a 5-second countdown when starting the game
 
     def reset_ball(self):
         """Reset ball to the center"""
@@ -85,19 +80,20 @@ class GameState:
         }
 
     async def update(self):
-        """Update game state"""
         current_time = time.time()
         dt = min(current_time - self.last_update, 1 / 30)
         self.last_update = current_time
 
-        if self.countdown > 0:
-            self.countdown -= dt
-            if self.countdown < 0:
-                self.countdown = 0
+        if self.countdown is not None:
+            self.countdown = max(0, self.countdown - dt)
+            if self.countdown == 0:
+                self.countdown = None
 
-        self._update_paddles(dt * self.fps_cap)
+        # Only allow paddle movement when the countdown is over
+        if self.countdown is None:
+            self._update_paddles(dt * self.fps_cap)
 
-        if self.running and not self.game_over and self.countdown <= 0:
+        if self.running and self.countdown is None and not self.game_over:
             await self._update_ball(dt * self.fps_cap)
 
     def _update_paddles(self, time_factor):
@@ -146,83 +142,80 @@ class GameState:
 
         return speed_x, speed_y
 
-    async def _update_ball(self, time_factor):
-        """Move the ball and detect collisions with improved physics"""
-        if self.scores["left"] >= 5 or self.scores["right"] >= 5:
-            self.running = False
-            self.game_over = True
+    async def _update_ball(self, dt):
+        # Save the previous ball position
+        prev_x = self.ball["x"]
+        prev_y = self.ball["y"]
 
-        # Update position based on speed and delta time
-        next_x = self.ball["x"] + self.ball["speedX"] * time_factor
-        next_y = self.ball["y"] + self.ball["speedY"] * time_factor
+        # Update position
+        self.ball["x"] += self.ball["speedX"] * dt
+        self.ball["y"] += self.ball["speedY"] * dt
 
-        # Wall collision (ceiling and floor)
-        if next_y - self.ball["radius"] <= 0:
-            # Bounce on the ceiling
-            self.ball["speedY"] = abs(self.ball["speedY"])
-            next_y = self.ball[
-                "radius"
-            ]  # Correct position to avoid sticking to the edge
-        elif next_y + self.ball["radius"] >= self.HEIGHT:
-            # Bounce on the floor
-            self.ball["speedY"] = -abs(self.ball["speedY"])
-            next_y = self.HEIGHT - self.ball["radius"]  # Correct position
+        # Calculate the movement vector
+        dx = self.ball["x"] - prev_x
+        dy = self.ball["y"] - prev_y
 
-        # Check paddle collisions before updating final position
-        hit_paddle = None
+        # Function to check paddle collision
+        def check_paddle_collision(paddle):
+            # Expand the collision area to include the complete ball movement
+            expanded_paddle = {
+                "x": paddle["x"] - self.ball["radius"],
+                "y": paddle["y"] - self.ball["radius"],
+                "width": paddle["width"] + self.ball["radius"] * 2,
+                "height": paddle["height"] + self.ball["radius"] * 2,
+            }
 
-        # Paddle collision (left)
+            # Check if the movement line intersects with the expanded paddle
+            if (
+                min(prev_x, self.ball["x"])
+                <= expanded_paddle["x"] + expanded_paddle["width"]
+                and max(prev_x, self.ball["x"]) >= expanded_paddle["x"]
+                and min(prev_y, self.ball["y"])
+                <= expanded_paddle["y"] + expanded_paddle["height"]
+                and max(prev_y, self.ball["y"]) >= expanded_paddle["y"]
+            ):
+
+                # Calculate the exact collision point
+                if dx != 0:  # Avoid division by zero
+                    t = (
+                        (expanded_paddle["x"] - prev_x) / dx
+                        if self.ball["speedX"] > 0
+                        else (expanded_paddle["x"] + expanded_paddle["width"] - prev_x)
+                        / dx
+                    )
+                    t = max(0, min(1, t))
+                    collision_y = prev_y + dy * t
+
+                    if (
+                        expanded_paddle["y"]
+                        <= collision_y
+                        <= expanded_paddle["y"] + expanded_paddle["height"]
+                    ):
+                        return True, collision_y
+            return False, None
+
+        # Check paddle collisions
+        left_collision, left_y = check_paddle_collision(self.left_paddle)
+        right_collision, right_y = check_paddle_collision(self.right_paddle)
+
+        if left_collision and self.ball["speedX"] < 0:
+            self._handle_paddle_collision(self.left_paddle, left_y, "left")
+        elif right_collision and self.ball["speedX"] > 0:
+            self._handle_paddle_collision(self.right_paddle, right_y, "right")
+
+        # Collisions with top and bottom walls
         if (
-            next_x - self.ball["radius"]
-            <= self.left_paddle["x"] + self.left_paddle["width"]
-            and self.ball["x"] - self.ball["radius"]
-            > self.left_paddle["x"] + self.left_paddle["width"]
-            and next_y + self.ball["radius"] >= self.left_paddle["y"]
-            and next_y - self.ball["radius"]
-            <= self.left_paddle["y"] + self.left_paddle["height"]
+            self.ball["y"] - self.ball["radius"] <= 0
+            or self.ball["y"] + self.ball["radius"] >= self.HEIGHT
         ):
-            hit_paddle = self.left_paddle
-            self.ball["last_hit"] = "left"
-            # Adjust x to avoid passing through the paddle
-            next_x = hit_paddle["x"] + hit_paddle["width"] + self.ball["radius"]
-
-        # Paddle collision (right)
-        elif (
-            next_x + self.ball["radius"] >= self.right_paddle["x"]
-            and self.ball["x"] + self.ball["radius"] < self.right_paddle["x"]
-            and next_y + self.ball["radius"] >= self.right_paddle["y"]
-            and next_y - self.ball["radius"]
-            <= self.right_paddle["y"] + self.right_paddle["height"]
-        ):
-            hit_paddle = self.right_paddle
-            self.ball["last_hit"] = "right"
-            # Adjust x to avoid passing through the paddle
-            next_x = hit_paddle["x"] - self.ball["radius"]
-
-        # Process realistic bounce if hit a paddle
-        if hit_paddle:
-            # Calculate current speed
-            current_speed = math.sqrt(
-                self.ball["speedX"] ** 2 + self.ball["speedY"] ** 2
+            self.ball["speedY"] = -self.ball["speedY"]
+            self.ball["y"] = max(
+                self.ball["radius"],
+                min(self.HEIGHT - self.ball["radius"], self.ball["y"]),
             )
-
-            # Use the improved bounce function
-            speed_x, speed_y = self._calculate_paddle_bounce(
-                hit_paddle, next_y, current_speed
-            )
-
-            # Apply the new speeds
-            self.ball["speedX"] = speed_x
-            self.ball["speedY"] = speed_y
-
-            # Add small variation to avoid predictable patterns in repeated bounces
-            if abs(self.ball["speedY"]) < current_speed * 0.2:
-                # If the vertical speed is very low, add a bit of variation
-                variation = current_speed * 0.1 * (-1 if self.ball["speedY"] < 0 else 1)
-                self.ball["speedY"] += variation
 
         # Check if there was a goal (after checking paddle collisions)
-        if next_x - self.ball["radius"] <= 0:
+        if self.ball["x"] - self.ball["radius"] <= 0:
             # Right player goal
             self._last_scorer = "right"
             self.scores["right"] += 1
@@ -230,7 +223,7 @@ class GameState:
                 await self._send_score_update(is_player1=False)
             self.reset_ball()
             return  # Avoid updating position after resetting
-        elif next_x + self.ball["radius"] >= self.WIDTH:
+        elif self.ball["x"] + self.ball["radius"] >= self.WIDTH:
             # Left player goal
             self._last_scorer = "left"
             self.scores["left"] += 1
@@ -239,9 +232,30 @@ class GameState:
             self.reset_ball()
             return  # Avoid updating position after resetting
 
-        # Actualiza la posición final de la pelota
-        self.ball["x"] = next_x
-        self.ball["y"] = next_y
+    def _handle_paddle_collision(self, paddle, collision_y, side):
+        # Calculate the relative impact point on the paddle (-1 to 1)
+        relative_intersect_y = (collision_y - (paddle["y"] + paddle["height"] / 2)) / (
+            paddle["height"] / 2
+        )
+
+        # Calculate the bounce angle (limited by MIN_BOUNCE_ANGLE and MAX_BOUNCE_ANGLE)
+        bounce_angle = relative_intersect_y * self.MAX_BOUNCE_ANGLE
+        bounce_angle = max(
+            -self.MAX_BOUNCE_ANGLE, min(self.MAX_BOUNCE_ANGLE, bounce_angle)
+        )
+
+        # Increase the speed
+        speed = min(
+            math.sqrt(self.ball["speedX"] ** 2 + self.ball["speedY"] ** 2)
+            * self.BALL_ACCELERATION,
+            self.MAX_BALL_SPEED,
+        )
+
+        # Update speeds
+        self.ball["speedX"] = (
+            -math.cos(bounce_angle) * speed * (-1 if side == "left" else 1)
+        )
+        self.ball["speedY"] = math.sin(bounce_angle) * speed
 
     def process_key_event(self, key, is_pressed):
         """Handle keyboard events to move paddles"""
@@ -286,7 +300,7 @@ class GameState:
             "right_paddle": self.right_paddle,
             "ball": self.ball,
             "scores": self.scores,
-            "countdown": max(0, self.countdown),
+            "countdown": self.countdown,
         }
 
     def set_left_player(self, user_id):

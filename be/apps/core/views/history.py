@@ -23,8 +23,7 @@ class HistoryView(View):
             match_data = {
                 "match_id": str(match.match_id),
                 "is_tournament": match.tournament_id is not None,
-                "is_local": match.local_match,
-                "type": match.type_match,
+                "type_match": match.type_match,
                 "status": "finished" if game_finished else "in_progress",
                 "can_play": not game_finished,
                 "players": (
@@ -47,7 +46,7 @@ class HistoryView(View):
                             "avatar": match.opponent_id.avatar,
                         },
                     ]
-                    if match.local_match
+                    if match.type_match == "local"
                     else
                     # For tournaments, use the loop to get both perspectives
                     [
@@ -82,7 +81,7 @@ class HistoryView(View):
         """Create a new match (local matches) for tournaments you have to use the put of TournamentsView"""
         try:
             data = json.loads(request.body)
-            if not data.get("local_match", False):
+            if not data.get("type_match", False):
                 return create_response(
                     error="Only local matches can be created", status=400
                 )
@@ -94,16 +93,14 @@ class HistoryView(View):
                 match_id=match_id,
                 user_id=user,
                 opponent_id=user,
-                type_match="match",
-                local_match=True,
+                type_match="local",
                 result_user=0,
                 result_opponent=0,
             )
 
             match_data = {
                 "match_id": str(match_id),
-                "type": "match",
-                "is_local": True,
+                "type_match": "local",
                 "status": "in_progress",
                 "players": [
                     {
@@ -147,7 +144,7 @@ class HistoryView(View):
             is_player1 = data.get("is_player1", True)
 
             # For local matches, update the corresponding score
-            if match.local_match:
+            if match.type_match == "local":
                 if is_player1:
                     match.result_user += 1
                 else:

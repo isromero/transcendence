@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
-from apps.core.models import Tournaments, History
+from apps.core.models import Tournaments, History, User
 from apps.core.utils import (
     generate_join_code,
     serialize_tournament,
@@ -9,10 +9,9 @@ from apps.core.utils import (
     handle_form_errors,
 )
 import json
-import random
+import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-import uuid
 from apps.core.forms.tournaments import TournamentsForm
 
 
@@ -23,12 +22,59 @@ class TournamentsView(View):
         try:
             if join_code:
                 tournament = get_object_or_404(Tournaments, join_code=join_code)
+
+                if tournament.status == "in_progress":
+                    matches = History.objects.filter(tournament_id=tournament)
+
+                    if tournament.max_players == 4:
+                        semi_matches = matches.filter(
+                            type_match="tournament_semi"
+                        ).distinct("tournament_match_number")
+
+                        final_matches = matches.filter(
+                            type_match="tournament_final"
+                        ).distinct("tournament_match_number")
+
+                        semis_finished = all(
+                            max(
+                                matches.filter(match_id=m.match_id).values_list(
+                                    "result_user", flat=True
+                                )
+                            )
+                            >= 5
+                            for m in semi_matches
+                        )
+
+                        finals_finished = (
+                            all(
+                                max(
+                                    matches.filter(match_id=m.match_id).values_list(
+                                        "result_user", flat=True
+                                    )
+                                )
+                                >= 5
+                                for m in final_matches
+                            )
+                            if final_matches.exists()
+                            else False
+                        )
+
+                        if semis_finished and finals_finished:
+                            tournament.status = "completed"
+                            tournament.save()
+
+                            # Restore all display names of the players
+                            for player in tournament.players.all():
+                                player.tournament_display_name = player.username
+                                player.save(update_fields=["tournament_display_name"])
+
                 return create_response(
                     data=serialize_tournament(tournament),
                     message="Tournament retrieved successfully",
                     status=200,
                 )
         except Exception as e:
+            print(f"Error in tournament GET: {str(e)}")
             return create_response(error=str(e), status=400)
 
     def post(self, request):
@@ -62,6 +108,7 @@ class TournamentsView(View):
         try:
             data = json.loads(request.body)
             action = data.get("action")
+            join_code = data.get("join_code")
             tournament_id = data.get("tournament_id")
 
             if not tournament_id or not action:
@@ -72,13 +119,29 @@ class TournamentsView(View):
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
-                join_code = data.get("join_code")
+
+                display_name = data.get("display_name")
+
+                user = User.objects.get(id=request.user.id)
+                user.tournament_display_name = display_name
+                user.save()
+
+                print(user.tournament_display_name)
+
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
-                if tournament.players.count() >= tournament.max_players:
+
+                if (
+                    tournament.players.count() >= tournament.max_players
+                    and request.user not in tournament.players.all()
+                ):
                     return create_response(error="Tournament is full", status=400)
+
                 tournament.players.add(request.user)
-                if tournament.players.count() == tournament.max_players:
+                if (
+                    tournament.players.count() == tournament.max_players
+                    and tournament.status == "pending"
+                ):
                     tournament.status = "ready"
                 tournament.save()
                 return create_response(
@@ -86,27 +149,44 @@ class TournamentsView(View):
                 )
 
             elif action == "leave":
-                join_code = data.get("join_code")
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
-                if tournament.status not in ["pending", "ready"]:
-                    return create_response(
-                        error="You can't leave started tournaments", status=400
-                    )
+
+                # Uncomment this if we don't want the user to leave, but we can't force that... so... not useful
+                # if tournament.status not in ["pending", "ready"]:
+                #     return create_response(
+                #         error="You can't leave started tournaments", status=400
+                #     )
+
                 tournament.players.remove(request.user)
+
+                # If a player leaves, we need to check if we need to change the status
+                current_players = tournament.players.count()
+                if tournament.status == "ready" and current_players not in [4, 8]:
+                    tournament.status = "pending"
+
                 tournament.save()
                 return create_response(
                     message="Leaved the tournament successfully", status=200
                 )
 
             elif action == "start":
-                if tournament.status != "ready":
+                if tournament.status != "ready" or tournament.players.count() not in [
+                    4,
+                    8,
+                ]:
                     return create_response(
                         error="Tournament is not ready to start", status=400
                     )
 
-                players = list(tournament.players.all())
-                random.shuffle(players)
+                # Get players in order of joining this specific tournament
+                players = list(
+                    tournament.players.through.objects.filter(tournaments=tournament)
+                    .order_by("id")
+                    .values_list("user", flat=True)
+                )
+                players = [User.objects.get(id=player_id) for player_id in players]
+
                 num_players = len(players)
                 num_quarter_matches = (num_players - 4) // 2
                 players_in_quarters = num_quarter_matches * 2
@@ -139,6 +219,7 @@ class TournamentsView(View):
 
                 tournament.status = "in_progress"
                 tournament.current_round = 1 if quarter_players else 2
+
                 tournament.save()
 
                 return create_response(
@@ -168,13 +249,10 @@ class TournamentsView(View):
                 if not current_type:
                     return create_response(error="Invalid current round", status=400)
 
-                # Obtener los ganadores sin duplicados
                 winners = []
                 matches = History.objects.filter(
                     tournament_id=tournament, type_match=current_type
-                ).distinct(
-                    "match_id"
-                )  # Usamos distinct() para evitar duplicados
+                ).distinct("match_id")
 
                 for match in matches:
                     if match.result_user >= 5:
@@ -187,19 +265,6 @@ class TournamentsView(View):
                     self._create_next_round_matches(tournament, winners, next_type)
                     tournament.current_round = next_round
                     tournament.save()
-                else:
-                    # Si estamos en la final, no marcamos "completed" hasta que se juegue
-                    if tournament.current_round == 3:  # Final
-                        tournament.status = "in_progress"
-                        tournament.save()
-                        return create_response(
-                            data=serialize_tournament(tournament),
-                            message="Final match scheduled",
-                            status=200,
-                        )
-                    else:
-                        tournament.status = "completed"
-                        tournament.save()
 
                 return create_response(
                     data=serialize_tournament(tournament),
@@ -211,7 +276,7 @@ class TournamentsView(View):
                 return create_response(error="Unknown action", status=400)
 
         except Exception as e:
-            return create_response(error=str(e), status=400)
+            return JsonResponse({"error": str(e)}, status=400)
 
     def delete(self, _, tournament_id):
         """Deletes a tournament"""
@@ -222,6 +287,15 @@ class TournamentsView(View):
     def _create_match(
         self, tournament, user1, user2, type_match, match_id, match_number
     ):
+        existing_match = History.objects.filter(
+            tournament_id=tournament,
+            type_match=type_match,
+            tournament_match_number=match_number,
+        ).first()
+
+        if existing_match:
+            return
+
         History.objects.create(
             match_id=match_id,
             tournament_id=tournament,
@@ -231,7 +305,6 @@ class TournamentsView(View):
             tournament_match_number=match_number,
             result_user=0,
             result_opponent=0,
-            local_match=False,
         )
         History.objects.create(
             match_id=match_id,
@@ -242,17 +315,41 @@ class TournamentsView(View):
             tournament_match_number=match_number,
             result_user=0,
             result_opponent=0,
-            local_match=False,
         )
 
     def _create_next_round_matches(self, tournament, winners, next_type):
-        for i in range(0, len(winners), 2):
+        # Check if there are already matches for this round
+        existing_matches = (
+            History.objects.filter(tournament_id=tournament, type_match=next_type)
+            .values("tournament_match_number")
+            .distinct()
+        )
+
+        if existing_matches.exists():
+            return
+
+        # For finals, we need to ensure that only one match is created
+        if next_type == "tournament_final":
             match_id = uuid.uuid4()
+
             self._create_match(
                 tournament,
-                winners[i],
-                winners[i + 1],
+                winners[0],
+                winners[1],
                 next_type,
                 match_id,
-                (i // 2) + 1,
+                1,
             )
+        else:
+            for i in range(0, len(winners), 2):
+                match_id = uuid.uuid4()
+                match_number = (i // 2) + 1
+
+                self._create_match(
+                    tournament,
+                    winners[i],
+                    winners[i + 1],
+                    next_type,
+                    match_id,
+                    match_number,
+                )

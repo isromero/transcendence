@@ -58,29 +58,15 @@ export const tournamentService = {
     }
   },
 
-  updateTournamentWhenJoining: async (joinCode, tournament, displayName) => {
+  updateTournamentWhenJoining: async (
+    joinCode,
+    currentTournament,
+    profile,
+    newDisplayName = null
+  ) => {
     try {
-      const profile = await profileService.getProfile();
-      if (!profile?.data?.id) {
-        showErrorToast('Could not get user profile');
-        return null;
-      }
-
-      const currentTournament = await tournamentService.getTournament(joinCode);
-      if (!currentTournament) {
-        showErrorToast('Tournament not found');
-        return null;
-      }
-
-      const userId = profile.data.id;
-      const isAlreadyInTournament = currentTournament.players.some(
-        player => Number(player.id) === Number(userId)
-      );
-
-      if (isAlreadyInTournament) {
-        showErrorToast('You are already in this tournament');
-        return null;
-      }
+      const userId = profile.id;
+      const tournamentKey = `tournament_${joinCode}_player_${userId}`;
 
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
@@ -92,7 +78,7 @@ export const tournamentService = {
           action: 'join',
           tournament_id: currentTournament.id,
           join_code: joinCode,
-          displayName,
+          display_name: newDisplayName || profile.username,
         }),
         credentials: 'include',
       });
@@ -104,6 +90,7 @@ export const tournamentService = {
         return null;
       }
 
+      localStorage.setItem(tournamentKey, 'true');
       showSuccessToast('You joined the tournament successfully!');
       return result.data || result;
     } catch (error) {
@@ -144,6 +131,10 @@ export const tournamentService = {
 
   leaveTournament: async (joinCode, tournamentId) => {
     try {
+      const profile = await profileService.getProfile();
+      const userId = profile?.data?.id;
+      const tournamentKey = `tournament_${joinCode}_player_${userId}`;
+
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
         headers: {
@@ -165,6 +156,7 @@ export const tournamentService = {
         return null;
       }
 
+      localStorage.removeItem(tournamentKey);
       showSuccessToast('You left the tournament successfully');
       return result.data || result;
     } catch (error) {
@@ -195,7 +187,6 @@ export const tournamentService = {
         return null;
       }
 
-      showSuccessToast('Next round started successfully!');
       return result.data || result;
     } catch (error) {
       showErrorToast(`Error starting next round: ${error.message}`);

@@ -5,10 +5,8 @@ from apps.core.utils import serialize_user, create_response
 from apps.core.forms.user import UserForm
 import json
 import time
-import random
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.templatetags.static import static
 from django.contrib.auth import login, logout, authenticate
 import os
 from django.conf import settings

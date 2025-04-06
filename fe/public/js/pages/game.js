@@ -73,9 +73,9 @@ function updateGameRotation() {
 }
 
 async function updateGameState(gameState) {
+  // No need to call updateGameRotation here since it's already called during initialization
+  // and will be handled by window resize event
   try {
-    // No need to call updateGameRotation here since it's already called during initialization
-    // and will be handled by window resize event
     if (gameState.type === 'init' && gameState.state) {
       gameState = gameState.state;
     }
@@ -84,9 +84,19 @@ async function updateGameState(gameState) {
       return;
     }
 
+    const countdownElement = document.getElementById('countdown');
+    if (countdownElement) {
+      if (gameState.countdown !== null && gameState.countdown > 0) {
+        countdownElement.style.display = 'block';
+        countdownElement.textContent = Math.ceil(gameState.countdown);
+      } else {
+        countdownElement.style.display = 'none';
+      }
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const { left_paddle, right_paddle, ball, scores, countdown } = gameState;
+    const { left_paddle, right_paddle, ball, scores } = gameState;
 
     if (!left_paddle || !right_paddle || !ball || !scores) {
       console.error('Invalid game state:', gameState);
@@ -105,12 +115,6 @@ async function updateGameState(gameState) {
     ctx.font = '40px Pixelify Sans';
     ctx.textAlign = 'center';
     ctx.fillText(`${scores.left} - ${scores.right}`, canvas.width / 2, 50);
-    if (countdown && countdown > 0) {
-      ctx.fillStyle = 'white';
-      ctx.font = '80px Pixelify Sans';
-      ctx.textAlign = 'center';
-      ctx.fillText(Math.ceil(countdown), canvas.width / 2, canvas.height / 2);
-    }
 
     ctx.fillStyle = '#ff4d6d';
     ctx.fillRect(
@@ -146,13 +150,15 @@ async function updateGameState(gameState) {
 
         updateTournamentUI(tournamentData);
       } else {
-        // If it's a multiplayer or local game, show the modal
-        await loadPage('/modal-end-game');
+        if (window.location.pathname.includes('game/')) {
+          // If it's a multiplayer or local game, show the modal
+          await loadPage('/modal-end-game');
 
-        const matchId = path.split('/game/')[1]?.split('/')[0];
-        const data = await historyService.getMatchHistory(matchId);
+          const matchId = path.split('/game/')[1]?.split('/')[0];
+          const data = await historyService.getMatchHistory(matchId);
 
-        setWinner(data);
+          setWinner(data);
+        }
       }
     } else {
       // If the game is not ended, continue animating
@@ -193,7 +199,7 @@ const setWinner = data => {
     return;
   }
 
-  const isLocalMatch = data.is_local;
+  const isLocalMatch = data.type_match === 'local';
   const winner = data.players.find(player => player.is_winner);
 
   if (winner) {
@@ -213,7 +219,11 @@ async function checkIfGameFinished(matchId) {
   try {
     const data = await historyService.getMatchHistory(matchId);
 
-    if (data && data.status === 'finished') {
+    if (
+      data &&
+      data.status === 'finished' &&
+      window.location.pathname.includes('game/')
+    ) {
       await loadPage('/modal-end-game');
       setWinner(data);
       return true;
@@ -224,29 +234,6 @@ async function checkIfGameFinished(matchId) {
     console.error('Error checking game status:', error);
     return false;
   }
-}
-
-async function startCountdown() {
-  // Apply rotation before starting countdown
-  await updateGameRotation();
-
-  const countdownElement = document.getElementById('countdown');
-  let count = 5;
-
-  return new Promise(resolve => {
-    const interval = setInterval(() => {
-      console.log('Countdown:', count); // Debugging
-
-      countdownElement.textContent = count;
-      count--;
-
-      if (count < 0) {
-        clearInterval(interval);
-        countdownElement.style.display = 'none'; // Hide the counter
-        resolve();
-      }
-    }, 1000);
-  });
 }
 
 function setupMobileControls() {
@@ -408,7 +395,6 @@ export function init() {
 
       if (!gameFinished) {
         await updateGameRotation();
-        await startCountdown();
       }
 
       // Initialize WebSocket
