@@ -65,16 +65,18 @@ export const tournamentService = {
         showErrorToast('Could not get user profile');
         return null;
       }
-
+  
       const currentTournament = await tournamentService.getTournament(joinCode);
       if (!currentTournament) {
         showErrorToast('Tournament not found');
         return null;
       }
-
+  
       const userId = profile.data.id;
       const tournamentKey = `tournament_${joinCode}_player_${userId}`;
-
+  
+      const finalDisplayName = displayName;
+  
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'PUT',
         headers: {
@@ -85,18 +87,18 @@ export const tournamentService = {
           action: 'join',
           tournament_id: currentTournament.id,
           join_code: joinCode,
-          displayName,
+          display_name: finalDisplayName,
         }),
         credentials: 'include',
       });
-
+  
       const result = await response.json();
-
+  
       if (!response.ok || !result?.success) {
         showErrorToast(result);
         return null;
       }
-
+  
       localStorage.setItem(tournamentKey, 'true');
       showSuccessToast('You joined the tournament successfully!');
       return result.data || result;
@@ -105,6 +107,7 @@ export const tournamentService = {
       return null;
     }
   },
+  
 
   updateTournamentWhenStarting: async tournamentId => {
     try {

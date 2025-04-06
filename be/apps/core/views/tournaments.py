@@ -115,6 +115,12 @@ class TournamentsView(View):
             tournament = get_object_or_404(Tournaments, id=tournament_id)
 
             if action == "join":
+                
+                display_name = data.get("display_name")
+                
+                User.objects.filter(id=request.user.id).update(
+                    display_name=display_name
+                )
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
 

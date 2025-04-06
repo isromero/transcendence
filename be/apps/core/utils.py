@@ -78,6 +78,7 @@ def serialize_user(user):
         "avatar": user.avatar,
         "is_online": user.is_online,
         "deleted_user": user.deleted_user,
+        "display_name": user.display_name,
     }
 
 
@@ -137,12 +138,12 @@ def serialize_tournament(tournament):
             "tournament_match_number": match.tournament_match_number,
             "player1": {
                 "id": player1_record.user_id.id,
-                "username": player1_record.user_id.username,
+                "username": player1_record.user_id.display_name,
                 "score": player1_record.result_user,
             },
             "player2": {
                 "id": player2_record.user_id.id,
-                "username": player2_record.user_id.username,
+                "username": player2_record.user_id.display_name,
                 "score": player2_record.result_user,
             },
             "game_finished": max(player1_record.result_user, player2_record.result_user)
@@ -191,7 +192,7 @@ def serialize_tournament(tournament):
         "current_round": tournament.current_round,
         "join_code": tournament.join_code,
         "players": [
-            {"id": player.id, "username": player.username, "avatar": player.avatar}
+            {"id": player.id, "username": player.display_name, "avatar": player.avatar}
             for player in ordered_player_objects
         ],
         "matches": {
