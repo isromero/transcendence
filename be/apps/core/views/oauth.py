@@ -11,6 +11,9 @@ from apps.core.utils import create_response
 from apps.core.models import User
 import requests
 import json
+import os
+from urllib.parse import urlparse
+import uuid
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -51,14 +54,56 @@ class OAuthCallback(View):
         user_info = self._get_user_info(token_data.get("access_token"))
         if "error" in user_info:
             return create_response(error=user_info, status=400)
-        self.response = self._authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect(f"http://localhost:3001/")
-        self._transfer_data(self.response, self.redirect_response)
-        return self.redirect_response
+        self._authenticate_and_login(request, user_info)
+        self._transfer_data(user_info, token_data)
+        return HttpResponseRedirect("http://localhost:3001/")
 
-    def _transfer_data(self):
-        for key, value in self.response.items():
-            self.redirect_response.set_cookie(key, value)
+    def _download_and_save_avatar(self, avatar_url):
+        """Download avatar from 42 CDN and save it locally"""
+        try:
+            # If the URL is from 42 CDN, download and save locally
+            if "cdn.intra.42.fr" in avatar_url:
+                response = requests.get(avatar_url)
+                if response.status_code == 200:
+                    # Generate unique name for the file
+                    file_extension = os.path.splitext(urlparse(avatar_url).path)[1]
+                    filename = f"avatar_{uuid.uuid4()}{file_extension}"
+                    file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+                    # Guardar imagen directamente en media
+                    with open(file_path, "wb") as f:
+                        f.write(response.content)
+
+                    # Devolver solo el nombre del archivo
+                    return filename  # Django añadirá MEDIA_URL automáticamente
+
+            return avatar_url
+        except Exception as e:
+            print(f"Error downloading avatar: {e}")
+            return "default_avatar.webp"
+
+    def _transfer_data(self, user_data, token_data):
+        """Transfer user data from 42 API to our database"""
+        try:
+            # Descargar y guardar el avatar localmente
+            avatar_url = user_data["image"]["link"]
+            local_avatar_path = self._download_and_save_avatar(avatar_url)
+
+            user = User.objects.get(username=user_data["login"])
+            user.email = user_data["email"]
+            user.avatar = f"/{local_avatar_path}"
+            user.access_token = token_data["access_token"]
+            user.refresh_token = token_data["refresh_token"]
+            user.save()
+            return user
+        except User.DoesNotExist:
+            return User.objects.create(
+                username=user_data["login"],
+                email=user_data["email"],
+                avatar=self._download_and_save_avatar(user_data["image"]["link"]),
+                access_token=token_data["access_token"],
+                refresh_token=token_data["refresh_token"],
+            )
 
     def _exchange_code_for_token(self, code: str) -> dict:
         data = {
