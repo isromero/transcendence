@@ -17,7 +17,6 @@ class TournamentAdmin(admin.ModelAdmin):
         "tournament_name",
         "start_date",
         "end_date",
-        # "players",
     )
 
 

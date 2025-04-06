@@ -16,8 +16,8 @@ class GameState:
         self.MAX_BOUNCE_ANGLE = math.pi / 3  # Maximum bounce angle (60 degrees)
         self.running = False
         self.last_update = time.time()
-        self.fps_cap = 90
-        self.countdown = 0  # Countdown timer in seconds
+        self.fps_cap = 60
+        self.countdown = None  # Initially None until the game starts
 
         self.left_paddle = {
             "x": 30,
@@ -50,18 +50,13 @@ class GameState:
         self.left_player_id = None
         self.right_player_id = None
 
-    def start_game(self, match_id):
-        """Init game with a match id"""
+    def start_game(self, match_id=None):
+        """Init game with countdown"""
         if match_id:
             self.match_id = match_id
-        else:
-            raise ValueError("Match ID is required")
-
+        self.countdown = 5.0  # Ensure it's a float
         self.running = True
-        self.game_over = False
-        self.scores = {"left": 0, "right": 0}
         self.reset_ball()
-        self.countdown = 5  # Set a 5-second countdown when starting the game
 
     def reset_ball(self):
         """Reset ball to the center"""
@@ -85,20 +80,19 @@ class GameState:
         }
 
     async def update(self):
-        """Update game state"""
         current_time = time.time()
         dt = min(current_time - self.last_update, 1 / 30)
         self.last_update = current_time
 
-        if self.countdown > 0:
-            self.countdown -= dt
-            if self.countdown < 0:
-                self.countdown = 0
+        if self.countdown is not None:
+            self.countdown = max(0, self.countdown - dt)
+            if self.countdown == 0:
+                self.countdown = None  # Disable countdown
+
+        if self.running and self.countdown is None and not self.game_over:
+            await self._update_ball(dt * self.fps_cap)
 
         self._update_paddles(dt * self.fps_cap)
-
-        if self.running and not self.game_over and self.countdown <= 0:
-            await self._update_ball(dt * self.fps_cap)
 
     def _update_paddles(self, time_factor):
         """Move paddles within the limits"""
@@ -286,7 +280,7 @@ class GameState:
             "right_paddle": self.right_paddle,
             "ball": self.ball,
             "scores": self.scores,
-            "countdown": max(0, self.countdown),
+            "countdown": self.countdown,
         }
 
     def set_left_player(self, user_id):

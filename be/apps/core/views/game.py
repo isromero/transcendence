@@ -8,9 +8,9 @@ from apps.core.game import GameState
 
 @method_decorator(csrf_exempt, name="dispatch")
 class GameView(View):
-    game_state = GameState()  # Instancia compartida del estado del juego
+    game_state = GameState()  # Singleton instance of GameState
 
-    def get(self, request):
+    def get(self, _):
         return JsonResponse(self.game_state.get_state())
 
     def post(self, request):

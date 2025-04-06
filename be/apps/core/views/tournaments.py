@@ -9,10 +9,9 @@ from apps.core.utils import (
     handle_form_errors,
 )
 import json
-import random
+import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-import uuid
 from apps.core.forms.tournaments import TournamentsForm
 
 

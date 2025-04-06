@@ -232,29 +232,6 @@ async function checkIfGameFinished(matchId) {
   }
 }
 
-async function startCountdown() {
-  // Apply rotation before starting countdown
-  await updateGameRotation();
-
-  const countdownElement = document.getElementById('countdown');
-  let count = 5;
-
-  return new Promise(resolve => {
-    const interval = setInterval(() => {
-      console.log('Countdown:', count); // Debugging
-
-      countdownElement.textContent = count;
-      count--;
-
-      if (count < 0) {
-        clearInterval(interval);
-        countdownElement.style.display = 'none'; // Hide the counter
-        resolve();
-      }
-    }, 1000);
-  });
-}
-
 function setupMobileControls() {
   const buttonMapping = {
     'left-up': 'w',
@@ -414,7 +391,6 @@ export function init() {
 
       if (!gameFinished) {
         await updateGameRotation();
-        await startCountdown();
       }
 
       // Initialize WebSocket
