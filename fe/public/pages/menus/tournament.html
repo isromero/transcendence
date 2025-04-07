@@ -1,6 +1,8 @@
 <div class="text-center mb-4">
   <h2 id="tournament-name" class="tournament-title">Tournament Name</h2>
-  <h5 id="join-code" class="text-muted tournament-title">Join Code: XXXX</h5>
+  <h5 id="join-code" class="text-muted tournament-title"
+  data-translationKey="join-code"
+  >Join Code: XXXX</h5>
 </div>
 
 <div class="container mt-5 tournament-container">
@@ -9,16 +11,21 @@
       <button
         id="leaveTournamentButton"
         class="btn cancel-button bs-primary border-primary-color"
+        data-translationKey="leave-tournament"
       >
         Leave Tournament
       </button>
-      <button id="start-tournament-btn" class="btn btn-success" disabled>
+      <button id="start-tournament-btn" class="btn btn-success" disabled
+        data-translationKey="start-tournament"
+      >
         Start Tournament
       </button>
     </div>
 
     <div class="col-12 mb-2">
-      <h5 class="mb-2 tournament-title">Semifinal</h5>
+      <h5 class="mb-2 tournament-title"
+        data-translationKey="semifinal"
+      >Semifinal</h5>
       <div class="scroll-container">
         <ul class="list-group">
           <li class="list-group-item">
@@ -56,7 +63,9 @@
     </div>
 
     <div class="col-12 mb-2">
-      <h5 class="mb-2 tournament-title">Final</h5>
+      <h5 class="mb-2 tournament-title"
+        data-translationKey="final"
+      >Final</h5>
       <div class="scroll-container">
         <ul class="list-group">
           <li class="list-group-item">
@@ -79,7 +88,9 @@
     </div>
 
     <div class="col-12 mb-5">
-      <h5 class="mb-4 tournament-title">Winner</h5>
+      <h5 class="mb-4 tournament-title"
+        data-translationKey="winner"
+      >Winner</h5>
       <div class="scroll-container">
         <div class="final-winner">
           <div
@@ -93,6 +104,7 @@
                 class="player-img-winner rounded-circle mb-3"
               />
               <p id="winner-name" class="fw-bold text-warning fs-3"
+                data-translationKey="wait-winner"
                 >Waiting for winner...</span
               >
             </div>

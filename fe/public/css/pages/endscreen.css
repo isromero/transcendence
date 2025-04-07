@@ -60,10 +60,9 @@
   margin-right: 10px;
 }
 
-/* Nueva clase para controlar el tamaño de las imágenes */
 .player-img {
-  width: 20px; /* Tamaño reducido */
-  height: 20px; /* Tamaño reducido */
+  width: 20px; 
+  height: 20px;
   object-fit: cover;
   margin-right: 10px;
 }
