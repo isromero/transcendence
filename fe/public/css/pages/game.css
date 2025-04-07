@@ -1,0 +1,22 @@
+/* Game page */
+.pong-container {
+  position: relative;
+  width: 800px;
+  height: 400px;
+  background-color: #20394f;
+  border: 2px solid #f6d6bd;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 200px black;
+  transform: rotate(0);
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  background-color: black;
+}
+
+.score {
+  font-size: 120px;
+  opacity: 0.7;
+}

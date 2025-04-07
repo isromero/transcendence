@@ -1,0 +1,17 @@
+/*tournament*/
+
+.scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tournament-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
