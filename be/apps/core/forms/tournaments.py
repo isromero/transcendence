@@ -13,9 +13,6 @@ class TournamentsForm(forms.ModelForm):
         if not tournament_name:
             raise ValidationError("Tournament name is required")
             
-        if Tournaments.objects.filter(tournament_name=tournament_name).exists():
-            raise ValidationError("Tournament name already exists")
-            
         if not re.match("^[a-zA-Z0-9_-]{3,50}$", tournament_name):
             raise ValidationError(
                 "Tournament name must be 3-50 characters and can only contain letters, numbers, underscores and hyphens"
