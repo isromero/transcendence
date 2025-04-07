@@ -18,8 +18,10 @@ export const usersService = {
       return await response.json();
     } catch (e) {
       console.error('Error fetching users:', e);
+      showErrorToast('Error fetching users');
     }
   },
+
   getUser: async id => {
     try {
       const response = await fetch(`${API_URL}/users/${id}`, {
@@ -36,8 +38,10 @@ export const usersService = {
       return await response.json();
     } catch (e) {
       console.error('Error fetching user:', e);
+      showErrorToast('Error fetching user');
     }
   },
+
   updateUser: async user => {
     try {
       const response = await fetch(`${API_URL}/users`, {
@@ -53,7 +57,7 @@ export const usersService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result);
+        showErrorToast(result?.message || 'Error updating account');
         return null;
       }
 
@@ -63,6 +67,7 @@ export const usersService = {
       showErrorToast(`Error updating account: ${e}`);
     }
   },
+
   updateUserAvatar: async file => {
     try {
       const formData = new FormData();
@@ -80,17 +85,18 @@ export const usersService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result);
+        showErrorToast(result?.message || 'Error updating avatar');
         return null;
       }
 
       showSuccessToast(result.message);
       return result.data;
     } catch (e) {
-      showErrorToast(`Error updating avatar ${e}`);
+      showErrorToast(`Error updating avatar: ${e}`);
       return null;
     }
   },
+
   deleteUser: async password => {
     try {
       const response = await fetch(`${API_URL}/users`, {
@@ -109,7 +115,8 @@ export const usersService = {
       }
 
       if (!response.ok) {
-        showErrorToast('Error deleting account');
+        const errorMessage = await response.json();
+        showErrorToast(errorMessage?.message || 'Error deleting account');
         return false;
       }
 
@@ -119,4 +126,31 @@ export const usersService = {
       return false;
     }
   },
+
+  deleteUserWithoutPassword: async () => {
+    try {
+      const response = await fetch(`${API_URL}/users`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({}),
+        credentials: 'include',
+      });
+  
+      if (response.status === 204) {
+        showSuccessToast('Account successfully deleted');
+        return true;
+      }
+  
+      const errorMessage = await response.json();
+      showErrorToast(errorMessage?.message || 'Error deleting account');
+      return false;
+    } catch (e) {
+      showErrorToast(`Error deleting account: ${e}`);
+      return false;
+    }
+  },
+  
 };
