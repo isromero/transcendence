@@ -12,7 +12,6 @@ export function init() {
   
     const tournamentName = document.getElementById('tournament-name').value.trim();
     const displayName = document.getElementById('leader-display-name').value.trim();
-    console.log('Display Name at submit:', displayName);
   
     const profile = await profileService.getProfile();
     if (!profile) {
