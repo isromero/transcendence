@@ -13,6 +13,7 @@ export async function init() {
   const joinCode = getJoinCodeFromURL();
   const startBtn = document.getElementById('start-tournament-btn');
   const leaveBtn = document.getElementById('leaveTournamentButton');
+  const nextRoundBtn = document.getElementById('next-round-btn');
   let intervalId = null;
   let isInitialized = false;
 
@@ -172,30 +173,29 @@ export async function init() {
       if (!tournament) {
         return;
       }
-
+  
       updateTournamentUI(tournament);
-
+  
       if (tournament.status === 'in_progress') {
         const currentRoundKey = roundMap[tournament.current_round];
         const currentRoundFinished =
           tournament.matches.round_finished?.[currentRoundKey];
-
+  
+        // Si la ronda ha terminado, habilitar el botón "Next Round"
+        const nextRoundBtn = document.getElementById('next-round-btn');
         if (currentRoundFinished) {
-          const updatedTournament = await tournamentService.goToNextRound(
-            tournament.id
-          );
-          if (updatedTournament) {
-            updateTournamentUI(updatedTournament);
-            await maybeRedirectToMatch(updatedTournament);
-          }
+          nextRoundBtn?.removeAttribute('disabled');
         } else {
-          await maybeRedirectToMatch(tournament);
+          nextRoundBtn?.setAttribute('disabled', 'true');
         }
+  
+        // Redirigir a las partidas solo si la ronda no ha terminado
+        await maybeRedirectToMatch(tournament);
       } else if (tournament.status === 'ready') {
         const profile = await profileService.getProfile();
         const playerId = Number(profile?.data?.id);
         const leaderId = Number(tournament.players?.[0]?.id);
-
+  
         if (playerId === leaderId) {
           startBtn?.removeAttribute('disabled');
         }
@@ -208,9 +208,27 @@ export async function init() {
       console.error('Error in handleTournamentProgress:', error);
     }
   }
+  
 
   intervalId = setInterval(handleTournamentProgress, 1000);
+  nextRoundBtn?.addEventListener('click', async () => {
+    try {
+      const tournament = await tournamentService.getTournament(joinCode);
+      if (!tournament) {
+        return;
+      }
 
+      // Avanzamos la ronda
+      const updatedTournament = await tournamentService.goToNextRound(tournament.id);
+      if (updatedTournament) {
+        // Actualizamos la UI y redirigimos a las partidas de la siguiente ronda
+        updateTournamentUI(updatedTournament);
+        await maybeRedirectToMatch(updatedTournament);
+      }
+    } catch (error) {
+      showErrorToast(`Error going to next round: ${error.message}`);
+    }
+  });
   startBtn?.addEventListener('click', handleStartTournament);
   leaveBtn?.addEventListener('click', handleLeaveTournament);
   window.addEventListener('storage', handleStorageChange);
