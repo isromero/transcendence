@@ -52,7 +52,8 @@ class OAuthCallback(View):
         if "error" in user_info:
             return create_response(error=user_info, status=400)
         self.response = self._authenticate_and_login(request, user_info)
-        self.redirect_response = HttpResponseRedirect(f"http://localhost:3001/")
+        print("\n\n\n\n\n", settings.OAUTH42_HOSTNAME, "\n\n\n\n\n")
+        self.redirect_response = HttpResponseRedirect(f"http://{settings.OAUTH42_HOSTNAME}:3001/")
         self._transfer_data()
         return self.redirect_response
 
