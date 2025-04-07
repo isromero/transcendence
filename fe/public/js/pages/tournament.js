@@ -30,12 +30,22 @@ export async function init() {
     if (!tournament) {
       return;
     }
-    
+  
     console.log('Leaving tournament:', tournament);
     await tournamentService.leaveTournament(joinCode, tournament.id);
     console.log('Left tournament:', tournament);
   
     const updatedTournament = await tournamentService.getTournament(joinCode);
+  
+    // Verificar si el torneo ya está completado
+    if (updatedTournament.status === 'completed') {
+      console.log('Tournament is completed, not deleting.');
+      localStorage.setItem(
+        'tournament_left',
+        JSON.stringify({ joinCode, timestamp: Date.now() })
+      );
+      return; // Salir sin eliminar el torneo
+    }
   
     const profile = await profileService.getProfile();
     const userId = profile?.data?.id;
@@ -56,6 +66,7 @@ export async function init() {
       JSON.stringify({ joinCode, timestamp: Date.now() })
     );
   }
+  
   
 
   function handleStorageChange(event) {
