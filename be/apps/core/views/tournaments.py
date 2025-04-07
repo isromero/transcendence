@@ -94,6 +94,12 @@ class TournamentsView(View):
             # Add the creator as the first player
             tournament.players.add(request.user)
             tournament.save()
+            
+            display_name = data.get("display_name")
+
+            user = User.objects.get(id=request.user.id)
+            user.tournament_display_name = display_name
+            user.save()
 
             return create_response(
                 data=serialize_tournament(tournament),

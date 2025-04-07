@@ -3,7 +3,7 @@ import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 import { profileService } from './profile.js';
 
 export const tournamentService = {
-  createTournament: async (tournamentName, maxPlayers) => {
+  createTournament: async (tournamentName, maxPlayers, profile, newDisplayName = null) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'POST',
@@ -14,6 +14,7 @@ export const tournamentService = {
         body: JSON.stringify({
           tournament_name: tournamentName,
           max_players: maxPlayers,
+          display_name: newDisplayName || profile.username,
         }),
         credentials: 'include',
       });
