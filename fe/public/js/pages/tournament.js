@@ -24,19 +24,38 @@ export async function init() {
 
   async function leaveTournament() {
     clearInterval(intervalId);
-
+  
     const tournament = await tournamentService.getTournament(joinCode);
     if (!tournament) {
       return;
     }
-
+    
+    console.log('Leaving tournament:', tournament);
     await tournamentService.leaveTournament(joinCode, tournament.id);
-
+    console.log('Left tournament:', tournament);
+  
+    const updatedTournament = await tournamentService.getTournament(joinCode);
+  
+    const profile = await profileService.getProfile();
+    const userId = profile?.data?.id;
+  
+    const noPlayersLeft = updatedTournament.current_players === 0;
+    const onlyCurrentUserLeft =
+      updatedTournament.current_players === 1 &&
+      updatedTournament.players?.[0]?.id === userId;
+  
+    if (noPlayersLeft || onlyCurrentUserLeft) {
+      await tournamentService.deleteTournament(joinCode, tournament.id);
+      console.log('Tournament deleted due to lack of players');
+      console.log('Torneo eliminado por falta de jugadores');
+    }
+  
     localStorage.setItem(
       'tournament_left',
       JSON.stringify({ joinCode, timestamp: Date.now() })
     );
   }
+  
 
   function handleStorageChange(event) {
     if (event.key === 'tournament_left') {

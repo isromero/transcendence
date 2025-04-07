@@ -284,8 +284,10 @@ class TournamentsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def delete(self, _, tournament_id):
+    def delete(self, request):
         """Deletes a tournament"""
+        data = json.loads(request.body)
+        tournament_id = data.get("tournament_id")
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
         return HttpResponse(status=204)
