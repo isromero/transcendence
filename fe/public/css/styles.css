@@ -549,3 +549,8 @@ canvas {
 .list-group {
   width: 100%;
 }
+
+
+.hidden {
+  display: none !important;
+}

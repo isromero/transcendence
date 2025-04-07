@@ -191,11 +191,41 @@ export async function init() {
         const currentRoundKey = roundMap[tournament.current_round];
         const currentRoundFinished =
           tournament.matches.round_finished?.[currentRoundKey];
-  
-        // Si la ronda ha terminado, habilitar el botón "Next Round"
+        
+        // Obtener el perfil del usuario actual
+        const profile = await profileService.getProfile();
+        const userId = profile?.data?.id;
+        
+        // Encuentra el botón de siguiente ronda
         const nextRoundBtn = document.getElementById('next-round-btn');
+        
+        // Por defecto ocultar el botón de siguiente ronda
+        nextRoundBtn?.classList.add('hidden');
+        
+        // Solo mostrar el botón cuando la ronda actual ha terminado
         if (currentRoundFinished) {
-          nextRoundBtn?.removeAttribute('disabled');
+          // Si estamos en las semifinales y han terminado
+          if (currentRoundKey === 'semi_finals') {
+            // Identificar a los ganadores de las semifinales
+            const semiFinalsMatches = tournament.matches.semi_finals || [];
+            const semifinalsWinners = semiFinalsMatches.map(match => {
+              // El ganador es el jugador con mayor puntuación
+              return match.player1.score > match.player2.score 
+                ? match.player1.id 
+                : match.player2.id;
+            });
+            
+            // Mostrar el botón solo si el usuario actual es uno de los ganadores
+            if (semifinalsWinners.includes(userId)) {
+              nextRoundBtn?.classList.remove('hidden');
+              nextRoundBtn?.removeAttribute('disabled');
+            }
+          } else {
+            // Para otros rounds, mantener el comportamiento original
+            // (cualquiera puede ver el botón)
+            nextRoundBtn?.classList.remove('hidden');
+            nextRoundBtn?.removeAttribute('disabled');
+          }
         } else {
           nextRoundBtn?.setAttribute('disabled', 'true');
         }
