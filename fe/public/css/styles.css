@@ -25,28 +25,28 @@
 @font-face {
   font-family: 'Pixelify Sans';
   src: url('../assets/fonts/PixelifySans-Regular.ttf') format('truetype');
-  font-weight: 400; /* Regular */
+  font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pixelify Sans';
   src: url('../assets/fonts/PixelifySans-Medium.ttf') format('truetype');
-  font-weight: 500; /* Medium */
+  font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pixelify Sans';
   src: url('../assets/fonts/PixelifySans-SemiBold.ttf') format('truetype');
-  font-weight: 600; /* SemiBold */
+  font-weight: 600; 
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pixelify Sans';
   src: url('../assets/fonts/PixelifySans-Bold.ttf') format('truetype');
-  font-weight: 700; /* Bold */
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -110,24 +110,6 @@
   color: var(--bs-text-color-quaternary);
 }
 
-.accept-button {
-  color: var(--bs-text-color-tertiary);
-  background-color: var(--bs-primary);
-  border-color: var(--bs-text-color-tertiary);
-}
-
-.login-button {
-  color: var(--bs-text-color);
-  background-color: var(--bs-primary);
-  border-color: var(--bs-text-color);
-}
-
-.cancel-button {
-  color: var(--bs-text-color);
-  background-color: var(--bs-primary);
-  border-color: var(---bs-text-color);
-}
-
 .border-primary {
   border-color: var(--bs-text-color) !important;
 }
@@ -183,15 +165,6 @@
     0 0 0.3em var(--bs-text-color),
     0 0 0.6em #c3a38a,
     0 0 1em #c3a38a;
-}
-
-.button-text-styles {
-  color: var(--bs-text-color-secondary);
-  text-shadow: 0px 4px 6px #000;
-  -webkit-text-stroke: 0.5px black;
-  font-family: 'Pixelify Sans';
-  font-style: normal;
-  line-height: normal;
 }
 
 .link-text-styles {
