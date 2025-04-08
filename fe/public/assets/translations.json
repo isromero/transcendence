@@ -9,6 +9,21 @@
     "spanish": "Iniciar sesión",
     "ukrainian": "Увійти"
   },
+  "edit-avatar": {
+    "english": "Change Avatar",
+    "spanish": "Cambiar imagen de perfil",
+    "ukrainian": "Змінити аватар"
+  },
+  "logout": {
+    "english": "Logout",
+    "spanish": "Cerrar sesión",
+    "ukrainian": "Вийти"
+  },
+  "logout-confirmation": {
+    "english": "Are you sure you want to logout?",
+    "spanish": "¿Estás seguro de esto?",
+    "ukrainian": "Ви впевнені, що хочете вийти?"
+  },
   "password": {
     "english": "Password",
     "spanish": "Contraseña",
@@ -183,6 +198,81 @@
     "english": "Tournament",
     "spanish": "Torneo",
     "ukrainian": "Турнір"
+  },
+  "play-again": {
+    "english": "Play again",
+    "spanish": "Jugar de nuevo",
+    "ukrainian": "Грати знову"
+  },
+  "return-menu": {
+    "english": "Return to menu",
+    "spanish": "Volver al menú",
+    "ukrainian": "Повернутися до меню"
+  },
+  "winner": {
+    "english": "WINNER",
+    "spanish": "GANADOR",
+    "ukrainian": "ПЕРЕМОЖЕЦЬ"
+  },
+  "match-ended": {
+    "english": "Match Ended",
+    "spanish": "Partida finalizada",
+    "ukrainian": "Матч завершено"
+  },
+  "display-name": {
+    "english": "Display name:",
+    "spanish": "Nombre a mostrar:",
+    "ukrainian": "Ім'я для відображення:"
+  },
+  "enter-code": {
+    "english": "Enter Code:",
+    "spanish": "Ingresa el Código:",
+    "ukrainian": "Введіть код:"
+  },
+  "queue": {
+    "english": "In queue for a match. Waiting for another player...",
+    "spanish": "Esperando más jugadores...",
+    "ukrainian": "У черзі на матч. Очікування іншого гравця..."
+  },
+  "create-tournament": {
+    "english": "Create tournaments",
+    "spanish": "Crear torneo",
+    "ukrainian": "Створити турнір"
+  },
+  "leave-tournament": {
+    "english": "Leave tournament",
+    "spanish": "Abandonar torneo",
+    "ukrainian": "Вийти з турніру"
+  },
+  "start-tournament": {
+    "english": "Start tournament",
+    "spanish": "Empezar torneo",
+    "ukrainian": "Розпочати турнір"
+  },
+  "join-code": {
+    "english": "Join Code: XXXX",
+    "spanish": "Código de partida: XXXX",
+    "ukrainian": "Код приєднання: XXXX"
+  },
+  "semifinal": {
+    "english": "Semifinal",
+    "spanish": "Semifinal",
+    "ukrainian": "Півфінал"
+  },
+  "final": {
+    "english": "Final",
+    "spanish": "Final",
+    "ukrainian": "Фінал"
+  },
+  "waiting-player": {
+    "english": "Waiting for player...",
+    "spanish": "Esperando jugador...",
+    "ukrainian": "Очікування гравця..."
+  },
+  "wait-winner": {
+    "english": "Waiting winner...",
+    "spanish": "Esperando Campeón",
+    "ukrainian": "Очікування переможця..."
   },
   "your-name": {
     "english": "Your name",
