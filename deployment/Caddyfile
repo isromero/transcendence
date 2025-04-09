@@ -1,0 +1,11 @@
+{
+    email josgarci@student.42madrid.com
+}
+
+localhost {
+    reverse_proxy /api/* be:8000
+    reverse_proxy /metrics fe:3002
+    reverse_proxy fe:3001
+    encode gzip
+    file_server
+}

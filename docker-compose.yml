@@ -97,9 +97,28 @@ services:
     networks:
       - transcendence_network
 
+  caddy:
+    container_name: caddy
+    image: caddy:latest
+    ports:
+      - 8080:80
+      - 443:443
+    volumes:
+      - ./deployment:/etc/caddy/
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: always
+    depends_on:
+      - be
+      - fe
+    networks:
+      - transcendence_network
+
 volumes:
   db_data:
   prometheus_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   transcendence_network:
