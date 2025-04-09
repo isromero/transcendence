@@ -243,6 +243,7 @@ function setupMobileControls() {
     'right-up': 'ArrowUp',
     'right-down': 'ArrowDown',
   };
+  
 
   Object.keys(buttonMapping).forEach(buttonId => {
     const button = document.getElementById(buttonId);

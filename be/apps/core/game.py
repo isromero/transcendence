@@ -147,13 +147,37 @@ class GameState:
         prev_x = self.ball["x"]
         prev_y = self.ball["y"]
 
+        # Calculate next position
+        next_x = self.ball["x"] + self.ball["speedX"] * dt
+        next_y = self.ball["y"] + self.ball["speedY"] * dt
+        
+        # Check for goals BEFORE updating position
+        if next_x - self.ball["radius"] <= 0:
+            # Ball will cross left boundary - Right player scores
+            self._last_scorer = "right"
+            self.scores["right"] += 1
+            if self.scores["right"] <= 5:
+                await self._send_score_update(is_player1=False)
+            self.reset_ball()
+            return
+        elif next_x + self.ball["radius"] >= self.WIDTH:
+            # Ball will cross right boundary - Left player scores
+            self._last_scorer = "left"
+            self.scores["left"] += 1
+            if self.scores["left"] <= 5:
+                await self._send_score_update(is_player1=True)
+            self.reset_ball()
+            return
+
         # Update position
-        self.ball["x"] += self.ball["speedX"] * dt
-        self.ball["y"] += self.ball["speedY"] * dt
+        self.ball["x"] = next_x
+        self.ball["y"] = next_y
 
         # Calculate the movement vector
         dx = self.ball["x"] - prev_x
         dy = self.ball["y"] - prev_y
+    
+    # Resto del código para detección de colisiones con paletas y paredes...
 
         # Function to check paddle collision
         def check_paddle_collision(paddle):
@@ -215,20 +239,23 @@ class GameState:
             )
 
         # Check if there was a goal (after checking paddle collisions)
+        # Check if there was a goal (after checking paddle collisions)
         if self.ball["x"] - self.ball["radius"] <= 0:
-            # Right player goal
+            # Ball crossed left boundary - Right player scores
             self._last_scorer = "right"
             self.scores["right"] += 1
             if self.scores["right"] <= 5:
-                await self._send_score_update(is_player1=False)
+                # Right player (player2) scored
+                await self._send_score_update(is_player1=False)  # El jugador 2 (derecha) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
         elif self.ball["x"] + self.ball["radius"] >= self.WIDTH:
-            # Left player goal
+            # Ball crossed right boundary - Left player scores
             self._last_scorer = "left"
             self.scores["left"] += 1
             if self.scores["left"] <= 5:
-                await self._send_score_update(is_player1=True)
+                # Left player (player1) scored
+                await self._send_score_update(is_player1=True)  # El jugador 1 (izquierda) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
 
@@ -251,11 +278,13 @@ class GameState:
             self.MAX_BALL_SPEED,
         )
 
-        # Update speeds
-        self.ball["speedX"] = (
-            -math.cos(bounce_angle) * speed * (-1 if side == "left" else 1)
-        )
+        # Update speeds - Corrected direction logic
+        direction = 1 if side == "left" else -1
+        self.ball["speedX"] = math.cos(bounce_angle) * direction * speed
         self.ball["speedY"] = math.sin(bounce_angle) * speed
+        
+        # Record last hit
+        self.ball["last_hit"] = side
 
     def process_key_event(self, key, is_pressed):
         """Handle keyboard events to move paddles"""
@@ -315,22 +344,42 @@ class GameState:
         from django.db import transaction
 
         try:
+            # Depuración - imprime los IDs de jugadores
+            print(f"Left player ID: {self.left_player_id}, Right player ID: {self.right_player_id}")
+            print(f"Goal scored by {'Left player' if is_player1 else 'Right player'}")
+            
             with transaction.atomic():
                 matches = History.objects.filter(match_id=self.match_id)
                 if not matches.exists():
+                    print("No matches found for match_id:", self.match_id)
                     return
 
                 for match in matches:
-                    if match.user_id.id == self.left_player_id:
+                    match_user_id = match.user_id.id
+                    print(f"Match user ID: {match_user_id}")
+                    
+                    # Verificar explícitamente cada caso para facilitar la depuración
+                    if match_user_id == self.left_player_id:
+                        print(f"This is left player's record")
                         if is_player1:
+                            print("Left player scored - incrementing result_user")
                             match.result_user += 1
                         else:
+                            print("Right player scored - incrementing result_opponent")
                             match.result_opponent += 1
+                    elif match_user_id == self.right_player_id:
+                        print(f"This is right player's record")
+                        if is_player1:
+                            print("Left player scored - incrementing result_opponent")
+                            match.result_opponent += 1
+                        else:
+                            print("Right player scored - incrementing result_user")
+                            match.result_user += 1
                     else:
-                        if is_player1:
-                            match.result_opponent += 1
-                        else:
-                            match.result_user += 1
+                        print(f"User ID {match_user_id} doesn't match either player!")
+                    
+                    # Mostrar los resultados actualizados
+                    print(f"Updated scores - user: {match.result_user}, opponent: {match.result_opponent}")
                     match.save()
 
         except Exception as e:

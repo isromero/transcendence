@@ -57,7 +57,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
         )
 
-    async def disconnect(self):
+    async def disconnect(self, _code):
         """Handle the disconnection of a client"""
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
@@ -75,6 +75,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                         print(f"Game loop {self.match_id} cancelled correctly")
 
                 del self.__class__.games[self.match_id]
+
 
     async def receive(self, text_data):
         """Handle the messages received from the clients"""
