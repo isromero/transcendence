@@ -57,7 +57,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
         )
 
-    async def disconnect(self, _code):
+    async def disconnect(self, _):
         """Handle the disconnection of a client"""
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
@@ -72,7 +72,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     try:
                         await loop_task
                     except asyncio.CancelledError:
-                        print(f"Game loop {self.match_id} cancelled correctly")
+                        pass
 
                 del self.__class__.games[self.match_id]
 

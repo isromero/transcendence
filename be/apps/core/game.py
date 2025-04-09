@@ -344,9 +344,7 @@ class GameState:
         from django.db import transaction
 
         try:
-            # Depuración - imprime los IDs de jugadores
-            print(f"Left player ID: {self.left_player_id}, Right player ID: {self.right_player_id}")
-            print(f"Goal scored by {'Left player' if is_player1 else 'Right player'}")
+            
             
             with transaction.atomic():
                 matches = History.objects.filter(match_id=self.match_id)
@@ -356,30 +354,21 @@ class GameState:
 
                 for match in matches:
                     match_user_id = match.user_id.id
-                    print(f"Match user ID: {match_user_id}")
                     
-                    # Verificar explícitamente cada caso para facilitar la depuración
                     if match_user_id == self.left_player_id:
-                        print(f"This is left player's record")
                         if is_player1:
-                            print("Left player scored - incrementing result_user")
                             match.result_user += 1
                         else:
-                            print("Right player scored - incrementing result_opponent")
                             match.result_opponent += 1
                     elif match_user_id == self.right_player_id:
-                        print(f"This is right player's record")
                         if is_player1:
-                            print("Left player scored - incrementing result_opponent")
                             match.result_opponent += 1
                         else:
-                            print("Right player scored - incrementing result_user")
                             match.result_user += 1
                     else:
                         print(f"User ID {match_user_id} doesn't match either player!")
                     
-                    # Mostrar los resultados actualizados
-                    print(f"Updated scores - user: {match.result_user}, opponent: {match.result_opponent}")
+                    
                     match.save()
 
         except Exception as e:
