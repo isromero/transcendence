@@ -1,11 +1,20 @@
 {
     email josgarci@student.42madrid.com
+    local_certs
 }
 
-localhost {
+# hay que cambiar el hostname
+
+https://localhost {
     reverse_proxy /api/* be:8000
     reverse_proxy /metrics fe:3002
     reverse_proxy fe:3001
     encode gzip
     file_server
+    tls internal
+
+    handle_path /images/* {
+        root * /app/media
+        file_server
+    }
 }

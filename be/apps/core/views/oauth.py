@@ -53,7 +53,7 @@ class OAuthCallback(View):
             return create_response(error=user_info, status=400)
         self.response = self._authenticate_and_login(request, user_info)
         print("\n\n\n\n\n", settings.OAUTH42_HOSTNAME, "\n\n\n\n\n")
-        self.redirect_response = HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}:3001/")
+        self.redirect_response = HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}")
         self._transfer_data()
         return self.redirect_response
 
