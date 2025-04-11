@@ -38,27 +38,33 @@ def place_image_on_canvas(canvas, image, x, y):
             canvas_x = x + i
             canvas_y = y + j
             if 0 <= canvas_x < len(canvas) and 0 <= canvas_y < len(canvas[0]):
-                canvas[canvas_x][canvas_y] = image.array[i][j]
+                if image.array[i][j] is not ' ':
+                    canvas[canvas_x][canvas_y] = image.array[i][j]
 
 # Main execution block
-if __name__ == "__main__":
-    # Initialize the canvas of 54 (height) x 171 (width) filled with spaces
+def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
+
+    game_height = 800
+    game_width = 400
     canvas_height = 54
     canvas_width = 171
     canvas = [[' ' for _ in range(canvas_width)] for _ in range(canvas_height)]
 
-    # Load images. Replace 'sky.txt' and 'ball.txt' with your actual ASCII art files.
     sky = AsciiImage('field.txt')   # Background, e.g., a sky
     ball = AsciiImage('ball.txt') # Foreground, e.g., a ball
     padle = AsciiImage('padle.txt') # Foreground, e.g., a ball
+    left_score = AsciiImage(f'numbers/{score_l}.txt') # Foreground, e.g., a ball
+    right_score = AsciiImage(f'numbers/{score_r}.txt') # Foreground, e.g., a ball
 
-    # Place images onto the canvas:
-    # First, place the sky at the top-left of the canvas.
     place_image_on_canvas(canvas, sky, 0, 0)
-    # Then, place the ball so it overlaps the sky.
+    place_image_on_canvas(canvas, padle, 5, 6)  # Adjust x,y coordinates as needed
+    place_image_on_canvas(canvas, padle, 5, 171 - 6 - padle.rows) 
+    # points 1
+    place_image_on_canvas(canvas, left_score, 3, 70)  # Adjust x,y coordinates as needed
+    place_image_on_canvas(canvas, right_score, 3, 171 - 70 - right_score.rows)  # Adjust x,y coordinates as needed
     place_image_on_canvas(canvas, ball, 5, 20)  # Adjust x,y coordinates as needed
-    place_image_on_canvas(canvas, padle, 5, 20)  # Adjust x,y coordinates as needed
 
-    # Clear the console and print the final composed canvas.
     clear_console()
     print_canvas(canvas)
+
+render(0, 1, 150, 150, 4, 5, 6)
