@@ -1,39 +1,49 @@
-Las estadisticas las calcula mal:
-Wins: 2
+1. Las estadisticas las calcula mal:
+   Wins: 2
+   Loses: 6
+   Total: 10
+   este es el resultado despues del torneo
 
-Loses: 6
+2. No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo
 
-Total: 10
-este es el resultado despues del torneo
+3. En otro ordenador no carga las fotos de perfil
 
-No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo
+4. En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0
 
-En otro ordenador no carga las fotos de perfil
+5. Las flechas en el juego van mal. Arreglado en otra rama
 
-En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0
+6. En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama?
 
-En http://localhost:3001/profile/2 es el profile del amigo, no se v la foto, no pone el status si esta logueado, y no hy ninguna estadistica
+7. En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas:
+   be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+   be           | Error in tournament GET: No Tournaments matches the given query.
+   be           | Bad Request: /api/tournaments/lalalal
+   be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+   be           | INFO:     172.18.0.6:60404 - "GET /metrics HTTP/1.1" 200 OK
+   be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+   be           | Error in tournament GET: No Tournaments matches the given query.
+   be           | Bad Request: /api/tournaments/lalalal
+   be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+   be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+   be           | Error in tournament GET: No Tournaments matches the given query.
+   be           | Bad Request: /api/tournaments/lalalal
+   be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+   da esta respuesta cada poco segundos
+   
+8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas
 
-Las flechas en el juego van mal. Arreglado en otra rama
+9. Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario
 
-En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama?
+10. Un usuario solo puede cambiar su avatar y nada mas
 
-En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas:
-be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
-be           | Error in tournament GET: No Tournaments matches the given query.
-be           | Bad Request: /api/tournaments/lalalal
-be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
-be           | INFO:     172.18.0.6:60404 - "GET /metrics HTTP/1.1" 200 OK
-be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
-be           | Error in tournament GET: No Tournaments matches the given query.
-be           | Bad Request: /api/tournaments/lalalal
-be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
-be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
-be           | Error in tournament GET: No Tournaments matches the given query.
-be           | Bad Request: /api/tournaments/lalalal
-be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
-da esta respuesta cada poco segundos
+11. En algunos dispositivos no se ven todas las flechas en el partido
 
-Ajuste dinamico de tamaño de la pagina en vertical
+12. Screen reader and assistive technologies. Tenemos esto hecho?
 
-Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario
+13. Cuando un jugador se desconecta, el otro sigue jugando, no se si esto esta bien
+
+14. En http://localhost:3001/profile/2 es el profile del amigo, no se ve la foto, no pone el status si esta logueado, y no hy ninguna estadistica y no se ve toda esta informacion: Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
+
+15. El creador del torneo no puede elejir un nombre para el torneo
+
+16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments.
