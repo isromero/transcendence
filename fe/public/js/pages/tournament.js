@@ -16,6 +16,7 @@ export async function init() {
   const nextRoundBtn = document.getElementById('next-round-btn');
   let intervalId = null;
   let isInitialized = false;
+  let invalidTournament = false; // Flag to track invalid tournament codes
 
   const roundMap = {
     1: 'quarter_finals',
@@ -180,63 +181,58 @@ export async function init() {
 
   async function handleTournamentProgress() {
     try {
-      const tournament = await tournamentService.getTournament(joinCode);
-      if (!tournament) {
+      if (invalidTournament) {
+        clearInterval(intervalId); // Stop further requests if the tournament is invalid
         return;
       }
-  
+
+      const tournament = await tournamentService.getTournament(joinCode);
+      if (!tournament) {
+        invalidTournament = true; // Mark the tournament as invalid
+        showErrorToast('Invalid tournament code. Please check and try again.');
+        clearInterval(intervalId); // Stop further requests
+        return;
+      }
+
       updateTournamentUI(tournament);
-  
+
       if (tournament.status === 'in_progress') {
         const currentRoundKey = roundMap[tournament.current_round];
         const currentRoundFinished =
           tournament.matches.round_finished?.[currentRoundKey];
-        
-        // Obtener el perfil del usuario actual
+
         const profile = await profileService.getProfile();
         const userId = profile?.data?.id;
-        
-        // Encuentra el botón de siguiente ronda
-        const nextRoundBtn = document.getElementById('next-round-btn');
-        
-        // Por defecto ocultar el botón de siguiente ronda
+
         nextRoundBtn?.classList.add('hidden');
-        
-        // Solo mostrar el botón cuando la ronda actual ha terminado
+
         if (currentRoundFinished) {
-          // Si estamos en las semifinales y han terminado
           if (currentRoundKey === 'semi_finals') {
-            // Identificar a los ganadores de las semifinales
             const semiFinalsMatches = tournament.matches.semi_finals || [];
             const semifinalsWinners = semiFinalsMatches.map(match => {
-              // El ganador es el jugador con mayor puntuación
-              return match.player1.score > match.player2.score 
-                ? match.player1.id 
+              return match.player1.score > match.player2.score
+                ? match.player1.id
                 : match.player2.id;
             });
-            
-            // Mostrar el botón solo si el usuario actual es uno de los ganadores
+
             if (semifinalsWinners.includes(userId)) {
               nextRoundBtn?.classList.remove('hidden');
               nextRoundBtn?.removeAttribute('disabled');
             }
           } else {
-            // Para otros rounds, mantener el comportamiento original
-            // (cualquiera puede ver el botón)
             nextRoundBtn?.classList.remove('hidden');
             nextRoundBtn?.removeAttribute('disabled');
           }
         } else {
           nextRoundBtn?.setAttribute('disabled', 'true');
         }
-  
-        // Redirigir a las partidas solo si la ronda no ha terminado
+
         await maybeRedirectToMatch(tournament);
       } else if (tournament.status === 'ready') {
         const profile = await profileService.getProfile();
         const playerId = Number(profile?.data?.id);
         const leaderId = Number(tournament.players?.[0]?.id);
-  
+
         if (playerId === leaderId) {
           startBtn?.removeAttribute('disabled');
         }
@@ -247,11 +243,13 @@ export async function init() {
       }
     } catch (error) {
       console.error('Error in handleTournamentProgress:', error);
+      showErrorToast(`Error in tournament progress: ${error.message}`);
+      clearInterval(intervalId); // Stop further requests on error
     }
   }
-  
 
-  intervalId = setInterval(handleTournamentProgress, 1000);
+  intervalId = setInterval(handleTournamentProgress, 5000);
+
   nextRoundBtn?.addEventListener('click', async () => {
     try {
       const tournament = await tournamentService.getTournament(joinCode);
