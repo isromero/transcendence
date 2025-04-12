@@ -8,12 +8,12 @@ export function init() {
   const wins = document.getElementById('wins');
   const loses = document.getElementById('loses');
   const total = document.getElementById('total');
-  const tournamentWins = document.getElementById('tournament-wins'); // Nuevo
-  const tournamentLoses = document.getElementById('tournament-loses'); // Nuevo
+  const tournamentWins = document.getElementById('tournament-wins');
+  const tournamentLoses = document.getElementById('tournament-loses');
 
   async function loadProfileData() {
     const pathParts = window.location.pathname.split('/');
-    const userId = pathParts[2]; // /profile/123 -> 123
+    const userId = pathParts[2];
 
     const { data } = userId
       ? await usersService.getUser(userId)
@@ -35,8 +35,8 @@ export function init() {
     wins.textContent = victories;
     loses.textContent = defeats;
     total.textContent = totalMatches;
-    tournamentWins.textContent = tournamentVictories; // Nuevo
-    tournamentLoses.textContent = tournamentDefeats; // Nuevo
+    tournamentWins.textContent = tournamentVictories;
+    tournamentLoses.textContent = tournamentDefeats;
   }
 
   loadProfileData();
