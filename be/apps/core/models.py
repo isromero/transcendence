@@ -20,6 +20,7 @@ class User(AbstractUser):
         max_length=150,
         null=True,
         blank=True,
+        unique=True,
     )
 
     USERNAME_FIELD = "username"
