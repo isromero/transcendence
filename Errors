@@ -4,7 +4,7 @@
    Total: 10
    este es el resultado despues del torneo
 
-2. No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo
+2. No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # TODO (isma): si me da tiempo
 
 3. En otro ordenador no carga las fotos de perfil
 
@@ -12,9 +12,9 @@
 
 5. Las flechas en el juego van mal. Arreglado en otra rama ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
-6. En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama? TAREA DE ISMA
+6. En multijugador el mismo usuario puede mover las dos flechas. # TODO (isma)
 
-7. En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas:
+7. En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas: ESTO NO DEBERÍA IMPORTAR PERO HABRÍA QUE MIRARLO, NO ES ALGO CRÍTICO NI UN EROR MALO DEL TODO, SON ERRORES CONTROLADOS MÁS O MENOS PERO HAY QUE ECHARLE UN OJO
    be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
    be           | Error in tournament GET: No Tournaments matches the given query.
    be           | Bad Request: /api/tournaments/lalalal
@@ -30,21 +30,24 @@
    be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
    da esta respuesta cada poco segundos
    
-8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas
+8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas -> En ningún sitio pide que tengamos que hacer cosas dinámicas con "resize", seguro que si actualizas la página la pantalla se ajustará bien, en el caso de que no entonces MIRARLO -> SAMU???
 
 9. Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
-10. Un usuario solo puede cambiar su avatar y nada mas
+10. Un usuario solo puede cambiar su avatar y nada mas -> Esto es mentirá. Esto son solo los usuarios de la intra de 42 los que solo pueden cambiar su avatar. Y es justo lo que debe de pasar.
 
-11. En algunos dispositivos no se ven todas las flechas en el partido
+11. En algunos dispositivos no se ven todas las flechas en el partido -> Esto se ha comprobado de manera dinámica? Es decir, todo el rato moviendo la pantalla sin actualizar o pasa incluso después de actualizar? ARREGLAR SAMU SI FALLA??
 
-12. Screen reader and assistive technologies. Tenemos esto hecho?
+12. Screen reader and assistive technologies. Tenemos esto hecho? -> SAMU?? debería con los aria-... que ha metido, pero checkear
 
-13. Cuando un jugador se desconecta, el otro sigue jugando, no se si esto esta bien
+13. Cuando un jugador se desconecta, el otro sigue jugando, no se si esto esta bien -> ESTO ESTÁ BIEN ✅ nos da igual y no queremos gestionar esto. Hay en algún sitio que especifique lo contrario?
 
-14. En http://localhost:3001/profile/2 es el profile del amigo, no se ve la foto, no pone el status si esta logueado, y no hy ninguna estadistica y no se ve toda esta informacion: Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
+14. En http://localhost:3001/profile/2 es el profile del amigo, no se ve la foto, no pone el status si esta logueado, y no hy ninguna estadistica y no se ve toda esta informacion: 
+Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
+ADRI??? ESTO EStá arreglado en la rama tournaments?? está relacionado con el punto 4
 
-15. El creador del torneo no puede elejir un nombre para el torneo ARREGLADO  EN RAMA DE TORUNAMENS✅ 
+15. El creador del torneo no puede elegir un nombre para el torneo ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
 16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments. unique=True,ARREGLADO  EN RAMA DE TORUNAMENS✅ 
  
+17. Lag en el juego en ordenadores de 42
