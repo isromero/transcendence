@@ -29,6 +29,7 @@
    be           | Bad Request: /api/tournaments/lalalal
    be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
    da esta respuesta cada poco segundos
+ARREGLADO  EN RAMA DE TORUNAMENS✅ + error que te metia en pagina de torneo que no existia
    
 8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas -> En ningún sitio pide que tengamos que hacer cosas dinámicas con "resize", seguro que si actualizas la página la pantalla se ajustará bien, en el caso de que no entonces MIRARLO -> SAMU???
 
