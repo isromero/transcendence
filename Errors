@@ -1,0 +1,9 @@
+Las estadisticas las calcula mal
+
+No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo
+
+En otro ordenador no carga las fotos de perfil
+
+En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0
+
+En http://localhost:3001/profile/2 es el profile del amifo, no se v la foto, no pone el status si esta logueado, y no hy ninguna estadistica
