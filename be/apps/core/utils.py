@@ -83,24 +83,29 @@ def serialize_user(user):
 
 
 def serialize_friend(friend_relation):
-    # For received requests, we need to show who sent the request
     user_to_show = (
         friend_relation.user_id
         if friend_relation.status == "sent"
         else friend_relation.friend_id
     )
 
+    # Obtener el historial del usuario para calcular estadísticas
+    user_history = History.objects.filter(user_id=user_to_show)
+
     return {
         "id": user_to_show.id,
         "username": user_to_show.username,
-        "avatar": user_to_show.avatar,
-        "created_at": friend_relation.created_at,
-        "status": friend_relation.status,
+        "avatar": user_to_show.avatar.url if hasattr(user_to_show.avatar, 'url') else user_to_show.avatar or '/default_avatar.webp',
         "is_online": user_to_show.is_online,
+        "wins": user_history.filter(result_user__gt=models.F("result_opponent")).count(),
+        "loses": user_history.filter(result_user__lt=models.F("result_opponent")).count(),
+        "total_matches": user_history.count(),
     }
 
 
 def serialize_stats(user, user_history):
+    # Filtrar partidas que no sean de torneos
+    non_tournament_matches = user_history.filter(type_match__in=["local", "multiplayer"])
     tournament_matches = user_history.exclude(type_match__in=["local", "multiplayer"])
     tournament_wins = tournament_matches.filter(
         result_user__gt=models.F("result_opponent")
@@ -111,13 +116,13 @@ def serialize_stats(user, user_history):
         "avatar": user.avatar,
         "username": user.username,
         "display_name": user.tournament_display_name,
-        "victories": user_history.filter(
+        "victories": non_tournament_matches.filter(
             result_user__gt=models.F("result_opponent")
         ).count(),
-        "defeats": user_history.filter(
+        "defeats": non_tournament_matches.filter(
             result_user__lt=models.F("result_opponent")
         ).count(),
-        "total_matches": user_history.count(),
+        "total_matches": non_tournament_matches.count(),  # Solo partidas no relacionadas con torneos
         "tournaments_victories": tournament_wins.count(),
         "tournaments_defeats": tournament_matches.count() - tournament_wins.count(),
         "total_tournaments": tournament_matches.values("tournament_id")
