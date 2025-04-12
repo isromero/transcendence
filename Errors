@@ -1,4 +1,4 @@
-1. Las estadisticas las calcula mal:
+1. Las estadisticas las calcula mal: ARREGLADO ✅
    Wins: 2
    Loses: 6
    Total: 10
@@ -8,11 +8,11 @@
 
 3. En otro ordenador no carga las fotos de perfil
 
-4. En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0
+4. En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0 ARREGLADO ✅
 
-5. Las flechas en el juego van mal. Arreglado en otra rama
+5. Las flechas en el juego van mal. Arreglado en otra rama ARREGLADO ✅
 
-6. En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama?
+6. En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama? TAREA DE ISMA
 
 7. En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas:
    be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
@@ -32,7 +32,7 @@
    
 8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas
 
-9. Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario
+9. Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
 10. Un usuario solo puede cambiar su avatar y nada mas
 
@@ -46,4 +46,4 @@
 
 15. El creador del torneo no puede elejir un nombre para el torneo
 
-16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments.
+16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments. unique=True,ARREGLADO ✅
