@@ -1,7 +1,5 @@
-<div class="bs-primary d-flex justify-content-center align-items-center vh-100">
-  <div
-    class="container text-center position-absolute top-20 start-50 translate-middle"
-  >
+<div class="bs-primary d-flex flex-column justify-content-center align-items-center vh-100">
+  <div class="container text-center mb-4">
     <div class="row">
       <div class="col-12">
         <div class="profile-circle mx-auto mb-3">
@@ -9,35 +7,45 @@
             id="avatar"
             alt="Profile Picture"
             class="rounded-circle border border-primary glowing-border border-3 text-principal-color"
-            height="120"
+            height="100"
             src=""
-            width="120"
+            width="100"
           />
         </div>
         <h2
-          class="username text-principal-color profile-title"
+          class="username text-principal-color profile-title mb-3"
           id="username"
+          style="font-size: 1.8rem;" <!-- Tamaño reducido para móviles -->
         ></h2>
       </div>
     </div>
   </div>
-  <div
-    class="container text-center position-absolute start-50 translate-middle"
-    style="bottom: 9rem"
-  >
+  <div class="container text-center">
     <div class="row">
-      <div class="col-12">
-        <p class="text-principal-color button-text-size mb-0">
+      <!-- Columna de estadísticas generales -->
+      <div class="col-12 col-md-6 mb-3">
+        <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem;">
           <span data-translationKey="wins">Wins</span>:
           <span id="wins"></span>
         </p>
-        <p class="text-principal-color button-text-size mb-0">
+        <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem;">
           <span data-translationKey="loses">Loses</span>:
           <span id="loses"></span>
         </p>
-        <p class="text-principal-color button-text-size mb-0">
+        <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem;">
           <span data-translationKey="total">Total</span>:
           <span id="total"></span>
+        </p>
+      </div>
+      <!-- Columna de estadísticas de torneos -->
+      <div class="col-12 col-md-6 mb-3">
+        <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem;">
+          <span data-translationKey="tournamentWins">Tournament Wins</span>:
+          <span id="tournament-wins"></span>
+        </p>
+        <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem;">
+          <span data-translationKey="tournamentLoses">Tournament Loses</span>:
+          <span id="tournament-loses"></span>
         </p>
       </div>
     </div>
