@@ -1,4 +1,10 @@
-Las estadisticas las calcula mal
+Las estadisticas las calcula mal:
+Wins: 2
+
+Loses: 6
+
+Total: 10
+este es el resultado despues del torneo
 
 No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo
 
@@ -6,4 +12,28 @@ En otro ordenador no carga las fotos de perfil
 
 En http://localhost:3001/friends cuando lista los amigos sus estadisticas siempre estan a 0
 
-En http://localhost:3001/profile/2 es el profile del amifo, no se v la foto, no pone el status si esta logueado, y no hy ninguna estadistica
+En http://localhost:3001/profile/2 es el profile del amigo, no se v la foto, no pone el status si esta logueado, y no hy ninguna estadistica
+
+Las flechas en el juego van mal. Arreglado en otra rama
+
+En multijugador el mismo usuario puede mover las dos flechas. Arreglado en otra rama?
+
+En los torneos cuando pongo mal el codigo hace muchas peticiones seguidas:
+be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+be           | Error in tournament GET: No Tournaments matches the given query.
+be           | Bad Request: /api/tournaments/lalalal
+be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+be           | INFO:     172.18.0.6:60404 - "GET /metrics HTTP/1.1" 200 OK
+be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+be           | Error in tournament GET: No Tournaments matches the given query.
+be           | Bad Request: /api/tournaments/lalalal
+be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+be           | INFO:     172.18.0.1:58708 - "GET /api/tournaments/DGZTLF HTTP/1.1" 200 OK
+be           | Error in tournament GET: No Tournaments matches the given query.
+be           | Bad Request: /api/tournaments/lalalal
+be           | INFO:     172.18.0.1:58710 - "GET /api/tournaments/lalalal HTTP/1.1" 400 Bad Request
+da esta respuesta cada poco segundos
+
+Ajuste dinamico de tamaño de la pagina en vertical
+
+Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario
