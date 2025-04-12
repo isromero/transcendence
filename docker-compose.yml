@@ -1,44 +1,44 @@
-services:
-  be:
-    container_name: be
-    build: ./be
-    ports:
-      - 8000:8000
-    volumes:
-      - ./be:/app
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
-    restart: always
-    depends_on:
-      - db
-    networks:
-      - transcendence_network
+# services:
+#   be:
+#     container_name: be
+#     build: ./be
+#     ports:
+#       - 8000:8000
+#     volumes:
+#       - ./be:/app
+#     env_file:
+#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#     restart: always
+#     depends_on:
+#       - db
+#     networks:
+#       - transcendence_network
 
-  db:
-    container_name: db
-    image: postgres
-    ports:
-      - 5432:5432
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
-    restart: always
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - transcendence_network
+#   db:
+#     container_name: db
+#     image: postgres
+#     ports:
+#       - 5432:5432
+#     env_file:
+#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#     restart: always
+#     volumes:
+#       - db_data:/var/lib/postgresql/data
+#     networks:
+#       - transcendence_network
 
-  fe:
-    container_name: fe
-    build: ./fe
-    ports:
-      - 3001:3001
-      - 3002:3002
-    volumes:
-      - ./fe:/app
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
-    networks:
-      - transcendence_network
+#   fe:
+#     container_name: fe
+#     build: ./fe
+#     ports:
+#       - 3001:3001
+#       - 3002:3002
+#     volumes:
+#       - ./fe:/app
+#     env_file:
+#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#     networks:
+#       - transcendence_network
 
 # añadido para monitorizacion
   # prometheus:
@@ -97,6 +97,42 @@ services:
   #   networks:
   #     - transcendence_network
 
+#   caddy:
+#     container_name: caddy
+#     image: caddy:latest
+#     ports:
+#       - 8080:80
+#       - 8443:443
+#     volumes:
+#       - ./deployment:/etc/caddy/
+#       - caddy_data:/data
+#       - caddy_config:/config
+#       - ./be/media:/app/media
+#     restart: always
+#     depends_on:
+#       - be
+#       - fe
+#     networks:
+#       - transcendence_network
+
+# volumes:
+#   db_data:
+#   prometheus_data:
+#   caddy_data:
+#   caddy_config:
+
+# networks:
+#   transcendence_network:
+#     driver: bridge
+
+
+
+
+
+
+
+services:
+
   caddy:
     container_name: caddy
     image: caddy:latest
@@ -115,64 +151,47 @@ services:
     networks:
       - transcendence_network
 
-volumes:
-  db_data:
-  prometheus_data:
-  caddy_data:
-  caddy_config:
+  be:
+    container_name: be
+    build: ./be
+    user: django
+    ports:
+      - 8000:8000
+    volumes:
+      - be_data:/app
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - transcendence_network
 
-networks:
-  transcendence_network:
-    driver: bridge
+  db:
+    container_name: db
+    image: postgres
+    user: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - transcendence_network
 
-
-
-
-
-
-
-# services:
-#   be:
-#     container_name: be
-#     build: ./be
-#     user: django
-#     ports:
-#       - 8000:8000
-#     volumes:
-#       - be_data:/app
-#     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
-#     restart: always
-#     depends_on:
-#       - db
-#     networks:
-#       - transcendence_network
-
-#   db:
-#     container_name: db
-#     image: postgres
-#     user: postgres
-#     ports:
-#       - 5432:5432
-#     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
-#     restart: always
-#     volumes:
-#       - db_data:/var/lib/postgresql/data
-#     networks:
-#       - transcendence_network
-
-#   fe:
-#     container_name: fe
-#     build: ./fe
-#     user: fe
-#     ports:
-#       - 3001:3001
-#       - 3002:3002
-#     volumes:
-#       - fe_data:/app
-#     networks:
-#       - transcendence_network
+  fe:
+    container_name: fe
+    build: ./fe
+    user: fe
+    ports:
+      - 3001:3001
+      - 3002:3002
+    volumes:
+      - fe_data:/app
+    networks:
+      - transcendence_network
 
 #   prometheus:
 #     container_name: prom
@@ -230,13 +249,15 @@ networks:
 #     networks:
 #       - transcendence_network
 
-# volumes:
-#   db_data:
-#   # grafana_data:
-#   prometheus_data:
-#   be_data:
-#   fe_data:
+volumes:
+  db_data:
+  # grafana_data:
+  # prometheus_data:
+  be_data:
+  fe_data:
+  caddy_data:
+  caddy_config:
 
-# networks:
-#   transcendence_network:
-#     driver: bridge
+networks:
+  transcendence_network:
+    driver: bridge
