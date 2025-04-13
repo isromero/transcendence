@@ -39,7 +39,7 @@ OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
 OAUTH42_USER_INFO_URL = os.getenv("OAUTH42_USER_INFO_URL")
 OAUTH42_HOSTNAME = os.getenv("OAUTH42_HOSTNAME", "localhost")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [os.getenv("OAUTH42_HOSTNAME", "localhost").split(":")[0]]
 
 
 # Application definition
@@ -77,7 +77,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
