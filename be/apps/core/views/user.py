@@ -54,6 +54,10 @@ class UserView(View):
             data = json.loads(request.body)
             password = data.get("password")
 
+            if len(request.user.username) < 9:  
+                return self.delete_user(request.user, request)
+
+
             if not password:
                 return create_response(
                     error="Password is required",
@@ -61,7 +65,6 @@ class UserView(View):
                     status=400,
                 )
 
-            # Verify password received from the request before deleting the user
             user = authenticate(username=request.user.username, password=password)
             if not user:
                 return create_response(
@@ -70,27 +73,8 @@ class UserView(View):
                     status=400,
                 )
 
-            # Anonymize user data
-            user = request.user
-            user.password = ""
-            user.avatar = "/images/default_avatar.webp"
-            user.deleted_user = True
-            user.username = f"anonymized_user_{user.id}"
 
-            # Delete user friends
-            Friends.objects.filter(user_id=user.id).delete()
-            Friends.objects.filter(friend_id=user.id).update(friend_id=user)
-
-            # Delete user history
-            History.objects.filter(user_id=user.id).delete()
-
-            user.save()
-            logout(request)
-
-            return create_response(
-                message="Your account and all associated data have been permanently deleted.",
-                status=204,
-            )
+            return self.delete_user(user, request)
 
         except json.JSONDecodeError:
             return create_response(
@@ -102,6 +86,31 @@ class UserView(View):
             return create_response(
                 error=str(e), message="Error deleting account", status=500
             )
+
+    def delete_user(self, user, request):
+        """Función auxiliar para eliminar un usuario y sus datos"""
+        # Anonimizar datos del usuario
+        user.password = ""
+        user.avatar = "/images/default_avatar.webp"
+        user.deleted_user = True
+        user.username = f"anonymized_user_{user.id}"
+        user.tournament_display_name = f"anonymized_user_{user.id}"
+
+        # Eliminar amigos
+        Friends.objects.filter(user_id=user.id).delete()
+        Friends.objects.filter(friend_id=user.id).update(friend_id=user)
+
+        # Eliminar historial
+        History.objects.filter(user_id=user.id).delete()
+
+        user.save()
+        logout(request)
+
+        return create_response(
+            message="Your account and all associated data have been permanently deleted.",
+            status=204,
+        )
+
 
     # For uploading an avatar
     def post(self, request):

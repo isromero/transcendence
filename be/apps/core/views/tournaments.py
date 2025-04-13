@@ -94,6 +94,12 @@ class TournamentsView(View):
             # Add the creator as the first player
             tournament.players.add(request.user)
             tournament.save()
+            
+            display_name = data.get("display_name")
+
+            user = User.objects.get(id=request.user.id)
+            user.tournament_display_name = display_name
+            user.save()
 
             return create_response(
                 data=serialize_tournament(tournament),
@@ -278,8 +284,10 @@ class TournamentsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def delete(self, _, tournament_id):
+    def delete(self, request):
         """Deletes a tournament"""
+        data = json.loads(request.body)
+        tournament_id = data.get("tournament_id")
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
         return HttpResponse(status=204)

@@ -243,6 +243,7 @@ function setupMobileControls() {
     'right-up': 'ArrowUp',
     'right-down': 'ArrowDown',
   };
+  
 
   Object.keys(buttonMapping).forEach(buttonId => {
     const button = document.getElementById(buttonId);
@@ -376,8 +377,14 @@ export function init() {
       // Initialize canvas
       canvas = document.getElementById('pong');
       ctx = canvas.getContext('2d');
+      // Establece resolución interna sin forzar tamaño visual
       canvas.width = 800;
       canvas.height = 400;
+
+      // Asegura que el canvas se vea bien escalado
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+
 
       const path = window.location.pathname;
       const matchId = path.split('/game/')[1]?.split('/')[0];
