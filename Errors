@@ -52,3 +52,10 @@ ADRI??? ESTO EStá arreglado en la rama tournaments?? está relacionado con el p
 16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments. unique=True,ARREGLADO  EN RAMA DE TORUNAMENS✅ 
  
 17. Lag en el juego en ordenadores de 42
+***************************************************************************
+
+1. Al cambiar nombre de usuario de pepe(registrado normal) a josgarci, deja hacer el cambio y lo trata como si fura de la intra
+
+2. No se puede loguear con la intra
+
+3. Cuando alguien sale del torneo sigue apareciendo en la lista de jugadores. Al dar a jugar con dos jugadores que se han desconectado, deja hacer una partita pero luego se queda en esteprando al ganador
