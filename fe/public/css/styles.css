@@ -50,15 +50,26 @@
 }
 
 /*------------------------------------------------------------------------*/
+#game-wrapper {
+  transform: scale(1.6); /* Escala común para botones y canvas */
+  transform-origin: center;
+}
+
+@media (max-width: 768px) {
+  #game-wrapper {
+    transform: scale(1.4); /* Escala para pantallas más pequeñas */
+  }
+}
+
 .pong-container {
-  position: relative;
-  width: 800px;
-  height: 400px;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 2 / 1;
+  height: auto;
   background-color: #20394f;
   border: 2px solid #f6d6bd;
   border-radius: 10px;
   box-shadow: inset 0px 0px 200px black;
-  transform: rotate(0);
 }
 
 canvas {
@@ -66,6 +77,7 @@ canvas {
   margin: 0 auto;
   background-color: black;
 }
+
 
 /*------------------------------------------------------------------------*/
 .top-box,
@@ -553,4 +565,9 @@ canvas {
 
 .hidden {
   display: none !important;
+}
+
+#game-wrapper .game-button {
+  transform: scale(0.8); /* Reduce visualmente los botones dentro del wrapper */
+  transform-origin: center;
 }
