@@ -4,10 +4,11 @@ import websocket
 import json
 import time
 import threading
-import keyboard  # pip install keyboard
+import sys
+import termios
+import tty
+import select
 from src.render import render
-
-
 
 # Game settings (assumed game size: 800×400)
 GAME_WIDTH = 800
@@ -45,7 +46,7 @@ def render_game(state, left_username, right_username):
     countdown_raw = state.get("countdown", None)
     countdown = int(countdown_raw) if countdown_raw is not None else None
 
-    #render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown)
+    render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown)
     return state
 
 def login_and_get_cookie(api_url, username, password):
@@ -100,6 +101,43 @@ def create_match(api_url, session):
     print("Match Created:", result)
     return result
 
+def send_key_event(ws, key_name, is_pressed):
+    # Prepare and send the key event to the WebSocket server
+    data = {
+        "type": "key_event",
+        "key": key_name,
+        "is_pressed": is_pressed
+    }
+    ws.send(json.dumps(data))
+    print(f"Sent key event: {key_name} {'pressed' if is_pressed else 'released'}")
+
+def listen_to_keys(ws):
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setcbreak(fd)
+        while True:
+            rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
+            if rlist:
+                ch = sys.stdin.read(1)
+                key = None
+                if ch == '\x1b':
+                    if select.select([sys.stdin], [], [], 0.05)[0]:
+                        ch += sys.stdin.read(2)  # usually arrow keys produce 3-character sequences
+                if ch in ['w', 's']:
+                    key = ch
+                elif ch == 'i':  # Up arrow
+                    key = 'ArrowUp'
+                elif ch == 'k':  # Down arrow
+                    key = 'ArrowDown'
+                
+                if key:
+                    send_key_event(ws, key, True)
+    except Exception as e:
+        print("Key listening error:", e)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
 def connect_websocket(match_id, left_username, right_username):
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
@@ -110,7 +148,7 @@ def connect_websocket(match_id, left_username, right_username):
             print("Could not parse message as JSON:", message)
             return
         rendered = render_game(state, left_username, right_username)
-        #print(rendered)
+        print(rendered)
 
     def on_error(ws, error):
         print("WebSocket Error:", error)
@@ -121,22 +159,8 @@ def connect_websocket(match_id, left_username, right_username):
     def on_open(ws):
         print("WebSocket connection opened")
 
-        # Start a thread to listen for keyboard input
-        def listen_to_keys():
-            def send_key_event(key_name, is_pressed):
-                data = {
-                    "type": "key_event",
-                    "key": key_name,
-                    "is_pressed": is_pressed
-                }
-                ws.send(json.dumps(data))
-
-            # Only track relevant keys
-            for key in ['w', 's', 'up', 'down']:
-                keyboard.on_press_key(key, lambda e, k=key: send_key_event(k, True))
-                keyboard.on_release_key(key, lambda e, k=key: send_key_event(k, False))
-
-        threading.Thread(target=listen_to_keys, daemon=True).start()
+        # Start a thread to listen for key input using our custom reader.
+        threading.Thread(target=listen_to_keys, args=(ws,), daemon=True).start()
 
     from websocket import WebSocketApp
     ws_app = WebSocketApp(ws_url,
