@@ -38,7 +38,7 @@ def place_image_on_canvas(canvas, image, x, y):
             canvas_x = x + i
             canvas_y = y + j
             if 0 <= canvas_x < len(canvas) and 0 <= canvas_y < len(canvas[0]):
-                if image.array[i][j] is not ' ':
+                if image.array[i][j] != ' ':
                     canvas[canvas_x][canvas_y] = image.array[i][j]
 
 # Main execution block
@@ -61,10 +61,10 @@ def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
     place_image_on_canvas(canvas, padle, int((padle2_y * canvas_height) / game_height), 171 - 6 - padle.rows) 
     # points 1
     place_image_on_canvas(canvas, left_score, 3, 70)  # Adjust x,y coordinates as needed
-    place_image_on_canvas(canvas, right_score, 3, 171 - 70 - right_score.rows)  # Adjust x,y coordinates as needed
+    place_image_on_canvas(canvas, right_score, 3, 171 - 75 - right_score.rows)  # Adjust x,y coordinates as needed
     place_image_on_canvas(canvas, ball, int((ball_y * canvas_height) / game_height) - int(ball.cols / 4), int((ball_x * canvas_width) / game_width) - int(ball.rows / 1.2))
 
     clear_console()
     print_canvas(canvas)
 
-render(0, 1, 150, 150, 4, 5, 6)
+#render(0, 1, 150, 150, 4, 5, 6)

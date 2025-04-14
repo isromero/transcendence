@@ -130,7 +130,7 @@ def listen_to_keys(ws):
     old_settings = termios.tcgetattr(fd)
     try:
         tty.setcbreak(fd)
-        while True:
+        while ws.keep_running:  # This helps the thread exit cleanly
             rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
             if rlist:
                 ch = sys.stdin.read(1)
@@ -140,13 +140,17 @@ def listen_to_keys(ws):
                         ch += sys.stdin.read(2)
                 if ch in ['w', 's']:
                     key = ch
-                elif ch == 'i':  # Up arrow
+                elif ch == 'i':
                     key = 'ArrowUp'
-                elif ch == 'k':  # Down arrow
+                elif ch == 'k':
                     key = 'ArrowDown'
-                
+
                 if key:
-                    send_key_event(ws, key, True)
+                    try:
+                        send_key_event(ws, key, True)
+                    except Exception as e:
+                        print("WebSocket send failed:", e)
+                        break
     except Exception as e:
         print("Key listening error:", e)
     finally:
