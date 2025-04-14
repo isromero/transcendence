@@ -17,7 +17,7 @@ GAME_HEIGHT = 400
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def render_game(state, left_username, right_username):
+def render_game(state, left_username, right_username, ws):
     # Left paddle
     left_paddle = state.get("left_paddle", {})
     left_paddle_x = int(left_paddle.get("x", 0))
@@ -46,8 +46,23 @@ def render_game(state, left_username, right_username):
     countdown_raw = state.get("countdown", None)
     countdown = int(countdown_raw) if countdown_raw is not None else None
 
+    # When one of the scores reaches 5, send disconnect, close the websocket, and exit
+    if left_score == 5 or right_score == 5:
+        disconnect_data = {"type": "disconnect"}
+        try:
+            ws.send(json.dumps(disconnect_data))
+        except Exception as e:
+            print("Error sending disconnect message:", e)
+        finally:
+            ws.close()
+        print("Game ended. Exiting the program...")
+        # Give some time for the socket to close gracefully
+        time.sleep(0.5)
+        # Force exit to terminate all threads (or use sys.exit() if a graceful exit is desired)
+
     render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown)
     return state
+
 
 def login_and_get_cookie(api_url, username, password):
     url = f"{api_url.rstrip('/')}/login"  # Ensure no double slashes
@@ -79,7 +94,7 @@ def login_and_get_cookie(api_url, username, password):
     return session, message, cookies
 
 def create_match(api_url, session):
-    url = f"{api_url.rstrip('/')}/history"  # Ensure no double slashes
+    url = f"{api_url.rstrip('/')}/history"
     payload = {"type_match": "local"}
     headers = {
         "Content-Type": "application/json",
@@ -102,7 +117,6 @@ def create_match(api_url, session):
     return result
 
 def send_key_event(ws, key_name, is_pressed):
-    # Prepare and send the key event to the WebSocket server
     data = {
         "type": "key_event",
         "key": key_name,
@@ -122,8 +136,8 @@ def listen_to_keys(ws):
                 ch = sys.stdin.read(1)
                 key = None
                 if ch == '\x1b':
-                    if select.select([sys.stdin], [], [], 0.05)[0]:
-                        ch += sys.stdin.read(2)  # usually arrow keys produce 3-character sequences
+                    if select.select([sys.stdin], [], [], 0.01)[0]:
+                        ch += sys.stdin.read(2)
                 if ch in ['w', 's']:
                     key = ch
                 elif ch == 'i':  # Up arrow
@@ -138,7 +152,7 @@ def listen_to_keys(ws):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def connect_websocket(match_id, left_username, right_username):
+def connect_match(match_id, left_username, right_username):
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
     def on_message(ws, message):
@@ -147,7 +161,7 @@ def connect_websocket(match_id, left_username, right_username):
         except Exception:
             print("Could not parse message as JSON:", message)
             return
-        rendered = render_game(state, left_username, right_username)
+        rendered = render_game(state, left_username, right_username, ws)
         print(rendered)
 
     def on_error(ws, error):
@@ -170,6 +184,7 @@ def connect_websocket(match_id, left_username, right_username):
     ws_app.on_open = on_open
     ws_app.run_forever()
 
+'''
 # Example usage
 api_url = "http://localhost:8000/api/"  # Replace with your API URL
 username = "testotest"
@@ -183,4 +198,6 @@ if session:
     if match_data and "data" in match_data:
         match_id = match_data["data"].get("match_id")
         if match_id:
-            connect_websocket(match_id, left_username, right_username)
+            connect_match(match_id, left_username, right_username)
+print("returning to the normal program...")
+'''
