@@ -39,7 +39,7 @@ OAUTH42_AUTH_URL = os.getenv("OAUTH42_AUTH_URL")
 OAUTH42_USER_INFO_URL = os.getenv("OAUTH42_USER_INFO_URL")
 OAUTH42_HOSTNAME = os.getenv("OAUTH42_HOSTNAME", "localhost")
 
-ALLOWED_HOSTS = [os.getenv("OAUTH42_HOSTNAME", "localhost").split(":")[0]]
+ALLOWED_HOSTS = [os.getenv("OAUTH42_HOSTNAME", "localhost").split(":")[0], "be"]
 
 
 # Application definition
