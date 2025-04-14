@@ -57,8 +57,8 @@ def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
     right_score = AsciiImage(f'src/numbers/{score_r}.txt') # Foreground, e.g., a ball
 
     place_image_on_canvas(canvas, sky, 0, 0)
-    place_image_on_canvas(canvas, padle, 5, 6)  # Adjust x,y coordinates as needed
-    place_image_on_canvas(canvas, padle, 5, 171 - 6 - padle.rows) 
+    place_image_on_canvas(canvas, padle, int((padle1_y * canvas_height) / game_height), 6) 
+    place_image_on_canvas(canvas, padle, int((padle2_y * canvas_height) / game_height), 171 - 6 - padle.rows) 
     # points 1
     place_image_on_canvas(canvas, left_score, 3, 70)  # Adjust x,y coordinates as needed
     place_image_on_canvas(canvas, right_score, 3, 171 - 70 - right_score.rows)  # Adjust x,y coordinates as needed
