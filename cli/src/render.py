@@ -44,17 +44,17 @@ def place_image_on_canvas(canvas, image, x, y):
 # Main execution block
 def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
 
-    game_height = 800
-    game_width = 400
+    game_height = 400
+    game_width = 800
     canvas_height = 54
     canvas_width = 171
     canvas = [[' ' for _ in range(canvas_width)] for _ in range(canvas_height)]
 
-    sky = AsciiImage('field.txt')   # Background, e.g., a sky
-    ball = AsciiImage('ball.txt') # Foreground, e.g., a ball
-    padle = AsciiImage('padle.txt') # Foreground, e.g., a ball
-    left_score = AsciiImage(f'numbers/{score_l}.txt') # Foreground, e.g., a ball
-    right_score = AsciiImage(f'numbers/{score_r}.txt') # Foreground, e.g., a ball
+    sky = AsciiImage('src/field.txt')   # Background, e.g., a sky
+    ball = AsciiImage('src/ball.txt') # Foreground, e.g., a ball
+    padle = AsciiImage('src/padle.txt') # Foreground, e.g., a ball
+    left_score = AsciiImage(f'src/numbers/{score_l}.txt') # Foreground, e.g., a ball
+    right_score = AsciiImage(f'src/numbers/{score_r}.txt') # Foreground, e.g., a ball
 
     place_image_on_canvas(canvas, sky, 0, 0)
     place_image_on_canvas(canvas, padle, 5, 6)  # Adjust x,y coordinates as needed
@@ -62,7 +62,7 @@ def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
     # points 1
     place_image_on_canvas(canvas, left_score, 3, 70)  # Adjust x,y coordinates as needed
     place_image_on_canvas(canvas, right_score, 3, 171 - 70 - right_score.rows)  # Adjust x,y coordinates as needed
-    place_image_on_canvas(canvas, ball, 5, 20)  # Adjust x,y coordinates as needed
+    place_image_on_canvas(canvas, ball, int((ball_y * canvas_height) / game_height) - int(ball.cols / 4), int((ball_x * canvas_width) / game_width) - int(ball.rows / 1.2))
 
     clear_console()
     print_canvas(canvas)
