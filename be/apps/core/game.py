@@ -89,6 +89,10 @@ class GameState:
             if self.countdown == 0:
                 self.countdown = None
 
+        # Stop the game if no players are connected
+        if not self.running:
+            return
+
         # Only allow paddle movement when the countdown is over
         if self.countdown is None:
             self._update_paddles(dt * self.fps_cap)
