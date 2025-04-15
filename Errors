@@ -60,7 +60,7 @@ Each user has a Match History including 1v1 games, dates, and relevant details, 
 
 3. Cuando alguien sale del torneo sigue apareciendo en la lista de jugadores. Al dar a jugar con dos jugadores que se han desconectado, deja hacer una partita pero luego se queda en esteprando al ganador ->> se queda asi
 
-4. Al entrar a local y salir sale este error del dom
+4. Al entrar a local y salir sale este error del dom TODO ISMA?
 game.js:439 Error in initializeGame: TypeError: Cannot read properties of null (reading 'getContext')
     at initializeGame (game.js:379:20)
 game.js:170 Error in updateGameState: TypeError: Cannot read properties of null (reading 'clearRect')
