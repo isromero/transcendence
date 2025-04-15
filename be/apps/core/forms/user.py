@@ -14,7 +14,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username"]
+        fields = ["username", "password"]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -31,7 +31,7 @@ class UserForm(forms.ModelForm):
         # Validate username change - only if oldUsername is provided
         if old_username:
             if old_username != self.instance.username:
-                raise ValidationError("Username is incorrect")
+                raise ValidationError("Old username is incorrect")
             if not password:
                 raise ValidationError("Password is required to change username")
             if not check_password(password, self.instance.password):
@@ -46,6 +46,10 @@ class UserForm(forms.ModelForm):
                 and self.instance.username.lower() != username.lower()
             ):
                 raise ValidationError("Username already exists")
+
+            # Ensure the new username has at least 9 characters
+            if len(username) < 9:
+                raise ValidationError("Username must be at least 9 characters long")
 
         # Verify password change
         if new_password or old_password:
