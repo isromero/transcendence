@@ -31,11 +31,11 @@
    da esta respuesta cada poco segundos
 ARREGLADO  EN RAMA DE TORUNAMENS✅ + error que te metia en pagina de torneo que no existia
    
-8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas -> En ningún sitio pide que tengamos que hacer cosas dinámicas con "resize", seguro que si actualizas la página la pantalla se ajustará bien, en el caso de que no entonces MIRARLO -> SAMU???
+8. Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas -> En ningún sitio pide que tengamos que hacer cosas dinámicas con "resize", seguro que si actualizas la página la pantalla se ajustará bien, en el caso de que no entonces ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
 9. Para eliminar al usuario registrado con la intra pide la contraseña y no se puede eliminar este usuario ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
-10. Un usuario solo puede cambiar su avatar y nada mas -> Esto es mentirá. Esto son solo los usuarios de la intra de 42 los que solo pueden cambiar su avatar. Y es justo lo que debe de pasar.
+10. Un usuario solo puede cambiar su avatar y nada mas -> Esto es mentirá. Esto son solo los usuarios de la intra de 42 los que solo pueden cambiar su avatar. Y es justo lo que debe de pasar.ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
 11. En algunos dispositivos no se ven todas las flechas en el partido -> Esto se ha comprobado de manera dinámica? Es decir, todo el rato moviendo la pantalla sin actualizar o pasa incluso después de actualizar? ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
@@ -60,7 +60,7 @@ Each user has a Match History including 1v1 games, dates, and relevant details, 
 
 3. Cuando alguien sale del torneo sigue apareciendo en la lista de jugadores. Al dar a jugar con dos jugadores que se han desconectado, deja hacer una partita pero luego se queda en esteprando al ganador ->> se queda asi
 
-4. Al entrar a local y salir sale este error del dom TODO ISMA?
+4. Al entrar a local y salir sale este error del dom TODO ISMA? ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 game.js:439 Error in initializeGame: TypeError: Cannot read properties of null (reading 'getContext')
     at initializeGame (game.js:379:20)
 game.js:170 Error in updateGameState: TypeError: Cannot read properties of null (reading 'clearRect')
