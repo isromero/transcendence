@@ -30,7 +30,6 @@ export function init() {
     const defeats = Number(data.defeats || 0);
     const tournamentDefeats = Number(data.tournament_defeats || 0);
     const totalMatches = Number(data.total_matches || 0);
-    const totalTournaments = Number(data.total_tournaments || 0);
 
     wins.textContent = victories;
     loses.textContent = defeats;
@@ -41,5 +40,5 @@ export function init() {
 
   loadProfileData();
 
-  return () => {};  return () => {};
+  return () => {};
 }

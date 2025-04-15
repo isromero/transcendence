@@ -94,6 +94,10 @@ async function updateGameState(gameState) {
       }
     }
 
+    if (!ctx) {
+      return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const { left_paddle, right_paddle, ball, scores } = gameState;
@@ -243,7 +247,6 @@ function setupMobileControls() {
     'right-up': 'ArrowUp',
     'right-down': 'ArrowDown',
   };
-  
 
   Object.keys(buttonMapping).forEach(buttonId => {
     const button = document.getElementById(buttonId);
@@ -376,15 +379,16 @@ export function init() {
 
       // Initialize canvas
       canvas = document.getElementById('pong');
+      if (!canvas) {
+        return;
+      }
+
       ctx = canvas.getContext('2d');
-      // Establece resolución interna sin forzar tamaño visual
       canvas.width = 800;
       canvas.height = 400;
 
-      // Asegura que el canvas se vea bien escalado
       canvas.style.width = '100%';
       canvas.style.height = 'auto';
-
 
       const path = window.location.pathname;
       const matchId = path.split('/game/')[1]?.split('/')[0];
