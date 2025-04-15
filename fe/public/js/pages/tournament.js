@@ -34,7 +34,6 @@ export async function init() {
   
     console.log('Leaving tournament:', tournament);
     await tournamentService.leaveTournament(joinCode, tournament.id);
-    console.log('Left tournament:', tournament);
   
     const updatedTournament = await tournamentService.getTournament(joinCode);
   

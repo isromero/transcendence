@@ -105,8 +105,15 @@ def serialize_friend(friend_relation):
 
 def serialize_stats(user, user_history):
     # Filtrar partidas que no sean de torneos
-    non_tournament_matches = user_history.filter(type_match__in=["local", "multiplayer"])
-    tournament_matches = user_history.exclude(type_match__in=["local", "multiplayer"])
+    non_tournament_matches = user_history.filter(
+        type_match__in=["local", "multiplayer"],
+        result_user__gt=0,  # Excluir partidos con marcador 0
+        result_opponent__gt=0  # Excluir partidos con marcador 0
+    )
+    tournament_matches = user_history.exclude(type_match__in=["local", "multiplayer"]).filter(
+        result_user__gt=0,  # Excluir partidos con marcador 0
+        result_opponent__gt=0  # Excluir partidos con marcador 0
+    )
     tournament_wins = tournament_matches.filter(
         result_user__gt=models.F("result_opponent")
     )
@@ -122,7 +129,7 @@ def serialize_stats(user, user_history):
         "defeats": non_tournament_matches.filter(
             result_user__lt=models.F("result_opponent")
         ).count(),
-        "total_matches": non_tournament_matches.count(),  # Solo partidas no relacionadas con torneos
+        "total_matches": non_tournament_matches.count(),  # Solo partidas válidas
         "tournaments_victories": tournament_wins.count(),
         "tournaments_defeats": tournament_matches.count() - tournament_wins.count(),
         "total_tournaments": tournament_matches.values("tournament_id")
