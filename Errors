@@ -37,7 +37,7 @@ ARREGLADO  EN RAMA DE TORUNAMENS✅ + error que te metia en pagina de torneo que
 
 10. Un usuario solo puede cambiar su avatar y nada mas -> Esto es mentirá. Esto son solo los usuarios de la intra de 42 los que solo pueden cambiar su avatar. Y es justo lo que debe de pasar.
 
-11. En algunos dispositivos no se ven todas las flechas en el partido -> Esto se ha comprobado de manera dinámica? Es decir, todo el rato moviendo la pantalla sin actualizar o pasa incluso después de actualizar? ARREGLAR SAMU SI FALLA??
+11. En algunos dispositivos no se ven todas las flechas en el partido -> Esto se ha comprobado de manera dinámica? Es decir, todo el rato moviendo la pantalla sin actualizar o pasa incluso después de actualizar? ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
 12. Screen reader and assistive technologies. Tenemos esto hecho? -> SAMU?? debería con los aria-... que ha metido, pero checkear
 
@@ -45,7 +45,7 @@ ARREGLADO  EN RAMA DE TORUNAMENS✅ + error que te metia en pagina de torneo que
 
 14. En http://localhost:3001/profile/2 es el profile del amigo, no se ve la foto, no pone el status si esta logueado, y no hy ninguna estadistica y no se ve toda esta informacion: 
 Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
-ADRI??? ESTO EStá arreglado en la rama tournaments?? está relacionado con el punto 4
+ --------->>>>>TODO: ISMA TIENE QUE VER CON PROFILE:ID ENDPOINT
 
 15. El creador del torneo no puede elegir un nombre para el torneo ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
@@ -54,8 +54,8 @@ ADRI??? ESTO EStá arreglado en la rama tournaments?? está relacionado con el p
 17. Lag en el juego en ordenadores de 42
 ***************************************************************************
 
-1. Al cambiar nombre de usuario de pepe(registrado normal) a josgarci, deja hacer el cambio y lo trata como si fura de la intra
+1. Al cambiar nombre de usuario de pepe(registrado normal) a josgarci, deja hacer el cambio y lo trata como si fura de la intra ARREGLADO  EN RAMA DE TORUNAMENS✅
 
 2. No se puede loguear con la intra
 
-3. Cuando alguien sale del torneo sigue apareciendo en la lista de jugadores. Al dar a jugar con dos jugadores que se han desconectado, deja hacer una partita pero luego se queda en esteprando al ganador
+3. Cuando alguien sale del torneo sigue apareciendo en la lista de jugadores. Al dar a jugar con dos jugadores que se han desconectado, deja hacer una partita pero luego se queda en esteprando al ganador ->> se queda asi
