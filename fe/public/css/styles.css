@@ -55,6 +55,17 @@
   transform: scale(1.6); /* Escala común para botones y canvas */
   transform-origin: center;
 }
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #game-wrapper {
+    transform: scale(1.5); /* Escala para tablets */
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  #game-wrapper {
+    transform: scale(1.4); /* Escala para ordenadores */
+  }
+}
 
 @media (max-width: 768px) {
   #game-wrapper {
@@ -337,4 +348,3 @@ canvas {
   transform: scale(0.8); /* Reduce visualmente los botones dentro del wrapper */
   transform-origin: center;
 }
-

@@ -32,7 +32,7 @@ clean-compose:
 re: clean-compose clean-migrations all
 
 fclean: down clean delvol
-	docker system prune -a -f
+	docker system prune -a -f --volumes
 
 # Delete only containers, dont delete images or volumes
 clean: stop

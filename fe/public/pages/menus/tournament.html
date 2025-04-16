@@ -1,13 +1,12 @@
-<div class="text-center mb-4">
-  <h2 id="tournament-name" class="tournament-title">Tournament Name</h2>
-  <h5 id="join-code" class="text-muted tournament-title"
-  data-translationKey="join-code"
-  >Join Code: XXXX</h5>
-</div>
+<div class="container-fluid mt-8">
+  <div class="text-center ">
+    <h2 id="tournament-name" class="tournament-title">Tournament Name</h2>
+    <h5 id="join-code" class="text-muted tournament-title">Join Code: XXXX</h5>
+  </div>
 
-<div class="container mt-5 tournament-container">
   <div class="row text-center">
-    <div class="col-12 mb-4">
+    <!-- Botones de acción -->
+    <div class="col-12 mb-3 d-flex justify-content-center gap-2">
       <button
         aria-label="leave tournament"
         id="leaveTournamentButton"
@@ -22,6 +21,13 @@
       >
         Start Tournament
       </button>
+      <button
+        id="next-round-btn"
+        class="btn btn-primary"
+        disabled
+      >
+        Next Round
+      </button>
     </div>
     <div class="col-12 mb-5">
       <button
@@ -34,6 +40,8 @@
     </div>
     
 
+    <!-- Semifinal -->
+    <div class="col-12 mb-4">
     <div class="col-12 mb-2">
       <h5 class="mb-2 tournament-title"
         data-translationKey="semifinal"
@@ -99,26 +107,39 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="col-12 mb-5">
       <h5 class="mb-4 tournament-title"
         data-translationKey="winner"
       >Winner</h5>
       <div class="scroll-container">
+=======
+    <div class="col-12 mb-2">
+      <h5 class="tournament-title">Winner</h5>
+      <div class="scroll-container w-50 mx-auto text-center">
+>>>>>>> tournament-details
         <div class="final-winner">
           <div
             class="card bg-dark text-white border border-white border-1 winner-container"
           >
-            <div class="card-body text-center">
-              <p class="fw-bold text-warning fs-3">👑</p>
+            <div class="card-body text-center p-1">
+              <p class="fw-bold text-warning fs-6 mb-1">👑</p>
               <img
                 id="winner-avatar"
                 src=""
-                class="player-img-winner rounded-circle mb-3"
+                class="player-img-winner rounded-circle mb-1"
+                style="width: 50px; height: 50px;"
               />
+<<<<<<< HEAD
               <p id="winner-name" class="fw-bold text-warning fs-3"
                 data-translationKey="wait-winner"
                 >Waiting for winner...</span
               >
+=======
+              <p id="winner-name" class="fw-bold text-warning fs-6 mb-0">
+                Waiting for winner...
+              </p>
+>>>>>>> tournament-details
             </div>
           </div>
         </div>
@@ -126,3 +147,13 @@
     </div>
   </div>
 </div>
+
+<style>
+  @media (max-width: 375px) and (max-height: 667px) {
+    .container-fluid {
+      transform: scale(0.75);
+      transform-origin: top center;
+      margin-top: 18rem;
+    }
+  }
+</style>

@@ -89,6 +89,10 @@ class GameState:
             if self.countdown == 0:
                 self.countdown = None
 
+        # Stop the game if no players are connected
+        if not self.running:
+            return
+
         # Only allow paddle movement when the countdown is over
         if self.countdown is None:
             self._update_paddles(dt * self.fps_cap)
@@ -150,7 +154,6 @@ class GameState:
         # Calculate next position
         next_x = self.ball["x"] + self.ball["speedX"] * dt
         next_y = self.ball["y"] + self.ball["speedY"] * dt
-        
         # Check for goals BEFORE updating position
         if next_x - self.ball["radius"] <= 0:
             # Ball will cross left boundary - Right player scores
@@ -178,6 +181,8 @@ class GameState:
         dy = self.ball["y"] - prev_y
     
     # Resto del código para detección de colisiones con paletas y paredes...
+
+        # Resto del código para detección de colisiones con paletas y paredes...
 
         # Function to check paddle collision
         def check_paddle_collision(paddle):
@@ -246,7 +251,9 @@ class GameState:
             self.scores["right"] += 1
             if self.scores["right"] <= 5:
                 # Right player (player2) scored
-                await self._send_score_update(is_player1=False)  # El jugador 2 (derecha) marcó
+                await self._send_score_update(
+                    is_player1=False
+                )  # El jugador 2 (derecha) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
         elif self.ball["x"] + self.ball["radius"] >= self.WIDTH:
@@ -255,7 +262,9 @@ class GameState:
             self.scores["left"] += 1
             if self.scores["left"] <= 5:
                 # Left player (player1) scored
-                await self._send_score_update(is_player1=True)  # El jugador 1 (izquierda) marcó
+                await self._send_score_update(
+                    is_player1=True
+                )  # El jugador 1 (izquierda) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
 
@@ -283,6 +292,9 @@ class GameState:
         self.ball["speedX"] = math.cos(bounce_angle) * direction * speed
         self.ball["speedY"] = math.sin(bounce_angle) * speed
         
+        # Record last hit
+        self.ball["last_hit"] = side
+
         # Record last hit
         self.ball["last_hit"] = side
 
@@ -342,10 +354,7 @@ class GameState:
     def _send_score_update(self, is_player1):
         from apps.core.models import History
         from django.db import transaction
-
         try:
-            
-            
             with transaction.atomic():
                 matches = History.objects.filter(match_id=self.match_id)
                 if not matches.exists():
@@ -354,7 +363,6 @@ class GameState:
 
                 for match in matches:
                     match_user_id = match.user_id.id
-                    
                     if match_user_id == self.left_player_id:
                         if is_player1:
                             match.result_user += 1
@@ -367,8 +375,6 @@ class GameState:
                             match.result_user += 1
                     else:
                         print(f"User ID {match_user_id} doesn't match either player!")
-                    
-                    
                     match.save()
 
         except Exception as e:
