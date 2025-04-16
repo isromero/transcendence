@@ -235,12 +235,10 @@ services:
   caddy:
     container_name: caddy
     build: ./deployment
-    # image: caddy:latest
     ports:
       - 8080:80
       - 8443:443
     volumes:
-      # - ./deployment:/etc/caddy/
       - caddy_data:/data
       - caddy_config:/config
       - be_media:/app/media
