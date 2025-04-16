@@ -49,20 +49,29 @@ def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
     canvas_height = 54
     canvas_width = 171
     canvas = [[' ' for _ in range(canvas_width)] for _ in range(canvas_height)]
+    if timer is not None:
+        timer = int(timer)
+    else:
+        timer = 0 
 
-    sky = AsciiImage('src/field.txt')   # Background, e.g., a sky
-    ball = AsciiImage('src/ball.txt') # Foreground, e.g., a ball
-    padle = AsciiImage('src/padle.txt') # Foreground, e.g., a ball
-    left_score = AsciiImage(f'src/numbers/{score_l}.txt') # Foreground, e.g., a ball
-    right_score = AsciiImage(f'src/numbers/{score_r}.txt') # Foreground, e.g., a ball
+    sky = AsciiImage('src/field.txt')
+    ball = AsciiImage('src/ball.txt')
+    padle = AsciiImage('src/padle.txt')
+    countdown = AsciiImage('src/countdown.txt')
+    left_score = AsciiImage(f'src/numbers/{score_l}.txt')
+    right_score = AsciiImage(f'src/numbers/{score_r}.txt')
 
     place_image_on_canvas(canvas, sky, 0, 0)
     place_image_on_canvas(canvas, padle, int((padle1_y * canvas_height) / game_height), 6) 
-    place_image_on_canvas(canvas, padle, int((padle2_y * canvas_height) / game_height), 171 - 6 - padle.rows) 
+    place_image_on_canvas(canvas, padle, int((padle2_y * canvas_height) / game_height), 174 - padle.rows) 
     # points 1
-    place_image_on_canvas(canvas, left_score, 3, 70)  # Adjust x,y coordinates as needed
-    place_image_on_canvas(canvas, right_score, 3, 171 - 75 - right_score.rows)  # Adjust x,y coordinates as needed
+    place_image_on_canvas(canvas, left_score, 3, 70)
+    place_image_on_canvas(canvas, right_score, 3, 171 - 75 - right_score.rows) 
     place_image_on_canvas(canvas, ball, int((ball_y * canvas_height) / game_height) - int(ball.cols / 4), int((ball_x * canvas_width) / game_width) - int(ball.rows / 1.2))
+    if (timer):
+        timer_txt = AsciiImage(f'src/numbers/{timer}.txt')
+        place_image_on_canvas(canvas, countdown, (int(canvas_height / 2) - int(countdown.cols / 4.2)), (int(canvas_width / 2) - int(countdown.rows)))
+        place_image_on_canvas(canvas, timer_txt, 24, 82)
 
     clear_console()
     print_canvas(canvas)
