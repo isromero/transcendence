@@ -45,11 +45,12 @@ ARREGLADO  EN RAMA DE TORUNAMENS✅ + error que te metia en pagina de torneo que
 
 14. En http://localhost:3001/profile/2 es el profile del amigo, no se ve la foto, no pone el status si esta logueado, y no hy ninguna estadistica y no se ve toda esta informacion: 
 Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
- --------->>>>>TODO: ISMA TIENE QUE VER CON PROFILE:ID ENDPOINT
+ --------->>>>>TODO: ISMA TIENE QUE VER CON PROFILE:ID ENDPOINT ARREGLADO  EN RAMA DE TORUNAMENS✅
 
 15. El creador del torneo no puede elegir un nombre para el torneo ARREGLADO  EN RAMA DE TORUNAMENS✅ 
 
-16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique display name to play the tournaments. unique=True,ARREGLADO  EN RAMA DE TORUNAMENS✅ 
+16. Los nombres que los usuarios eligen para el torneo se pueden repetir y no deberian:  Users can select a unique 
+display name to play the tournaments. unique=True,ARREGLADO  EN RAMA DE TORUNAMENS✅ 
  
 17. Lag en el juego en ordenadores de 42
 ***************************************************************************
