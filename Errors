@@ -21,6 +21,51 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 07. aveces No deja cambiar de avatar (Error updating avatar) y aveces se queda pillado y no entre en la pagina para cambiar avatar
 
+08. al desconectarse da este error:
+be           | INFO:     connection closed
+be           | ERROR:    Exception in ASGI application
+be           | Traceback (most recent call last):
+be           |   File "/usr/local/lib/python3.13/site-packages/uvicorn/protocols/websockets/websockets_impl.py", line 243, in run_asgi
+be           |     result = await self.app(self.scope, self.asgi_receive, self.asgi_send)  # type: ignore[func-returns-value]
+be           |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+be           |     return await self.app(scope, receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/routing.py", line 48, in __call__
+be           |     return await application(scope, receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/sessions.py", line 44, in __call__
+be           |     return await self.inner(dict(scope, cookies=cookies), receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/sessions.py", line 261, in __call__
+be           |     return await self.inner(wrapper.scope, receive, wrapper.send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/auth.py", line 185, in __call__
+be           |     return await super().__call__(scope, receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/middleware.py", line 24, in __call__
+be           |     return await self.inner(scope, receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/routing.py", line 118, in __call__
+be           |     return await application(
+be           |            ^^^^^^^^^^^^^^^^^^
+be           |     ...<10 lines>...
+be           |     )
+be           |     ^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/consumer.py", line 95, in app
+be           |     return await consumer(scope, receive, send)
+be           |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/consumer.py", line 58, in __call__
+be           |     await await_many_dispatch(
+be           |         [receive, self.channel_receive], self.dispatch
+be           |     )
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/utils.py", line 50, in await_many_dispatch
+be           |     await dispatch(result)
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/consumer.py", line 74, in dispatch
+be           |     await handler(message)
+be           |   File "/usr/local/lib/python3.13/site-packages/channels/generic/websocket.py", line 250, in websocket_disconnect
+be           |     await self.disconnect(message["code"])
+
 <!-- ERRORES ANTERIORES SIN SOLUCIONAR: -->
 
 2. No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # TODO (isma): si me da tiempo
