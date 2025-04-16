@@ -3,6 +3,7 @@ import requests
 import json
 import os
 from src.game import create_match, connect_match
+from src.matchmaking import matchmaking
 
 def fetch_api_data(url, params=None):
     try:
@@ -50,19 +51,19 @@ def login(api_url):
 
         cookies = session.cookies.get_dict()
         print("Login successful!")
-        return cookies
+        return cookies, username
 
 def read_manual(command):
-    path = f"./cli/man/{command}.txt"
+    path = f"./man/{command}.txt"
     if os.path.exists(path):
         with open(path, "r") as file:
             print(file.read())
     else:
         print("No manual entry for:", command)
 
-def cli_prompt(api_url, cookie):
+def cli_prompt(api_url, cookie, username):
     while True:
-        command = input("(user) > ").strip().lower()
+        command = input(f"({username}) > ").strip().lower()
 
         if command == "exit":
             print("Goodbye!")
@@ -76,7 +77,7 @@ def cli_prompt(api_url, cookie):
             read_manual(cmd)
 
         elif command == "login":
-            cookie = login(api_url)
+            cookie, username = login(api_url)
 
         elif command == "play local":
             print("Starting local game...")
@@ -87,7 +88,7 @@ def cli_prompt(api_url, cookie):
                 if match_data and "data" in match_data:
                     match_id = match_data["data"].get("match_id")
                     if match_id:
-                        connect_match(match_id, "Player1", "Player2")
+                        connect_match(match_id, "Player1", "Player2", "all")
                     else:
                         print("Match ID not found in response.")
                 else:
@@ -96,7 +97,17 @@ def cli_prompt(api_url, cookie):
                 print("Error during local match:", e)
 
         elif command == "play online":
-            print("Starting online game... (not implemented yet)")
+            print("Starting online game...")
+            try:
+                session = requests.Session()
+                session.cookies.update(cookie)
+                match_id, side = matchmaking(cookie)
+                if match_id:
+                    connect_match(match_id, "Player1", "Player2", side)
+                else:
+                    print("Match ID not found in response.")
+            except Exception as e:
+                print("Error during online match:", e)
 
         else:
             print("Unknown command. Type 'help' for assistance.")
@@ -115,8 +126,8 @@ def main():
         except requests.exceptions.RequestException as e:
             print("Failed to connect:", e)
 
-    cookie = login(api_url)
-    cli_prompt(api_url, cookie)
+    cookie, username = login(api_url)
+    cli_prompt(api_url, cookie, username)
 
 if __name__ == "__main__":
     main()

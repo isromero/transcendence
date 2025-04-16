@@ -125,7 +125,7 @@ def send_key_event(ws, key_name, is_pressed):
     ws.send(json.dumps(data))
     print(f"Sent key event: {key_name} {'pressed' if is_pressed else 'released'}")
 
-def listen_to_keys(ws):
+def listen_to_keys(ws, side):
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
@@ -138,12 +138,14 @@ def listen_to_keys(ws):
                 if ch == '\x1b':
                     if select.select([sys.stdin], [], [], 0.01)[0]:
                         ch += sys.stdin.read(2)
-                if ch in ['w', 's']:
-                    key = ch
-                elif ch == 'i':
-                    key = 'ArrowUp'
-                elif ch == 'k':
-                    key = 'ArrowDown'
+                if side == "left" or side == "all":
+                    if ch in ['w', 's']:
+                        key = ch
+                if side == "right" or side == "all":
+                    if ch == 'i':
+                        key = 'ArrowUp'
+                    elif ch == 'k':
+                        key = 'ArrowDown'
 
                 if key:
                     try:
@@ -156,7 +158,7 @@ def listen_to_keys(ws):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def connect_match(match_id, left_username, right_username):
+def connect_match(match_id, left_username, right_username, side):
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
     def on_message(ws, message):
@@ -178,7 +180,7 @@ def connect_match(match_id, left_username, right_username):
         print("WebSocket connection opened")
 
         # Start a thread to listen for key input using our custom reader.
-        threading.Thread(target=listen_to_keys, args=(ws,), daemon=True).start()
+        threading.Thread(target=listen_to_keys, args=(ws, side,), daemon=True).start()
 
     from websocket import WebSocketApp
     ws_app = WebSocketApp(ws_url,
