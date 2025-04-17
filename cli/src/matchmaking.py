@@ -34,7 +34,8 @@ def login_and_get_cookie(api_url, username, password):
     return session, message, cookies
 
 def matchmaking(cookies):
-    ws_url = "ws://localhost:8000/ws/matchmaking"
+    # TODO: Samu / JOSE ?? WSS o WS. PORT 8000 OR 8443??
+    ws_url = "wss://localhost:8000/ws/matchmaking"
     result_container = {"match_id": None, "player": None}
 
     def on_message(ws, message):

@@ -26,8 +26,7 @@ def update_caddyfile(caddyfile_path, hostname):
 
     with open(caddyfile_path, "w") as file:
         for line in lines:
-            if line.strip().startswith("https://") and line.strip().endswith("{"):
-            # if line.strip() == "https://localhost {":
+            if line.strip().startswith("https://") and line.strip().endswith("{") and line.strip() != "https://localhost {":
                 file.write(f"https://{hostname} {{\n")
             else:
                 file.write(line)

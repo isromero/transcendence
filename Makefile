@@ -8,7 +8,7 @@ build:
 
 up:
 	python3 update_env_and_caddy.py
-	$(COMPOSE) up --build
+	$(COMPOSE) up
 
 down:
 	$(COMPOSE) down -t 1

@@ -159,6 +159,7 @@ def listen_to_keys(ws, side):
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 def connect_match(match_id, left_username, right_username, side):
+    # TODO: Samu / JOSE ?? WSS o WS. PORT 8000 OR 8443??
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
     def on_message(ws, message):

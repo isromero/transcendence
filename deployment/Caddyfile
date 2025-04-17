@@ -3,10 +3,8 @@
     local_certs
 }
 
-# hay que cambiar el hostname
-
-
-https://c2r9s2.42madrid.com {
+# this hostname is automatically changed by update_env_and_caddy.py
+https://c2r9s3.42madrid.com {
     reverse_proxy /api/* be:8000
     reverse_proxy /metrics fe:3002
     reverse_proxy fe:3001
@@ -25,16 +23,23 @@ https://c2r9s2.42madrid.com {
         file_server
     }
 }
-# https://c2r1s1.42madrid.com {
-#     reverse_proxy /api/* be:8000
-#     reverse_proxy /metrics fe:3002
-#     reverse_proxy fe:3001
-#     encode gzip
-#     file_server
-#     tls internal
-# 
-#     handle_path /images/* {
-#         root * /app/media
-#         file_server
-#     }
-# }
+
+https://localhost {
+    reverse_proxy /api/* be:8000
+    reverse_proxy /metrics fe:3002
+    reverse_proxy fe:3001
+    reverse_proxy /ws/* be:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+    encode gzip
+    file_server
+    tls internal
+
+    handle_path /images/* {
+        root * /app/media
+        file_server
+    }
+}
