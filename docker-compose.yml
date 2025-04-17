@@ -4,8 +4,7 @@ services:
     container_name: caddy
     build: ./deployment
     ports:
-      - 8080:80
-      - 8443:443
+      - 8443:443 # MAIN PORT TO ACCESS TO FRONTEND AND EVERYTHING
     volumes:
       - ./deployment:/etc/caddy/
       - caddy_data:/data
@@ -51,7 +50,6 @@ services:
     container_name: fe
     build: ./fe
     ports:
-      # - 3001:3001 Testing this because Caddy
       - 3002:3002
     volumes:
       - ./fe:/app
@@ -129,13 +127,8 @@ volumes:
 networks:
   transcendence_network:
     driver: bridge
-    
-
-
 
 ####     COMPOSE DE ENTREGA   #####
-
-
 
 # services:
 #   be:
@@ -174,7 +167,6 @@ networks:
 #     build: ./fe
 #     user: fe
 #     ports:
-#       - 3001:3001
 #       - 3002:3002
 #     volumes:
 #       - fe_data:/app
