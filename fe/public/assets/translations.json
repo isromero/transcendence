@@ -234,6 +234,11 @@
     "spanish": "Esperando más jugadores...",
     "ukrainian": "У черзі на матч. Очікування іншого гравця..."
   },
+  "requests": {
+    "english": "Requests",
+    "spanish": "Peticiones de amiguis",
+    "ukrainian": "Запити"
+  },
   "create-tournament": {
     "english": "Create tournaments",
     "spanish": "Crear torneo",
