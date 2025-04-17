@@ -82,7 +82,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 del self.__class__.games[self.match_id]
 
-
     async def receive(self, text_data):
         """Handle the messages received from the clients"""
         data = json.loads(text_data)
