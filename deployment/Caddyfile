@@ -6,7 +6,7 @@
 # hay que cambiar el hostname
 
 
-https://c2r9s4.42madrid.com {
+https://c2r9s2.42madrid.com {
     reverse_proxy /api/* be:8000
     reverse_proxy /metrics fe:3002
     reverse_proxy fe:3001
