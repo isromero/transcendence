@@ -66,6 +66,15 @@ be           |     await handler(message)
 be           |   File "/usr/local/lib/python3.13/site-packages/channels/generic/websocket.py", line 250, in websocket_disconnect
 be           |     await self.disconnect(message["code"])
 
+09. Al loguearse con la intra se queda asi: {"success": false, "data": null, "message": null, "error": {"error": "Failed to obtain access token"}}. Al meterse de nuevo a la pagina, se conecta bien
+
+10. No se ven las fotos.
+
+11. se puede acceder a la pagina de otro usuario sin ser amigos. No se si es un error.
+
+12. 
+
+
 % ERRORES ANTERIORES SIN SOLUCIONAR:
 
 2. No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # TODO (isma): si me da tiempo

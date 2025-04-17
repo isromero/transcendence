@@ -14,6 +14,21 @@
     "spanish": "Cambiar imagen de perfil",
     "ukrainian": "Змінити аватар"
   },
+  "old-username": {
+    "english": "Old username",
+    "spanish": "Antiguo nombre de usuario",
+    "ukrainian": "Старе ім'я"
+  },
+  "change-password": {
+    "english": "Change password",
+    "spanish": "Cambiar seguro",
+    "ukrainian": "Змінити пароль"
+  },
+  "old-password": {
+    "english": "Old password",
+    "spanish": "Contraseña antigua",
+    "ukrainian": "Старий пароль"
+  },
   "logout": {
     "english": "Logout",
     "spanish": "Cerrar sesión",
@@ -32,7 +47,7 @@
   "local": {
     "english": "Local",
     "spanish": "Local",
-    "ukrainian": "Локальний"
+    "ukrainian": "Локальна"
   },
   "num-players": {
     "english": "Number of players",
