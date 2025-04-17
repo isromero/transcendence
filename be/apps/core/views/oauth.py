@@ -57,6 +57,11 @@ class OAuthCallback(View):
         self._authenticate_and_login(request, user_info)
         self._transfer_data(user_info, token_data)
         return HttpResponseRedirect(f"http://{settings.OAUTH42_HOSTNAME}:3001/")
+        # self.response = self._authenticate_and_login(request, user_info)
+        # print("\n\n\n\n\n", settings.OAUTH42_HOSTNAME, "\n\n\n\n\n")
+        # self.redirect_response = HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}")
+        # self._transfer_data()
+        # return self.redirect_response
 
     def _download_and_save_avatar(self, avatar_url):
         """Download avatar from 42 CDN and save it locally"""

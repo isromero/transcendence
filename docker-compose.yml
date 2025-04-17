@@ -97,9 +97,86 @@
 #     networks:
 #       - transcendence_network
 
+# añadido para monitorizacion
+  # prometheus:
+  #   container_name: prom
+  #   build: ./monitoring
+  #   user: prometheus
+  #   ports:
+  #     - 9090:9090
+  #   restart: always
+  #   depends_on:
+  #     - be
+  #   volumes:
+  #     - prometheus_data:/prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # grafana:
+  #   container_name: grf
+  #   build: ./monitoring/grafana-config
+  #   user: grafana
+  #   ports:
+  #     - 3333:3333
+  #   # volumes:
+  #   #   - grafana_data:/var/lib/grafana
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   restart: always
+  #   depends_on:
+  #     - prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # postgres_exporter:
+  #   container_name: pg_exporter
+  #   image: prometheuscommunity/postgres-exporter
+  #   ports:
+  #     - 9187:9187
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   command: '--no-collector.stat_bgwriter'
+  #   restart: always
+  #   depends_on:
+  #     prometheus:
+  #       condition: service_started
+  #   networks:
+  #     - transcendence_network
+
+  # blackbox_exporter:
+  #   container_name: blackbox
+  #   build: ./monitoring/blackbox
+  #   ports:
+  #     - 9115:9115
+  #   restart: always
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+  #   networks:
+  #     - transcendence_network
+
+#   caddy:
+#     container_name: caddy
+#     image: caddy:latest
+#     ports:
+#       - 8080:80
+#       - 8443:443
+#     volumes:
+#       - ./deployment:/etc/caddy/
+#       - caddy_data:/data
+#       - caddy_config:/config
+#       - ./be/media:/app/media
+#     restart: always
+#     depends_on:
+#       - be
+#       - fe
+#     networks:
+#       - transcendence_network
+
 # volumes:
 #   db_data:
 #   prometheus_data:
+#   caddy_data:
+#   caddy_config:
 
 # networks:
 #   transcendence_network:
@@ -120,6 +197,7 @@ services:
       - 8000:8000
     volumes:
       - be_data:/app
+      - be_media:/app/media
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
@@ -154,68 +232,88 @@ services:
     networks:
       - transcendence_network
 
-  prometheus:
-    container_name: prom
-    build: ./monitoring
-    user: prometheus
+  # prometheus:
+  #   container_name: prom
+  #   build: ./monitoring
+  #   user: prometheus
+  #   ports:
+  #     - 9090:9090
+  #   restart: always
+  #   depends_on:
+  #     - be
+  #   volumes:
+  #     - prometheus_data:/prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # grafana:
+  #   container_name: grf
+  #   build: ./monitoring/grafana-config
+  #   user: grafana
+  #   ports:
+  #     - 3333:3333
+  #   # volumes:
+  #   #   - grafana_data:/var/lib/grafana
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   restart: always
+  #   depends_on:
+  #     - prometheus
+  #   networks:
+  #     - transcendence_network
+
+  # postgres_exporter:
+  #   container_name: pg_exporter
+  #   image: prometheuscommunity/postgres-exporter
+  #   ports:
+  #     - 9187:9187
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+  #   command: '--no-collector.stat_bgwriter'
+  #   restart: always
+  #   depends_on:
+  #     prometheus:
+  #       condition: service_started
+  #   networks:
+  #     - transcendence_network
+
+  # blackbox_exporter:
+  #   container_name: blackbox
+  #   build: ./monitoring/blackbox
+  #   ports:
+  #     - 9115:9115
+  #   restart: always
+  #   env_file:
+  #     - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+  #   networks:
+  #     - transcendence_network
+
+  caddy:
+    container_name: caddy
+    build: ./deployment
     ports:
-      - 9090:9090
+      - 8080:80
+      - 8443:443
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - be_media:/app/media
     restart: always
     depends_on:
       - be
-    volumes:
-      - prometheus_data:/prometheus
-    networks:
-      - transcendence_network
-
-  grafana:
-    container_name: grf
-    build: ./monitoring/grafana-config
-    user: grafana
-    ports:
-      - 3333:3333
-    # volumes:
-    #   - grafana_data:/var/lib/grafana
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
-    restart: always
-    depends_on:
-      - prometheus
-    networks:
-      - transcendence_network
-
-  postgres_exporter:
-    container_name: pg_exporter
-    image: prometheuscommunity/postgres-exporter
-    ports:
-      - 9187:9187
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
-    command: '--no-collector.stat_bgwriter'
-    restart: always
-    depends_on:
-      prometheus:
-        condition: service_started
-    networks:
-      - transcendence_network
-
-  blackbox_exporter:
-    container_name: blackbox
-    build: ./monitoring/blackbox
-    ports:
-      - 9115:9115
-    restart: always
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+      - fe
     networks:
       - transcendence_network
 
 volumes:
   db_data:
-  # grafana_data:
+  grafana_data:
   prometheus_data:
   be_data:
+  be_media:
   fe_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   transcendence_network:

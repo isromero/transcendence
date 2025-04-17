@@ -412,7 +412,7 @@ export function init() {
 
       // Initialize WebSocket
       ws = new WebSocket(
-        `ws://${window.location.hostname}:8000/ws/game/${matchId}`
+        `wss://${window.location.hostname}:8443/ws/game/${matchId}`
       );
 
       ws.onopen = () => {

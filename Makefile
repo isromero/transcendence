@@ -7,6 +7,7 @@ build:
 	$(COMPOSE) build
 
 up:
+	python3 update_env_and_caddy.py
 	$(COMPOSE) up --build
 
 down:

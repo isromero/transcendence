@@ -1,0 +1,40 @@
+{
+    email josgarci@student.42madrid.com
+    local_certs
+}
+
+# hay que cambiar el hostname
+
+
+https://c2r9s4.42madrid.com {
+    reverse_proxy /api/* be:8000
+    reverse_proxy /metrics fe:3002
+    reverse_proxy fe:3001
+    reverse_proxy /ws/* be:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+    encode gzip
+    file_server
+    tls internal
+
+    handle_path /images/* {
+        root * /app/media
+        file_server
+    }
+}
+# https://c2r1s1.42madrid.com {
+#     reverse_proxy /api/* be:8000
+#     reverse_proxy /metrics fe:3002
+#     reverse_proxy fe:3001
+#     encode gzip
+#     file_server
+#     tls internal
+# 
+#     handle_path /images/* {
+#         root * /app/media
+#         file_server
+#     }
+# }

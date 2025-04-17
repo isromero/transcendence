@@ -1,0 +1,48 @@
+docker compose down -t 1 && docker rmi transcendence-caddy && docker volume rm transcendence_be_media transcendence_caddy_config transcendence_caddy_data	
+
+https://localhost:8443
+
+
+
+
+    handle_path /images/* {
+        root * /app/media
+        file_server
+    }
+
+handle_path /images/* {
+    reverse_proxy be:8000
+}
+
+
+
+
+
+
+
+
+FROM caddy:latest
+RUN addgroup --system caddygroup && adduser --system --ingroup caddygroup caddyuser
+RUN mkdir -p /app/media && chown -R caddyuser:caddygroup /app/media
+COPY ./Caddyfile /etc/caddy/Caddyfile
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chown -R caddyuser:caddygroup /etc/caddy /data /config /app
+RUN chmod +x /entrypoint.sh
+USER caddyuser
+EXPOSE 443
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+
+
+
+
+
+FROM caddy:latest
+RUN addgroup --system caddygroup && adduser --system --ingroup caddygroup caddyuser
+RUN mkdir -p /app/media && chown -R caddyuser:caddygroup /app/media
+COPY ./Caddyfile /etc/caddy/Caddyfile
+RUN chown -R caddyuser:caddygroup /etc/caddy /data /config /app
+USER caddyuser
+EXPOSE 443
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
