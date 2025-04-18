@@ -50,6 +50,113 @@
   font-style: normal;
 }
 
+/*------------------------------------------------------------------------*/
+#game-wrapper {
+  transform: scale(1.6); /* Escala común para botones y canvas */
+  transform-origin: center;
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #game-wrapper {
+    transform: scale(1.5); /* Escala para tablets */
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  #game-wrapper {
+    transform: scale(1.4); /* Escala para ordenadores */
+  }
+}
+
+@media (max-width: 768px) {
+  #game-wrapper {
+    transform: scale(1.4); /* Escala para pantallas más pequeñas */
+  }
+}
+
+.pong-container {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 2 / 1;
+  height: auto;
+  background-color: #20394f;
+  border: 2px solid #f6d6bd;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 200px black;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  background-color: black;
+}
+
+
+/*------------------------------------------------------------------------*/
+.top-box,
+.bottom-box {
+  background-color: #1b2a3a;
+  height: 100px;
+  width: 40px;
+  border-radius: 10px;
+}
+
+.game-area {
+  background-color: #112233;
+  width: 20rem;
+  height: 70vh;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0px 0px 200px black;
+}
+
+.game-section {
+  position: relative;
+  height: 47%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.score {
+  font-size: 120px;
+  opacity: 0.7;
+}
+
+.bar {
+  position: absolute;
+  width: 110px;
+  height: 20px;
+  background-color: var(--bs-text-color-tertiary);
+}
+
+.top-bar {
+  top: 10px;
+  right: 10px;
+}
+
+.bottom-bar {
+  bottom: 10px;
+  left: 10px;
+}
+
+.game-divider {
+  height: 2px;
+  background-color: white;
+  margin: 10px 0;
+}
+
+.test-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
+/*------------------------------------------------------------------------*/
+
 .form-control,
 .form-control-lg {
   border: 0px;
@@ -230,4 +337,14 @@
 
 .list-group {
   width: 100%;
+
+}
+
+.hidden {
+  display: none !important;
+}
+
+#game-wrapper .game-button {
+  transform: scale(0.8); /* Reduce visualmente los botones dentro del wrapper */
+  transform-origin: center;
 }

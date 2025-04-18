@@ -117,7 +117,6 @@ class HistoryView(View):
                     },
                 ],
             }
-            print(f"Match ID: {match_id}")
             return create_response(
                 data=match_data, message="Local match created successfully", status=201
             )
@@ -127,8 +126,6 @@ class HistoryView(View):
     def put(self, request, match_id=None):
         """Update match score"""
         try:
-            print(f"Recibiendo PUT para match_id={match_id}")
-            print(f"Datos recibidos: {request.body}")
             matches = History.objects.filter(match_id=match_id)
             if not matches.exists():
                 return create_response(error="Match not found", status=404)

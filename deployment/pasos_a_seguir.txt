@@ -1,0 +1,16 @@
+Instalar certificado en el sistema
+
+Linux: copiar archivo de certificado *.crt a /usr/local/share/ca-certificates
+	sudo cp local.crt /usr/local/share/ca-certificates
+	sudo update-ca-certificates
+
+Windows:
+	abrir archivo de certificado *.crt.
+	Instalar certificado
+	Equipo local
+	Colocar todos los certificados en el siguiente almacén
+		Entidades de certificación raíz de confianza
+	Terminar
+
+Cambiar el puerto en el servicio de caddy en el docker-compose.yml
+Montar un volumen compartido entre be/app/images y caddy/app/images

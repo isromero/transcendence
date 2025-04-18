@@ -37,11 +37,17 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         await self.check_matchmaking()
 
-    async def disconnect(self):
-        for i, player in enumerate(self.queue):
-            if player[0] == self:
-                self.queue.pop(i)
-                break
+    async def disconnect(
+        self, close_code
+    ):  # don't delete close_code, it's required to not get an error
+        """Handle client disconnection"""
+        try:
+            for i, player in enumerate(self.queue):
+                if player[0] == self:
+                    self.queue.pop(i)
+                    break
+        except Exception as e:
+            print(f"Error during matchmaking disconnect: {e}")
 
     async def check_matchmaking(self):
         if len(self.queue) >= 2:

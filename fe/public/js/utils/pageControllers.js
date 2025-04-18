@@ -32,6 +32,9 @@ export const pageControllers = {
   '/profile': {
     init: initProfile,
   },
+  '/profile/:id': {
+    init: initProfile,
+  },
   '/friends': {
     init: initFriends,
   },

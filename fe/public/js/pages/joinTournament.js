@@ -17,26 +17,34 @@ export function init() {
       return;
     }
 
-    await loadPage(`/tournament/${joinCode}`);
+    try {
+      
+      const tournament = await tournamentService.getTournament(joinCode);
+      if (!tournament) {
+        showErrorToast('Tournament not found. Please check the code and try again.');
+        return;
+      }
 
-    const tournament = await tournamentService.getTournament(joinCode);
-    if (!tournament) {
-      showErrorToast('Tournament not found.');
-      return;
+      const profile = await profileService.getProfile();
+      if (!profile) {
+        showErrorToast('Profile not found.');
+        return;
+      }
+
+      
+      await tournamentService.updateTournamentWhenJoining(
+        joinCode,
+        tournament,
+        profile.data,
+        displayName
+      );
+
+      
+      await loadPage(`/tournament/${joinCode}`);
+    } catch (error) {
+      console.error('Error joining tournament:', error);
+      showErrorToast('An error occurred while joining the tournament.');
     }
-
-    const profile = await profileService.getProfile();
-    if (!profile) {
-      showErrorToast('Profile not found.');
-      return;
-    }
-
-    await tournamentService.updateTournamentWhenJoining(
-      joinCode,
-      tournament,
-      profile.data,
-      displayName
-    );
   }
 
   form?.addEventListener('submit', handleFormSubmit);

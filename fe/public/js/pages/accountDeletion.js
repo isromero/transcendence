@@ -1,15 +1,34 @@
 import { usersService } from '../services/users.js';
 import { loadPage } from '../router/router.js';
+import { profileService } from '../services/profile.js';
 
 export function init() {
   const form = document.getElementById('accountDeletionForm');
   const passwordInput = document.getElementById('password');
   const togglePassword = document.getElementById('togglePassword');
+  const passwordFieldWrapper = document.getElementById('passwordFieldWrapper');
 
   async function handleFormSubmit() {
-    const ok = await usersService.deleteUser(passwordInput.value);
-    if (ok) {
-      loadPage('/auth');
+    try {
+      const profile = await profileService.getProfile();
+      const username = String(profile?.data?.username ?? '');
+
+      const isOAuthUser = username.length < 9;
+
+      if (isOAuthUser) {
+        const ok = await usersService.deleteUserWithoutPassword();
+        if (ok) {
+          loadPage('/auth');
+        }
+      } else {
+        const ok = await usersService.deleteUser(passwordInput.value);
+        if (ok) {
+          loadPage('/auth');
+        }
+      }
+    } catch (e) {
+      console.error('Error handling form submission:', e);
+      showErrorToast('An error occurred while processing your request.');
     }
   }
 
@@ -18,8 +37,25 @@ export function init() {
       passwordInput.type === 'password' ? 'text' : 'password';
   }
 
+  async function initForm() {
+    try {
+      const profile = await profileService.getProfile();
+      const username = String(profile?.data?.username ?? '');
+
+      if (username.length >= 9) {
+        passwordFieldWrapper.style.display = 'block';
+      } else {
+        passwordFieldWrapper.style.display = 'none';
+      }
+    } catch (e) {
+      console.error('Error loading profile:', e);
+    }
+  }
+
   form?.addEventListener('formValid', handleFormSubmit);
   togglePassword?.addEventListener('click', handleTogglePassword);
+
+  initForm();
 
   return () => {
     form?.removeEventListener('formValid', handleFormSubmit);

@@ -57,7 +57,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
         )
 
-    async def disconnect(self):
+    async def disconnect(self, _):
         """Handle the disconnection of a client"""
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
@@ -66,13 +66,19 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             # If there are no players in the game, delete it
             if not self.__class__.games[self.match_id]["players"]:
+                game_state = self.__class__.games[self.match_id]["state"]
+
+                # Stop the game if countdown is active or no players are connected
+                if game_state.countdown is not None or not game_state.running:
+                    game_state.running = False
+
                 loop_task = self.__class__.games[self.match_id].get("loop_task")
                 if loop_task:
                     loop_task.cancel()
                     try:
                         await loop_task
                     except asyncio.CancelledError:
-                        print(f"Game loop {self.match_id} cancelled correctly")
+                        pass
 
                 del self.__class__.games[self.match_id]
 
@@ -103,8 +109,15 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.match_id in self.__class__.games
                 and self.__class__.games[self.match_id]["state"].running
             ):
-                await self.__class__.games[self.match_id]["state"].update()
-                state = self.__class__.games[self.match_id]["state"].get_state()
+                game_state = self.__class__.games[self.match_id]["state"]
+
+                # Stop the game loop if no players are connected
+                if not self.__class__.games[self.match_id]["players"]:
+                    game_state.running = False
+                    break
+
+                await game_state.update()
+                state = game_state.get_state()
                 await self.channel_layer.group_send(
                     self.group_name, {"type": "game_update", "game_state": state}
                 )

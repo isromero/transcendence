@@ -1,5 +1,6 @@
 import { usersService } from '../services/users.js';
 import { loadPage } from '../router/router.js';
+import { showErrorToast} from '../utils/helpers.js';
 
 export function init() {
   const form = document.getElementById('editUsernameForm');
@@ -9,9 +10,17 @@ export function init() {
   const togglePassword = document.getElementById('togglePassword');
 
   async function handleFormSubmit() {
+    const newUsername = newUsernameInput.value.trim();
+
+    // Validar que el nuevo nombre de usuario tenga al menos 9 caracteres
+    if (newUsername.length < 9) {
+      showErrorToast('El nuevo nombre de usuario debe tener al menos 9 caracteres.');
+      return;
+    }
+
     const user = {
       oldUsername: oldUsernameInput.value,
-      username: newUsernameInput.value,
+      username: newUsername,
       password: passwordInput.value,
     };
 

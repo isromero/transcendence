@@ -1,4 +1,22 @@
+####     COMPOSE DE DESARROLLO   #####
 services:
+  caddy:
+    container_name: caddy
+    build: ./deployment
+    ports:
+      - 8443:443 # MAIN PORT TO ACCESS TO FRONTEND AND EVERYTHING
+    volumes:
+      - ./deployment:/etc/caddy/
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./be/media:/app/media
+    restart: always
+    depends_on:
+      - be
+      - fe
+    networks:
+      - transcendence_network
+
   be:
     container_name: be
     build: ./be
@@ -6,6 +24,7 @@ services:
       - 8000:8000
     volumes:
       - ./be:/app
+      - be_media:/app/media
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     restart: always
@@ -31,7 +50,6 @@ services:
     container_name: fe
     build: ./fe
     ports:
-      - 3001:3001
       - 3002:3002
     volumes:
       - ./fe:/app
@@ -40,7 +58,7 @@ services:
     networks:
       - transcendence_network
 
-# añadido para monitorizacion
+  # añadido para monitorizacion
   prometheus:
     container_name: prom
     build: ./monitoring
@@ -61,8 +79,6 @@ services:
     user: grafana
     ports:
       - 3333:3333
-    # volumes:
-    #   - grafana_data:/var/lib/grafana
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
     restart: always
@@ -97,19 +113,22 @@ services:
     networks:
       - transcendence_network
 
+
 volumes:
   db_data:
+  grafana_data:
   prometheus_data:
+  be_data:
+  be_media:
+  fe_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   transcendence_network:
     driver: bridge
 
-
-
-
-
-
+####     COMPOSE DE ENTREGA   #####
 
 # services:
 #   be:
@@ -120,6 +139,7 @@ networks:
 #       - 8000:8000
 #     volumes:
 #       - be_data:/app
+#       - be_media:/app/media
 #     env_file:
 #       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
 #     restart: always
@@ -147,7 +167,6 @@ networks:
 #     build: ./fe
 #     user: fe
 #     ports:
-#       - 3001:3001
 #       - 3002:3002
 #     volumes:
 #       - fe_data:/app
@@ -210,12 +229,32 @@ networks:
 #     networks:
 #       - transcendence_network
 
+#   caddy:
+#     container_name: caddy
+#     build: ./deployment
+#     ports:
+#       - 8080:80
+#       - 8443:443
+#     volumes:
+#       - caddy_data:/data
+#       - caddy_config:/config
+#       - be_media:/app/media
+#     restart: always
+#     depends_on:
+#       - be
+#       - fe
+#     networks:
+#       - transcendence_network
+
 # volumes:
 #   db_data:
-#   # grafana_data:
+#   grafana_data:
 #   prometheus_data:
 #   be_data:
+#   be_media:
 #   fe_data:
+#   caddy_data:
+#   caddy_config:
 
 # networks:
 #   transcendence_network:

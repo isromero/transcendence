@@ -17,7 +17,7 @@ export function initMatchmaking() {
 
   // Check if there is a queue active in any tab
   const isInQueue = localStorage.getItem('matchmaking_active');
-  if (isInQueue) {
+  if (false) {
     showErrorToast('You are already in a matchmaking queue in another tab.');
     return;
   }
@@ -47,7 +47,7 @@ function handleQueue() {
 
   localStorage.setItem('matchmaking_active', 'true');
 
-  ws = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking`);
+  ws = new WebSocket(`wss://${window.location.hostname}:8443/ws/matchmaking`);
 
   ws.onmessage = async event => {
     const data = JSON.parse(event.data);
