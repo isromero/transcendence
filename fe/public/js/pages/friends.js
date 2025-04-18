@@ -21,15 +21,6 @@ function createFriendCard(friend) {
             <span class="text-${friend.is_online ? 'success' : 'secondary'} me-1" style="font-size: 0.6rem;">●</span>
             <span class="text-principal-color small">${friend.is_online ? 'Online' : 'Offline'}</span>
           </div>
-          <p class="text-principal-color small mb-1">
-            <span data-translationKey="wins" class="me-1">Wins</span>: <span>${friend.wins || 0}</span>
-          </p>
-          <p class="text-principal-color small mb-1">
-            <span data-translationKey="loses" class="me-1">Loses</span>: <span>${friend.loses || 0}</span>
-          </p>
-          <p class="text-principal-color small mb-0">
-            <span data-translationKey="total" class="me-1">Total</span>: <span>${(friend.wins || 0) + (friend.loses || 0)}</span>
-          </p>
         </div>
       </article>
     </a>

@@ -124,10 +124,10 @@ def serialize_stats(user, user_history):
     )
     tournament_matches = user_history.exclude(
         type_match__in=["local", "multiplayer"]
-    ).filter(
-        result_user__gt=0,  # Exclude matches with score 0
-        result_opponent__gt=0,  # Exclude matches with score 0
-    )
+     ).filter(
+         result_user__gt=0,  # Exclude matches with score 0
+         result_opponent__gt=0,  # Exclude matches with score 0
+     )
     tournament_wins = tournament_matches.filter(
         result_user__gt=models.F("result_opponent")
     )

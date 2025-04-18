@@ -26,14 +26,14 @@ export function init() {
     username.textContent = data.username;
 
     const victories = Number(data.victories || 0);
-    const tournamentVictories = Number(data.tournament_victories || 0);
+    const tournamentVictories = Number(data.tournaments_victories || 0);
     const defeats = Number(data.defeats || 0);
-    const tournamentDefeats = Number(data.tournament_defeats || 0);
+    const tournamentDefeats = Number(data.tournaments_defeats || 0);
     const totalMatches = Number(data.total_matches || 0);
 
     wins.textContent = victories;
     loses.textContent = defeats;
-    total.textContent = totalMatches;
+    total.textContent = victories + defeats;
     tournamentWins.textContent = tournamentVictories;
     tournamentLoses.textContent = tournamentDefeats;
   }

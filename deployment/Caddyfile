@@ -24,6 +24,6 @@
     }
 }
 
-https://c2r9s3.42madrid.com, https://localhost {
+https://c2r10s5.42madrid.com, https://localhost {
     import common_config
 }
