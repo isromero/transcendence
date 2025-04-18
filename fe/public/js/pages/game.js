@@ -167,12 +167,11 @@ async function updateGameState(gameState, is_animation) {
       }
     } else {
       // If the game is not ended, continue animating
-      if (is_animation){
+      if (is_animation) {
         animationFrameId = requestAnimationFrame(() =>
           updateGameState(gameState, true)
-       );
+        );
       }
-   
     }
   } catch (error) {
     console.error('Error in updateGameState:', error);
@@ -251,7 +250,6 @@ function setupMobileControls() {
     'right-up': 'ArrowUp',
     'right-down': 'ArrowDown',
   };
-  
 
   Object.keys(buttonMapping).forEach(buttonId => {
     const button = document.getElementById(buttonId);
@@ -421,7 +419,7 @@ export function init() {
 
       ws.onopen = () => {
         if (ws?.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: 'init_game', match_id: matchId }));
+          ws.send(JSON.stringify({ type: 'init', match_id: matchId }));
         }
       };
 
