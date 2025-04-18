@@ -60,3 +60,6 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 ### TODO ISMA? ADRI?
 - SPA navegación hacia atrás OK, pero hacia adelante no se puede (el botón hacia adelante no está habilitado en el navegador. Probado en merge-temp)
 
+### TODO SAMU
+- Textos sin traducir cuando no tienes ningún amigo y cuando no te tienes ninguna solicitud de amigo pendiente
+
