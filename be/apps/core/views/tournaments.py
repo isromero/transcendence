@@ -128,11 +128,17 @@ class TournamentsView(View):
 
                 display_name = data.get("display_name")
 
+                # Verificar si el display_name ya está en uso en este torneo
+                if tournament.players.filter(tournament_display_name=display_name).exists():
+                    display_name = request.user.username  # Usar el username si el display_name está en uso
+                    return create_response(
+                        error=f"Display name '{data.get('display_name')}' is already taken. Your username '{display_name}' will be used instead.",
+                        status=400
+                    )
+
                 user = User.objects.get(id=request.user.id)
                 user.tournament_display_name = display_name
                 user.save()
-
-                print(user.tournament_display_name)
 
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
@@ -151,7 +157,8 @@ class TournamentsView(View):
                     tournament.status = "ready"
                 tournament.save()
                 return create_response(
-                    message="Joined tournament successfully", status=200
+                    message=f"Joined tournament successfully with display name '{display_name}'",
+                    status=200,
                 )
 
             elif action == "leave":

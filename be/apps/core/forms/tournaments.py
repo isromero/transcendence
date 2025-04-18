@@ -28,3 +28,9 @@ class TournamentsForm(forms.ModelForm):
             raise ValidationError("Tournament must have 4 or 8 players")
             
         return max_players
+    
+    def clean_tournament_display_name(self):
+        tournament_display_name = self.cleaned_data.get("tournament_display_name")
+        if User.objects.filter(tournament_display_name=tournament_display_name).exists():
+            raise ValidationError("This display name is already taken.")
+        return tournament_display_name
