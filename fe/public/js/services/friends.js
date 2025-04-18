@@ -16,7 +16,6 @@ export const friendsService = {
         throw new Error('Failed to fetch friends');
       }
       const result = await response.json();
-      console.log('Friends:', result.data);
       return result.data;
     } catch (e) {
       console.error('Error fetching friends:', e);
