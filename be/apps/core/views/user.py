@@ -15,7 +15,6 @@ from django.conf import settings
 # TODO: We should use a proper authentication system in the future.
 
 
-# @method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(csrf_exempt, name="dispatch")
 class UserView(View):
     def get(self, _, user_id=None):
@@ -54,9 +53,8 @@ class UserView(View):
             data = json.loads(request.body)
             password = data.get("password")
 
-            if len(request.user.username) < 9:  
+            if len(request.user.username) < 9:
                 return self.delete_user(request.user, request)
-
 
             if not password:
                 return create_response(
@@ -72,7 +70,6 @@ class UserView(View):
                     message="The password is incorrect",
                     status=400,
                 )
-
 
             return self.delete_user(user, request)
 
@@ -110,7 +107,6 @@ class UserView(View):
             message="Your account and all associated data have been permanently deleted.",
             status=204,
         )
-
 
     # For uploading an avatar
     def post(self, request):
