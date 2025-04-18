@@ -72,12 +72,13 @@ function updateGameRotation() {
   }
 }
 
-async function updateGameState(gameState) {
+async function updateGameState(gameState, is_animation) {
   // No need to call updateGameRotation here since it's already called during initialization
   // and will be handled by window resize event
   try {
-    if (gameState.type === 'init' && gameState.state) {
+    if (gameState.type === 'init_game' && gameState.state) {
       gameState = gameState.state;
+      is_animation = true;
     }
 
     if (gameEnded) {
@@ -166,9 +167,12 @@ async function updateGameState(gameState) {
       }
     } else {
       // If the game is not ended, continue animating
-      animationFrameId = requestAnimationFrame(() =>
-        updateGameState(gameState)
-      );
+      if (is_animation){
+        animationFrameId = requestAnimationFrame(() =>
+          updateGameState(gameState, true)
+       );
+      }
+   
     }
   } catch (error) {
     console.error('Error in updateGameState:', error);
@@ -424,7 +428,7 @@ export function init() {
       ws.onmessage = event => {
         try {
           const gameState = JSON.parse(event.data);
-          updateGameState(gameState);
+          updateGameState(gameState, false);
         } catch (error) {
           console.error('Error processing WebSocket message:', error);
         }
