@@ -26,6 +26,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 ### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
 - En otro ordenador no carga las fotos de perfil
+    + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
 
 ### TODO ISMA
 - En multijugador el mismo usuario puede mover las dos flechas.
@@ -42,6 +43,11 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 ### TODO JOSE 
 - Errores callback de la intra
+    + Arreglado en rama merge-temp cambiar
+    (oauth.py // oauthcallback)     return HttpResponseRedirect(f"http://{settings.OAUTH42_HOSTNAME}:3001/")
+                                    return HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}/")
+    Tiene que existir la varible de entorno OAUTH42_HOSTNAME=hostname:8443 o cXrYsZ.42madrid.com:8443
+
 
 ### TODO JOSE
 - Errores de las métricas, no salen nada (y revisar en 42 si da error metrics.js)
