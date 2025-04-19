@@ -1,6 +1,7 @@
 import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 from .game import GameState
 
 
@@ -16,6 +17,36 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
 
+        from apps.core.models import History
+
+        @database_sync_to_async
+        def get_match_data():
+            matches = list(
+                History.objects.filter(match_id=self.match_id)
+                .order_by("id")
+                .select_related("user_id")
+            )
+            if not matches:
+                return None, None, None
+
+            match = matches[0]
+
+            if match.type_match.startswith("tournament"):
+                player1 = matches[0].user_id
+                player2 = matches[1].user_id if len(matches) > 1 else None
+            else:
+                player1 = matches[0].user_id
+                player2 = matches[1].user_id if len(matches) > 1 else None
+
+            return match, player1, player2
+
+        match_data = await get_match_data()
+        if not match_data or not match_data[0]:
+            await self.close()
+            return
+
+        match, player1, player2 = match_data
+
         # If the game doesn't exist, create it
         if self.match_id not in self.__class__.games:
             self.__class__.games[self.match_id] = {
@@ -25,12 +56,31 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "left_player": None,
                 "right_player": None,
             }
-            self.__class__.games[self.match_id]["state"].start_game(self.match_id)
+            game_state = self.__class__.games[self.match_id]["state"]
+            game_state.type_match = match.type_match
+            game_state.start_game(self.match_id)
 
         game = self.__class__.games[self.match_id]
 
-        # Assign position to the player if not assigned
-        if game["left_player"] is None:
+        # For tournaments and multiplayer, assign positions based on order
+        if match.type_match in [
+            "multiplayer",
+            "tournament_quarter",
+            "tournament_semi",
+            "tournament_final",
+        ]:
+            if player1 and player2:
+                first_player_id = player1.id
+                second_player_id = player2.id
+
+                # Assign positions consistently
+                game["left_player"] = first_player_id
+                game["right_player"] = second_player_id
+                game["state"].set_left_player(first_player_id)
+                game["state"].set_right_player(second_player_id)
+
+        # Assign position to the player if not assigned (for non-multiplayer games)
+        elif game["left_player"] is None:
             game["left_player"] = self.user.id
             game["state"].set_left_player(self.user.id)
         elif game["right_player"] is None and game["left_player"] != self.user.id:
@@ -78,6 +128,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if data.get("type") == "key_event" and self.match_id in self.__class__.games:
             game = self.__class__.games[self.match_id]["state"]
+            game.current_user_id = self.user.id
             game.process_key_event(data["key"], data["is_pressed"])
 
             updated_state = game.get_state()
