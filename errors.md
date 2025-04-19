@@ -7,7 +7,7 @@ No deja loguearse con ninguno
 deja registrar a user1 pero no a user2
 
 
-### TODO ADRI
+### TODO ADRI ✅ Hecho
 - No deja crear torneos Si habia una vez un jugador que se puso un nombre en un torneo tipo: jugador1, luego en otros torneos no le deja usarlo.
 duplicate key value violates unique constraint "core_user_tournament_display_name_321645ac_uniq"
 DETAIL: Key (tournament_display_name)=(uno) already exists.
@@ -15,6 +15,12 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 ### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
 - Aveces No deja cambiar de avatar (Error updating avatar) y aveces se queda pillado y no entre en la pagina para cambiar avatar
     + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
+
+### TODO ISMA ✅ Hecho
+- No aparecen las estadisticas del torneo.
+
+### TODO ISMA ✅ Hecho
+- Muestra mal las estadisticas de amigos, en la pagina donde se listan los amigos y en el perfil de amigo se muestran las estadisticas diferentes y no verdaderas. En el perfil del amigo no se muestra si esta online
 
 ### TODO (isma): si me da tiempo
 - No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # 
@@ -32,7 +38,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 ### TODO SAMU
 - Screen reader and assistive technologies. Tenemos esto hecho?
 
-### TODO TODOS
+### TODO TODOS ✅ Hecho
 - Lag en el juego en ordenadores de 42
    
 
