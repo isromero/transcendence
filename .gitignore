@@ -15,3 +15,6 @@ fe/.ash*
 
 # Monitoring
 monitoring/.env
+
+# CLI
+cli/src/__pycache__/

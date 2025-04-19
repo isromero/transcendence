@@ -15,7 +15,6 @@ export const profileService = {
       if (!response.ok) {
         throw new Error('Failed to fetch profile');
       }
-      console.log('Profile:', response);
       return await response.json();
     } catch (e) {
       showErrorToast(`Error fetching profile: ${e}`);

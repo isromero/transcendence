@@ -45,17 +45,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # Send initial state to the client
         initial_state = game["state"].get_state()
-        await self.send(
-            json.dumps(
-                {
-                    "type": "init",
-                    "state": initial_state,
-                    "player_side": (
-                        "left" if self.user.id == game["left_player"] else "right"
-                    ),
-                }
-            )
-        )
+        await self.send(json.dumps({"type": "init", **initial_state}))
 
     async def disconnect(self, _):
         """Handle the disconnection of a client"""

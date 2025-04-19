@@ -9,7 +9,7 @@ function getJoinCodeFromURL() {
   return joinCode;
 }
 
-export async function init() {
+export function init() {
   const joinCode = getJoinCodeFromURL();
   const startBtn = document.getElementById('start-tournament-btn');
   const leaveBtn = document.getElementById('leaveTournamentButton');
@@ -26,48 +26,41 @@ export async function init() {
 
   async function leaveTournament() {
     clearInterval(intervalId);
-  
+
     const tournament = await tournamentService.getTournament(joinCode);
     if (!tournament) {
       return;
     }
-  
-    console.log('Leaving tournament:', tournament);
+
     await tournamentService.leaveTournament(joinCode, tournament.id);
-  
+
     const updatedTournament = await tournamentService.getTournament(joinCode);
-  
-    // Verificar si el torneo ya está completado
+
     if (updatedTournament.status === 'completed') {
-      console.log('Tournament is completed, not deleting.');
       localStorage.setItem(
         'tournament_left',
         JSON.stringify({ joinCode, timestamp: Date.now() })
       );
-      return; // Salir sin eliminar el torneo
+      return; // Leave without deleting
     }
-  
+
     const profile = await profileService.getProfile();
     const userId = profile?.data?.id;
-  
+
     const noPlayersLeft = updatedTournament.current_players === 0;
     const onlyCurrentUserLeft =
       updatedTournament.current_players === 1 &&
       updatedTournament.players?.[0]?.id === userId;
-  
+
     if (noPlayersLeft || onlyCurrentUserLeft) {
       await tournamentService.deleteTournament(joinCode, tournament.id);
-      console.log('Tournament deleted due to lack of players');
-      console.log('Torneo eliminado por falta de jugadores');
     }
-  
+
     localStorage.setItem(
       'tournament_left',
       JSON.stringify({ joinCode, timestamp: Date.now() })
     );
   }
-  
-  
 
   function handleStorageChange(event) {
     if (event.key === 'tournament_left') {
@@ -208,11 +201,11 @@ export async function init() {
         if (currentRoundFinished) {
           if (currentRoundKey === 'semi_finals') {
             const semiFinalsMatches = tournament.matches.semi_finals || [];
-            const semifinalsWinners = semiFinalsMatches.map(match => {
-              return match.player1.score > match.player2.score
+            const semifinalsWinners = semiFinalsMatches.map(match =>
+              match.player1.score > match.player2.score
                 ? match.player1.id
-                : match.player2.id;
-            });
+                : match.player2.id
+            );
 
             if (semifinalsWinners.includes(userId)) {
               nextRoundBtn?.classList.remove('hidden');
@@ -257,7 +250,9 @@ export async function init() {
       }
 
       // Avanzamos la ronda
-      const updatedTournament = await tournamentService.goToNextRound(tournament.id);
+      const updatedTournament = await tournamentService.goToNextRound(
+        tournament.id
+      );
       if (updatedTournament) {
         // Actualizamos la UI y redirigimos a las partidas de la siguiente ronda
         updateTournamentUI(updatedTournament);
