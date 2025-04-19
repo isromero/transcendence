@@ -2,7 +2,6 @@ import { friendsService } from '../services/friends.js';
 import { IMAGES_URL } from '../utils/constants.js';
 
 function createFriendCard(friend) {
-  console.log(friend);
   return `
     <a class="spa-link" href="/profile/${friend.id}">
       <article class="d-flex justify-content-between align-items-center border border-2 border-primary-color rounded p-2 mb-2">
