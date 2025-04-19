@@ -1,3 +1,5 @@
+## PROBLEMAS ENCONTRADOS
+
 ### TODO ISMA -> NO SE HASHEA LA CONTRASEÑA CUANDO CAMBIAS EL NOMBRE DEL USUARIO ENTONCES SE CAMBIA Y NO PUEDES VOLVER A INICIAR SESIÓN
 - Al cambiar el nombre de usuario, se sale de la sesion y ya no deja de acceder, invalid credencial. Y no deja registrarse con el usuario nuevo. 
 ejemplo:
@@ -12,7 +14,7 @@ deja registrar a user1 pero no a user2
 duplicate key value violates unique constraint "core_user_tournament_display_name_321645ac_uniq"
 DETAIL: Key (tournament_display_name)=(uno) already exists.
 
-### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
+### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU ✅ Hecho
 - Aveces No deja cambiar de avatar (Error updating avatar) y aveces se queda pillado y no entre en la pagina para cambiar avatar
     + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
 
@@ -42,7 +44,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 - Lag en el juego en ordenadores de 42
    
 
-### TODO JOSE 
+### TODO JOSE ✅ Hecho
 - Errores callback de la intra
     + Arreglado en rama merge-temp cambiar
     (oauth.py // oauthcallback)     return HttpResponseRedirect(f"http://{settings.OAUTH42_HOSTNAME}:3001/")
@@ -50,7 +52,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
     Tiene que existir la varible de entorno OAUTH42_HOSTNAME=hostname:8443 o cXrYsZ.42madrid.com:8443
 
 
-### TODO JOSE
+### TODO JOSE ✅ Hecho
 - Errores de las métricas, no salen nada (y revisar en 42 si da error metrics.js)
 
 ### TODO SAMU
@@ -62,4 +64,16 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 ### TODO SAMU
 - Textos sin traducir cuando no tienes ningún amigo y cuando no te tienes ninguna solicitud de amigo pendiente
+
+
+
+## TESTEADO EN 42 Y NO SOLUCIONADO
+
+
+
+
+
+
+## TESTEADO EN 42 Y FUNCIONAL
+
 
