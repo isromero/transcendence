@@ -2,6 +2,7 @@ import { friendsService } from '../services/friends.js';
 import { IMAGES_URL } from '../utils/constants.js';
 
 function createFriendCard(friend) {
+  console.log(friend);
   return `
     <a class="spa-link" href="/profile/${friend.id}">
       <article class="d-flex justify-content-between align-items-center border border-2 border-primary-color rounded p-2 mb-2">
@@ -21,6 +22,12 @@ function createFriendCard(friend) {
             <span class="text-${friend.is_online ? 'success' : 'secondary'} me-1" style="font-size: 0.6rem;">●</span>
             <span class="text-principal-color small">${friend.is_online ? 'Online' : 'Offline'}</span>
           </div>
+          <p class="text-principal-color small mb-1">
+             <span data-translationKey="wins" class="me-1">Wins</span>: <span>${friend.victories || 0}</span>
+           </p>
+           <p class="text-principal-color small mb-1">
+             <span data-translationKey="loses" class="me-1">Loses</span>: <span>${friend.defeats || 0}</span>
+           </p>
         </div>
       </article>
     </a>

@@ -10,6 +10,8 @@ export function init() {
   const total = document.getElementById('total');
   const tournamentWins = document.getElementById('tournament-wins');
   const tournamentLoses = document.getElementById('tournament-loses');
+  const onlineStatus = document.getElementById('online-status');
+  const onlineIndicator = document.getElementById('online-indicator');
 
   async function loadProfileData() {
     const pathParts = window.location.pathname.split('/');
@@ -25,6 +27,9 @@ export function init() {
 
     username.textContent = data.username;
 
+    onlineStatus.textContent = data.is_online ? 'Online' : 'Offline';
+    onlineIndicator.className = `text-${data.is_online ? 'success' : 'secondary'} me-1`;
+
     const victories = Number(data.victories || 0);
     const tournamentVictories = Number(data.tournaments_victories || 0);
     const defeats = Number(data.defeats || 0);
@@ -33,12 +38,12 @@ export function init() {
 
     wins.textContent = victories;
     loses.textContent = defeats;
-    total.textContent = victories + defeats;
+    total.textContent = totalMatches;
     tournamentWins.textContent = tournamentVictories;
     tournamentLoses.textContent = tournamentDefeats;
   }
 
   loadProfileData();
 
-  return () => {};  return () => {};
+  return () => {};
 }

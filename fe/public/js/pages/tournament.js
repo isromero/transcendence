@@ -240,7 +240,7 @@ export function init() {
     }
   }
 
-  intervalId = setInterval(handleTournamentProgress, 5000);
+  intervalId = setInterval(handleTournamentProgress, 1000);
 
   nextRoundBtn?.addEventListener('click', async () => {
     try {
