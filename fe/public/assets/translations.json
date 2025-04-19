@@ -189,11 +189,6 @@
     "spanish": "Limite de jugadores",
     "ukrainian": "Максимум гравців"
   },
-  "create-tournaments": {
-    "english": "Create tournaments",
-    "spanish": "Crear torneo",
-    "ukrainian": "Створити турнір"
-  },
   "tournament": {
     "english": "Tournament",
     "spanish": "Torneo",
@@ -235,7 +230,7 @@
     "ukrainian": "У черзі на матч. Очікування іншого гравця..."
   },
   "create-tournament": {
-    "english": "Create tournaments",
+    "english": "Create tournament",
     "spanish": "Crear torneo",
     "ukrainian": "Створити турнір"
   },

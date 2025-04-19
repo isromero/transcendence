@@ -96,7 +96,9 @@ def serialize_friend(friend_relation):
 
     user_history = History.objects.filter(user_id=user_to_show)
 
-    return {
+    stats_data = serialize_stats(user_to_show, user_history)
+
+    base_data = {
         "id": user_to_show.id,
         "username": user_to_show.username,
         "avatar": (
@@ -105,50 +107,76 @@ def serialize_friend(friend_relation):
             else user_to_show.avatar or "/default_avatar.webp"
         ),
         "is_online": user_to_show.is_online,
-        "wins": user_history.filter(
-            result_user__gt=models.F("result_opponent")
-        ).count(),
-        "loses": user_history.filter(
-            result_user__lt=models.F("result_opponent")
-        ).count(),
-        "total_matches": user_history.count(),
     }
+
+    return {**base_data, **stats_data}
 
 
 def serialize_stats(user, user_history):
-    # Filtrar partidas que no sean de torneos
+    # Partidas normales (no torneo) que han terminado (excluyendo 5-5)
     non_tournament_matches = user_history.filter(
         type_match__in=["local", "multiplayer"],
-        result_user__gt=0,  # Exclude matches with score 0
-        result_opponent__gt=0,  # Exclude matches with score 0
-    )
-    tournament_matches = user_history.exclude(
-        type_match__in=["local", "multiplayer"]
+        result_user__gt=0,
+        result_opponent__gt=0,
     ).filter(
-        result_user__gt=0,  # Exclude matches with score 0
-        result_opponent__gt=0,  # Exclude matches with score 0
+        models.Q(result_user=5, result_opponent__lt=5)
+        | models.Q(result_opponent=5, result_user__lt=5)
     )
-    tournament_wins = tournament_matches.filter(
-        result_user__gt=models.F("result_opponent")
+
+    # Unique tournaments with FINISHED matches (excluyendo 5-5)
+    tournaments = (
+        user_history.filter(
+            type_match__in=[
+                "tournament_quarter",
+                "tournament_semi",
+                "tournament_final",
+            ],
+            result_user__gt=0,
+            result_opponent__gt=0,
+        )
+        .filter(
+            models.Q(result_user=5, result_opponent__lt=5)
+            | models.Q(result_opponent=5, result_user__lt=5)
+        )
+        .values("tournament_id")
+        .distinct()
     )
+
+    # Count the number of wins in tournaments (excluyendo 5-5)
+    tournament_wins = (
+        user_history.filter(
+            type_match="tournament_final",
+            result_user=5,
+            result_opponent__lt=5,  # Asegurar que el oponente no tiene 5
+            tournament_id__in=tournaments.values("tournament_id"),
+        )
+        .values("tournament_id")
+        .distinct()
+        .count()
+    )
+
+    total_tournaments = tournaments.count()
+    tournament_defeats = total_tournaments - tournament_wins
+
+    # Solo mirar los registros donde el usuario es user_id (excluyendo 5-5)
+    victories = non_tournament_matches.filter(
+        result_user=5, result_opponent__lt=5
+    ).count()
+    defeats = non_tournament_matches.filter(
+        result_opponent=5, result_user__lt=5
+    ).count()
 
     return {
         "id": user.id,
         "avatar": user.avatar,
         "username": user.username,
         "display_name": user.tournament_display_name,
-        "victories": non_tournament_matches.filter(
-            result_user__gt=models.F("result_opponent")
-        ).count(),
-        "defeats": non_tournament_matches.filter(
-            result_user__lt=models.F("result_opponent")
-        ).count(),
-        "total_matches": non_tournament_matches.count(),  # Solo partidas válidas
-        "tournaments_victories": tournament_wins.count(),
-        "tournaments_defeats": tournament_matches.count() - tournament_wins.count(),
-        "total_tournaments": tournament_matches.values("tournament_id")
-        .distinct()
-        .count(),
+        "victories": victories,
+        "defeats": defeats,
+        "total_matches": non_tournament_matches.count() + total_tournaments,
+        "tournaments_victories": tournament_wins,
+        "tournaments_defeats": tournament_defeats,
+        "total_tournaments": total_tournaments,
     }
 
 
