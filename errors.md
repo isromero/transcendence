@@ -12,12 +12,6 @@ deja registrar a user1 pero no a user2
 duplicate key value violates unique constraint "core_user_tournament_display_name_321645ac_uniq"
 DETAIL: Key (tournament_display_name)=(uno) already exists.
 
-### TODO ADRI (no sé si esto realmente está o no)
-- No aparecen las estadisticas del torneo.
-
-### TODO ISMA (aunque lo de que no salga online da un poco igual)
-- Muestra mal las estadisticas de amigos, en la pagina donde se listan los amigos y en el perfil de amigo se muestran las estadisticas diferentes y no verdaderas. En el perfil del amigo no se muestra si esta online
-
 ### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
 - Aveces No deja cambiar de avatar (Error updating avatar) y aveces se queda pillado y no entre en la pagina para cambiar avatar
     + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
@@ -57,7 +51,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 - Revisar con Jose el tema de los ws y http dentro del cli cuando nuestro sistema ahora es WSS y HTTPS
     + El cli se conecta directamente al 8000 y con ws. ¿¿¿Es válido??? Funcionar funciona. 
 
-### TODO ISMA? ADRI?
+### TODO ISMA
 - SPA navegación hacia atrás OK, pero hacia adelante no se puede (el botón hacia adelante no está habilitado en el navegador. Probado en merge-temp)
 
 ### TODO SAMU
