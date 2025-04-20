@@ -39,7 +39,7 @@
 @font-face {
   font-family: 'Pixelify Sans';
   src: url('../assets/fonts/PixelifySans-SemiBold.ttf') format('truetype');
-  font-weight: 600; 
+  font-weight: 600;
   font-style: normal;
 }
 
@@ -50,48 +50,6 @@
   font-style: normal;
 }
 
-/*------------------------------------------------------------------------*/
-#game-wrapper {
-  transform: scale(1.6); /* Escala común para botones y canvas */
-  transform-origin: center;
-}
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  #game-wrapper {
-    transform: scale(1.5); /* Escala para tablets */
-  }
-}
-
-@media screen and (min-width: 1025px) {
-  #game-wrapper {
-    transform: scale(1.4); /* Escala para ordenadores */
-  }
-}
-
-@media (max-width: 768px) {
-  #game-wrapper {
-    transform: scale(1.4); /* Escala para pantallas más pequeñas */
-  }
-}
-
-.pong-container {
-  width: 100%;
-  max-width: 900px;
-  aspect-ratio: 2 / 1;
-  height: auto;
-  background-color: #20394f;
-  border: 2px solid #f6d6bd;
-  border-radius: 10px;
-  box-shadow: inset 0px 0px 200px black;
-}
-
-canvas {
-  display: block;
-  margin: 0 auto;
-  background-color: black;
-}
-
-
-/*------------------------------------------------------------------------*/
 .top-box,
 .bottom-box {
   background-color: #1b2a3a;
@@ -302,30 +260,6 @@ canvas {
   color: #dc3545;
 }
 
-.countdown-text {
-  position: absolute;
-  font-size: 80px;
-  font-weight: bold;
-  color: white;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.countdown-display {
-  font-size: 100px;
-  font-weight: bold;
-  color: #ff4d6d;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-#countdown {
-  position: absolute;
-  z-index: 100;
-}
-
 .hidden {
   display: none !important;
 }
@@ -337,14 +271,8 @@ canvas {
 
 .list-group {
   width: 100%;
-
 }
 
 .hidden {
   display: none !important;
-}
-
-#game-wrapper .game-button {
-  transform: scale(0.8); /* Reduce visualmente los botones dentro del wrapper */
-  transform-origin: center;
 }

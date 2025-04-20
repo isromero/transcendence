@@ -3,6 +3,7 @@ import { showErrorToast, updateTournamentUI } from '../utils/helpers.js';
 import { historyService } from '../services/history.js';
 import { IMAGES_URL } from '../utils/constants.js';
 import { tournamentService } from '../services/tournaments.js';
+
 let canvas;
 let ctx;
 let ws;
@@ -11,6 +12,7 @@ let gameEnded = false;
 let isInitializing = false;
 let hasNavigatedAway = false;
 let reconnectTimeout = null;
+const mobileControlHandlers = {};
 
 function resetGameState() {
   if (animationFrameId !== null) {
@@ -179,8 +181,6 @@ async function updateGameState(gameState, is_animation) {
   }
 }
 
-// Add window resize event to handle orientation changes
-window.addEventListener('resize', updateGameRotation);
 function stopGame() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
@@ -263,30 +263,35 @@ function setupMobileControls() {
       return;
     }
 
-    button.addEventListener('mousedown', () =>
-      sendKeyEvent(buttonMapping[buttonId], true)
-    );
-    button.addEventListener('mouseup', () =>
-      sendKeyEvent(buttonMapping[buttonId], false)
-    );
-
-    button.addEventListener(
-      'touchstart',
-      e => {
-        e.preventDefault();
+    const handlePress = e => {
+      e.preventDefault();
+      if (typeof sendKeyEvent === 'function') {
         sendKeyEvent(buttonMapping[buttonId], true);
-      },
-      { passive: true }
-    );
-
-    button.addEventListener(
-      'touchend',
-      e => {
-        e.preventDefault();
+      } else {
+        console.error('sendKeyEvent function is not defined');
+      }
+    };
+    const handleRelease = () => {
+      if (typeof sendKeyEvent === 'function') {
         sendKeyEvent(buttonMapping[buttonId], false);
-      },
-      { passive: true }
-    );
+      } else {
+        console.error('sendKeyEvent function is not defined');
+      }
+    };
+
+    // Save references to be able to remove them later
+    mobileControlHandlers[buttonId] = {
+      press: handlePress,
+      release: handleRelease,
+    };
+
+    button.addEventListener('touchstart', handlePress, { passive: false });
+    button.addEventListener('touchend', handleRelease);
+    button.addEventListener('touchcancel', handleRelease);
+
+    button.addEventListener('mousedown', handlePress, { passive: false });
+    button.addEventListener('mouseup', handleRelease);
+    button.addEventListener('mouseleave', handleRelease);
   });
 }
 
@@ -371,6 +376,26 @@ export function init() {
     document.removeEventListener('keyup', handleKeyUp);
     window.removeEventListener('beforeunload', handleBeforeUnload);
     window.removeEventListener('popstate', handlePopState);
+
+    // Remove mobile control listeners
+    Object.keys(mobileControlHandlers).forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      const handlers = mobileControlHandlers[buttonId];
+      if (button && handlers) {
+        button.removeEventListener('touchstart', handlers.press);
+        button.removeEventListener('touchend', handlers.release);
+        button.removeEventListener('touchcancel', handlers.release);
+
+        button.removeEventListener('mousedown', handlers.press);
+        button.removeEventListener('mouseup', handlers.release);
+        button.removeEventListener('mouseleave', handlers.release);
+      }
+    });
+
+    // Clear the handlers object
+    Object.keys(mobileControlHandlers).forEach(
+      key => delete mobileControlHandlers[key]
+    );
   }
 
   async function initializeGame() {
@@ -459,9 +484,10 @@ export function init() {
   return () => {
     cleanupGameResources();
     window.removeEventListener('resize', updateGameRotation);
-    if (ws?.readyState === WebSocket.OPEN) {
+    if (ws && ws?.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'disconnect' }));
       ws.close();
+      ws = null;
     }
     isInitializing = false;
   };
