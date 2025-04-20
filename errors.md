@@ -11,34 +11,29 @@ deja registrar a user1 pero no a user2
 ### TODO (isma): si me da tiempo
 - No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # 
 
-### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
-- En otro ordenador no carga las fotos de perfil
-    + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
-
-### TODO ISMA
+### TODO ISMA  ✅ Hecho
 - En multijugador el mismo usuario puede mover las dos flechas.
 
 ### TODO ADRI (esto creo que no está mal, el zoom no es algo que importa o pantallas tan dinámicas pero echale un ojo)
 - Ajuste dinamico de tamaño de la pagina en vertical. Al hacer zoom se sobreponen las lineas
 
-### TODO SAMU
+### TODO SAMU  ✅ Hecho
 - Screen reader and assistive technologies. Tenemos esto hecho?
 
-### TODO SAMU
+### TODO SAMU (esto merece la pena hacerlo?)
 - Los mensajes de error o de confirmación (los que salen arriba a la derecha en rojo o verde) siempre son en inglés independientemente del idioma del usuario.
 - También es estadísticas, Tournaments Wins y Tournaments Loses siempre están en inglés
 
-### TODO SAMU
+### TODO SAMU  ✅ Hecho
 - Revisar con Jose el tema de los ws y http dentro del cli cuando nuestro sistema ahora es WSS y HTTPS
-    + El cli se conecta directamente al 8000 y con ws. ¿¿¿Es válido??? Funcionar funciona. 
 
-### TODO ISMA
+### TODO ISMA ✅ Hecho
 - SPA navegación hacia atrás OK, pero hacia adelante no se puede (el botón hacia adelante no está habilitado en el navegador. Probado en merge-temp)
 
 ### TODO SAMU
 - Textos sin traducir cuando no tienes ningún amigo y cuando no te tienes ninguna solicitud de amigo pendiente
 
-### TODO nosequién
+### TODO ISMA(es esperado esto, pero veo si lo fixeo o no)
 - El nombre mostrado al finalizar el torneo no corresponde con el nombre que el usuario ha puesto para jugar el torneo, si no que se muestra el username de registro en la aplicación.
 - En la pantalla intermedia del torneo (en la de las semifinales) sí se muestra bien, el fallo únicamente es el la pantalla final del resumen del torneo.
 
@@ -51,14 +46,6 @@ Josgarci acepta la invitación.
 Lyandriy rechaza la invitación.
 Josgarci y Lyandriy son amigos.
 
-## TESTEADO EN 42 Y NO SOLUCIONADO
-
-
-
-
-
-
-## TESTEADO EN 42 Y FUNCIONAL
 
 ### TODO ADRI ✅ Hecho (checkeado en rama merge-temp)
 - No deja crear torneos Si habia una vez un jugador que se puso un nombre en un torneo tipo: jugador1, luego en otros torneos no le deja usarlo.
@@ -75,7 +62,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 ### TODO ISMA ✅ Hecho (checkeado en rama merge-temp)
 - Muestra mal las estadisticas de amigos, en la pagina donde se listan los amigos y en el perfil de amigo se muestran las estadisticas diferentes y no verdaderas. En el perfil del amigo no se muestra si esta online
 
-### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU (checkeado en rama merge-temp)
+### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU ✅ Hecho (checkeado en rama merge-temp)
 - En otro ordenador no carga las fotos de perfil
     + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
 
@@ -92,9 +79,9 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 ### TODO JOSE ✅ Hecho (checkeado en rama merge-temp)
 - Errores de las métricas, no salen nada (y revisar en 42 si da error metrics.js)
 
-### TODO JOSE (checkeado en rama merge-temp)
+### TODO JOSE ✅ Hecho(checkeado en rama merge-temp)
 - Limpiar archivos de grafana obsoletos y dejar solo el dashboard definitivo 
 
-### TODO JOSE (checkeado en rama environmet_unified)
+### TODO JOSE ✅ Hecho(checkeado en rama environmet_unified)
 - Unificar las variables de entorno en un único archivo. (subject dice environment variables must be set inside a .env)
 
