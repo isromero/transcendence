@@ -125,7 +125,7 @@ const updateMatchResults = (roundMatches, roundPrefix) => {
     const player1 = match.player1;
     const player2 = match.player2;
 
-    // Actualizar scores
+    // Update scores
     const player1Score = document.querySelector(
       `.${roundPrefix}-player${matchNumber * 2 - 1}`
     );
@@ -138,7 +138,7 @@ const updateMatchResults = (roundMatches, roundPrefix) => {
       player2Score.textContent = player2.score || '0';
     }
 
-    // Actualizar información de jugadores usando IDs
+    // Update player information using IDs
     const p1Name = document.getElementById(
       `${roundPrefix}${matchNumber}-p1-name`
     );
@@ -178,32 +178,41 @@ export function updateTournamentUI(tournamentData) {
   const lang = document.documentElement.lang;
 
   tournamentName.textContent = tournamentData.tournament_name;
-  if (lang === "uk-UA")
+  if (lang === 'uk-UA') {
     joinCode.textContent = `Код приєднання: ${tournamentData.join_code}`;
-  if (lang === "es")
+  }
+  if (lang === 'es') {
     joinCode.textContent = `Código de partida: ${tournamentData.join_code}`;
-  if (lang === "en")
+  }
+  if (lang === 'en') {
     joinCode.textContent = `Join Code: ${tournamentData.join_code}`;
+  }
 
   const playerSlots = document.querySelectorAll('.player-info span');
   playerSlots.forEach(slot => {
-    if (lang === "uk-UA")
+    if (lang === 'uk-UA') {
       slot.textContent = 'Очікування гравця...';
-    if (lang === "es")
+    }
+    if (lang === 'es') {
       slot.textContent = 'Esperando Jugador...';
-    if (lang === "en")
+    }
+    if (lang === 'en') {
       slot.textContent = 'Waiting for player...';
+    }
     slot.previousElementSibling.src = `${IMAGES_URL}/default_avatar.webp`;
   });
 
   const playerSlots2 = document.querySelectorAll('.player-info-final span');
   playerSlots2.forEach(slot => {
-    if (lang === "uk-UA")
+    if (lang === 'uk-UA') {
       slot.textContent = 'Очікування гравця...';
-    if (lang === "es")
+    }
+    if (lang === 'es') {
       slot.textContent = 'Esperando Jugador...';
-    if (lang === "en")
+    }
+    if (lang === 'en') {
       slot.textContent = 'Waiting for player...';
+    }
     slot.previousElementSibling.src = `${IMAGES_URL}/default_avatar.webp`;
   });
 
@@ -235,7 +244,7 @@ export function updateTournamentUI(tournamentData) {
     const player1 = finalMatch.player1;
     const player2 = finalMatch.player2;
 
-    // Actualizar información de la final usando IDs
+    // Update final match information using IDs
     const p1Name = document.getElementById('final-p1-name');
     const p1Img = document.getElementById('final-p1-img');
     const p2Name = document.getElementById('final-p2-name');
@@ -267,7 +276,7 @@ export function updateTournamentUI(tournamentData) {
         : `${IMAGES_URL}/default_avatar.webp`;
     }
 
-    // Actualizar ganador si el juego está terminado
+    // Update winner if the game is finished
     if (Math.max(player1.score, player2.score) >= 5) {
       const winner = player1.score > player2.score ? player1 : player2;
       const winnerImage = document.getElementById('winner-avatar');

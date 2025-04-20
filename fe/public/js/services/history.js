@@ -1,3 +1,4 @@
+import { loadErrorPage } from '../components/error.js';
 import { API_URL } from '../utils/constants.js';
 import { showErrorToast } from '../utils/helpers.js';
 
@@ -49,6 +50,12 @@ export const historyService = {
       },
       credentials: 'include',
     });
+
+    if (!response.ok) {
+      showErrorToast('This match does not exist');
+      loadErrorPage('Match not found');
+      return null;
+    }
 
     const result = await response.json();
 

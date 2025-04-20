@@ -249,12 +249,12 @@ export function init() {
         return;
       }
 
-      // Avanzamos la ronda
+      // Go to the next round
       const updatedTournament = await tournamentService.goToNextRound(
         tournament.id
       );
       if (updatedTournament) {
-        // Actualizamos la UI y redirigimos a las partidas de la siguiente ronda
+        // Update the UI and redirect to the next round matches
         updateTournamentUI(updatedTournament);
         await maybeRedirectToMatch(updatedTournament);
       }
@@ -268,7 +268,7 @@ export function init() {
 
   initializeTournament();
 
-  // If you leave thr tournament with popstate and beforeunload / others
+  // If you leave the tournament with popstate and beforeunload / others
   // We don't care, we won't do anything
   // We only care if you leave the tournament with the leave button
   // This is because it's a little buggy if we handle that way

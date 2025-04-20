@@ -12,7 +12,7 @@ export function init() {
 
     const result = await friendsService.addFriend(friend);
     if (result) {
-      await loadPage('/friends');
+      await loadPage('/friends', { updateHistory: false });
     }
   }
 

@@ -9,29 +9,32 @@ export function init() {
 
   async function handleFormSubmit(event) {
     event.preventDefault();
-  
-    const tournamentName = document.getElementById('tournament-name').value.trim();
-    const displayName = document.getElementById('leader-display-name').value.trim();
-  
+
+    const tournamentName = document
+      .getElementById('tournament-name')
+      .value.trim();
+    const displayName = document
+      .getElementById('leader-display-name')
+      .value.trim();
+
     const profile = await profileService.getProfile();
     if (!profile) {
       showErrorToast('Profile not found.');
       return;
     }
-  
+
     const result = await tournamentService.createTournament(
       tournamentName,
       4,
       profile.data,
-      displayName || profile.data.username // fallback si está vacío
+      displayName || profile.data.username // fallback if empty
     );
-  
+
     if (result) {
       await loadPage(`/tournament/${result.join_code}`);
       await updateTournamentUI(result);
     }
   }
-  
 
   form?.addEventListener('formValid', handleFormSubmit);
 

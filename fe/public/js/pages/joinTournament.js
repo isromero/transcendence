@@ -18,10 +18,11 @@ export function init() {
     }
 
     try {
-      
       const tournament = await tournamentService.getTournament(joinCode);
       if (!tournament) {
-        showErrorToast('Tournament not found. Please check the code and try again.');
+        showErrorToast(
+          'Tournament not found. Please check the code and try again.'
+        );
         return;
       }
 
@@ -31,7 +32,6 @@ export function init() {
         return;
       }
 
-      
       await tournamentService.updateTournamentWhenJoining(
         joinCode,
         tournament,
@@ -39,8 +39,7 @@ export function init() {
         displayName
       );
 
-      
-      await loadPage(`/tournament/${joinCode}`);
+      await loadPage(`/tournament/${joinCode}`, { updateHistory: true });
     } catch (error) {
       console.error('Error joining tournament:', error);
       showErrorToast('An error occurred while joining the tournament.');
