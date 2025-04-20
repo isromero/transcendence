@@ -36,6 +36,7 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 ### TODO SAMU
 - Screen reader and assistive technologies. Tenemos esto hecho?
+- (SAMU:) si eso ya lo tenemos!
 
 ### TODO TODOS
 - Lag en el juego en ordenadores de 42
@@ -54,3 +55,4 @@ DETAIL: Key (tournament_display_name)=(uno) already exists.
 
 ### TODO SAMU
 - Revisar con Jose el tema de los ws y http dentro del cli cuando nuestro sistema ahora es WSS y HTTPS
+- esto ya lo tenemos, no podemos cargarnos el localhost 8000 porque no solo se necesita para el cli si no para otra cosas de lo que me ha comentado jose
