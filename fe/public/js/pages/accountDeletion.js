@@ -1,7 +1,7 @@
 import { usersService } from '../services/users.js';
 import { loadPage } from '../router/router.js';
 import { profileService } from '../services/profile.js';
-
+import { showErrorToast } from '../utils/helpers.js';
 export function init() {
   const form = document.getElementById('accountDeletionForm');
   const passwordInput = document.getElementById('password');
@@ -18,12 +18,12 @@ export function init() {
       if (isOAuthUser) {
         const ok = await usersService.deleteUserWithoutPassword();
         if (ok) {
-          loadPage('/auth');
+          loadPage('/auth', { updateHistory: false });
         }
       } else {
         const ok = await usersService.deleteUser(passwordInput.value);
         if (ok) {
-          loadPage('/auth');
+          loadPage('/auth', { updateHistory: false });
         }
       }
     } catch (e) {

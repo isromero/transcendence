@@ -11,6 +11,10 @@ deja registrar a user1 pero no a user2
 ### TODO (isma): si me da tiempo
 - No se puede eliminar amigos, aunque el subject no dice que hay que hacerlo # 
 
+### PROBABLEMENTE ARREGLADO PERO REVISAR 🔔 LYUDMYLA Y SAMU
+- En otro ordenador no carga las fotos de perfil
+    + Arreglado (poner en docker compose de be el volumen be_media:/app/media para que lo comparta con caddy y pueda servir las imágenes)
+
 ### TODO ISMA
 - En multijugador el mismo usuario puede mover las dos flechas.
 

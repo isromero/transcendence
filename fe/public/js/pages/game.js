@@ -10,6 +10,7 @@ let animationFrameId = null;
 let gameEnded = false;
 let isInitializing = false;
 let hasNavigatedAway = false;
+let reconnectTimeout = null;
 
 function resetGameState() {
   if (animationFrameId !== null) {
@@ -157,7 +158,7 @@ async function updateGameState(gameState, is_animation) {
       } else {
         if (window.location.pathname.includes('game/')) {
           // If it's a multiplayer or local game, show the modal
-          await loadPage('/modal-end-game');
+          await loadPage('/modal-end-game', { updateHistory: false });
 
           const matchId = path.split('/game/')[1]?.split('/')[0];
           const data = await historyService.getMatchHistory(matchId);
@@ -184,6 +185,11 @@ function stopGame() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
+  }
+
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+    reconnectTimeout = null;
   }
 
   if (ws) {
@@ -231,7 +237,7 @@ async function checkIfGameFinished(matchId) {
       data.status === 'finished' &&
       window.location.pathname.includes('game/')
     ) {
-      await loadPage('/modal-end-game');
+      await loadPage('/modal-end-game', { updateHistory: false });
       setWinner(data);
       return true;
     }
@@ -329,7 +335,6 @@ export function init() {
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: 'disconnect' }));
         ws.close();
-        stopGame();
       }
     } catch (error) {
       console.error('Error in handleBeforeUnload:', error);
@@ -345,8 +350,6 @@ export function init() {
         ws.close();
       }
 
-      cleanupGameResources();
-
       const path = window.location.pathname;
       const matchId = path.split('/game/')[1]?.split('/')[0];
 
@@ -358,7 +361,7 @@ export function init() {
         }
       }
     } catch (error) {
-      console.error('Error en handlePopState:', error);
+      console.error('Error in handlePopState:', error);
     }
   }
 
@@ -381,7 +384,6 @@ export function init() {
       }
 
       ctx = canvas.getContext('2d');
-      // Establece resolución interna sin forzar tamaño visual
       canvas.width = 800;
       canvas.height = 400;
 
@@ -427,8 +429,12 @@ export function init() {
       };
 
       ws.onclose = () => {
-        if (!gameEnded && !hasNavigatedAway) {
-          setTimeout(initializeGame, 1000);
+        if (
+          !gameEnded &&
+          !hasNavigatedAway &&
+          window.location.pathname.includes('/game/')
+        ) {
+          reconnectTimeout = setTimeout(initializeGame, 1000);
         }
       };
 
