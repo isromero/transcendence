@@ -264,15 +264,23 @@ function setupMobileControls() {
       sendKeyEvent(buttonMapping[buttonId], false)
     );
 
-    button.addEventListener('touchstart', e => {
-      e.preventDefault();
-      sendKeyEvent(buttonMapping[buttonId], true);
-    });
+    button.addEventListener(
+      'touchstart',
+      e => {
+        e.preventDefault();
+        sendKeyEvent(buttonMapping[buttonId], true);
+      },
+      { passive: true }
+    );
 
-    button.addEventListener('touchend', e => {
-      e.preventDefault();
-      sendKeyEvent(buttonMapping[buttonId], false);
-    });
+    button.addEventListener(
+      'touchend',
+      e => {
+        e.preventDefault();
+        sendKeyEvent(buttonMapping[buttonId], false);
+      },
+      { passive: true }
+    );
   });
 }
 
@@ -298,14 +306,7 @@ export function init() {
 
   function handleKeyDown(event) {
     try {
-      const playerRole = sessionStorage.getItem('player_role');
-      const isLocalMatch = true;
-
-      if (
-        isLocalMatch ||
-        (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
-        (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
-      ) {
+      if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
         sendKeyEvent(event.key, true);
       }
     } catch (error) {
@@ -315,14 +316,7 @@ export function init() {
 
   function handleKeyUp(event) {
     try {
-      const playerRole = sessionStorage.getItem('player_role');
-      const isLocalMatch = true;
-
-      if (
-        isLocalMatch ||
-        (playerRole === 'left' && ['w', 's'].includes(event.key)) ||
-        (playerRole === 'right' && ['ArrowUp', 'ArrowDown'].includes(event.key))
-      ) {
+      if (['w', 's', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
         sendKeyEvent(event.key, false);
       }
     } catch (error) {
