@@ -17,7 +17,7 @@ GAME_HEIGHT = 400
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def render_game(state, left_username, right_username, ws):
+def render_game(state, left_username, right_username, ws, side):
     # Left paddle
     left_paddle = state.get("left_paddle", {})
     left_paddle_x = int(left_paddle.get("x", 0))
@@ -60,7 +60,7 @@ def render_game(state, left_username, right_username, ws):
         time.sleep(0.5)
         # Force exit to terminate all threads (or use sys.exit() if a graceful exit is desired)
 
-    render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown)
+    render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown, side)
     return state
 
 
@@ -167,7 +167,7 @@ def connect_match(match_id, left_username, right_username, side, cookies):
         except Exception:
             print("Could not parse message as JSON:", message)
             return
-        rendered = render_game(state, left_username, right_username, ws)
+        rendered = render_game(state, left_username, right_username, ws, side)
         #print(rendered)
 
     def on_error(ws, error):

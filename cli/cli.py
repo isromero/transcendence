@@ -188,7 +188,7 @@ def cli_prompt(api_url, cookie, username):
 def main():
     # Print help manual at startup.
     print(f"{Fore.MAGENTA}Welcome to the CLI! Here is the help manual:{Style.RESET_ALL}")
-    read_manual("help")
+    read_manual("title")
     
     while True:
         try:
