@@ -14,34 +14,19 @@ export function init() {
   const onlineIndicator = document.getElementById('online-indicator');
   const matchesContainer = document.getElementById('matches-container');
 
-  function formatMatchType(type) {
-    if (!type) return 'Unknown';
-
-    const mapping = {
-      local: 'Local',
-      'tournament semi': 'Tournament Semifinals',
-      'tournament final': 'Tournament Finals',
-      'tournament group': 'Tournament Group Stage',
-      ranked: 'Ranked Match',
-      friendly: 'Friendly Match',
-    };
-
-    return mapping[type.toLowerCase()] || type;
-  }
-
   async function loadProfileData() {
     const pathParts = window.location.pathname.split('/');
     const userId = pathParts[2];
 
     const { data } = userId
-      ? await usersService.getUser(userId) // Perfil de un amigo
-      : await profileService.getProfile(); // Perfil propio
+      ? await usersService.getUser(userId) 
+      : await profileService.getProfile(); 
 
     avatar.src = data.avatar
       ? `${IMAGES_URL}${data.avatar.replace('/images/', '/')}`
       : `${IMAGES_URL}/default_avatar.webp`;
 
-    username.textContent = data.username;
+    username.textContent = data.username || 'Unknown';
     onlineStatus.textContent = data.is_online ? 'Online' : 'Offline';
     onlineIndicator.className = `text-${data.is_online ? 'success' : 'secondary'} me-1`;
 
@@ -63,9 +48,9 @@ export function init() {
 
         matchElement.innerHTML = `
           <div class="match-info">
-            <p><strong>${formatMatchType(match.type)}</strong></p>
+            <p><strong>${match.type}</strong></p>
             <p>${formattedDate} at ${formattedTime}</p>
-            <p><strong>${data.username}</strong> ${match.score.user} - ${match.score.opponent} <strong>${match.opponent.username}</strong></p>
+            <p><strong>${match.players.player1.username}</strong> ${match.players.player1.score} - ${match.players.player2.score} <strong>${match.players.player2.username}</strong></p>
           </div>
         `;
 

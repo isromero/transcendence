@@ -72,7 +72,9 @@ def validate_password(password):
 
 
 def serialize_user(user):
-    user_history = History.objects.filter(user_id=user)
+    user_history = History.objects.filter(
+        models.Q(user_id=user) | models.Q(opponent_id=user)
+    )
 
     base_data = {
         "id": user.id,
@@ -94,7 +96,9 @@ def serialize_friend(friend_relation):
         else friend_relation.friend_id
     )
 
-    user_history = History.objects.filter(user_id=user_to_show)
+    user_history = History.objects.filter(
+        models.Q(user_id=user_to_show) | models.Q(opponent_id=user_to_show)
+    )
 
     base_data = {
         "id": user_to_show.id,
@@ -112,7 +116,7 @@ def serialize_friend(friend_relation):
 
 
 def serialize_stats(user, user_history):
-    # Partidas normales (no torneo) que han terminado (excluyendo 5-5)
+    
     non_tournament_matches = user_history.filter(
         type_match__in=["local", "multiplayer"],
         result_user__gt=0,
@@ -122,7 +126,7 @@ def serialize_stats(user, user_history):
         | models.Q(result_opponent=5, result_user__lt=5)
     )
 
-    # Unique tournaments with FINISHED matches (excluyendo 5-5)
+    
     tournaments = (
         user_history.filter(
             type_match__in=[
@@ -146,7 +150,7 @@ def serialize_stats(user, user_history):
         user_history.filter(
             type_match="tournament_final",
             result_user=5,
-            result_opponent__lt=5,  # Asegurar que el oponente no tiene 5
+            result_opponent__lt=5,  
             tournament_id__in=tournaments.values("tournament_id"),
         )
         .values("tournament_id")
@@ -157,7 +161,7 @@ def serialize_stats(user, user_history):
     total_tournaments = tournaments.count()
     tournament_defeats = total_tournaments - tournament_wins
 
-    # Solo mirar los registros donde el usuario es user_id (excluyendo 5-5)
+    
     victories = non_tournament_matches.filter(
         result_user=5, result_opponent__lt=5
     ).count()
@@ -350,36 +354,71 @@ def generate_join_code():
 
 
 def serialize_stats_with_history(user, user_history):
-    # Partidas normales (no torneo) que han terminado (excluyendo 5-5)
-    non_tournament_matches = user_history.filter(
-        type_match__in=["local", "multiplayer"],
-        result_user__gt=0,
-        result_opponent__gt=0,
-    ).filter(
-        models.Q(result_user=5, result_opponent__lt=5)
-        | models.Q(result_opponent=5, result_user__lt=5)
+    
+    user_history = user_history.filter(user_id=user)
+
+    
+    user_history = user_history.exclude(
+        models.Q(result_user=5, result_opponent=5) |
+        models.Q(result_user=0, result_opponent=0) |  
+        ~models.Q(result_user=5) & ~models.Q(result_opponent=5)  
     )
 
-    # Unique tournaments with FINISHED matches (excluyendo 5-5)
+    
+    matches = user_history.values(
+        "match_id",
+        "type_match",
+        "date",
+        "result_user",
+        "result_opponent",
+        "user_id__username",
+        "user_id__avatar",
+        "opponent_id__username",
+        "opponent_id__avatar",
+    )
+
+    match_history = [
+        {
+            "match_id": match["match_id"],
+            "type": match["type_match"],
+            "date": match["date"],
+            "players": {
+                "player1": {
+                    "username": match["user_id__username"],
+                    "avatar": match["user_id__avatar"] or "/default_avatar.webp",
+                    "score": match["result_user"],
+                },
+                "player2": {
+                    "username": match["opponent_id__username"],
+                    "avatar": match["opponent_id__avatar"] or "/default_avatar.webp",
+                    "score": match["result_opponent"],
+                },
+            },
+        }
+        for match in matches
+    ]
+
+    
+    victories = user_history.filter(
+        result_user=5, result_opponent__lt=5
+    ).count()
+    defeats = user_history.filter(
+        result_opponent=5, result_user__lt=5
+    ).count()
+    total_matches = user_history.count()
+
     tournaments = (
         user_history.filter(
             type_match__in=[
                 "tournament_quarter",
                 "tournament_semi",
                 "tournament_final",
-            ],
-            result_user__gt=0,
-            result_opponent__gt=0,
-        )
-        .filter(
-            models.Q(result_user=5, result_opponent__lt=5)
-            | models.Q(result_opponent=5, result_user__lt=5)
+            ]
         )
         .values("tournament_id")
         .distinct()
     )
 
-    # Count the number of wins in tournaments (excluyendo 5-5)
     tournament_wins = (
         user_history.filter(
             type_match="tournament_final",
@@ -395,46 +434,10 @@ def serialize_stats_with_history(user, user_history):
     total_tournaments = tournaments.count()
     tournament_defeats = total_tournaments - tournament_wins
 
-    # Solo mirar los registros donde el usuario es user_id (excluyendo 5-5)
-    victories = non_tournament_matches.filter(
-        result_user=5, result_opponent__lt=5
-    ).count()
-    defeats = non_tournament_matches.filter(
-        result_opponent=5, result_user__lt=5
-    ).count()
-
-    # Historial de partidas
-    matches = user_history.values(
-        "match_id",
-        "type_match",
-        "date",
-        "result_user",
-        "result_opponent",
-        "opponent_id__username",
-        "opponent_id__avatar",
-    )
-
-    match_history = [
-        {
-            "match_id": match["match_id"],
-            "type": match["type_match"],
-            "date": match["date"],
-            "score": {
-                "user": match["result_user"],
-                "opponent": match["result_opponent"],
-            },
-            "opponent": {
-                "username": match["opponent_id__username"],
-                "avatar": match["opponent_id__avatar"] or "/default_avatar.webp",
-            },
-        }
-        for match in matches
-    ]
-
     return {
         "victories": victories,
         "defeats": defeats,
-        "total_matches": non_tournament_matches.count() + total_tournaments,
+        "total_matches": total_matches,
         "tournaments_victories": tournament_wins,
         "tournaments_defeats": tournament_defeats,
         "total_tournaments": total_tournaments,
