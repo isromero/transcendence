@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login, logout, authenticate
 import os
 from django.conf import settings
+from apps.core.utils import handle_form_errors
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
@@ -40,9 +41,7 @@ class UserView(View):
                 return create_response(
                     data=serialize_user(user), message="User updated successfully"
                 )
-            return create_response(
-                error=form.errors, message="User update failed", status=400
-            )
+            return handle_form_errors(form)
         except json.JSONDecodeError:
             return create_response(
                 error="Invalid JSON", message="User update failed", status=400
