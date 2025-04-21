@@ -48,7 +48,6 @@ export function init() {
             <p>Date: ${new Date(match.date).toLocaleDateString()}</p>
             <p>Score: You ${match.score.user} - ${match.score.opponent} ${match.opponent.username}</p>
           </div>
-          <img src="${match.opponent.avatar}" alt="Opponent Avatar" class="avatar">
         `;
         matchesContainer.appendChild(matchElement);
       });
