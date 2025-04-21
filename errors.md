@@ -1,6 +1,6 @@
 ## PROBLEMAS ENCONTRADOS
 
-### TODO ISMA -> NO SE HASHEA LA CONTRASEÑA CUANDO CAMBIAS EL NOMBRE DEL USUARIO ENTONCES SE CAMBIA Y NO PUEDES VOLVER A INICIAR SESIÓN
+### TODO ISMA ✅ Hecho
 - Al cambiar el nombre de usuario, se sale de la sesion y ya no deja de acceder, invalid credencial. Y no deja registrarse con el usuario nuevo. 
 ejemplo:
 Username: user1
