@@ -198,11 +198,13 @@ def serialize_tournament(tournament):
                 "id": player1_record.user_id.id,
                 "username": player1_record.user_id.tournament_display_name,
                 "score": player1_record.result_user,
+                "avatar": player1_record.user_id.avatar,
             },
             "player2": {
                 "id": player2_record.user_id.id,
                 "username": player2_record.user_id.tournament_display_name,
                 "score": player2_record.result_user,
+                "avatar": player2_record.user_id.avatar,
             },
             "game_finished": max(player1_record.result_user, player2_record.result_user)
             >= 5,
@@ -225,11 +227,8 @@ def serialize_tournament(tournament):
         for match in matches.filter(type_match="tournament_semi").distinct("match_id")
     ]
     final_matches = [
-        match_data
-        for match in matches.filter(type_match="tournament_final")
-        .order_by("tournament_match_number", "-date")
-        .distinct("tournament_match_number")
-        if (match_data := get_match_data(match)) is not None
+        get_match_data(match)
+        for match in matches.filter(type_match="tournament_final").distinct("match_id")
     ]
 
     # Get players in order of joining this specific tournament

@@ -12,8 +12,7 @@ export function getCleanPageKey(requestedPath) {
   );
 }
 
-// * Parse the HTML content and create script elements to be executed
-// * This is ultra important to execute the scripts in a SPA
+// Parse the HTML content and set it to the container
 export function parseAndSetContent(container, htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
@@ -24,20 +23,6 @@ export function parseAndSetContent(container, htmlString) {
   // Transfer all nodes of the parsed content
   Array.from(doc.body.childNodes).forEach(node => {
     container.appendChild(node.cloneNode(true));
-  });
-
-  // Search and execute scripts
-  const scripts = Array.from(container.querySelectorAll('script'));
-  scripts.forEach(script => {
-    const newScript = document.createElement('script');
-    newScript.async = false; // Ensure scripts are executed in the order they appear
-    newScript.type = 'module';
-    if (script.src) {
-      newScript.src = script.src;
-    } else {
-      newScript.textContent = script.textContent;
-    }
-    script.parentNode.replaceChild(newScript, script);
   });
 }
 
@@ -237,6 +222,10 @@ export function updateTournamentUI(tournamentData) {
 
   if (tournamentData.matches.semi_finals?.length > 0) {
     updateMatchResults(tournamentData.matches.semi_finals, 'semi');
+  }
+
+  if (tournamentData.matches.finals?.length > 0) {
+    updateMatchResults(tournamentData.matches.finals, 'final');
   }
 
   if (tournamentData.matches.finals?.length > 0) {

@@ -84,19 +84,19 @@ class UserView(View):
             )
 
     def delete_user(self, user, request):
-        """Función auxiliar para eliminar un usuario y sus datos"""
-        # Anonimizar datos del usuario
+        """Anonymize user data and delete user"""
+        # Anonymize user data
         user.password = ""
         user.avatar = "/images/default_avatar.webp"
         user.deleted_user = True
         user.username = f"anonymized_user_{user.id}"
         user.tournament_display_name = f"anonymized_user_{user.id}"
 
-        # Eliminar amigos
+        # Delete friends
         Friends.objects.filter(user_id=user.id).delete()
         Friends.objects.filter(friend_id=user.id).update(friend_id=user)
 
-        # Eliminar historial
+        # Delete history
         History.objects.filter(user_id=user.id).delete()
 
         user.save()
