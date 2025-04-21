@@ -11,14 +11,14 @@
 
 FROM caddy:latest
 
-RUN addgroup --system caddygroup && adduser --system --ingroup caddygroup caddyuser
-RUN mkdir -p /app/media && chown -R caddyuser:caddygroup /app/media
+# RUN addgroup --system caddygroup && adduser --system --ingroup caddygroup caddyuser
+# RUN mkdir -p /app/media && chown -R caddyuser:caddygroup /app/media
 
 COPY ./Caddyfile /etc/caddy/Caddyfile
 
-RUN chown -R caddyuser:caddygroup /etc/caddy /data /config /app
+# RUN chown -R caddyuser:caddygroup /etc/caddy /data /config /app
 
-USER caddyuser
+# USER caddyuser
 
 EXPOSE 443
 
