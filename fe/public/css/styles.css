@@ -280,18 +280,20 @@
 
 
 /* --- Perfil --- */
-.profile-container {
-  min-height: 100vh;
-  padding-bottom: 6rem;
-  margin-top: 9rem;
-  overflow-y: scroll; 
-  position: relative;
-  scale: 0.9;
 
-  
+
+.profile-container {
+  position: fixed;
+  inset: 0;
+  overflow-y: scroll;
+  padding: 9rem 1rem 6rem 1rem;
+  margin: 0;
+  scale: 1; /* o elimínalo */
+  margin-top: 9rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 
 .profile-container::-webkit-scrollbar {
   display: none;
