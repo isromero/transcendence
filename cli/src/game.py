@@ -158,8 +158,7 @@ def listen_to_keys(ws, side):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def connect_match(match_id, left_username, right_username, side):
-    # TODO: Samu / JOSE ?? WSS o WS. PORT 8000 OR 8443??
+def connect_match(match_id, left_username, right_username, side, cookies):
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
     def on_message(ws, message):
@@ -169,7 +168,7 @@ def connect_match(match_id, left_username, right_username, side):
             print("Could not parse message as JSON:", message)
             return
         rendered = render_game(state, left_username, right_username, ws)
-        print(rendered)
+        #print(rendered)
 
     def on_error(ws, error):
         print("WebSocket Error:", error)
@@ -183,11 +182,15 @@ def connect_match(match_id, left_username, right_username, side):
         # Start a thread to listen for key input using our custom reader.
         threading.Thread(target=listen_to_keys, args=(ws, side,), daemon=True).start()
 
+    cookie_header = '; '.join([f'{key}={value}' for key, value in cookies.items()])
+    headers = [f"Cookie: {cookie_header}"]
+
     from websocket import WebSocketApp
     ws_app = WebSocketApp(ws_url,
                           on_message=on_message,
                           on_error=on_error,
-                          on_close=on_close)
+                          on_close=on_close,
+                          header=headers)
     ws_app.on_open = on_open
     ws_app.run_forever()
 
