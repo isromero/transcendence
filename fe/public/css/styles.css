@@ -282,7 +282,7 @@
 /* --- Perfil --- */
 .profile-container {
   min-height: 100vh;
-  padding-bottom: 2rem;
+  padding-bottom: 6rem;
   margin-top: 9rem;
   overflow-y: scroll; /* Usa scroll para mantener la funcionalidad */
   position: relative;
@@ -310,7 +310,7 @@
 /* --- Contenedor de Historial --- */
 .matches-container,
 .profile-matches-container {
-  max-height: 40vh;
+  max-height: 60vh; /* Aumentado de 40vh a 60vh */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -318,7 +318,7 @@
   margin: 0 auto;
   padding: 1rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px; /* Aumentado de 600px a 700px */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -326,6 +326,7 @@
 
 .profile-matches-container {
   margin-bottom: 2rem;
+  
 }
 .profile-matches-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari y Opera */
@@ -378,8 +379,9 @@
 @media (max-width: 768px) {
   .matches-container,
   .profile-matches-container {
-    max-height: 300px;
+    max-height: 50vh; /* Eliminamos la limitación en pantallas pequeñas */
     padding: 0.5rem;
+    max-width: 100%; /* Ajuste responsivo en lugar de un ancho fijo */
   }
 
   .match-card,
@@ -408,7 +410,7 @@
 @media (max-width: 480px) {
   .matches-container,
   .profile-matches-container {
-    max-height: 250px;
+    max-height: 50vh; /* Igual aquí, permite que crezca libremente */
     gap: 0.5rem;
   }
 
@@ -422,4 +424,15 @@
     width: 35px;
     height: 35px;
   }
+}
+
+
+.stats-wrapper {
+  margin-top: 1rem;
+}
+
+.stats-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
