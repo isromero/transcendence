@@ -6,8 +6,8 @@
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="card border-0">
-          <div class="card-body bs-primary">
-            <form id="joinTournamentForm">
+          <div class="card-body bs-primary text-center">
+            <form id="joinTournamentForm" class="needs-validation" novalidate>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color text-center w-100"
@@ -20,7 +20,6 @@
                   type="text"
                   class="form-control form-control-lg bs-secondary"
                   style="border-radius: 20px"
-                  required
                 />
               </div>
               <div class="form-group mb-3">
@@ -37,6 +36,7 @@
                   style="border-radius: 20px"
                   required
                 />
+                <div class="invalid-feedback">Join code is required</div>
               </div>
               <div class="d-flex justify-content-center gap-2">
                 <a class="spa-link" href="/" style="flex: 1">

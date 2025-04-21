@@ -191,32 +191,40 @@ export function init() {
       if (tournament.status === 'in_progress') {
         const currentRoundKey = roundMap[tournament.current_round];
         const currentRoundFinished =
-          tournament.matches.round_finished?.[currentRoundKey];
+          tournament.matches?.round_finished?.[currentRoundKey];
 
         const profile = await profileService.getProfile();
         const userId = profile?.data?.id;
 
         nextRoundBtn?.classList.add('hidden');
+        nextRoundBtn?.setAttribute('disabled', 'true');
 
-        if (currentRoundFinished) {
-          if (currentRoundKey === 'semi_finals') {
-            const semiFinalsMatches = tournament.matches.semi_finals || [];
-            const semifinalsWinners = semiFinalsMatches.map(match =>
-              match.player1.score > match.player2.score
+        if (currentRoundFinished && currentRoundKey && userId) {
+          const completedRoundMatches =
+            tournament.matches?.[currentRoundKey] || [];
+
+          const winners = completedRoundMatches
+            .map(match => {
+              if (
+                !match.player1?.id ||
+                !match.player2?.id ||
+                match.player1.score === undefined ||
+                match.player2.score === undefined
+              ) {
+                return null;
+              }
+              return match.player1.score > match.player2.score
                 ? match.player1.id
-                : match.player2.id
-            );
+                : match.player2.id;
+            })
+            .filter(id => id !== null);
 
-            if (semifinalsWinners.includes(userId)) {
+          if (winners.includes(userId)) {
+            if (currentRoundKey !== 'finals') {
               nextRoundBtn?.classList.remove('hidden');
               nextRoundBtn?.removeAttribute('disabled');
             }
-          } else {
-            nextRoundBtn?.classList.remove('hidden');
-            nextRoundBtn?.removeAttribute('disabled');
           }
-        } else {
-          nextRoundBtn?.setAttribute('disabled', 'true');
         }
 
         await maybeRedirectToMatch(tournament);
@@ -232,6 +240,9 @@ export function init() {
         startBtn?.setAttribute('disabled', 'true');
       } else if (tournament.status === 'completed') {
         leaveBtn?.classList.remove('hidden');
+        startBtn?.classList.add('hidden');
+        nextRoundBtn?.classList.add('hidden');
+        nextRoundBtn?.setAttribute('disabled', 'true');
       }
     } catch (error) {
       console.error('Error in handleTournamentProgress:', error);

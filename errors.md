@@ -33,7 +33,7 @@ deja registrar a user1 pero no a user2
 ### TODO SAMU
 - Textos sin traducir cuando no tienes ningún amigo y cuando no te tienes ninguna solicitud de amigo pendiente
 
-### TODO ISMA(es esperado esto, pero veo si lo fixeo o no)
+### TODO ISMA ✅ Hecho
 - El nombre mostrado al finalizar el torneo no corresponde con el nombre que el usuario ha puesto para jugar el torneo, si no que se muestra el username de registro en la aplicación.
 - En la pantalla intermedia del torneo (en la de las semifinales) sí se muestra bien, el fallo únicamente es el la pantalla final del resumen del torneo.
 
@@ -47,7 +47,8 @@ Lyandriy rechaza la invitación.
 Josgarci y Lyandriy son amigos.
 
 
-### TODO ADRI ✅ Hecho (checkeado en rama merge-temp)
+### TODO ADRI ✅ Hecho (checkeado en rama merge-temp) -> No funcionaba bien
+### Y YO(isma) LO HE ARREGLADO ✅ Hecho
 - No deja crear torneos Si habia una vez un jugador que se puso un nombre en un torneo tipo: jugador1, luego en otros torneos no le deja usarlo.
 duplicate key value violates unique constraint "core_user_tournament_display_name_321645ac_uniq"
 DETAIL: Key (tournament_display_name)=(uno) already exists.

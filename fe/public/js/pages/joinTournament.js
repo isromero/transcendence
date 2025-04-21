@@ -12,11 +12,6 @@ export function init() {
     const displayName = document.getElementById('displayName').value.trim();
     const joinCode = document.getElementById('joinCode').value.trim();
 
-    if (!displayName || !joinCode) {
-      showErrorToast('Please fill in all fields.');
-      return;
-    }
-
     try {
       const tournament = await tournamentService.getTournament(joinCode);
       if (!tournament) {
@@ -46,9 +41,9 @@ export function init() {
     }
   }
 
-  form?.addEventListener('submit', handleFormSubmit);
+  form?.addEventListener('formValid', handleFormSubmit);
 
   return () => {
-    form?.removeEventListener('submit', handleFormSubmit);
+    form?.removeEventListener('formValid', handleFormSubmit);
   };
 }

@@ -16,12 +16,7 @@ class User(AbstractUser):
     last_activity = models.DateTimeField(default=timezone.now)
     deleted_user = models.BooleanField(default=False)
 
-    tournament_display_name = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True,
-        unique=True,
-    )
+    tournament_display_name = models.CharField(max_length=150, null=True, blank=True)
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []  # Required fields for create superuser
