@@ -34,9 +34,8 @@ def login_and_get_cookie(api_url, username, password):
     return session, message, cookies
 
 def matchmaking(cookies):
-    # TODO: Samu / JOSE ?? WSS o WS. PORT 8000 OR 8443??
-    ws_url = "wss://localhost:8000/ws/matchmaking"
-    result_container = {"match_id": None, "player": None}
+    ws_url = "ws://localhost:8000/ws/matchmaking"
+    result_container = {"match_id": None, "position": None}
 
     def on_message(ws, message):
         try:
@@ -48,8 +47,8 @@ def matchmaking(cookies):
         # Check for start_match message
         if state.get("type") == "start_match":
             result_container["match_id"] = state.get("match_id")
-            result_container["player"] = state.get("player")
-            print(f"Match found! ID: {result_container['match_id']}, Player: {result_container['player']}")
+            result_container["position"] = state.get("position")
+            print(f"Match found! ID: {result_container['match_id']}, Player: {result_container['position']}")
             ws.close()
         else:
             print("waiting for other players...")
@@ -77,7 +76,7 @@ def matchmaking(cookies):
     ws_app.on_open = on_open
     ws_app.run_forever()
 
-    return result_container["match_id"], result_container["player"]
+    return result_container["match_id"], result_container["position"]
 
 # Example usage
 '''
