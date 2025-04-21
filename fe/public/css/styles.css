@@ -286,7 +286,7 @@
   position: fixed;
   inset: 0;
   overflow-y: scroll;
-  padding: 9rem 1rem 6rem 1rem;
+  padding: 2rem 1rem 6rem 1rem;
   margin: 0;
   scale: 1; /* o elimínalo */
   margin-top: 9rem;
