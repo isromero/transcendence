@@ -31,33 +31,30 @@ export function init() {
     onlineStatus.textContent = data.is_online ? 'Online' : 'Offline';
     onlineIndicator.className = `text-${data.is_online ? 'success' : 'secondary'} me-1`;
 
-    const victories = Number(data.victories || 0);
-    const tournamentVictories = Number(data.tournaments_victories || 0);
-    const defeats = Number(data.defeats || 0);
-    const tournamentDefeats = Number(data.tournaments_defeats || 0);
-    const totalMatches = Number(data.total_matches || 0);
+    wins.textContent = Number(data.victories || 0);
+    loses.textContent = Number(data.defeats || 0);
+    total.textContent = Number(data.total_matches || 0);
+    tournamentWins.textContent = Number(data.tournaments_victories || 0);
+    tournamentLoses.textContent = Number(data.tournaments_defeats || 0);
 
-    wins.textContent = victories;
-    loses.textContent = defeats;
-    total.textContent = totalMatches;
-    tournamentWins.textContent = tournamentVictories;
-    tournamentLoses.textContent = tournamentDefeats;
-
-    matchesContainer.innerHTML = ''; // Limpiar contenedor
-
-    data.matches.forEach(match => {
-      const matchElement = document.createElement('div');
-      matchElement.className = 'match-card';
-      matchElement.innerHTML = `
-        <div class="match-info">
-          <p>Type: ${match.type}</p>
-          <p>Date: ${new Date(match.date).toLocaleDateString()}</p>
-          <p>Score: You ${match.score.user} - ${match.score.opponent} ${match.opponent.username}</p>
-        </div>
-        <img src="${match.opponent.avatar}" alt="Opponent Avatar" class="avatar">
-      `;
-      matchesContainer.appendChild(matchElement);
-    });
+    matchesContainer.innerHTML = '';
+    if (Array.isArray(data.match_history)) {
+      data.match_history.forEach(match => {
+        const matchElement = document.createElement('div');
+        matchElement.className = 'match-card';
+        matchElement.innerHTML = `
+          <div class="match-info">
+            <p>Type: ${match.type}</p>
+            <p>Date: ${new Date(match.date).toLocaleDateString()}</p>
+            <p>Score: You ${match.score.user} - ${match.score.opponent} ${match.opponent.username}</p>
+          </div>
+          <img src="${match.opponent.avatar}" alt="Opponent Avatar" class="avatar">
+        `;
+        matchesContainer.appendChild(matchElement);
+      });
+    } else {
+      matchesContainer.innerHTML = '<p>No matches found.</p>';
+    }
   }
 
   loadProfileData();
