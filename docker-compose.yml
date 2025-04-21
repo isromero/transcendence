@@ -26,7 +26,7 @@ services:
       - ./be:/app
       - be_media:/app/media
     env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+      - ${TRANSCENDENCE_ENV_FILE:-.env}
     restart: always
     depends_on:
       - db
@@ -39,7 +39,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+      - ${TRANSCENDENCE_ENV_FILE:-.env}
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -53,8 +53,6 @@ services:
       - 3002:3002
     volumes:
       - ./fe:/app
-    env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
     networks:
       - transcendence_network
 
@@ -80,7 +78,7 @@ services:
     ports:
       - 3333:3333
     env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+      - ${TRANSCENDENCE_ENV_FILE:-.env}
     restart: always
     depends_on:
       - prometheus
@@ -93,7 +91,7 @@ services:
     ports:
       - 9187:9187
     env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+      - ${TRANSCENDENCE_ENV_FILE:-.env}
     command: '--no-collector.stat_bgwriter'
     restart: always
     depends_on:
@@ -109,7 +107,7 @@ services:
       - 9115:9115
     restart: always
     env_file:
-      - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+      - ${TRANSCENDENCE_ENV_FILE:-.env}
     networks:
       - transcendence_network
 
@@ -141,7 +139,7 @@ networks:
 #       - be_data:/app
 #       - be_media:/app/media
 #     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#       - ${TRANSCENDENCE_ENV_FILE:-.env}
 #     restart: always
 #     depends_on:
 #       - db
@@ -155,7 +153,7 @@ networks:
 #     ports:
 #       - 5432:5432
 #     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#       - ${TRANSCENDENCE_ENV_FILE:-.env}
 #     restart: always
 #     volumes:
 #       - db_data:/var/lib/postgresql/data
@@ -193,10 +191,8 @@ networks:
 #     user: grafana
 #     ports:
 #       - 3333:3333
-#     # volumes:
-#     #   - grafana_data:/var/lib/grafana
 #     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+#       - ${TRANSCENDENCE_ENV_FILE:-.env}
 #     restart: always
 #     depends_on:
 #       - prometheus
@@ -209,7 +205,7 @@ networks:
 #     ports:
 #       - 9187:9187
 #     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./monitoring/.env}
+#       - ${TRANSCENDENCE_ENV_FILE:-.env}
 #     command: '--no-collector.stat_bgwriter'
 #     restart: always
 #     depends_on:
@@ -225,7 +221,7 @@ networks:
 #       - 9115:9115
 #     restart: always
 #     env_file:
-#       - ${TRANSCENDENCE_ENV_FILE:-./be/.env}
+#       - ${TRANSCENDENCE_ENV_FILE:-.env}
 #     networks:
 #       - transcendence_network
 

@@ -44,7 +44,7 @@ def update_caddyfile(caddyfile_path, hostname):
 
 def main():
     hostname = get_hostname()
-    env_path = "./be/.env"
+    env_path = ".env"
     caddyfile_path = "./deployment/Caddyfile"
 
     print(f"Using hostname: {hostname}")
