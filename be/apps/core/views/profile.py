@@ -1,6 +1,6 @@
 from django.views import View
 from apps.core.models import History
-from apps.core.utils import serialize_stats
+from apps.core.utils import serialize_stats_with_history
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from apps.core.utils import create_response
@@ -14,7 +14,7 @@ class ProfileView(View):
             user_history = History.objects.filter(user_id=user)
             return create_response(
                 data={
-                    **serialize_stats(user, user_history),
+                    **serialize_stats_with_history(user, user_history),
                     "is_online": user.is_online,
                 }
             )
