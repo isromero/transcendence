@@ -276,3 +276,91 @@
 .hidden {
   display: none !important;
 }
+
+/* Ajustes generales */
+.container-fluid {
+  padding: 0;
+}
+
+.profile-circle {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+
+.stats-container p {
+  margin-bottom: 0.5rem;
+}
+
+/* Ajustes para el contenedor de historial */
+.matches-container {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  padding: 1rem; /* Espaciado interno */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  max-width: 600px; /* Limita el ancho en pantallas grandes */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para mejor visibilidad */
+  background-color: #f9f9f9; /* Fondo claro */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Ajustes para las tarjetas de partidas */
+.match-card {
+  display: flex;
+  flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  text-align: center; /* Centra el texto */
+}
+
+/* Imagen del avatar */
+.match-card .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem; /* Espaciado debajo del avatar */
+}
+
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+  .matches-container {
+    max-height: 300px; /* Reduce la altura máxima en pantallas pequeñas */
+    padding: 0.5rem; /* Reduce el padding */
+  }
+
+  .match-card {
+    flex-direction: column; /* Asegura que las tarjetas sean verticales */
+    padding: 0.8rem;
+  }
+
+  .match-card .avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Media queries para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .matches-container {
+    max-height: 250px;
+    gap: 0.5rem; /* Reduce el espacio entre tarjetas */
+  }
+
+  .match-card {
+    padding: 0.5rem;
+  }
+
+  .match-card .avatar {
+    width: 35px;
+    height: 35px;
+  }
+}

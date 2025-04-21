@@ -12,6 +12,7 @@ export function init() {
   const tournamentLoses = document.getElementById('tournament-loses');
   const onlineStatus = document.getElementById('online-status');
   const onlineIndicator = document.getElementById('online-indicator');
+  const matchesContainer = document.getElementById('matches-container');
 
   async function loadProfileData() {
     const pathParts = window.location.pathname.split('/');
@@ -41,6 +42,22 @@ export function init() {
     total.textContent = totalMatches;
     tournamentWins.textContent = tournamentVictories;
     tournamentLoses.textContent = tournamentDefeats;
+
+    matchesContainer.innerHTML = ''; // Limpiar contenedor
+
+    data.matches.forEach(match => {
+      const matchElement = document.createElement('div');
+      matchElement.className = 'match-card';
+      matchElement.innerHTML = `
+        <div class="match-info">
+          <p>Type: ${match.type}</p>
+          <p>Date: ${new Date(match.date).toLocaleDateString()}</p>
+          <p>Score: You ${match.score.user} - ${match.score.opponent} ${match.opponent.username}</p>
+        </div>
+        <img src="${match.opponent.avatar}" alt="Opponent Avatar" class="avatar">
+      `;
+      matchesContainer.appendChild(matchElement);
+    });
   }
 
   loadProfileData();

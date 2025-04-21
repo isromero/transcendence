@@ -74,6 +74,8 @@ def validate_password(password):
 def serialize_user(user):
     user_history = History.objects.filter(user_id=user)
 
+    stats_data = serialize_stats_for_friends(user, user_history)
+
     base_data = {
         "id": user.id,
         "username": user.username,
@@ -82,9 +84,8 @@ def serialize_user(user):
         "deleted_user": user.deleted_user,
         "display_name": user.tournament_display_name,
     }
-    stats_data = serialize_stats(user, user_history)
 
-    return {**base_data, **stats_data}
+    return {**base_data, "matches": stats_data}
 
 
 def serialize_friend(friend_relation):
@@ -96,7 +97,7 @@ def serialize_friend(friend_relation):
 
     user_history = History.objects.filter(user_id=user_to_show)
 
-    stats_data = serialize_stats(user_to_show, user_history)
+    stats_data = serialize_stats_for_friends(user_to_show, user_history)
 
     base_data = {
         "id": user_to_show.id,
@@ -109,7 +110,7 @@ def serialize_friend(friend_relation):
         "is_online": user_to_show.is_online,
     }
 
-    return {**base_data, **stats_data}
+    return {**base_data, "matches": stats_data}
 
 
 def serialize_stats(user, user_history):
@@ -178,6 +179,35 @@ def serialize_stats(user, user_history):
         "tournaments_defeats": tournament_defeats,
         "total_tournaments": total_tournaments,
     }
+
+
+def serialize_stats_for_friends(user, user_history):
+    matches = user_history.values(
+        "match_id",
+        "type_match",
+        "date",
+        "result_user",
+        "result_opponent",
+        "opponent_id__username",
+        "opponent_id__avatar",
+    )
+
+    return [
+        {
+            "match_id": match["match_id"],
+            "type": match["type_match"],
+            "date": match["date"],
+            "score": {
+                "user": match["result_user"],
+                "opponent": match["result_opponent"],
+            },
+            "opponent": {
+                "username": match["opponent_id__username"],
+                "avatar": match["opponent_id__avatar"] or "/default_avatar.webp",
+            },
+        }
+        for match in matches
+    ]
 
 
 def serialize_tournament(tournament):
