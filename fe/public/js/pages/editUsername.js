@@ -1,5 +1,6 @@
 import { usersService } from '../services/users.js';
 import { loadPage } from '../router/router.js';
+import { showErrorToast } from '../utils/helpers.js';
 
 export function init() {
   const form = document.getElementById('editUsernameForm');
@@ -9,15 +10,22 @@ export function init() {
   const togglePassword = document.getElementById('togglePassword');
 
   async function handleFormSubmit() {
+    const newUsername = newUsernameInput.value.trim();
+
+    if (newUsername.length < 9) {
+      showErrorToast('Username must be at least 9 characters long.');
+      return;
+    }
+
     const user = {
       oldUsername: oldUsernameInput.value,
-      username: newUsernameInput.value,
+      username: newUsername,
       password: passwordInput.value,
     };
 
     const result = await usersService.updateUser(user);
     if (result) {
-      await loadPage('/edit-profile');
+      await loadPage('/edit-profile', { updateHistory: false });
     }
   }
 

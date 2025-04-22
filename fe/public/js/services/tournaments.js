@@ -3,7 +3,7 @@ import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 import { profileService } from './profile.js';
 
 export const tournamentService = {
-  createTournament: async (tournamentName, maxPlayers) => {
+  createTournament: async (tournamentName, maxPlayers, profile, newDisplayName = null) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'POST',
@@ -14,6 +14,7 @@ export const tournamentService = {
         body: JSON.stringify({
           tournament_name: tournamentName,
           max_players: maxPlayers,
+          display_name: newDisplayName || profile.username,
         }),
         credentials: 'include',
       });
@@ -193,4 +194,36 @@ export const tournamentService = {
       return null;
     }
   },
+  deleteTournament: async (joinCode, tournamentId) => {
+    try {
+      const response = await fetch(`${API_URL}/tournaments`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          tournament_id: tournamentId,  // Enviamos el tournament_id en el body
+        }),
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        showErrorToast('Error deleting tournament.');
+        return null;
+      }
+  
+      // Remover el torneo del almacenamiento local si todo fue exitoso
+      const userId = (await profileService.getProfile())?.data?.id;
+      const tournamentKey = `tournament_${joinCode}_player_${userId}`;
+      localStorage.removeItem(tournamentKey);
+  
+      showSuccessToast('Tournament deleted successfully.');
+      return true;
+    } catch (error) {
+      showErrorToast(`Error deleting tournament: ${error.message}`);
+      return null;
+    }
+  },
+  
 };

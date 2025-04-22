@@ -18,7 +18,7 @@ export function init() {
 
     const result = await usersService.updateUser(user);
     if (result) {
-      await loadPage('/edit-profile');
+      await loadPage('/edit-profile', { updateHistory: false });
     }
   }
 

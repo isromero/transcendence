@@ -1,0 +1,16 @@
+LOGIN(1)                 Transcendence Manual                 LOGIN(1)
+
+NAME
+    login - authenticate or change user credentials
+
+SYNOPSIS
+    login
+
+DESCRIPTION
+    Prompts the user to enter login credentials. 
+    Required before starting an online game.
+
+NOTE
+    Offline/local play may not require login.
+
+

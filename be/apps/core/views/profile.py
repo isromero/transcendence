@@ -12,6 +12,11 @@ class ProfileView(View):
         try:
             user = request.user
             user_history = History.objects.filter(user_id=user)
-            return create_response(data=serialize_stats(user, user_history))
+            return create_response(
+                data={
+                    **serialize_stats(user, user_history),
+                    "is_online": user.is_online,
+                }
+            )
         except Exception as e:
             return create_response(error=str(e), status=400)

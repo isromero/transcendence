@@ -1,0 +1,12 @@
+EXIT(1)                  Transcendence Manual                  EXIT(1)
+
+NAME
+    exit - terminate the CLI session
+
+SYNOPSIS
+    exit
+
+DESCRIPTION
+    Ends the current transcendence session and exits the application.
+
+

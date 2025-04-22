@@ -17,7 +17,7 @@ GAME_HEIGHT = 400
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def render_game(state, left_username, right_username, ws):
+def render_game(state, left_username, right_username, ws, side):
     # Left paddle
     left_paddle = state.get("left_paddle", {})
     left_paddle_x = int(left_paddle.get("x", 0))
@@ -60,7 +60,7 @@ def render_game(state, left_username, right_username, ws):
         time.sleep(0.5)
         # Force exit to terminate all threads (or use sys.exit() if a graceful exit is desired)
 
-    render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown)
+    render(ball_x, ball_y, left_paddle_y, right_paddle_y, left_score, right_score, countdown, side)
     return state
 
 
@@ -125,7 +125,7 @@ def send_key_event(ws, key_name, is_pressed):
     ws.send(json.dumps(data))
     print(f"Sent key event: {key_name} {'pressed' if is_pressed else 'released'}")
 
-def listen_to_keys(ws):
+def listen_to_keys(ws, side):
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
@@ -138,12 +138,14 @@ def listen_to_keys(ws):
                 if ch == '\x1b':
                     if select.select([sys.stdin], [], [], 0.01)[0]:
                         ch += sys.stdin.read(2)
-                if ch in ['w', 's']:
-                    key = ch
-                elif ch == 'i':
-                    key = 'ArrowUp'
-                elif ch == 'k':
-                    key = 'ArrowDown'
+                if side == "left" or side == "all":
+                    if ch in ['w', 's']:
+                        key = ch
+                if side == "right" or side == "all":
+                    if ch == 'i':
+                        key = 'ArrowUp'
+                    elif ch == 'k':
+                        key = 'ArrowDown'
 
                 if key:
                     try:
@@ -156,7 +158,7 @@ def listen_to_keys(ws):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def connect_match(match_id, left_username, right_username):
+def connect_match(match_id, left_username, right_username, side, cookies):
     ws_url = f"ws://localhost:8000/ws/game/{match_id}"
 
     def on_message(ws, message):
@@ -165,8 +167,8 @@ def connect_match(match_id, left_username, right_username):
         except Exception:
             print("Could not parse message as JSON:", message)
             return
-        rendered = render_game(state, left_username, right_username, ws)
-        print(rendered)
+        rendered = render_game(state, left_username, right_username, ws, side)
+        #print(rendered)
 
     def on_error(ws, error):
         print("WebSocket Error:", error)
@@ -178,13 +180,17 @@ def connect_match(match_id, left_username, right_username):
         print("WebSocket connection opened")
 
         # Start a thread to listen for key input using our custom reader.
-        threading.Thread(target=listen_to_keys, args=(ws,), daemon=True).start()
+        threading.Thread(target=listen_to_keys, args=(ws, side,), daemon=True).start()
+
+    cookie_header = '; '.join([f'{key}={value}' for key, value in cookies.items()])
+    headers = [f"Cookie: {cookie_header}"]
 
     from websocket import WebSocketApp
     ws_app = WebSocketApp(ws_url,
                           on_message=on_message,
                           on_error=on_error,
-                          on_close=on_close)
+                          on_close=on_close,
+                          header=headers)
     ws_app.on_open = on_open
     ws_app.run_forever()
 

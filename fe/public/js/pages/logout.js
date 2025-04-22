@@ -5,7 +5,7 @@ export function init() {
   async function handleLogout() {
     const success = await authService.logout();
     if (success) {
-      await loadPage('/auth');
+      await loadPage('/auth', { updateHistory: false });
     }
   }
 
