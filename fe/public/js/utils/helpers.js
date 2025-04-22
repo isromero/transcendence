@@ -60,17 +60,6 @@ export function showSuccessToast(message) {
   const toastEl = document.getElementById('successToast');
   toastEl.querySelector('.toast-body').textContent = message;
   const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
-  if (document.documentElement.lang != "en")
-  {
-    if (document.documentElement.lang != "es")
-    {
-      messageEl.textContent = "Усе правильно!";
-    }
-    else
-    {
-      messageEl.textContent = "Todo correcto!!";
-    }
-  }
   toast.show();
 }
 
@@ -112,17 +101,6 @@ export function showErrorToast(result) {
   const messageEl = toastEl.querySelector('.toast-body');
   messageEl.innerHTML = message.replace(/\n/g, '<br>');
   const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
-  if (document.documentElement.lang != "en")
-  {
-    if (document.documentElement.lang != "es")
-    {
-      messageEl.textContent = "Упс, сталася помилка, спробуйте ще раз пізніше.";
-    }
-    else
-    {
-      messageEl.textContent = "Ups, hemos tenido un error, intentalo de nuevo más tarde.";
-    }
-  }
   toast.show();
 }
 
