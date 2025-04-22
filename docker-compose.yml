@@ -7,8 +7,6 @@ services:
       - 8443:443 # MAIN PORT TO ACCESS TO FRONTEND AND EVERYTHING
     volumes:
       - ./deployment:/etc/caddy/
-      - caddy_data:/data
-      - caddy_config:/config
       - be_media:/app/media
     restart: always
     depends_on:
@@ -53,6 +51,7 @@ services:
       - 3002:3002
     volumes:
       - ./fe:/app
+      - /app/node_modules
     networks:
       - transcendence_network
 
@@ -116,11 +115,11 @@ volumes:
   db_data:
   grafana_data:
   prometheus_data:
-  be_data:
+  # be_data:
   be_media:
-  fe_data:
-  caddy_data:
-  caddy_config:
+  # fe_data:
+  # caddy_data:
+  # caddy_config:
 
 networks:
   transcendence_network:
