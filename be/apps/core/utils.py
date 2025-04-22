@@ -360,11 +360,32 @@ def serialize_stats_with_history(user, user_history):
     
     user_history = user_history.exclude(
         models.Q(result_user=5, result_opponent=5) |
-        models.Q(result_user=0, result_opponent=0) |  
-        ~models.Q(result_user=5) & ~models.Q(result_opponent=5)  
+        models.Q(result_user=0, result_opponent=0) |
+        ~models.Q(result_user=5) & ~models.Q(result_opponent=5)
     )
 
     
+    normal_matches = user_history.filter(type_match__in=["local", "multiplayer"])
+
+    
+    tournament_matches = user_history.filter(
+        type_match__in=["tournament_quarter", "tournament_semi", "tournament_final"]
+    )
+
+    
+    normal_wins = normal_matches.filter(result_user=5, result_opponent__lt=5).count()
+    normal_losses = normal_matches.filter(result_opponent=5, result_user__lt=5).count()
+
+    
+    tournament_wins = tournament_matches.filter(
+        result_user=5, result_opponent__lt=5
+    ).count()
+    tournament_losses = tournament_matches.filter(
+        result_opponent=5, result_user__lt=5
+    ).count()
+
+    total_matches = normal_matches.count() + tournament_matches.count()
+
     matches = user_history.values(
         "match_id",
         "type_match",
@@ -398,48 +419,11 @@ def serialize_stats_with_history(user, user_history):
         for match in matches
     ]
 
-    
-    victories = user_history.filter(
-        result_user=5, result_opponent__lt=5
-    ).count()
-    defeats = user_history.filter(
-        result_opponent=5, result_user__lt=5
-    ).count()
-    total_matches = user_history.count()
-
-    tournaments = (
-        user_history.filter(
-            type_match__in=[
-                "tournament_quarter",
-                "tournament_semi",
-                "tournament_final",
-            ]
-        )
-        .values("tournament_id")
-        .distinct()
-    )
-
-    tournament_wins = (
-        user_history.filter(
-            type_match="tournament_final",
-            result_user=5,
-            result_opponent__lt=5,
-            tournament_id__in=tournaments.values("tournament_id"),
-        )
-        .values("tournament_id")
-        .distinct()
-        .count()
-    )
-
-    total_tournaments = tournaments.count()
-    tournament_defeats = total_tournaments - tournament_wins
-
     return {
-        "victories": victories,
-        "defeats": defeats,
-        "total_matches": total_matches,
+        "victories": normal_wins,
+        "defeats": normal_losses,
         "tournaments_victories": tournament_wins,
-        "tournaments_defeats": tournament_defeats,
-        "total_tournaments": total_tournaments,
+        "tournaments_defeats": tournament_losses,
+        "total_matches": total_matches,
         "match_history": match_history,
     }

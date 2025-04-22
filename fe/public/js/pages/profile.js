@@ -30,11 +30,12 @@ export function init() {
     onlineStatus.textContent = data.is_online ? 'Online' : 'Offline';
     onlineIndicator.className = `text-${data.is_online ? 'success' : 'secondary'} me-1`;
 
+    
     wins.textContent = Number(data.victories || 0);
     loses.textContent = Number(data.defeats || 0);
-    total.textContent = Number(data.total_matches || 0);
     tournamentWins.textContent = Number(data.tournaments_victories || 0);
     tournamentLoses.textContent = Number(data.tournaments_defeats || 0);
+    total.textContent = Number(data.total_matches || 0);
 
     matchesContainer.innerHTML = '';
     if (Array.isArray(data.match_history)) {
