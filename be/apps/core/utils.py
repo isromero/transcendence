@@ -355,75 +355,130 @@ def generate_join_code():
 
 def serialize_stats_with_history(user, user_history):
     
-    user_history = user_history.filter(user_id=user)
-
-    
-    user_history = user_history.exclude(
-        models.Q(result_user=5, result_opponent=5) |
-        models.Q(result_user=0, result_opponent=0) |
-        ~models.Q(result_user=5) & ~models.Q(result_opponent=5)
+    user_history = user_history.filter(
+        models.Q(user_id=user) | models.Q(opponent_id=user)
     )
 
     
-    normal_matches = user_history.filter(type_match__in=["local", "multiplayer"])
+    unique_matches = user_history.values('match_id').distinct()
+    match_ids = [match['match_id'] for match in unique_matches]
 
     
-    tournament_matches = user_history.filter(
+    unique_history = user_history.filter(match_id__in=match_ids).distinct('match_id')
+
+    
+    unique_history = unique_history.exclude(
+        models.Q(result_user=0, result_opponent=0)
+    ).filter(
+        
+        models.Q(result_user=5) | models.Q(result_opponent=5)
+    )
+
+    
+    normal_matches = unique_history.filter(
+        type_match__in=["local", "multiplayer"]
+    )
+
+    
+    tournament_matches = unique_history.filter(
         type_match__in=["tournament_quarter", "tournament_semi", "tournament_final"]
     )
 
     
-    normal_wins = normal_matches.filter(result_user=5, result_opponent__lt=5).count()
-    normal_losses = normal_matches.filter(result_opponent=5, result_user__lt=5).count()
+    normal_wins = normal_matches.filter(
+        models.Q(
+            
+            models.Q(type_match="local", user_id=user, result_user=5) |
+            
+            models.Q(type_match="multiplayer") & (
+                models.Q(user_id=user, result_user=5) |
+                models.Q(opponent_id=user, result_opponent=5)
+            )
+        )
+    ).count()
+
+    normal_losses = normal_matches.filter(
+        models.Q(
+            
+            models.Q(type_match="local", user_id=user, result_opponent=5) |
+            
+            models.Q(type_match="multiplayer") & (
+                models.Q(user_id=user, result_opponent=5) |
+                models.Q(opponent_id=user, result_user=5)
+            )
+        )
+    ).count()
 
     
     tournament_wins = tournament_matches.filter(
-        result_user=5, result_opponent__lt=5
+        models.Q(user_id=user, result_user=5) |
+        models.Q(opponent_id=user, result_opponent=5)
     ).count()
+
     tournament_losses = tournament_matches.filter(
-        result_opponent=5, result_user__lt=5
+        models.Q(user_id=user, result_opponent=5) |
+        models.Q(opponent_id=user, result_user=5)
     ).count()
 
-    total_matches = normal_matches.count() + tournament_matches.count()
-
+    
     matches = user_history.values(
         "match_id",
         "type_match",
         "date",
         "result_user",
         "result_opponent",
+        "user_id",
         "user_id__username",
         "user_id__avatar",
+        "opponent_id",
         "opponent_id__username",
         "opponent_id__avatar",
-    )
+    ).distinct('match_id')
 
-    match_history = [
-        {
+    match_history = []
+    for match in matches:
+        
+        is_player1 = match["user_id"] == user.id
+        
+        
+        if is_player1:
+            player1_username = match["user_id__username"]
+            player1_avatar = match["user_id__avatar"] or "/default_avatar.webp"
+            player1_score = match["result_user"]
+            player2_username = match["opponent_id__username"]
+            player2_avatar = match["opponent_id__avatar"] or "/default_avatar.webp"
+            player2_score = match["result_opponent"]
+        else:
+            player1_username = match["opponent_id__username"]
+            player1_avatar = match["opponent_id__avatar"] or "/default_avatar.webp"
+            player1_score = match["result_opponent"]
+            player2_username = match["user_id__username"]
+            player2_avatar = match["user_id__avatar"] or "/default_avatar.webp"
+            player2_score = match["result_user"]
+
+        match_history.append({
             "match_id": match["match_id"],
             "type": match["type_match"],
             "date": match["date"],
             "players": {
                 "player1": {
-                    "username": match["user_id__username"],
-                    "avatar": match["user_id__avatar"] or "/default_avatar.webp",
-                    "score": match["result_user"],
+                    "username": player1_username,
+                    "avatar": player1_avatar,
+                    "score": player1_score,
                 },
                 "player2": {
-                    "username": match["opponent_id__username"],
-                    "avatar": match["opponent_id__avatar"] or "/default_avatar.webp",
-                    "score": match["result_opponent"],
+                    "username": player2_username,
+                    "avatar": player2_avatar,
+                    "score": player2_score,
                 },
-            },
-        }
-        for match in matches
-    ]
+            }
+        })
 
     return {
         "victories": normal_wins,
         "defeats": normal_losses,
         "tournaments_victories": tournament_wins,
         "tournaments_defeats": tournament_losses,
-        "total_matches": total_matches,
+        "total_matches": len(match_history),
         "match_history": match_history,
     }
