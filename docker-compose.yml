@@ -81,8 +81,11 @@ services:
     container_name: grf
     build: ./monitoring/grafana-config
     user: grafana
-    # ports:
-    #   - 3333:3333
+    ports:
+      - 3333:3333
+    # environment:
+    # - GF_SERVER_ROOT_URL=https://localhost:8443/grafana
+    # - GF_SERVER_SERVE_FROM_SUB_PATH=true
     env_file:
       - ${TRANSCENDENCE_ENV_FILE:-.env}
     restart: always

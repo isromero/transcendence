@@ -7,7 +7,27 @@
 (common_config) {
     reverse_proxy /api/* be:8000
     reverse_proxy /metrics fe:3002
+    reverse_proxy /blackbox blackbox:9115
+    reverse_proxy /* fe:3001
+    reverse_proxy /ws/* be:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
     # rutas de monitorización
+    reverse_proxy /grafana grf:3333
+    # Con estas dos directivas
+    # handle /grafana {
+    #     uri strip_prefix /grafana
+    #     reverse_proxy grf:3333
+    # }
+
+    # handle /grafana/* {
+    #     uri strip_prefix /grafana
+    #     reverse_proxy grf:3333
+    # }
+
     handle /prometheus {
         uri strip_prefix /prometheus
         reverse_proxy prom:9090
@@ -16,15 +36,6 @@
     handle /prometheus/* {
         uri strip_prefix /prometheus
         reverse_proxy prom:9090
-    }
-    reverse_proxy /grafana grf:3333
-    reverse_proxy /blackbox blackbox:9115
-    reverse_proxy /* fe:3001
-    reverse_proxy /ws/* be:8000 {
-        header_up Host {host}
-        header_up X-Real-IP {remote}
-        header_up X-Forwarded-For {remote}
-        header_up X-Forwarded-Proto {scheme}
     }
     encode gzip
     file_server
