@@ -12,6 +12,7 @@ import ssl
 from colorama import init, Fore, Style
 from src.game import create_match, connect_match
 from src.matchmaking import matchmaking
+from src.badapple.player import play_badapple
 
 # Initialize colorama
 init(autoreset=True)
@@ -156,6 +157,9 @@ def cli_prompt(api_url, cookie, username, url):
 
         elif command == "login":
             cookie, username = login(api_url)
+
+        elif command == "apple":
+            play_badapple()
 
         elif command == "play local":
             print(f"{Fore.BLUE}Starting local game...{Style.RESET_ALL}")
