@@ -1,7 +1,6 @@
-<div
-  class="bs-primary d-flex flex-column justify-content-center align-items-center vh-100 mt-4"
->
-  <div class="container text-center mb-4">
+<div class="profile-container overflow-auto w-100" style="max-height: 100vh;">
+
+  <div class="text-center mb-4">
     <div class="row">
       <div class="col-12">
         <div class="profile-circle mx-auto mb-3">
@@ -28,45 +27,44 @@
       </div>
     </div>
   </div>
-  <div class="container text-center">
-    <div class="row">
+  <div class="text-center">
+    <div class="row justify-content-center">
       <div class="col-12 mb-3">
-        <p
-          class="text-principal-color button-text-size mb-3"
-          style="font-size: 1.3rem"
-        >
-          <span data-translationKey="wins">Wins</span>:
-          <span id="wins"></span>
-        </p>
-        <p
-          class="text-principal-color button-text-size mb-3"
-          style="font-size: 1.3rem"
-        >
-          <span data-translationKey="loses">Loses</span>:
-          <span id="loses"></span>
-        </p>
-        <p
-          class="text-principal-color button-text-size mb-3"
-          style="font-size: 1.3rem"
-        >
-          <span data-translationKey="tournamentWins">Tournament Wins</span>:
-          <span id="tournament-wins"></span>
-        </p>
-        <p
-          class="text-principal-color button-text-size mb-3"
-          style="font-size: 1.3rem"
-        >
-          <span data-translationKey="tournamentLoses">Tournament Loses</span>:
-          <span id="tournament-loses"></span>
-        </p>
-        <p
-          class="text-principal-color button-text-size mb-3"
-          style="font-size: 1.3rem"
-        >
-          <span data-translationKey="total">Total</span>:
-          <span id="total"></span>
+        <div class="stats-wrapper d-flex flex-column flex-md-row justify-content-center gap-3">
+          <!-- Columna 1: Wins, Losses -->
+          <div class="stats-column">
+            <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem">
+              <span data-translationKey="wins">Wins</span>: <span id="wins"></span>
+            </p>
+            <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem">
+              <span data-translationKey="loses">Loses</span>: <span id="loses"></span>
+            </p>
+          </div>
+  
+          <!-- Columna 2: Tournament Wins, Tournament Losses, Total -->
+          <div class="stats-column">
+            <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem">
+              <span data-translationKey="tournamentWins">Tournament Wins</span>: <span id="tournament-wins"></span>
+            </p>
+            <p class="text-principal-color button-text-size mb-3" style="font-size: 1.3rem">
+              <span data-translationKey="tournamentLoses">Tournament Loses</span>: <span id="tournament-loses"></span>
+            </p>
+          </div>
+        </div>
+        <p class="text-principal-color button-text-size mt-3 text-center" style="font-size: 1.3rem">
+          <span data-translationKey="total">Total</span>: <span id="total"></span>
         </p>
       </div>
     </div>
   </div>
+  
+  <h2
+  class=" text-principal-color profile-title mb-3 text-center"
+  style="font-size: 1.8rem"
+>History</h2>
+  <div id="matches-container" class="profile-matches-container">
+    <!-- Las partidas se cargarán dinámicamente aquí -->
+  </div>
+  <div style="height: 100px;"></div>
+
 </div>

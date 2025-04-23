@@ -72,7 +72,9 @@ def validate_password(password):
 
 
 def serialize_user(user):
-    user_history = History.objects.filter(user_id=user)
+    user_history = History.objects.filter(
+        models.Q(user_id=user) | models.Q(opponent_id=user)
+    )
 
     base_data = {
         "id": user.id,
@@ -82,7 +84,7 @@ def serialize_user(user):
         "deleted_user": user.deleted_user,
         "display_name": user.tournament_display_name,
     }
-    stats_data = serialize_stats(user, user_history)
+    stats_data = serialize_stats_with_history(user, user_history)
 
     return {**base_data, **stats_data}
 
@@ -94,9 +96,9 @@ def serialize_friend(friend_relation):
         else friend_relation.friend_id
     )
 
-    user_history = History.objects.filter(user_id=user_to_show)
-
-    stats_data = serialize_stats(user_to_show, user_history)
+    user_history = History.objects.filter(
+        models.Q(user_id=user_to_show) | models.Q(opponent_id=user_to_show)
+    )
 
     base_data = {
         "id": user_to_show.id,
@@ -108,12 +110,13 @@ def serialize_friend(friend_relation):
         ),
         "is_online": user_to_show.is_online,
     }
+    stats_data = serialize_stats_with_history(user_to_show, user_history)
 
     return {**base_data, **stats_data}
 
 
 def serialize_stats(user, user_history):
-    # Partidas normales (no torneo) que han terminado (excluyendo 5-5)
+    
     non_tournament_matches = user_history.filter(
         type_match__in=["local", "multiplayer"],
         result_user__gt=0,
@@ -123,7 +126,7 @@ def serialize_stats(user, user_history):
         | models.Q(result_opponent=5, result_user__lt=5)
     )
 
-    # Unique tournaments with FINISHED matches (excluyendo 5-5)
+    
     tournaments = (
         user_history.filter(
             type_match__in=[
@@ -147,7 +150,7 @@ def serialize_stats(user, user_history):
         user_history.filter(
             type_match="tournament_final",
             result_user=5,
-            result_opponent__lt=5,  # Asegurar que el oponente no tiene 5
+            result_opponent__lt=5,  
             tournament_id__in=tournaments.values("tournament_id"),
         )
         .values("tournament_id")
@@ -158,7 +161,7 @@ def serialize_stats(user, user_history):
     total_tournaments = tournaments.count()
     tournament_defeats = total_tournaments - tournament_wins
 
-    # Solo mirar los registros donde el usuario es user_id (excluyendo 5-5)
+    
     victories = non_tournament_matches.filter(
         result_user=5, result_opponent__lt=5
     ).count()
@@ -178,6 +181,35 @@ def serialize_stats(user, user_history):
         "tournaments_defeats": tournament_defeats,
         "total_tournaments": total_tournaments,
     }
+
+
+def serialize_stats_for_friends(user, user_history):
+    matches = user_history.values(
+        "match_id",
+        "type_match",
+        "date",
+        "result_user",
+        "result_opponent",
+        "opponent_id__username",
+        "opponent_id__avatar",
+    )
+
+    return [
+        {
+            "match_id": match["match_id"],
+            "type": match["type_match"],
+            "date": match["date"],
+            "score": {
+                "user": match["result_user"],
+                "opponent": match["result_opponent"],
+            },
+            "opponent": {
+                "username": match["opponent_id__username"],
+                "avatar": match["opponent_id__avatar"] or "/default_avatar.webp",
+            },
+        }
+        for match in matches
+    ]
 
 
 def serialize_tournament(tournament):
@@ -319,3 +351,134 @@ def generate_join_code():
     timestamp = str(int(time.time()))[-2:]  # last 2 digits of the timestamp
     code = "".join(secrets.choice(allowed_chars) for _ in range(4))
     return code + timestamp
+
+
+def serialize_stats_with_history(user, user_history):
+    
+    user_history = user_history.filter(
+        models.Q(user_id=user) | models.Q(opponent_id=user)
+    )
+
+    
+    unique_matches = user_history.values('match_id').distinct()
+    match_ids = [match['match_id'] for match in unique_matches]
+
+    
+    unique_history = user_history.filter(match_id__in=match_ids).distinct('match_id')
+
+    
+    unique_history = unique_history.exclude(
+        models.Q(result_user=0, result_opponent=0)
+    ).filter(
+        
+        models.Q(result_user=5) | models.Q(result_opponent=5)
+    )
+
+    
+    normal_matches = unique_history.filter(
+        type_match__in=["local", "multiplayer"]
+    )
+
+    
+    tournament_matches = unique_history.filter(
+        type_match__in=["tournament_quarter", "tournament_semi", "tournament_final"]
+    )
+
+    
+    normal_wins = normal_matches.filter(
+        models.Q(
+            
+            models.Q(type_match="local", user_id=user, result_user=5) |
+            
+            models.Q(type_match="multiplayer") & (
+                models.Q(user_id=user, result_user=5) |
+                models.Q(opponent_id=user, result_opponent=5)
+            )
+        )
+    ).count()
+
+    normal_losses = normal_matches.filter(
+        models.Q(
+            
+            models.Q(type_match="local", user_id=user, result_opponent=5) |
+            
+            models.Q(type_match="multiplayer") & (
+                models.Q(user_id=user, result_opponent=5) |
+                models.Q(opponent_id=user, result_user=5)
+            )
+        )
+    ).count()
+
+    
+    tournament_wins = tournament_matches.filter(
+        models.Q(user_id=user, result_user=5) |
+        models.Q(opponent_id=user, result_opponent=5)
+    ).count()
+
+    tournament_losses = tournament_matches.filter(
+        models.Q(user_id=user, result_opponent=5) |
+        models.Q(opponent_id=user, result_user=5)
+    ).count()
+
+    
+    matches = user_history.values(
+        "match_id",
+        "type_match",
+        "date",
+        "result_user",
+        "result_opponent",
+        "user_id",
+        "user_id__username",
+        "user_id__avatar",
+        "opponent_id",
+        "opponent_id__username",
+        "opponent_id__avatar",
+    ).distinct('match_id')
+
+    match_history = []
+    for match in matches:
+        
+        is_player1 = match["user_id"] == user.id
+        
+        
+        if is_player1:
+            player1_username = match["user_id__username"]
+            player1_avatar = match["user_id__avatar"] or "/default_avatar.webp"
+            player1_score = match["result_user"]
+            player2_username = match["opponent_id__username"]
+            player2_avatar = match["opponent_id__avatar"] or "/default_avatar.webp"
+            player2_score = match["result_opponent"]
+        else:
+            player1_username = match["opponent_id__username"]
+            player1_avatar = match["opponent_id__avatar"] or "/default_avatar.webp"
+            player1_score = match["result_opponent"]
+            player2_username = match["user_id__username"]
+            player2_avatar = match["user_id__avatar"] or "/default_avatar.webp"
+            player2_score = match["result_user"]
+
+        match_history.append({
+            "match_id": match["match_id"],
+            "type": match["type_match"],
+            "date": match["date"],
+            "players": {
+                "player1": {
+                    "username": player1_username,
+                    "avatar": player1_avatar,
+                    "score": player1_score,
+                },
+                "player2": {
+                    "username": player2_username,
+                    "avatar": player2_avatar,
+                    "score": player2_score,
+                },
+            }
+        })
+
+    return {
+        "victories": normal_wins,
+        "defeats": normal_losses,
+        "tournaments_victories": tournament_wins,
+        "tournaments_defeats": tournament_losses,
+        "total_matches": len(match_history),
+        "match_history": match_history,
+    }

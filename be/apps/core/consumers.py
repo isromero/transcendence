@@ -152,8 +152,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             ):
                 game_state = self.__class__.games[self.match_id]["state"]
 
-                # Stop the game loop if no players are connected
-                if not self.__class__.games[self.match_id]["players"]:
+                
+                if not self.__class__.games[self.match_id]["players"] or game_state.game_over:
                     game_state.running = False
                     break
 

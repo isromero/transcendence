@@ -156,21 +156,27 @@ class GameState:
         # Calculate next position
         next_x = self.ball["x"] + self.ball["speedX"] * dt
         next_y = self.ball["y"] + self.ball["speedY"] * dt
-        # Check for goals BEFORE updating position
+
+        
         if next_x - self.ball["radius"] <= 0:
-            # Ball will cross left boundary - Right player scores
             self._last_scorer = "right"
             self.scores["right"] += 1
             if self.scores["right"] <= 5:
                 await self._send_score_update(is_player1=False)
+                if self.scores["right"] == 5:
+                    self.running = False 
+                    self.game_over = True
             self.reset_ball()
             return
         elif next_x + self.ball["radius"] >= self.WIDTH:
-            # Ball will cross right boundary - Left player scores
+            
             self._last_scorer = "left"
             self.scores["left"] += 1
             if self.scores["left"] <= 5:
                 await self._send_score_update(is_player1=True)
+                if self.scores["left"] == 5:
+                    self.running = False  
+                    self.game_over = True
             self.reset_ball()
             return
 
