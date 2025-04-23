@@ -8,7 +8,6 @@
     reverse_proxy /api/* be:8000
     reverse_proxy /metrics fe:3002
     reverse_proxy /blackbox blackbox:9115
-    reverse_proxy /* fe:3001
     reverse_proxy /ws/* be:8000 {
         header_up Host {host}
         header_up X-Real-IP {remote}
@@ -16,17 +15,14 @@
         header_up X-Forwarded-Proto {scheme}
     }
     # rutas de monitorización
-    reverse_proxy /grafana grf:3333
-    # Con estas dos directivas
-    # handle /grafana {
-    #     uri strip_prefix /grafana
-    #     reverse_proxy grf:3333
-    # }
-
-    # handle /grafana/* {
-    #     uri strip_prefix /grafana
-    #     reverse_proxy grf:3333
-    # }
+     
+    handle /grafana* {
+        reverse_proxy grf:3333 {
+            header_up X-Forwarded-Host {host}
+            header_up X-Forwarded-Server {host}
+            header_up X-Forwarded-For {remote_host}
+        }
+    }
 
     handle /prometheus {
         uri strip_prefix /prometheus
@@ -46,6 +42,7 @@
         file_server
     }
 
+    reverse_proxy /* fe:3001
 }
 
 https://c1r17s6.42madrid.com, https://localhost {
