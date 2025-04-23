@@ -8,6 +8,7 @@ import sys
 import termios
 import tty
 import select
+import ssl
 from src.render import render
 
 # Game settings (assumed game size: 800×400)
@@ -73,7 +74,7 @@ def login_and_get_cookie(api_url, username, password):
     }
     
     session = requests.Session()
-    response = session.post(url, json=payload, headers=headers)
+    response = session.post(url, json=payload, headers=headers, verify=False)
     
     try:
         result = response.json()
@@ -101,7 +102,8 @@ def create_match(api_url, session):
         "Accept": "application/json"
     }
     
-    response = session.post(url, json=payload, headers=headers)
+    response = session.post(url, json=payload, headers=headers, verify=False)
+
     
     try:
         result = response.json()
@@ -138,14 +140,12 @@ def listen_to_keys(ws, side):
                 if ch == '\x1b':
                     if select.select([sys.stdin], [], [], 0.01)[0]:
                         ch += sys.stdin.read(2)
-                if side == "left" or side == "all":
-                    if ch in ['w', 's']:
-                        key = ch
-                if side == "right" or side == "all":
-                    if ch == 'i':
-                        key = 'ArrowUp'
-                    elif ch == 'k':
-                        key = 'ArrowDown'
+                if ch in ['w', 's']:
+                    key = ch
+                if ch == 'i':
+                    key = 'ArrowUp'
+                elif ch == 'k':
+                    key = 'ArrowDown'
 
                 if key:
                     try:
@@ -158,8 +158,10 @@ def listen_to_keys(ws, side):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def connect_match(match_id, left_username, right_username, side, cookies):
-    ws_url = f"ws://localhost:8000/ws/game/{match_id}"
+def connect_match(match_id, left_username, right_username, side, cookies, url):
+    # Convert the base URL from https:// to wss:// and append the match path
+    ws_base = url.replace("https://", "wss://").rstrip("/")
+    ws_url = f"{ws_base}/ws/game/{match_id}"
 
     def on_message(ws, message):
         try:
@@ -192,7 +194,7 @@ def connect_match(match_id, left_username, right_username, side, cookies):
                           on_close=on_close,
                           header=headers)
     ws_app.on_open = on_open
-    ws_app.run_forever()
+    ws_app.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
 '''
 # Example usage
