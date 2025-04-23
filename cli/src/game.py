@@ -140,14 +140,12 @@ def listen_to_keys(ws, side):
                 if ch == '\x1b':
                     if select.select([sys.stdin], [], [], 0.01)[0]:
                         ch += sys.stdin.read(2)
-                if side == "left" or side == "all":
-                    if ch in ['w', 's']:
-                        key = ch
-                if side == "right" or side == "all":
-                    if ch == 'i':
-                        key = 'ArrowUp'
-                    elif ch == 'k':
-                        key = 'ArrowDown'
+                if ch in ['w', 's']:
+                    key = ch
+                if ch == 'i':
+                    key = 'ArrowUp'
+                elif ch == 'k':
+                    key = 'ArrowDown'
 
                 if key:
                     try:

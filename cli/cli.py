@@ -181,8 +181,7 @@ def cli_prompt(api_url, cookie, username, url):
                 session.cookies.update(cookie)
                 match_id, side = matchmaking(cookie, url)
                 if match_id:
-                    print(side);
-                    #connect_match(match_id, "Player1", "Player2", side, cookie, url)
+                    connect_match(match_id, "Player1", "Player2", side, cookie, url)
                 else:
                     print(f"{Fore.RED}Match ID not found in response.{Style.RESET_ALL}")
             except Exception as e:
