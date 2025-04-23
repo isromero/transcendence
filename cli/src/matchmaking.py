@@ -3,6 +3,7 @@ import requests
 import websocket
 import json
 import time
+import ssl
 
 def login_and_get_cookie(api_url, username, password):
     url = f"{api_url.rstrip('/')}/login"
@@ -13,7 +14,7 @@ def login_and_get_cookie(api_url, username, password):
     }
     
     session = requests.Session()
-    response = session.post(url, json=payload, headers=headers)
+    response = session.post(url, json=payload, headers=headers, verify=False)
     
     try:
         result = response.json()
@@ -33,8 +34,10 @@ def login_and_get_cookie(api_url, username, password):
     
     return session, message, cookies
 
-def matchmaking(cookies):
-    ws_url = "ws://localhost:8000/ws/matchmaking"
+    # Convert the base URL from https:// to wss:// and append the match path
+def matchmaking(cookies, url):
+    ws_base = url.replace("https://", "wss://").rstrip("/")
+    ws_url = f"{ws_base}/ws/matchmaking"
     result_container = {"match_id": None, "position": None}
 
     def on_message(ws, message):
@@ -74,7 +77,7 @@ def matchmaking(cookies):
         header=headers
     )
     ws_app.on_open = on_open
-    ws_app.run_forever()
+    ws_app.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
     return result_container["match_id"], result_container["position"]
 
