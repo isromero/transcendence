@@ -12,36 +12,38 @@ export function init() {
     const displayName = document.getElementById('displayName').value.trim();
     const joinCode = document.getElementById('joinCode').value.trim();
 
-    if (!displayName || !joinCode) {
-      showErrorToast('Please fill in all fields.');
-      return;
+    try {
+      const tournament = await tournamentService.getTournament(joinCode);
+      if (!tournament) {
+        showErrorToast(
+          'Tournament not found. Please check the code and try again.'
+        );
+        return;
+      }
+
+      const profile = await profileService.getProfile();
+      if (!profile) {
+        showErrorToast('Profile not found.');
+        return;
+      }
+
+      await tournamentService.updateTournamentWhenJoining(
+        joinCode,
+        tournament,
+        profile.data,
+        displayName
+      );
+
+      await loadPage(`/tournament/${joinCode}`, { updateHistory: true });
+    } catch (error) {
+      console.error('Error joining tournament:', error);
+      showErrorToast('An error occurred while joining the tournament.');
     }
-
-    await loadPage(`/tournament/${joinCode}`);
-
-    const tournament = await tournamentService.getTournament(joinCode);
-    if (!tournament) {
-      showErrorToast('Tournament not found.');
-      return;
-    }
-
-    const profile = await profileService.getProfile();
-    if (!profile) {
-      showErrorToast('Profile not found.');
-      return;
-    }
-
-    await tournamentService.updateTournamentWhenJoining(
-      joinCode,
-      tournament,
-      profile.data,
-      displayName
-    );
   }
 
-  form?.addEventListener('submit', handleFormSubmit);
+  form?.addEventListener('formValid', handleFormSubmit);
 
   return () => {
-    form?.removeEventListener('submit', handleFormSubmit);
+    form?.removeEventListener('formValid', handleFormSubmit);
   };
 }

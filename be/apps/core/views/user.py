@@ -10,12 +10,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login, logout, authenticate
 import os
 from django.conf import settings
+from apps.core.utils import handle_form_errors
 
 # TODO: @csrf_exempt is a temporary solution to allow the API to be used without CSRF protection.
 # TODO: We should use a proper authentication system in the future.
 
 
-# @method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(csrf_exempt, name="dispatch")
 class UserView(View):
     def get(self, _, user_id=None):
@@ -41,9 +41,7 @@ class UserView(View):
                 return create_response(
                     data=serialize_user(user), message="User updated successfully"
                 )
-            return create_response(
-                error=form.errors, message="User update failed", status=400
-            )
+            return handle_form_errors(form)
         except json.JSONDecodeError:
             return create_response(
                 error="Invalid JSON", message="User update failed", status=400
@@ -54,6 +52,9 @@ class UserView(View):
             data = json.loads(request.body)
             password = data.get("password")
 
+            if len(request.user.username) < 9:
+                return self.delete_user(request.user, request)
+
             if not password:
                 return create_response(
                     error="Password is required",
@@ -61,7 +62,6 @@ class UserView(View):
                     status=400,
                 )
 
-            # Verify password received from the request before deleting the user
             user = authenticate(username=request.user.username, password=password)
             if not user:
                 return create_response(
@@ -70,27 +70,7 @@ class UserView(View):
                     status=400,
                 )
 
-            # Anonymize user data
-            user = request.user
-            user.password = ""
-            user.avatar = "/images/default_avatar.webp"
-            user.deleted_user = True
-            user.username = f"anonymized_user_{user.id}"
-
-            # Delete user friends
-            Friends.objects.filter(user_id=user.id).delete()
-            Friends.objects.filter(friend_id=user.id).update(friend_id=user)
-
-            # Delete user history
-            History.objects.filter(user_id=user.id).delete()
-
-            user.save()
-            logout(request)
-
-            return create_response(
-                message="Your account and all associated data have been permanently deleted.",
-                status=204,
-            )
+            return self.delete_user(user, request)
 
         except json.JSONDecodeError:
             return create_response(
@@ -102,6 +82,30 @@ class UserView(View):
             return create_response(
                 error=str(e), message="Error deleting account", status=500
             )
+
+    def delete_user(self, user, request):
+        """Anonymize user data and delete user"""
+        # Anonymize user data
+        user.password = ""
+        user.avatar = "/images/default_avatar.webp"
+        user.deleted_user = True
+        user.username = f"anonymized_user_{user.id}"
+        user.tournament_display_name = f"anonymized_user_{user.id}"
+
+        # Delete friends
+        Friends.objects.filter(user_id=user.id).delete()
+        Friends.objects.filter(friend_id=user.id).update(friend_id=user)
+
+        # Delete history
+        History.objects.filter(user_id=user.id).delete()
+
+        user.save()
+        logout(request)
+
+        return create_response(
+            message="Your account and all associated data have been permanently deleted.",
+            status=204,
+        )
 
     # For uploading an avatar
     def post(self, request):

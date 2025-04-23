@@ -18,6 +18,8 @@ class GameState:
         self.last_update = time.time()
         self.fps_cap = 60
         self.countdown = None  # Initially None until the game starts
+        self.type_match = None
+        self.current_user_id = None
 
         self.left_paddle = {
             "x": 30,
@@ -89,6 +91,10 @@ class GameState:
             if self.countdown == 0:
                 self.countdown = None
 
+        # Stop the game if no players are connected
+        if not self.running:
+            return
+
         # Only allow paddle movement when the countdown is over
         if self.countdown is None:
             self._update_paddles(dt * self.fps_cap)
@@ -147,9 +153,30 @@ class GameState:
         prev_x = self.ball["x"]
         prev_y = self.ball["y"]
 
+        # Calculate next position
+        next_x = self.ball["x"] + self.ball["speedX"] * dt
+        next_y = self.ball["y"] + self.ball["speedY"] * dt
+        # Check for goals BEFORE updating position
+        if next_x - self.ball["radius"] <= 0:
+            # Ball will cross left boundary - Right player scores
+            self._last_scorer = "right"
+            self.scores["right"] += 1
+            if self.scores["right"] <= 5:
+                await self._send_score_update(is_player1=False)
+            self.reset_ball()
+            return
+        elif next_x + self.ball["radius"] >= self.WIDTH:
+            # Ball will cross right boundary - Left player scores
+            self._last_scorer = "left"
+            self.scores["left"] += 1
+            if self.scores["left"] <= 5:
+                await self._send_score_update(is_player1=True)
+            self.reset_ball()
+            return
+
         # Update position
-        self.ball["x"] += self.ball["speedX"] * dt
-        self.ball["y"] += self.ball["speedY"] * dt
+        self.ball["x"] = next_x
+        self.ball["y"] = next_y
 
         # Calculate the movement vector
         dx = self.ball["x"] - prev_x
@@ -216,19 +243,25 @@ class GameState:
 
         # Check if there was a goal (after checking paddle collisions)
         if self.ball["x"] - self.ball["radius"] <= 0:
-            # Right player goal
+            # Ball crossed left boundary - Right player scores
             self._last_scorer = "right"
             self.scores["right"] += 1
             if self.scores["right"] <= 5:
-                await self._send_score_update(is_player1=False)
+                # Right player (player2) scored
+                await self._send_score_update(
+                    is_player1=False
+                )  # El jugador 2 (derecha) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
         elif self.ball["x"] + self.ball["radius"] >= self.WIDTH:
-            # Left player goal
+            # Ball crossed right boundary - Left player scores
             self._last_scorer = "left"
             self.scores["left"] += 1
             if self.scores["left"] <= 5:
-                await self._send_score_update(is_player1=True)
+                # Left player (player1) scored
+                await self._send_score_update(
+                    is_player1=True
+                )  # El jugador 1 (izquierda) marcó
             self.reset_ball()
             return  # Avoid updating position after resetting
 
@@ -251,22 +284,48 @@ class GameState:
             self.MAX_BALL_SPEED,
         )
 
-        # Update speeds
-        self.ball["speedX"] = (
-            -math.cos(bounce_angle) * speed * (-1 if side == "left" else 1)
-        )
+        # Update speeds - Corrected direction logic
+        direction = 1 if side == "left" else -1
+        self.ball["speedX"] = math.cos(bounce_angle) * direction * speed
         self.ball["speedY"] = math.sin(bounce_angle) * speed
+
+        # Record last hit
+        self.ball["last_hit"] = side
+
+        # Record last hit
+        self.ball["last_hit"] = side
 
     def process_key_event(self, key, is_pressed):
         """Handle keyboard events to move paddles"""
-        if key == "w" or key == "W":
-            self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "s" or key == "S":
-            self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowUp":
-            self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowDown":
-            self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+        print(self.type_match)
+        print(self.left_player_id)
+        print(self.right_player_id)
+        print(self.current_user_id)
+        # If it's a local match, allow all keys
+        if self.type_match == "local":
+            if key == "w" or key == "W":
+                self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "s" or key == "S":
+                self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowUp":
+                self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowDown":
+                self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+
+        # If it's a multiplayer match, only allow the keys for the current user
+        elif self.type_match != "local":
+            if (
+                key == "w" or key == "W"
+            ) and self.left_player_id == self.current_user_id:
+                self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif (
+                key == "s" or key == "S"
+            ) and self.left_player_id == self.current_user_id:
+                self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowUp" and self.right_player_id == self.current_user_id:
+                self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowDown" and self.right_player_id == self.current_user_id:
+                self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
 
     def _check_paddle_collision(self, paddle):
         """Check if the ball collides with a paddle"""
@@ -318,19 +377,23 @@ class GameState:
             with transaction.atomic():
                 matches = History.objects.filter(match_id=self.match_id)
                 if not matches.exists():
+                    print("No matches found for match_id:", self.match_id)
                     return
 
                 for match in matches:
-                    if match.user_id.id == self.left_player_id:
+                    match_user_id = match.user_id.id
+                    if match_user_id == self.left_player_id:
                         if is_player1:
                             match.result_user += 1
                         else:
                             match.result_opponent += 1
+                    elif match_user_id == self.right_player_id:
+                        if is_player1:
+                            match.result_opponent += 1
+                        else:
+                            match.result_user += 1
                     else:
-                        if is_player1:
-                            match.result_opponent += 1
-                        else:
-                            match.result_user += 1
+                        print(f"User ID {match_user_id} doesn't match either player!")
                     match.save()
 
         except Exception as e:

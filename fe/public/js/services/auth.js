@@ -31,6 +31,7 @@ export const authService = {
         Accept: 'application/json',
       },
       body: JSON.stringify(user),
+      credentials: 'include',
     });
 
     const result = await response.json();

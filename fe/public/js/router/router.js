@@ -66,7 +66,7 @@ function matchRoute(path) {
 
 let currentCleanup = null;
 
-export async function loadPage(page) {
+export async function loadPage(page, { updateHistory = true } = {}) {
   try {
     if (currentCleanup) {
       currentCleanup();
@@ -102,18 +102,20 @@ export async function loadPage(page) {
       await loadModal(url);
     } else if (url.includes('/game/')) {
       await loadGame(url);
-      window.history.pushState({ page: cleanPage }, '', cleanPage);
+      if (updateHistory) {
+        window.history.pushState({ page: cleanPage }, '', cleanPage);
+      }
     } else {
       await loadMenu(url);
-      window.history.pushState({ page: cleanPage }, '', cleanPage);
+      if (updateHistory) {
+        window.history.pushState({ page: cleanPage }, '', cleanPage);
+      }
     }
 
     const controller = pageControllers[matchedRoute.pattern];
     if (controller?.init) {
       currentCleanup = await controller.init(params);
     }
-
-    document.dispatchEvent(new CustomEvent('spaContentLoaded'));
   } catch (error) {
     loadErrorPage(error.message);
   }

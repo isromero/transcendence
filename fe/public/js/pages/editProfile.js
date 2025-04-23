@@ -8,7 +8,9 @@ export async function init() {
     const username = document.getElementById('changeUsernameButton');
     const password = document.getElementById('changePasswordButton');
 
-    // 42 users have a username with less than 9 characters
+    username.hidden = false;
+    password.hidden = false;
+
     if (data.username.length < 9) {
       username.hidden = true;
       password.hidden = true;
@@ -24,7 +26,7 @@ export async function init() {
   async function handleAvatarChange(event) {
     const file = event.target.files[0];
 
-    // Can upload only images
+
     if (!file.type.startsWith('image/')) {
       showErrorToast('Only images supported');
       return;

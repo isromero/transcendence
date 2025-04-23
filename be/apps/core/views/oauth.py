@@ -56,7 +56,12 @@ class OAuthCallback(View):
             return create_response(error=user_info, status=400)
         self._authenticate_and_login(request, user_info)
         self._transfer_data(user_info, token_data)
-        return HttpResponseRedirect("http://localhost:3001/")
+        return HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}/")
+        # self.response = self._authenticate_and_login(request, user_info)
+        # print("\n\n\n\n\n", settings.OAUTH42_HOSTNAME, "\n\n\n\n\n")
+        # self.redirect_response = HttpResponseRedirect(f"https://{settings.OAUTH42_HOSTNAME}")
+        # self._transfer_data()
+        # return self.redirect_response
 
     def _download_and_save_avatar(self, avatar_url):
         """Download avatar from 42 CDN and save it locally"""
@@ -87,7 +92,6 @@ class OAuthCallback(View):
             try:
                 # If the user exists, only update tokens
                 user = User.objects.get(username=user_info["login"])
-                user.email = user_info["email"]
                 user.access_token = token_data["access_token"]
                 user.refresh_token = token_data["refresh_token"]
                 user.save()
@@ -98,7 +102,6 @@ class OAuthCallback(View):
                 local_avatar_path = self._download_and_save_avatar(avatar_url)
                 return User.objects.create(
                     username=user_info["login"],
-                    email=user_info["email"],
                     avatar=local_avatar_path,
                     access_token=token_data["access_token"],
                     refresh_token=token_data["refresh_token"],

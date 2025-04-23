@@ -24,35 +24,57 @@ class UserForm(forms.ModelForm):
         old_password = cleaned_data.get("oldPassword")
         new_password = cleaned_data.get("newPassword")
 
-        # If there are no changes
-        if not username and not old_password and not new_password:
-            raise ValidationError("No changes provided")
+        is_username_change = bool(old_username)
+        is_password_change = bool(new_password or old_password)
 
-        # Validate username change - only if oldUsername is provided
+        if not is_username_change and not is_password_change:
+            if (
+                not cleaned_data.get("username")
+                and not cleaned_data.get("oldPassword")
+                and not cleaned_data.get("newPassword")
+            ):
+                raise ValidationError("No changes provided")
+
         if old_username:
+            if not username:
+                raise ValidationError(
+                    "New username is required when changing username."
+                )
             if old_username != self.instance.username:
-                raise ValidationError("Username is incorrect")
+                raise ValidationError("Old username is incorrect")
             if not password:
                 raise ValidationError("Password is required to change username")
             if not check_password(password, self.instance.password):
                 raise ValidationError("Password is incorrect")
 
-            # Validate the new username
             validate_username(username)
 
-            # Verify if the new username already exists
             if (
                 User.objects.filter(username=username.lower()).exists()
                 and self.instance.username.lower() != username.lower()
             ):
                 raise ValidationError("Username already exists")
 
-        # Verify password change
+            if (
+                User.objects.filter(tournament_display_name=username.lower())
+                .exclude(pk=self.instance.pk)
+                .exists()
+            ):
+                raise ValidationError(
+                    "This username is already taken as a display name by another user."
+                )
+
+            if len(username) < 9:
+                raise ValidationError("Username must be at least 9 characters long")
+
         if new_password or old_password:
-            if not username:
+            submitted_username_for_pwd_change = cleaned_data.get("username")
+            if not submitted_username_for_pwd_change:
                 raise ValidationError("Username is required to change password")
-            if username != self.instance.username:
-                raise ValidationError("Username is incorrect")
+            if submitted_username_for_pwd_change != self.instance.username:
+                raise ValidationError(
+                    "Username submitted for password change is incorrect"
+                )
             if not old_password:
                 raise ValidationError("Old password is required to set a new password")
             if not new_password:
@@ -64,22 +86,13 @@ class UserForm(forms.ModelForm):
                     "New password must be different from old password"
                 )
 
-            # Validate new password
             validate_password(new_password)
 
+        if old_username and username and username != self.instance.username:
+            self.instance.username = username
+            self.instance.tournament_display_name = username
+
+        if new_password:
+            self.instance.set_password(new_password)
+
         return cleaned_data
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-
-        # Always keep the current username if no new one is provided
-        if "username" not in self.cleaned_data:
-            user.username = self.instance.username
-
-        if self.cleaned_data.get("newPassword"):
-            user.set_password(self.cleaned_data["newPassword"])
-
-        if commit:
-            user.save()
-
-        return user

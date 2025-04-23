@@ -37,15 +37,23 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         await self.check_matchmaking()
 
-    async def disconnect(self):
-        for i, player in enumerate(self.queue):
-            if player[0] == self:
-                self.queue.pop(i)
-                break
+    async def disconnect(
+        self, close_code
+    ):  # don't delete close_code, it's required to not get an error
+        """Handle client disconnection"""
+        try:
+            for i, player in enumerate(self.queue):
+                if player[0] == self:
+                    self.queue.pop(i)
+                    break
+        except Exception as e:
+            print(f"Error during matchmaking disconnect: {e}")
 
     async def check_matchmaking(self):
         if len(self.queue) >= 2:
+            # The first player in the queue is the left player
             player1_tuple = self.queue.pop(0)
+            # The second player in the queue is the right player
             player2_tuple = self.queue.pop(0)
 
             player1_consumer, player1_id = player1_tuple
@@ -55,25 +63,21 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
             if not match_id:
                 await player1_consumer.send(
-                    json.dumps(
-                        {"type": "error", "message": "Error al crear la partida"}
-                    )
+                    json.dumps({"type": "error", "message": "Error creating match"})
                 )
                 await player2_consumer.send(
-                    json.dumps(
-                        {"type": "error", "message": "Error al crear la partida"}
-                    )
+                    json.dumps({"type": "error", "message": "Error creating match"})
                 )
                 return
 
             await player1_consumer.send(
                 json.dumps(
-                    {"type": "start_match", "match_id": match_id, "player": "left"}
+                    {"type": "start_match", "match_id": match_id, "position": "left"}
                 )
             )
             await player2_consumer.send(
                 json.dumps(
-                    {"type": "start_match", "match_id": match_id, "player": "right"}
+                    {"type": "start_match", "match_id": match_id, "position": "right"}
                 )
             )
 

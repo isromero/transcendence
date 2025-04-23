@@ -63,18 +63,12 @@ class TournamentsView(View):
                             tournament.status = "completed"
                             tournament.save()
 
-                            # Restore all display names of the players
-                            for player in tournament.players.all():
-                                player.tournament_display_name = player.username
-                                player.save(update_fields=["tournament_display_name"])
-
                 return create_response(
                     data=serialize_tournament(tournament),
                     message="Tournament retrieved successfully",
                     status=200,
                 )
         except Exception as e:
-            print(f"Error in tournament GET: {str(e)}")
             return create_response(error=str(e), status=400)
 
     def post(self, request):
@@ -94,6 +88,12 @@ class TournamentsView(View):
             # Add the creator as the first player
             tournament.players.add(request.user)
             tournament.save()
+
+            display_name = data.get("display_name")
+
+            user = User.objects.get(id=request.user.id)
+            user.tournament_display_name = display_name
+            user.save()
 
             return create_response(
                 data=serialize_tournament(tournament),
@@ -122,11 +122,21 @@ class TournamentsView(View):
 
                 display_name = data.get("display_name")
 
+                # Check if the display_name is already in use in this tournament
+                if tournament.players.filter(
+                    tournament_display_name=display_name
+                ).exists():
+                    display_name = (
+                        request.user.username
+                    )  # Use the username if the display_name is already in use
+                    return create_response(
+                        error=f"Display name '{data.get('display_name')}' is already taken. Your username '{display_name}' will be used instead.",
+                        status=400,
+                    )
+
                 user = User.objects.get(id=request.user.id)
                 user.tournament_display_name = display_name
                 user.save()
-
-                print(user.tournament_display_name)
 
                 if tournament.join_code != join_code:
                     return create_response(error="Invalid join code", status=400)
@@ -145,7 +155,8 @@ class TournamentsView(View):
                     tournament.status = "ready"
                 tournament.save()
                 return create_response(
-                    message="Joined tournament successfully", status=200
+                    message=f"Joined tournament successfully with display name '{display_name}'",
+                    status=200,
                 )
 
             elif action == "leave":
@@ -278,8 +289,10 @@ class TournamentsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def delete(self, _, tournament_id):
+    def delete(self, request):
         """Deletes a tournament"""
+        data = json.loads(request.body)
+        tournament_id = data.get("tournament_id")
         tournament = get_object_or_404(Tournaments, id=tournament_id)
         tournament.delete()
         return HttpResponse(status=204)

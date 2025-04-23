@@ -5,7 +5,7 @@ import { checkAuth } from './utils/auth-middleware.js';
 document.addEventListener('DOMContentLoaded', async () => {
   const initialPath = window.location.pathname;
   if (checkAuth(initialPath)) {
-    await loadPage(initialPath);
+    await loadPage(initialPath, { updateHistory: false });
   }
 });
 
@@ -14,7 +14,7 @@ window.addEventListener('popstate', async event => {
   const cleanPage = getCleanPageKey(rawPage);
 
   if (checkAuth(cleanPage)) {
-    await loadPage(cleanPage);
+    await loadPage(cleanPage, { updateHistory: false });
   }
 });
 
@@ -25,7 +25,7 @@ document.body.addEventListener('click', async event => {
   if (modalLink) {
     event.preventDefault();
     const modalPage = modalLink.getAttribute('data-modal');
-    await loadPage(`/modal-${modalPage}`);
+    await loadPage(`/modal-${modalPage}`, { updateHistory: false });
   } else if (spaLink) {
     event.preventDefault();
     const page = spaLink.getAttribute('href');

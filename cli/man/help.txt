@@ -1,0 +1,49 @@
+TRANSCENDENCE(1)            User Commands            TRANSCENDENCE(1)
+
+NAME
+    transcendence - command-line ping pong game interface
+
+SYNOPSIS
+	[COMMAND]
+
+DESCRIPTION
+    transcendence is a command-line interface (CLI) for playing
+    a real-time ping pong game. Users can log in, start games,
+    and access help or exit the application.
+
+COMMANDS
+    help
+        Display a list of available commands with brief descriptions.
+
+    login
+        Change credentials.
+
+    play
+        Start a new ping pong game session.
+
+    exit
+        Exit the transcendence CLI.
+
+EXAMPLES
+    help [CMD]
+        Show help with all available commands.
+
+    login
+        Prompt the user to log in.
+
+    play local/online
+        Start the ping pong game (must be logged in).
+
+    exit
+        Terminate the CLI session.
+
+NOTES
+    • Game requires an active internet connection.
+
+AUTHOR
+    Developed by Samusanc.
+
+SEE ALSO
+    ping(1), pong(6), ncurses(3)
+
+

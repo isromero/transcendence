@@ -1,0 +1,18 @@
+PLAY(1)                  Transcendence Manual                  PLAY(1)
+
+NAME
+    play - start a ping pong game session
+
+SYNOPSIS
+    play local
+    play online
+
+DESCRIPTION
+    Launches a ping pong game session.
+    Specify 'local' to play against AI or another local player.
+    Specify 'online' to connect and play against another online user.
+
+NOTE
+    Login is required for online play.
+
+
