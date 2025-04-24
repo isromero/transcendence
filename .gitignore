@@ -19,3 +19,5 @@ cli/src/badapple/__pycache__/
 
 .env
 .apple
+
+__pycache__/
