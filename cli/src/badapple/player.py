@@ -6,8 +6,8 @@ from mutagen.mp3 import MP3
 def play_badapple():
 
 # Config
-    mp3_file = "cli/src/audio.mp3"
-    frames_folder = "cli/src/frames/"
+    mp3_file = "src/badapple/audio.mp3"
+    frames_folder = "src/badapple/frames/"
 
     # Get audio duration
     audio = MP3(mp3_file)
