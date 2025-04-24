@@ -50,7 +50,6 @@ services:
     networks:
       - transcendence_network
 
-  # añadido para monitorizacion
   prometheus:
     container_name: prom
     build: ./monitoring
@@ -105,7 +104,6 @@ services:
       - ${TRANSCENDENCE_ENV_FILE:-.env}
     networks:
       - transcendence_network
-
 
 volumes:
   db_data:
