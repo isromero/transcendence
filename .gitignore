@@ -14,5 +14,8 @@ fe/.ash*
 
 # CLI
 cli/src/__pycache__/
+cli/src/badapple/frames/
+cli/src/badapple/__pycache__/
 
 .env
+.apple

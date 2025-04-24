@@ -44,9 +44,17 @@ export function init() {
         .map(friend => createFriendCard(friend))
         .join('');
     } else {
+      let langu = document.documentElement.lang;
+
+      if (langu === "uk-UA")
+        langu = "У вас ще немає друзів. Додайте друзів, щоб грати разом!";
+      else if (langu === "en")
+        langu = "No friends yet. Add some friends to play with!";
+      else
+        langu = "Aún no tienes amigos. ¡Agrega algunos para jugar con ellos!";
       friendsList.innerHTML = `
         <div class="text-center text-principal-color p-2">
-          <p data-translationKey="no-friends" class="small">No friends yet. Add some friends to play with!</p>
+          <p class="small">${langu}</p>
         </div>
       `;
     }

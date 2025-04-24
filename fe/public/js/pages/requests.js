@@ -46,9 +46,17 @@ export function init() {
         .map(request => createRequestCard(request))
         .join('');
     } else {
+      let langu = document.documentElement.lang;
+
+      if (langu === "uk-UA")
+        langu = "Ще немає запитів на дружбу!";
+      else if (langu === "en")
+        langu = "No friend requests yet!";
+      else
+        langu = "¡Aún no tienes solicitudes de amistad!";
       requestsList.innerHTML = `
         <div class="text-center text-principal-color p-4">
-          <p data-translationKey="no-requests">No friend requests yet!</p>
+          <p>${langu}</p>
         </div>
       `;
     }

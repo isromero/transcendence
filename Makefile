@@ -1,7 +1,13 @@
 # Check if docker-compose or docker compose is available
 COMPOSE := $(shell command -v docker-compose || echo "docker compose")
 
-all: build up
+all: apple build up
+
+.apple:
+	unzip -qq cli/src/badapple/frames.zip -d cli/src/badapple/
+	touch .apple
+
+apple: .apple
 
 build:
 	$(COMPOSE) build
@@ -34,6 +40,8 @@ re: clean-compose clean-migrations all
 
 fclean: down clean delvol
 	docker system prune -a -f --volumes
+	rm -rf cli/src/badapple/frames/
+	rm -rf .apple
 
 # Delete only containers, dont delete images or volumes
 clean: stop
