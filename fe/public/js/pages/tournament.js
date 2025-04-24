@@ -9,7 +9,7 @@ function getJoinCodeFromURL() {
   return joinCode;
 }
 
-export async function init() {
+export function init() {
   const joinCode = getJoinCodeFromURL();
   const startBtn = document.getElementById('start-tournament-btn');
   const leaveBtn = document.getElementById('leaveTournamentButton');
@@ -26,48 +26,41 @@ export async function init() {
 
   async function leaveTournament() {
     clearInterval(intervalId);
-  
+
     const tournament = await tournamentService.getTournament(joinCode);
     if (!tournament) {
       return;
     }
-  
-    console.log('Leaving tournament:', tournament);
+
     await tournamentService.leaveTournament(joinCode, tournament.id);
-  
+
     const updatedTournament = await tournamentService.getTournament(joinCode);
-  
-    // Verificar si el torneo ya está completado
+
     if (updatedTournament.status === 'completed') {
-      console.log('Tournament is completed, not deleting.');
       localStorage.setItem(
         'tournament_left',
         JSON.stringify({ joinCode, timestamp: Date.now() })
       );
-      return; // Salir sin eliminar el torneo
+      return; // Leave without deleting
     }
-  
+
     const profile = await profileService.getProfile();
     const userId = profile?.data?.id;
-  
+
     const noPlayersLeft = updatedTournament.current_players === 0;
     const onlyCurrentUserLeft =
       updatedTournament.current_players === 1 &&
       updatedTournament.players?.[0]?.id === userId;
-  
+
     if (noPlayersLeft || onlyCurrentUserLeft) {
       await tournamentService.deleteTournament(joinCode, tournament.id);
-      console.log('Tournament deleted due to lack of players');
-      console.log('Torneo eliminado por falta de jugadores');
     }
-  
+
     localStorage.setItem(
       'tournament_left',
       JSON.stringify({ joinCode, timestamp: Date.now() })
     );
   }
-  
-  
 
   function handleStorageChange(event) {
     if (event.key === 'tournament_left') {
@@ -198,32 +191,40 @@ export async function init() {
       if (tournament.status === 'in_progress') {
         const currentRoundKey = roundMap[tournament.current_round];
         const currentRoundFinished =
-          tournament.matches.round_finished?.[currentRoundKey];
+          tournament.matches?.round_finished?.[currentRoundKey];
 
         const profile = await profileService.getProfile();
         const userId = profile?.data?.id;
 
         nextRoundBtn?.classList.add('hidden');
+        nextRoundBtn?.setAttribute('disabled', 'true');
 
-        if (currentRoundFinished) {
-          if (currentRoundKey === 'semi_finals') {
-            const semiFinalsMatches = tournament.matches.semi_finals || [];
-            const semifinalsWinners = semiFinalsMatches.map(match => {
+        if (currentRoundFinished && currentRoundKey && userId) {
+          const completedRoundMatches =
+            tournament.matches?.[currentRoundKey] || [];
+
+          const winners = completedRoundMatches
+            .map(match => {
+              if (
+                !match.player1?.id ||
+                !match.player2?.id ||
+                match.player1.score === undefined ||
+                match.player2.score === undefined
+              ) {
+                return null;
+              }
               return match.player1.score > match.player2.score
                 ? match.player1.id
                 : match.player2.id;
-            });
+            })
+            .filter(id => id !== null);
 
-            if (semifinalsWinners.includes(userId)) {
+          if (winners.includes(userId)) {
+            if (currentRoundKey !== 'finals') {
               nextRoundBtn?.classList.remove('hidden');
               nextRoundBtn?.removeAttribute('disabled');
             }
-          } else {
-            nextRoundBtn?.classList.remove('hidden');
-            nextRoundBtn?.removeAttribute('disabled');
           }
-        } else {
-          nextRoundBtn?.setAttribute('disabled', 'true');
         }
 
         await maybeRedirectToMatch(tournament);
@@ -239,6 +240,9 @@ export async function init() {
         startBtn?.setAttribute('disabled', 'true');
       } else if (tournament.status === 'completed') {
         leaveBtn?.classList.remove('hidden');
+        startBtn?.classList.add('hidden');
+        nextRoundBtn?.classList.add('hidden');
+        nextRoundBtn?.setAttribute('disabled', 'true');
       }
     } catch (error) {
       console.error('Error in handleTournamentProgress:', error);
@@ -247,7 +251,7 @@ export async function init() {
     }
   }
 
-  intervalId = setInterval(handleTournamentProgress, 5000);
+  intervalId = setInterval(handleTournamentProgress, 1000);
 
   nextRoundBtn?.addEventListener('click', async () => {
     try {
@@ -256,10 +260,12 @@ export async function init() {
         return;
       }
 
-      // Avanzamos la ronda
-      const updatedTournament = await tournamentService.goToNextRound(tournament.id);
+      // Go to the next round
+      const updatedTournament = await tournamentService.goToNextRound(
+        tournament.id
+      );
       if (updatedTournament) {
-        // Actualizamos la UI y redirigimos a las partidas de la siguiente ronda
+        // Update the UI and redirect to the next round matches
         updateTournamentUI(updatedTournament);
         await maybeRedirectToMatch(updatedTournament);
       }
@@ -273,7 +279,7 @@ export async function init() {
 
   initializeTournament();
 
-  // If you leave thr tournament with popstate and beforeunload / others
+  // If you leave the tournament with popstate and beforeunload / others
   // We don't care, we won't do anything
   // We only care if you leave the tournament with the leave button
   // This is because it's a little buggy if we handle that way

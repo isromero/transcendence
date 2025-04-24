@@ -84,6 +84,36 @@
     "spanish": "Nombre de usuario",
     "ukrainian": "Ім'я користувача"
   },
+  "tournamentWins": {
+    "english": "Tournament Wins",
+    "spanish": "Victorias en torneos",
+    "ukrainian": "Перемоги в турнірах"
+  },
+  "tournamentLoses": {
+    "english": "Tournament Loses",
+    "spanish": "Derrotas en torneos",
+    "ukrainian": "Поразки в турнірах"
+  },
+  "requests": {
+    "english": "Requests",
+    "spanish": "Solicitudes",
+    "ukrainian": "Запити"
+  },
+  "send-request": {
+    "english": "Send request",
+    "spanish": "Enviar solicitud",
+    "ukrainian": "Надіслати запит"
+  },
+  "privacy-policy-link": {
+    "english": "Privacy Policy.",
+    "spanish": "Política de Privacidad.",
+    "ukrainian": "Політики конфіденційності."
+  },
+  "privacy-info": {
+    "english": "We use your data in accordance with our ",
+    "spanish": "Usamos tus datos según nuestra ",
+    "ukrainian": "Ми використовуємо ваші дані відповідно до нашої "
+  },
   "password-confirmation": {
     "english": "Password confirmation",
     "spanish": "Confirmación de contraseña",
@@ -99,10 +129,20 @@
     "spanish": "Nueva contraseña",
     "ukrainian": "Нова пароль"
   },
+  "old-password": {
+    "english": "Old password",
+    "spanish": "Contraseña antigua",
+    "ukrainian": "Старий пароль"
+  },
   "repeat-password": {
     "english": "Repeat password",
     "spanish": "Repetir contraseña",
     "ukrainian": "Повторити пароль"
+  },
+  "old-username": {
+    "english": "Old username",
+    "spanish": "Nombre de usuario antiguo",
+    "ukrainian": "Старе ім'я користувача"
   },
   "edit-username": {
     "english": "Change Username",
@@ -189,11 +229,6 @@
     "spanish": "Limite de jugadores",
     "ukrainian": "Максимум гравців"
   },
-  "create-tournaments": {
-    "english": "Create tournaments",
-    "spanish": "Crear torneo",
-    "ukrainian": "Створити турнір"
-  },
   "tournament": {
     "english": "Tournament",
     "spanish": "Torneo",
@@ -209,10 +244,20 @@
     "spanish": "Volver al menú",
     "ukrainian": "Повернутися до меню"
   },
+  "requests-received": {
+    "english": "Return to menu",
+    "spanish": "Solicitudes recibidas",
+    "ukrainian": "Отримані запити"
+  },
   "winner": {
     "english": "WINNER",
     "spanish": "GANADOR",
     "ukrainian": "ПЕРЕМОЖЕЦЬ"
+  },
+  "next-round": {
+    "english": "Next Round",
+    "spanish": "Siguiente Ronda",
+    "ukrainian": "Наступний Раунд"
   },
   "match-ended": {
     "english": "Match Ended",
@@ -235,7 +280,7 @@
     "ukrainian": "У черзі на матч. Очікування іншого гравця..."
   },
   "create-tournament": {
-    "english": "Create tournaments",
+    "english": "Create tournament",
     "spanish": "Crear torneo",
     "ukrainian": "Створити турнір"
   },
@@ -271,7 +316,7 @@
   },
   "wait-winner": {
     "english": "Waiting winner...",
-    "spanish": "Esperando Campeón",
+    "spanish": "Esperando Ganador...",
     "ukrainian": "Очікування переможця..."
   },
   "your-name": {

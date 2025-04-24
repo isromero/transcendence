@@ -19,7 +19,6 @@ export const pageMappings = {
   '/game/:id': '/pages/game/game.html',
   '/auth/privacy': '/pages/menus/privacy_policy.html',
   '/game/:id/tournament/:id': '/pages/game/game.html', // :id -> join_code
-
   '/tournament/:id': '/pages/menus/tournament.html', // :id -> join_code
 
   // Modals (no user routes)

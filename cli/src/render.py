@@ -42,7 +42,7 @@ def place_image_on_canvas(canvas, image, x, y):
                     canvas[canvas_x][canvas_y] = image.array[i][j]
 
 # Main execution block
-def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
+def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer, side):
 
     game_height = 400
     game_width = 800
@@ -62,7 +62,11 @@ def render(ball_x, ball_y, padle1_y, padle2_y, score_l, score_r, timer):
     right_score = AsciiImage(f'src/numbers/{score_r}.txt')
 
     place_image_on_canvas(canvas, sky, 0, 0)
+    if side == "right":
+        padle = AsciiImage('src/padle_fill.txt')
     place_image_on_canvas(canvas, padle, int((padle1_y * canvas_height) / game_height), 6) 
+    if side == "left":
+        padle = AsciiImage('src/padle_fill.txt')
     place_image_on_canvas(canvas, padle, int((padle2_y * canvas_height) / game_height), 174 - padle.rows) 
     # points 1
     place_image_on_canvas(canvas, left_score, 3, 70)

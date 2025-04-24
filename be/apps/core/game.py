@@ -18,6 +18,8 @@ class GameState:
         self.last_update = time.time()
         self.fps_cap = 60
         self.countdown = None  # Initially None until the game starts
+        self.type_match = None
+        self.current_user_id = None
 
         self.left_paddle = {
             "x": 30,
@@ -154,21 +156,27 @@ class GameState:
         # Calculate next position
         next_x = self.ball["x"] + self.ball["speedX"] * dt
         next_y = self.ball["y"] + self.ball["speedY"] * dt
-        # Check for goals BEFORE updating position
+
+        
         if next_x - self.ball["radius"] <= 0:
-            # Ball will cross left boundary - Right player scores
             self._last_scorer = "right"
             self.scores["right"] += 1
             if self.scores["right"] <= 5:
                 await self._send_score_update(is_player1=False)
+                if self.scores["right"] == 5:
+                    self.running = False 
+                    self.game_over = True
             self.reset_ball()
             return
         elif next_x + self.ball["radius"] >= self.WIDTH:
-            # Ball will cross right boundary - Left player scores
+            
             self._last_scorer = "left"
             self.scores["left"] += 1
             if self.scores["left"] <= 5:
                 await self._send_score_update(is_player1=True)
+                if self.scores["left"] == 5:
+                    self.running = False  
+                    self.game_over = True
             self.reset_ball()
             return
 
@@ -179,10 +187,6 @@ class GameState:
         # Calculate the movement vector
         dx = self.ball["x"] - prev_x
         dy = self.ball["y"] - prev_y
-    
-    # Resto del código para detección de colisiones con paletas y paredes...
-
-        # Resto del código para detección de colisiones con paletas y paredes...
 
         # Function to check paddle collision
         def check_paddle_collision(paddle):
@@ -244,7 +248,6 @@ class GameState:
             )
 
         # Check if there was a goal (after checking paddle collisions)
-        # Check if there was a goal (after checking paddle collisions)
         if self.ball["x"] - self.ball["radius"] <= 0:
             # Ball crossed left boundary - Right player scores
             self._last_scorer = "right"
@@ -291,7 +294,7 @@ class GameState:
         direction = 1 if side == "left" else -1
         self.ball["speedX"] = math.cos(bounce_angle) * direction * speed
         self.ball["speedY"] = math.sin(bounce_angle) * speed
-        
+
         # Record last hit
         self.ball["last_hit"] = side
 
@@ -300,14 +303,35 @@ class GameState:
 
     def process_key_event(self, key, is_pressed):
         """Handle keyboard events to move paddles"""
-        if key == "w" or key == "W":
-            self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "s" or key == "S":
-            self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowUp":
-            self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
-        elif key == "ArrowDown":
-            self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+        print(self.type_match)
+        print(self.left_player_id)
+        print(self.right_player_id)
+        print(self.current_user_id)
+        # If it's a local match, allow all keys
+        if self.type_match == "local":
+            if key == "w" or key == "W":
+                self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "s" or key == "S":
+                self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowUp":
+                self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowDown":
+                self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+
+        # If it's a multiplayer match, only allow the keys for the current user
+        elif self.type_match != "local":
+            if (
+                key == "w" or key == "W"
+            ) and self.left_player_id == self.current_user_id:
+                self.left_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif (
+                key == "s" or key == "S"
+            ) and self.left_player_id == self.current_user_id:
+                self.left_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowUp" and self.right_player_id == self.current_user_id:
+                self.right_paddle["dy"] = -self.PADDLE_SPEED if is_pressed else 0
+            elif key == "ArrowDown" and self.right_player_id == self.current_user_id:
+                self.right_paddle["dy"] = self.PADDLE_SPEED if is_pressed else 0
 
     def _check_paddle_collision(self, paddle):
         """Check if the ball collides with a paddle"""
@@ -354,6 +378,7 @@ class GameState:
     def _send_score_update(self, is_player1):
         from apps.core.models import History
         from django.db import transaction
+
         try:
             with transaction.atomic():
                 matches = History.objects.filter(match_id=self.match_id)

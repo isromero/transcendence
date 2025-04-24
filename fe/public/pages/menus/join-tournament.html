@@ -6,12 +6,12 @@
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="card border-0">
-          <div class="card-body bs-primary">
-            <form id="joinTournamentForm">
+          <div class="card-body bs-primary text-center">
+            <form id="joinTournamentForm" class="needs-validation" novalidate>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color text-center w-100"
-                  style="font-size: 2.5rem"
+                  style="font-size: 2rem"
                   data-translationKey="display-name"
                   >Your display name:</label
                 >
@@ -20,13 +20,12 @@
                   type="text"
                   class="form-control form-control-lg bs-secondary"
                   style="border-radius: 20px"
-                  required
                 />
               </div>
               <div class="form-group mb-3">
                 <label
                   class="form-secondary-title-color text-center w-100"
-                  style="font-size: 2.5rem"
+                  style="font-size: 2rem"
                   data-translationKey="enter-code"
                   >Enter code:</label
                 >
@@ -37,6 +36,7 @@
                   style="border-radius: 20px"
                   required
                 />
+                <div class="invalid-feedback">Join code is required</div>
               </div>
               <div class="d-flex justify-content-center gap-2">
                 <a class="spa-link" href="/" style="flex: 1">
@@ -52,7 +52,7 @@
                 <button
                   id="joinButton"
                   class="btn login-button flex-grow-1"
-                  style="border-radius: 10px; height: 2.8rem"
+                  style="border-radius: 10px; height: 2.8rem; font-size: 0.8rem;"
                   type="submit"
                   data-translationKey="join-tournament"
                 >

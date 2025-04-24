@@ -14,7 +14,7 @@ export function init() {
 
     const result = await authService.login(user);
     if (result) {
-      await loadPage('/');
+      await loadPage('/', { updateHistory: false });
     }
   }
 

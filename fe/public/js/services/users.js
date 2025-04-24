@@ -57,7 +57,7 @@ export const usersService = {
       const result = await response.json();
 
       if (!response.ok || !result?.success) {
-        showErrorToast(result?.message || 'Error updating account');
+        showErrorToast(result);
         return null;
       }
 
@@ -138,12 +138,12 @@ export const usersService = {
         body: JSON.stringify({}),
         credentials: 'include',
       });
-  
+
       if (response.status === 204) {
         showSuccessToast('Account successfully deleted');
         return true;
       }
-  
+
       const errorMessage = await response.json();
       showErrorToast(errorMessage?.message || 'Error deleting account');
       return false;
@@ -152,5 +152,4 @@ export const usersService = {
       return false;
     }
   },
-  
 };

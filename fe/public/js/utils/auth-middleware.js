@@ -46,7 +46,7 @@ export async function checkAuth(path) {
 
   // If not authenticated and trying to access protected routes
   if (!authenticated && !isPublicRoute) {
-    await loadPage('/auth');
+    await loadPage('/auth', { updateHistory: false });
     return false;
   }
 
