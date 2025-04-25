@@ -11,6 +11,7 @@ DESCRIPTION
     Launches a ping pong game session.
     Specify 'local' to play against AI or another local player.
     Specify 'online' to connect and play against another online user.
+    You can play with w,s,i,k keys
 
 NOTE
     Login is required for online play.
