@@ -26,7 +26,6 @@ export async function init() {
   async function handleAvatarChange(event) {
     const file = event.target.files[0];
 
-
     if (!file.type.startsWith('image/')) {
       showErrorToast('Only images supported');
       return;

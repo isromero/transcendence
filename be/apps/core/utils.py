@@ -145,7 +145,7 @@ def serialize_stats(user, user_history):
         .distinct()
     )
 
-    # Count the number of wins in tournaments (excluyendo 5-5)
+    # Count the number of wins in tournaments (excluding 5-5)
     tournament_wins = (
         user_history.filter(
             type_match="tournament_final",

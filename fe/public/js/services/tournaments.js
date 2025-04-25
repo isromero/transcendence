@@ -3,7 +3,12 @@ import { showErrorToast, showSuccessToast } from '../utils/helpers.js';
 import { profileService } from './profile.js';
 
 export const tournamentService = {
-  createTournament: async (tournamentName, maxPlayers, profile, newDisplayName = null) => {
+  createTournament: async (
+    tournamentName,
+    maxPlayers,
+    profile,
+    newDisplayName = null
+  ) => {
     try {
       const response = await fetch(`${API_URL}/tournaments`, {
         method: 'POST',
@@ -203,21 +208,20 @@ export const tournamentService = {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          tournament_id: tournamentId,  // Enviamos el tournament_id en el body
+          tournament_id: tournamentId,
         }),
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         showErrorToast('Error deleting tournament.');
         return null;
       }
-  
-      // Remover el torneo del almacenamiento local si todo fue exitoso
+
       const userId = (await profileService.getProfile())?.data?.id;
       const tournamentKey = `tournament_${joinCode}_player_${userId}`;
       localStorage.removeItem(tournamentKey);
-  
+
       showSuccessToast('Tournament deleted successfully.');
       return true;
     } catch (error) {
@@ -225,5 +229,4 @@ export const tournamentService = {
       return null;
     }
   },
-  
 };

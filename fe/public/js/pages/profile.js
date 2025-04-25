@@ -19,8 +19,8 @@ export function init() {
     const userId = pathParts[2];
 
     const { data } = userId
-      ? await usersService.getUser(userId) 
-      : await profileService.getProfile(); 
+      ? await usersService.getUser(userId)
+      : await profileService.getProfile();
 
     avatar.src = data.avatar
       ? `${IMAGES_URL}${data.avatar.replace('/images/', '/')}`
@@ -30,7 +30,6 @@ export function init() {
     onlineStatus.textContent = data.is_online ? 'Online' : 'Offline';
     onlineIndicator.className = `text-${data.is_online ? 'success' : 'secondary'} me-1`;
 
-    
     wins.textContent = Number(data.victories || 0);
     loses.textContent = Number(data.defeats || 0);
     tournamentWins.textContent = Number(data.tournaments_victories || 0);
@@ -45,7 +44,10 @@ export function init() {
 
         const date = new Date(match.date);
         const formattedDate = date.toLocaleDateString();
-        const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const formattedTime = date.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
 
         matchElement.innerHTML = `
           <div class="match-info">

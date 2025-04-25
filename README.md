@@ -38,16 +38,6 @@ docker compose run --rm be python manage.py makemigrations
 docker compose run --rm be python manage.py migrate
 ```
 
-#### How to save data
-
-After add some data to database, in order to keep it after compose down, follow this simple steps:
-Enter on backend container and save data into initial_data.json using:
-```code
-docker exec -it be bash
-python manage.py dumpdata --indent 2 > initial_data.json
-```
-That's it. Data will be loaded in the next container execution.
-
 ### Services
 The services will be available at:
 - Backend: http://localhost:8000

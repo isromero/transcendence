@@ -13,9 +13,8 @@
   }
 }
 
-
 .button-text-styles:hover {
-  background-color: var(--bs-background) !important; /* Azul */
+  background-color: var(--bs-background) !important;
   color: white !important;
 }
 
@@ -30,14 +29,12 @@
 }
 
 .cancel-button:hover {
-  background-color: #dc3545 !important; /* Rojo */
+  background-color: #dc3545 !important;
   color: white !important;
 }
 
 .btn-custom-hover:hover {
-  background-color: var(
-    --bs-success
-  ) !important;
+  background-color: var(--bs-success) !important;
   border-color: var(--bs-success) !important;
   color: white !important;
   transition:

@@ -277,10 +277,7 @@
   display: none !important;
 }
 
-
-
-/* --- Perfil --- */
-
+/* --- Profile --- */
 
 .profile-container {
   position: fixed;
@@ -294,11 +291,9 @@
   -ms-overflow-style: none;
 }
 
-
 .profile-container::-webkit-scrollbar {
   display: none;
 }
-
 
 .profile-circle {
   width: 120px;
@@ -309,7 +304,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* --- Contenedor de Historial --- */
+/* --- History container --- */
 .matches-container,
 .profile-matches-container {
   max-height: 60vh;
@@ -328,12 +323,10 @@
 
 .profile-matches-container {
   margin-bottom: 2rem;
-  
 }
 .profile-matches-container::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
-
 
 .match-card,
 .profile-match-card {
@@ -355,7 +348,6 @@
   text-align: left;
 }
 
-
 .match-card .avatar,
 .profile-match-card .avatar {
   width: 50px;
@@ -372,7 +364,6 @@
   object-fit: cover;
 }
 
-
 .profile-match-card .match-info {
   flex: 1;
 }
@@ -381,7 +372,7 @@
 @media (max-width: 768px) {
   .matches-container,
   .profile-matches-container {
-    max-height: 50vh; 
+    max-height: 50vh;
     padding: 0.5rem;
     max-width: 100%;
   }
@@ -412,7 +403,7 @@
 @media (max-width: 480px) {
   .matches-container,
   .profile-matches-container {
-    max-height: 50vh; 
+    max-height: 50vh;
     gap: 0.5rem;
   }
 
@@ -427,7 +418,6 @@
     height: 35px;
   }
 }
-
 
 .stats-wrapper {
   margin-top: 1rem;

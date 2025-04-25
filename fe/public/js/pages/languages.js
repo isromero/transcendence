@@ -23,13 +23,13 @@ function updateTranslations(currentLanguage) {
         el.tagName.toLowerCase() === 'input' &&
         ['button', 'submit', 'reset'].includes(el.type.toLowerCase())
       ) {
-        el.setAttribute("aria-label", newText);
+        el.setAttribute('aria-label', newText);
         el.value = newText;
       } else if (el.tagName.toLowerCase() === 'img') {
-        el.setAttribute("aria-label", newText);
+        el.setAttribute('aria-label', newText);
         el.alt = newText;
       } else {
-        el.setAttribute("aria-label", newText);
+        el.setAttribute('aria-label', newText);
         el.textContent = newText;
       }
     }

@@ -256,7 +256,7 @@ class GameState:
                 # Right player (player2) scored
                 await self._send_score_update(
                     is_player1=False
-                )  # El jugador 2 (derecha) marcó
+                )  # The right player scored
             self.reset_ball()
             return  # Avoid updating position after resetting
         elif self.ball["x"] + self.ball["radius"] >= self.WIDTH:
@@ -267,7 +267,7 @@ class GameState:
                 # Left player (player1) scored
                 await self._send_score_update(
                     is_player1=True
-                )  # El jugador 1 (izquierda) marcó
+                )  # The left player scored
             self.reset_ball()
             return  # Avoid updating position after resetting
 
@@ -303,10 +303,6 @@ class GameState:
 
     def process_key_event(self, key, is_pressed):
         """Handle keyboard events to move paddles"""
-        print(self.type_match)
-        print(self.left_player_id)
-        print(self.right_player_id)
-        print(self.current_user_id)
         # If it's a local match, allow all keys
         if self.type_match == "local":
             if key == "w" or key == "W":
