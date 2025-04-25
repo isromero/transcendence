@@ -18,7 +18,7 @@ def play_badapple():
     total_frames = len(frame_files)
 
     # Calculate FPS
-    fps = 33#total_frames / duration
+    fps = 34#total_frames / duration
     frame_delay = 1 / fps
 
     print(f"Total frames: {total_frames}")
