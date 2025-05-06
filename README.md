@@ -1,8 +1,5 @@
 # transcendence
 
-## Requirements (major/minor modules chosen and more)
-https://arc.net/e/059DF97D-3F04-49D1-A61C-EE5878BE8AB6
-
 ## Project Setup
 
 ### Prerequisites
